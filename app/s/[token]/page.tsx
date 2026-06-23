@@ -109,7 +109,7 @@ export default async function SharePage({
                       {share.watermark && (
                         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                           <span className="rotate-[-25deg] select-none text-2xl font-bold text-black/10">
-                            Family Vault · только просмотр
+                            Семейный сейф · только просмотр
                           </span>
                         </div>
                       )}
@@ -145,7 +145,7 @@ export default async function SharePage({
         )}
 
         <p className="border-t border-slate-100 pt-3 text-center text-xs text-slate-400">
-          🔐 Защищённая ссылка Family Vault. Доступ ограничен по времени и
+          🔐 Защищённая ссылка «Семейного сейфа». Доступ ограничен по времени и
           логируется.
         </p>
       </div>
