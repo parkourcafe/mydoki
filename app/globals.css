@@ -8,6 +8,7 @@
 
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
+  font-family: var(--font-inter), system-ui, sans-serif;
 }
 
 .btn {
@@ -30,4 +31,42 @@ body {
 }
 .card {
   @apply rounded-xl border border-slate-200 bg-white p-5 shadow-sm;
+}
+
+/* Лендинг (тёплая тема) */
+.heading-font {
+  font-family: var(--font-playfair), Georgia, serif;
+  font-weight: 700;
+  line-height: 1.05;
+}
+.warm-card {
+  background-color: #fdfaf5;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.warm-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.08);
+}
+.accent-btn {
+  background-color: #b85c38;
+  color: #fff;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+.accent-btn:hover {
+  background-color: #9f4a2e;
+  transform: translateY(-1px);
+}
+.section-header {
+  font-size: 2.5rem;
+  line-height: 2.75rem;
+  font-weight: 700;
+  color: #2c2522;
+}
+.nav-link {
+  color: #5c5248;
+  transition: color 0.2s ease;
+}
+.nav-link:hover {
+  color: #2c2522;
 }

@@ -2,173 +2,268 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/queries";
 
-const FEATURES: { icon: string; title: string; text: string }[] = [
-  {
-    icon: "👨‍👩‍👧",
-    title: "Семья",
-    text: "Профиль на каждого близкого — взрослые и дети в одном месте.",
-  },
+const HERO_DOCS: { icon: string; title: string; status?: string; warn?: boolean }[] = [
+  { icon: "🩺", title: "Анализы · Аня", status: "ОАК, биохимия — 6 файлов" },
+  { icon: "🛂", title: "Паспорт РФ · Миша", status: "действует до 2031" },
+  { icon: "🚗", title: "ОСАГО · Toyota", status: "истекает через 12 дней", warn: true },
+  { icon: "🎓", title: "Диплом · Аня", status: "оригинал" },
+];
+
+const STORE_CATS: { icon: string; title: string; items: string[] }[] = [
   {
     icon: "📄",
-    title: "Документы",
-    text: "Паспорта, дипломы, СНИЛС, договоры — с фото и сканами.",
+    title: "Личные документы",
+    items: ["Паспорта и загранпаспорта", "СНИЛС, ИНН, военный билет", "Дипломы, аттестаты, сертификаты"],
   },
   {
     icon: "🚗",
-    title: "Имущество",
-    text: "Авто и недвижимость с их документами: ПТС, ОСАГО, выписки.",
+    title: "Авто и недвижимость",
+    items: ["ОСАГО и КАСКО", "ПТС и СТС", "Выписки ЕГРН и договоры"],
   },
   {
-    icon: "🩺",
-    title: "Медкарта",
-    text: "Анализы, прививки и назначения по каждому члену семьи.",
+    icon: "🧾",
+    title: "Квитанции и справки",
+    items: ["Квитанции и чеки об оплате", "Справки с работы / учёбы", "Доверенности и прочее"],
   },
   {
-    icon: "⏰",
-    title: "Сроки",
-    text: "Напоминания, пока паспорт или страховка не истекли.",
-  },
-  {
-    icon: "🔗",
-    title: "Поделиться",
-    text: "Защищённая ссылка с таймером — врачу или в банк, потом отозвать.",
+    icon: "👨‍👩‍👧",
+    title: "Семейные документы",
+    items: ["Документы детей (все этапы)", "Медкарты всей семьи", "Договоры и соглашения"],
   },
 ];
 
-const SECURITY: string[] = [
-  "Данные изолированы по семье на уровне базы (RLS) — чужой не увидит.",
-  "Файлы в приватном хранилище, наружу только по временной ссылке.",
-  "Двухфакторный вход и оповещения о входе с нового устройства.",
-  "Вход через Google или почту, восстановление пароля.",
+const STEPS: { n: string; title: string; text: string }[] = [
+  { n: "1", title: "Создайте профили близких", text: "Добавьте взрослых и детей. У каждого будет свой раздел." },
+  { n: "2", title: "Загрузите документы", text: "Анализы, дипломы, справки, квитанции — просто сфотографируйте." },
+  { n: "3", title: "Получайте напоминания", text: "Система заранее предупредит об истечении документов." },
 ];
+
+const SECURITY: { icon: string; text: string }[] = [
+  { icon: "🔒", text: "Данные изолированы по семье (RLS) — чужой их не увидит" },
+  { icon: "🗂️", text: "Приватное хранилище + временные отзываемые ссылки" },
+  { icon: "🔑", text: "Двухфакторный вход и уведомления о входе с нового устройства" },
+  { icon: "🎚️", text: "Вы сами управляете доступом к каждому документу" },
+];
+
+function GoogleMark() {
+  return (
+    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
+      <svg width="14" height="14" viewBox="0 0 18 18" aria-hidden="true">
+        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z" />
+        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z" />
+        <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z" />
+        <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
+      </svg>
+    </span>
+  );
+}
 
 export default async function Home() {
   if (await getUser()) redirect("/my");
 
   return (
-    <main className="min-h-screen bg-white text-slate-900">
-      {/* Шапка */}
-      <header className="mx-auto flex max-w-5xl items-center justify-between px-4 py-5">
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-brand-100 bg-brand-50 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-600">
-          <span>🔐</span> Семейный сейф
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href="/login" className="btn-ghost">
-            Войти
-          </Link>
-          <Link href="/login" className="btn-primary">
-            Создать сейф
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-[#f9f5f0] text-[#2c2522]">
+      {/* NAV */}
+      <nav className="sticky top-0 z-50 border-b border-[#e8e0d5] bg-[#fdfaf5]">
+        <div className="mx-auto max-w-screen-xl px-5">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center gap-x-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#b85c38] text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <span className="text-2xl font-semibold tracking-tighter">doki</span>
+                <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
+              </div>
+            </div>
 
-      {/* Герой */}
-      <section className="relative overflow-hidden">
-        <div
-          className="pointer-events-none absolute inset-x-0 -top-24 h-72 bg-gradient-to-b from-brand-50 to-transparent"
-          aria-hidden="true"
-        />
-        <div className="relative mx-auto max-w-3xl px-4 pb-16 pt-12 text-center sm:pt-20">
-          <h1 className="text-balance text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl">
-            Все документы вашей семьи —{" "}
-            <span className="bg-gradient-to-r from-brand-600 via-brand-500 to-sky-500 bg-clip-text text-transparent">
-              в одном защищённом месте
-            </span>
-          </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-slate-600">
-            Паспорта, дипломы, медкарта и имущество — под рукой и под защитой.
-            Никаких папок, мессенджеров и потерянных сканов.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-            <Link href="/login" className="btn-primary px-6 py-3 text-base">
-              Создать сейф бесплатно
-            </Link>
-            <Link href="/login" className="btn-ghost px-6 py-3 text-base">
-              У меня уже есть аккаунт
+            <div className="hidden items-center gap-x-8 text-sm font-medium md:flex">
+              <a href="#what-to-store" className="nav-link">Что хранить</a>
+              <a href="#how" className="nav-link">Как это работает</a>
+              <a href="#security" className="nav-link">Безопасность</a>
+            </div>
+
+            <Link href="/login" className="accent-btn rounded-3xl px-5 py-2.5 text-sm font-semibold">
+              Войти
             </Link>
           </div>
-          <p className="mt-4 text-xs text-slate-400">
-            Бесплатно · без банковской карты · вход через Google
-          </p>
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <section className="mx-auto max-w-screen-xl px-5 pb-10 pt-10">
+        <div className="grid items-center gap-x-12 lg:grid-cols-2">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-x-2 rounded-full border border-[#e8e0d5] bg-white px-4 py-1.5 text-sm">
+              <span className="h-2 w-2 rounded-full bg-[#b85c38]" />
+              <span className="font-medium text-[#5c5248]">Личный сейф для документов всей семьи</span>
+            </div>
+
+            <h1 className="heading-font mb-5 text-[2.65rem] leading-[1.08] tracking-[-1.3px] text-[#2c2522] sm:text-6xl">
+              Все важные документы<br />
+              вашей семьи —<br />
+              в одном месте
+            </h1>
+
+            <p className="mb-7 max-w-md text-[19px] leading-snug text-[#5c5248]">
+              Паспорта, анализы, дипломы, справки, квитанции и ОСАГО.
+              Без хаоса. С напоминаниями об истечении.
+            </p>
+
+            <div className="mb-6 flex max-w-md flex-col gap-3">
+              <Link href="/login" className="accent-btn flex items-center justify-center gap-x-3 rounded-3xl px-8 py-[17px] text-[17px] font-semibold active:scale-[0.985]">
+                <GoogleMark />
+                <span>Войти через Google — сразу начать</span>
+              </Link>
+              <a href="#what-to-store" className="flex items-center justify-center rounded-3xl border border-[#d4c9b8] px-8 py-[17px] text-[17px] font-semibold transition-colors hover:bg-white">
+                Что можно хранить
+              </a>
+            </div>
+
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#5c5248]">
+              <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Регистрация за минуту</span>
+              <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Бесплатно</span>
+              <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Без карты</span>
+            </div>
+          </div>
+
+          {/* Визуал вместо фото */}
+          <div className="mt-9 lg:mt-0">
+            <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-5 shadow-xl">
+              <div className="mb-4 flex items-center justify-between px-1">
+                <span className="text-sm font-semibold text-[#8a7c6d]">Семейный архив</span>
+                <span className="text-xs text-[#b9ac9b]">4 документа</span>
+              </div>
+              <div className="space-y-3">
+                {HERO_DOCS.map((d) => (
+                  <div key={d.title} className="flex items-center gap-x-3 rounded-2xl border border-[#eee4d6] bg-white px-4 py-3">
+                    <div className="text-2xl">{d.icon}</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-semibold">{d.title}</div>
+                      {d.status && (
+                        <div className={"text-xs " + (d.warn ? "font-medium text-[#b85c38]" : "text-[#8a7c6d]")}>
+                          {d.warn ? "⏰ " : ""}{d.status}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Боль */}
-      <section className="mx-auto max-w-3xl px-4 py-12">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
-          <h2 className="text-lg font-semibold">Знакомо?</h2>
-          <ul className="mt-3 space-y-2 text-slate-600">
-            <li>📦 Перед поездкой ищешь, куда сфотографировал паспорт ребёнка.</li>
-            <li>⌛ Узнаёшь, что ОСАГО или загранпаспорт истёк — постфактум.</li>
-            <li>🗂️ Документы раскиданы по чатам, почте и десяти папкам.</li>
-          </ul>
-          <p className="mt-4 font-medium text-slate-900">
-            Семейный сейф собирает всё это в одном месте — и напоминает о сроках.
-          </p>
+      {/* ЧТО МОЖНО ХРАНИТЬ */}
+      <section id="what-to-store" className="mx-auto max-w-screen-xl px-5 py-10">
+        <div className="mb-7">
+          <h2 className="section-header mb-2">Что можно хранить в архиве</h2>
+          <p className="text-lg text-[#5c5248]">Всё важное — по людям и категориям, в одном месте.</p>
+        </div>
+
+        <div className="grid gap-4">
+          {/* Анализы — акцент */}
+          <div className="warm-card rounded-3xl border border-[#e8e0d5] p-6 ring-2 ring-[#b85c38]/20">
+            <div className="flex items-start gap-x-4">
+              <div className="mt-1 text-4xl">🩺</div>
+              <div className="flex-1">
+                <div className="mb-2 text-xl font-semibold">Анализы и медицинские исследования</div>
+                <div className="grid grid-cols-1 gap-x-6 text-sm text-[#5c5248] sm:grid-cols-2">
+                  <ul className="space-y-1">
+                    <li>• Результаты лабораторных анализов</li>
+                    <li>• Биохимия, ОАК, ОАМ, гормоны</li>
+                    <li>• УЗИ, МРТ, КТ, рентген</li>
+                  </ul>
+                  <ul className="mt-2 space-y-1 sm:mt-0">
+                    <li>• Заключения врачей</li>
+                    <li>• Прививочные сертификаты</li>
+                    <li>• Справки для школы / работы</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {STORE_CATS.map((c) => (
+              <div key={c.title} className="warm-card rounded-3xl border border-[#e8e0d5] p-5">
+                <div className="mb-3 flex items-center gap-x-2 font-semibold">
+                  <span className="text-xl">{c.icon}</span>
+                  <span>{c.title}</span>
+                </div>
+                <ul className="space-y-1 pl-1 text-sm text-[#5c5248]">
+                  {c.items.map((it) => (
+                    <li key={it}>• {it}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Возможности */}
-      <section className="mx-auto max-w-5xl px-4 py-12">
-        <h2 className="text-center text-2xl font-bold sm:text-3xl">
-          Всё под рукой
-        </h2>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f) => (
-            <div
-              key={f.title}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:shadow-md"
-            >
-              <div className="text-3xl">{f.icon}</div>
-              <h3 className="mt-3 font-semibold">{f.title}</h3>
-              <p className="mt-1 text-sm text-slate-600">{f.text}</p>
+      {/* КАК ЭТО РАБОТАЕТ */}
+      <section id="how" className="mx-auto max-w-screen-xl px-5 py-10">
+        <div className="mx-auto mb-8 max-w-2xl text-center">
+          <h2 className="section-header mb-2">Как это работает</h2>
+          <p className="text-lg text-[#5c5248]">Соберите все документы семьи за один вечер</p>
+        </div>
+        <div className="mx-auto grid max-w-2xl gap-6">
+          {STEPS.map((s) => (
+            <div key={s.n} className="flex gap-5">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#f0e6d9] text-2xl font-semibold text-[#b85c38]">
+                {s.n}
+              </div>
+              <div>
+                <div className="mb-1 text-xl font-semibold">{s.title}</div>
+                <p className="text-[#5c5248]">{s.text}</p>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Безопасность */}
-      <section className="mx-auto max-w-5xl px-4 py-12">
-        <div className="rounded-2xl bg-gradient-to-br from-brand-600 to-brand-700 p-8 text-white sm:p-10">
-          <h2 className="text-2xl font-bold sm:text-3xl">
-            Безопасность с первого дня
-          </h2>
-          <p className="mt-2 max-w-xl text-brand-100">
-            Это сейф, а не очередная папка в облаке. Доступ — только у вашей семьи.
-          </p>
-          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+      {/* БЕЗОПАСНОСТЬ */}
+      <section id="security" className="mx-auto max-w-screen-xl px-5 py-10">
+        <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-6 sm:p-8">
+          <h2 className="section-header mb-5 leading-tight">Надёжное хранение семейных документов</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
             {SECURITY.map((s) => (
-              <li key={s} className="flex gap-2 text-sm text-brand-50">
-                <span aria-hidden="true">🛡️</span>
-                <span>{s}</span>
-              </li>
+              <div key={s.text} className="flex gap-x-4">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[#f0e6d9] text-lg">
+                  {s.icon}
+                </div>
+                <span className="text-sm text-[#5c5248]">{s.text}</span>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       </section>
 
-      {/* Финальный призыв */}
-      <section className="mx-auto max-w-3xl px-4 py-16 text-center">
-        <h2 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
-          Соберите семейный архив за вечер
-        </h2>
-        <p className="mx-auto mt-4 max-w-md text-slate-600">
-          Добавьте близких, загрузите первые документы — и больше не ищите их по чатам.
-        </p>
-        <div className="mt-8">
-          <Link href="/login" className="btn-primary px-7 py-3 text-base">
-            Создать сейф бесплатно
+      {/* ФИНАЛЬНЫЙ CTA */}
+      <section className="mx-auto max-w-screen-xl px-5 py-10">
+        <div className="rounded-3xl bg-[#2c2522] px-6 py-10 text-center text-[#f9f5f0] sm:px-10">
+          <h2 className="mb-3 text-3xl font-semibold tracking-tight">Готовы собрать все документы семьи?</h2>
+          <p className="mb-6 text-sm text-[#d4c9b8]">Меньше 15 минут — и порядок надолго.</p>
+          <Link href="/login" className="mx-auto flex w-full max-w-sm items-center justify-center gap-x-3 rounded-3xl bg-[#b85c38] px-7 py-3.5 text-base font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]">
+            <GoogleMark />
+            <span>Войти через Google — сразу начать</span>
           </Link>
         </div>
       </section>
 
-      {/* Подвал */}
-      <footer className="border-t border-slate-200">
-        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 px-4 py-6 text-xs text-slate-400 sm:flex-row">
-          <span>🔐 Семейный сейф · doki.help</span>
-          <span>Приватно по умолчанию · RLS · приватный storage</span>
+      {/* FOOTER */}
+      <footer className="border-t border-[#e8e0d5] bg-[#fdfaf5] px-5 py-7 text-xs text-[#8a7c6d]">
+        <div className="mx-auto flex max-w-screen-xl flex-col items-center gap-y-2 text-center">
+          <div>© 2026 doki.help — Семейный архив документов</div>
+          <div className="flex gap-x-4">
+            <a href="#security" className="hover:text-[#2c2522]">Безопасность</a>
+            <Link href="/login" className="hover:text-[#2c2522]">Войти</Link>
+          </div>
         </div>
       </footer>
-    </main>
+    </div>
   );
 }
