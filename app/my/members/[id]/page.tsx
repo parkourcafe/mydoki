@@ -12,7 +12,8 @@ import {
   RELATION_LABEL,
   type DocCategory,
 } from "@/lib/categories";
-import { createDocument, createRecord, deleteRecord } from "@/app/my/actions";
+import { createRecord, deleteRecord } from "@/app/my/actions";
+import DocumentForm from "./DocumentForm";
 
 export default async function MemberPage({
   params,
@@ -82,71 +83,7 @@ export default async function MemberPage({
 
       <details className="card">
         <summary className="cursor-pointer font-medium">+ Добавить документ</summary>
-        <form
-          action={createDocument}
-          className="mt-4 grid gap-4 sm:grid-cols-2"
-          encType="multipart/form-data"
-        >
-          <input type="hidden" name="member_id" value={member.id} />
-          <div className="sm:col-span-2">
-            <label className="label">Название</label>
-            <input name="title" required className="input" placeholder="Паспорт РФ" />
-          </div>
-          <div>
-            <label className="label">Категория</label>
-            <select name="category" className="input" defaultValue="identity">
-              {CATEGORIES.map((c) => (
-                <option key={c.key} value={c.key}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="label">Тип / подтип</label>
-            <input name="subtype" className="input" placeholder="паспорт, диплом…" />
-          </div>
-          <div>
-            <label className="label">Кем выдан</label>
-            <input name="issuer" className="input" />
-          </div>
-          <div>
-            <label className="label">Номер</label>
-            <input name="doc_number" className="input" />
-          </div>
-          <div>
-            <label className="label">Дата выдачи</label>
-            <input name="issued_at" type="date" className="input" />
-          </div>
-          <div>
-            <label className="label">Действует до</label>
-            <input name="expires_at" type="date" className="input" />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="label">Теги (через запятую)</label>
-            <input name="tags" className="input" placeholder="срочно, оригинал" />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="label">Заметки</label>
-            <textarea name="notes" rows={2} className="input" />
-          </div>
-          <div className="sm:col-span-2">
-            <label className="label">Файлы (сканы / фото)</label>
-            <input
-              name="files"
-              type="file"
-              multiple
-              accept="image/*,application/pdf"
-              className="input"
-            />
-            <p className="mt-1 text-xs text-slate-400">
-              Загружаются в приватный bucket. Наружу — только по signed URL.
-            </p>
-          </div>
-          <div className="sm:col-span-2">
-            <button className="btn-primary">Сохранить документ</button>
-          </div>
-        </form>
+        <DocumentForm memberId={member.id} />
       </details>
 
       {/* Записи (медкарта/заметки без файла) */}
