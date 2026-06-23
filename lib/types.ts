@@ -58,6 +58,15 @@ export type RecordRow = {
   created_at: string;
 };
 
+export type LoginEvent = {
+  id: string;
+  user_id: string;
+  ip: string | null;
+  user_agent: string | null;
+  is_new_device: boolean;
+  created_at: string;
+};
+
 export type Share = {
   id: string;
   household_id: string;

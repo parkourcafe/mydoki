@@ -4,6 +4,7 @@ import type {
   Asset,
   DocumentFile,
   DocumentRow,
+  LoginEvent,
   Member,
   RecordRow,
   Share,
@@ -217,6 +218,17 @@ export async function searchDocuments(
     .limit(50);
   if (error) throw error;
   return (data ?? []) as DocumentRow[];
+}
+
+export async function listLoginEvents(limit = 10): Promise<LoginEvent[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("login_events")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(limit);
+  if (error) throw error;
+  return (data ?? []) as LoginEvent[];
 }
 
 export async function listSharesByDocument(

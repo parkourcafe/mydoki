@@ -11,6 +11,7 @@ import {
 } from "@/lib/queries";
 import { CATEGORY_LABEL } from "@/lib/categories";
 import CopyButton from "@/components/CopyButton";
+import FileActions from "@/components/FileActions";
 import {
   createShare,
   deleteDocument,
@@ -131,14 +132,7 @@ export default async function DocumentPage({
                   </div>
                 </div>
                 {signed[f.id] ? (
-                  <a
-                    href={signed[f.id]}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn-ghost"
-                  >
-                    Открыть
-                  </a>
+                  <FileActions url={signed[f.id]} name={f.file_name ?? "файл"} />
                 ) : (
                   <span className="text-xs text-slate-400">нет доступа</span>
                 )}

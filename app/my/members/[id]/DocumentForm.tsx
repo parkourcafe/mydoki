@@ -30,6 +30,11 @@ const EMPTY: Fields = {
   notes: "",
 };
 
+function fmtSize(n: number) {
+  if (n < 1024 * 1024) return `${Math.round(n / 1024)} КБ`;
+  return `${(n / 1024 / 1024).toFixed(1)} МБ`;
+}
+
 export default function DocumentForm({
   memberId,
   assetId,
@@ -39,18 +44,33 @@ export default function DocumentForm({
 }) {
   const router = useRouter();
   const [f, setF] = useState<Fields>(EMPTY);
+  const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveErr, setSaveErr] = useState<string | null>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
+  const pickRef = useRef<HTMLInputElement>(null);
+  const camRef = useRef<HTMLInputElement>(null);
 
   const set = (k: keyof Fields, v: string) => setF((p) => ({ ...p, [k]: v }));
 
+  function addFiles(list: FileList | null) {
+    if (!list || !list.length) return;
+    const incoming = Array.from(list);
+    setFiles((prev) => {
+      const seen = new Set(prev.map((x) => x.name + x.size));
+      return [...prev, ...incoming.filter((x) => !seen.has(x.name + x.size))];
+    });
+  }
+
+  function removeFile(i: number) {
+    setFiles((prev) => prev.filter((_, idx) => idx !== i));
+  }
+
   async function classify() {
-    const file = fileRef.current?.files?.[0];
+    const file = files[0];
     if (!file) {
-      setMsg("Сначала выберите файл — фото или скан документа.");
+      setMsg("Сначала выберите файл или сфотографируйте документ.");
       return;
     }
     setMsg(null);
@@ -72,7 +92,10 @@ export default function DocumentForm({
           doc_number: data.doc_number ?? p.doc_number,
           issued_at: data.issued_at ?? p.issued_at,
           expires_at: data.expires_at ?? p.expires_at,
-          tags: Array.isArray(data.tags) && data.tags.length ? data.tags.join(", ") : p.tags,
+          tags:
+            Array.isArray(data.tags) && data.tags.length
+              ? data.tags.join(", ")
+              : p.tags,
         }));
         setMsg("Поля заполнены автоматически — проверьте и сохраните.");
       }
@@ -111,11 +134,10 @@ export default function DocumentForm({
         tags,
       });
 
-      const files = Array.from(fileRef.current?.files ?? []);
       if (files.length) {
         const supabase = getSupabaseBrowser();
         for (const file of files) {
-          const safe = file.name.replace(/[^\w.\-]+/g, "_");
+          const safe = file.name.replace(/[^\w.\-]+/g, "_") || "file";
           const path = `${householdId}/${id}/${Date.now()}-${safe}`;
           const { error } = await supabase.storage
             .from("vault-files")
@@ -145,29 +167,80 @@ export default function DocumentForm({
   return (
     <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
       <div className="sm:col-span-2 rounded-lg border border-dashed border-brand-300 bg-brand-50/40 p-3">
-        <label className="label">Файлы (сканы / фото)</label>
+        <label className="label">Файлы документа</label>
+
         <input
-          ref={fileRef}
+          ref={pickRef}
           type="file"
           multiple
           accept="image/*,application/pdf"
-          className="input bg-white"
+          className="hidden"
+          onChange={(e) => addFiles(e.target.files)}
         />
-        <div className="mt-2 flex flex-wrap items-center gap-2">
+        <input
+          ref={camRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          className="hidden"
+          onChange={(e) => addFiles(e.target.files)}
+        />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => pickRef.current?.click()}
+            className="btn-ghost"
+          >
+            📎 Выбрать файл
+          </button>
+          <button
+            type="button"
+            onClick={() => camRef.current?.click()}
+            className="btn-ghost"
+          >
+            📷 Сфотографировать
+          </button>
           <button
             type="button"
             onClick={classify}
-            disabled={busy}
+            disabled={busy || !files.length}
             className="btn-ghost"
           >
             {busy ? "Распознаю…" : "✨ Распознать (AI)"}
           </button>
-          <span className="text-xs text-slate-500">
-            Заполнит поля по первому файлу. Файлы грузятся напрямую в приватное
-            хранилище.
-          </span>
         </div>
-        {msg && <p className="mt-2 text-xs text-slate-600">{msg}</p>}
+
+        {files.length > 0 && (
+          <ul className="mt-3 space-y-1">
+            {files.map((file, i) => (
+              <li
+                key={file.name + file.size + i}
+                className="flex items-center justify-between rounded-md bg-white px-2 py-1 text-sm"
+              >
+                <span className="truncate">
+                  {file.name}{" "}
+                  <span className="text-xs text-slate-400">
+                    {fmtSize(file.size)}
+                  </span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => removeFile(i)}
+                  className="ml-2 text-xs text-red-500 hover:underline"
+                >
+                  убрать
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <p className="mt-2 text-xs text-slate-500">
+          На телефоне «Сфотографировать» откроет камеру. Файлы грузятся напрямую
+          в приватное хранилище — размер не ограничен.
+        </p>
+        {msg && <p className="mt-1 text-xs text-slate-600">{msg}</p>}
       </div>
 
       <div className="sm:col-span-2">
