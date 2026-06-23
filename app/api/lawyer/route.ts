@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { lawyerChat } from "@/lib/gemini";
+import { lawyerChat } from "@/lib/llm";
 
 export const maxDuration = 60;
 
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const msg = e instanceof Error ? e.message : "Ошибка";
     if (msg === "NO_API_KEY") {
       return NextResponse.json(
-        { error: "AI-юрист не настроен (нет GEMINI_API_KEY)." },
+        { error: "AI-юрист не настроен (нет GLM_API_KEY)." },
         { status: 503 }
       );
     }

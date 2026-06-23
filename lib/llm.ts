@@ -1,39 +1,43 @@
 import "server-only";
 
-const ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models";
+/**
+ * Клиент LLM для GLM (Zhipu / z.ai). API OpenAI-совместимый.
+ * Переменные окружения:
+ *  - GLM_API_KEY       — ключ (обязателен)
+ *  - GLM_BASE_URL      — база API (по умолчанию z.ai international)
+ *  - GLM_MODEL         — текстовая модель (чат-юрист)
+ *  - GLM_VISION_MODEL  — модель с распознаванием изображений (документы)
+ */
 
 function apiKey(): string {
-  const k = process.env.GEMINI_API_KEY;
+  const k = process.env.GLM_API_KEY;
   if (!k) throw new Error("NO_API_KEY");
   return k;
 }
 
-function modelName(): string {
-  return process.env.GEMINI_MODEL || "gemini-2.0-flash";
-}
+const BASE = process.env.GLM_BASE_URL || "https://api.z.ai/api/paas/v4";
+const TEXT_MODEL = process.env.GLM_MODEL || "glm-4.6";
+const VISION_MODEL = process.env.GLM_VISION_MODEL || "glm-4v";
 
-type Part = { text?: string; inline_data?: { mime_type: string; data: string } };
-type Content = { role: "user" | "model"; parts: Part[] };
+type ChatMessage = { role: "system" | "user" | "assistant"; content: unknown };
 
-async function generate(body: Record<string, unknown>): Promise<string> {
-  const res = await fetch(
-    `${ENDPOINT}/${modelName()}:generateContent?key=${apiKey()}`,
-    {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body),
-    }
-  );
+async function chat(body: Record<string, unknown>): Promise<string> {
+  const res = await fetch(`${BASE}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${apiKey()}`,
+    },
+    body: JSON.stringify(body),
+  });
   if (!res.ok) {
     const detail = await res.text().catch(() => "");
-    throw new Error(`GEMINI_${res.status}: ${detail.slice(0, 200)}`);
+    throw new Error(`GLM_${res.status}: ${detail.slice(0, 200)}`);
   }
   const data = (await res.json()) as {
-    candidates?: { content?: { parts?: { text?: string }[] } }[];
+    choices?: { message?: { content?: string } }[];
   };
-  return (data.candidates?.[0]?.content?.parts ?? [])
-    .map((p) => p.text ?? "")
-    .join("");
+  return data.choices?.[0]?.message?.content ?? "";
 }
 
 /* ── Распознавание документа (vision) ───────────────────────────── */
@@ -81,22 +85,23 @@ export async function classifyDocument(
   base64: string,
   mediaType: string
 ): Promise<ClassifyResult> {
-  const text = await generate({
-    system_instruction: { parts: [{ text: CLASSIFY_SYSTEM }] },
-    contents: [
-      {
-        role: "user",
-        parts: [
-          { text: "Извлеки метаданные этого документа." },
-          { inline_data: { mime_type: mediaType, data: base64 } },
-        ],
-      },
-    ],
-    generationConfig: {
-      temperature: 0,
-      responseMimeType: "application/json",
-      maxOutputTokens: 600,
+  const dataUrl = `data:${mediaType};base64,${base64}`;
+  const messages: ChatMessage[] = [
+    { role: "system", content: CLASSIFY_SYSTEM },
+    {
+      role: "user",
+      content: [
+        { type: "text", text: "Извлеки метаданные этого документа. Ответ — только JSON." },
+        { type: "image_url", image_url: { url: dataUrl } },
+      ],
     },
+  ];
+
+  const text = await chat({
+    model: VISION_MODEL,
+    temperature: 0,
+    max_tokens: 600,
+    messages,
   });
 
   const raw = pickJson(text);
@@ -139,15 +144,16 @@ const LAWYER_SYSTEM = `Ты — AI-помощник по бытовым юрид
 export async function lawyerChat(
   history: { role: "user" | "assistant"; content: string }[]
 ): Promise<string> {
-  const contents: Content[] = history.slice(-20).map((m) => ({
-    role: m.role === "assistant" ? "model" : "user",
-    parts: [{ text: m.content }],
-  }));
+  const messages: ChatMessage[] = [
+    { role: "system", content: LAWYER_SYSTEM },
+    ...history.slice(-20).map((m) => ({ role: m.role, content: m.content })),
+  ];
 
-  const text = await generate({
-    system_instruction: { parts: [{ text: LAWYER_SYSTEM }] },
-    contents,
-    generationConfig: { temperature: 0.4, maxOutputTokens: 1200 },
+  const text = await chat({
+    model: TEXT_MODEL,
+    temperature: 0.4,
+    max_tokens: 1200,
+    messages,
   });
   return text.trim();
 }
