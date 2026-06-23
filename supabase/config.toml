@@ -1,0 +1,8 @@
+# Минимальный конфиг Supabase CLI. project_id — ref проекта Family Vault.
+# Применение миграций: `supabase link --project-ref uuopxzlcmzdtwebottar`
+# затем `supabase db push` (или `supabase db reset` на локальном стеке).
+project_id = "uuopxzlcmzdtwebottar"
+
+[db]
+# PostgREST экспонирует только public; схема private остаётся внутренней.
+schemas = ["public"]

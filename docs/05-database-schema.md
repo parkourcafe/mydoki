@@ -16,8 +16,8 @@
 
 ## Модель доступа
 
-Всё привязано к `household_id`. Доступ проверяют `SECURITY DEFINER`-хелперы
-(они же спасают `household_members` от рекурсии RLS):
+Всё привязано к `household_id`. Доступ проверяют `SECURITY DEFINER`-хелперы в
+схеме `private` (вне PostgREST; они же спасают `household_members` от рекурсии RLS):
 
 | Функция | Что проверяет |
 |---|---|
@@ -73,8 +73,8 @@ RPC, `grant … to authenticated` (их вызывают RLS-политики). 
 
 Security-advisors просмотрены: оставшиеся предупреждения уровня WARN —
 `SECURITY DEFINER`-функции, исполнимые `authenticated`. Это by-design (нужны
-политикам RLS). Дальнейшее ужесточение — вынести хелперы в схему вне PostgREST
-(см. [08-open-questions.md](08-open-questions.md)).
+политикам RLS). RLS-хелперы вынесены в схему `private` (вне PostgREST) — REST
+их больше не видит, advisor-warn по ним сняты.
 
 ## Чего в схеме пока НЕТ (осознанно)
 
