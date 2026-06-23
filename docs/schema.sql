@@ -26,6 +26,9 @@ do $$ begin create type record_kind as enum
   ('medical_analysis','prescription','nutrition','vaccination','note','other');
 exception when duplicate_object then null; end $$;
 
+do $$ begin create type consent_kind as enum ('privacy_policy','medical','marketing');
+exception when duplicate_object then null; end $$;
+
 -- ---------------------------- Семья / доступ --------------------------
 create table households (
   id          uuid primary key default gen_random_uuid(),
@@ -93,6 +96,7 @@ create table documents (
   issued_at    date,
   expires_at   date,                            -- для напоминаний о сроке
   notes        text,
+  tags         text[] not null default '{}',     -- свободные метки для поиска
   created_by   uuid not null default auth.uid(),
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
@@ -100,6 +104,7 @@ create table documents (
 create index on documents(household_id);
 create index on documents(member_id);
 create index on documents(expires_at);
+create index on documents using gin(tags);
 
 create table document_files (                   -- файл(ы) документа (скан фронт/оборот)
   id           uuid primary key default gen_random_uuid(),
@@ -147,9 +152,11 @@ create table shares (                           -- защищённая ссыл
   created_by   uuid not null default auth.uid(),
   expires_at   timestamptz not null,            -- ссылка истекает
   revoked_at   timestamptz,                      -- можно отозвать
-  max_views    int,                              -- лимит просмотров (опц.)
-  view_count   int not null default 0,
-  created_at   timestamptz not null default now()
+  max_views      int,                            -- лимит просмотров (опц.)
+  view_count     int not null default 0,
+  watermark      boolean not null default true,  -- водяной знак на превью
+  allow_download boolean not null default false, -- разрешить скачивание оригинала
+  created_at     timestamptz not null default now()
 );
 create index on shares(token);
 
@@ -166,6 +173,19 @@ create table audit_log (
 );
 create index on audit_log(household_id, created_at desc);
 
+-- ---------------------------- Согласия (ПДн/медицина) -----------------
+create table consents (
+  id           uuid primary key default gen_random_uuid(),
+  household_id uuid not null references households(id) on delete cascade,
+  member_id    uuid references members(id) on delete cascade,  -- опц.: по конкретному человеку
+  user_id      uuid not null default auth.uid(),               -- кто дал согласие
+  kind         consent_kind not null,
+  version      text not null,                                   -- версия политики/формы
+  granted_at   timestamptz not null default now(),
+  revoked_at   timestamptz
+);
+create index on consents(household_id);
+
 -- =====================================================================
 -- RLS
 -- =====================================================================
@@ -178,6 +198,7 @@ alter table records           enable row level security;
 alter table reminders         enable row level security;
 alter table shares            enable row level security;
 alter table audit_log         enable row level security;
+alter table consents          enable row level security;
 
 -- households: видят члены; управляет владелец. Создание — через create_household().
 create policy "household read"   on households for select using (is_household_member(id));
@@ -215,6 +236,10 @@ create policy "shares write" on shares for all
   using (is_household_editor(household_id)) with check (is_household_editor(household_id));
 -- audit_log: читают члены; пишет только функция log_audit (прямой insert закрыт).
 create policy "audit read" on audit_log for select using (is_household_member(household_id));
+-- consents: читают члены; создаёт/отзывает editor/owner (user_id фиксирует, кто дал).
+create policy "consents read"  on consents for select using (is_household_member(household_id));
+create policy "consents write" on consents for all
+  using (is_household_editor(household_id)) with check (is_household_editor(household_id));
 
 -- =====================================================================
 -- RPC
@@ -273,6 +298,7 @@ begin
     'document', jsonb_build_object(
       'title', doc.title, 'category', doc.category, 'subtype', doc.subtype,
       'issuer', doc.issuer, 'issued_at', doc.issued_at, 'expires_at', doc.expires_at),
+    'share', jsonb_build_object('watermark', s.watermark, 'allow_download', s.allow_download),
     'files', files
   );
 end; $$;
@@ -285,6 +311,24 @@ returns void language sql volatile security definer set search_path = public as 
   where id = p_share_id and is_household_editor(household_id);
 $$;
 grant execute on function revoke_share(uuid) to authenticated;
+
+-- ---------------------------- Hardening (права на функции) ------------
+-- Внутренние хелперы и пишущие RPC недоступны анонимам через PostgREST.
+-- Публичной остаётся только get_shared_document (share-ссылки).
+revoke execute on function
+  current_user_household_ids(),
+  is_household_member(uuid), is_household_editor(uuid), is_household_owner(uuid),
+  create_household(text),
+  log_audit(uuid, text, text, text, jsonb),
+  revoke_share(uuid)
+from public, anon;
+grant execute on function
+  current_user_household_ids(),
+  is_household_member(uuid), is_household_editor(uuid), is_household_owner(uuid),
+  create_household(text),
+  log_audit(uuid, text, text, text, jsonb),
+  revoke_share(uuid)
+to authenticated;
 
 -- =====================================================================
 -- Storage (приватный bucket; signed URL генерит сервер)

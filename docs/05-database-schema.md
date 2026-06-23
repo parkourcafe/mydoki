@@ -6,12 +6,12 @@
 ## Таблицы
 
 `households` · `household_members` · `members` · `documents` ·
-`document_files` · `records` · `reminders` · `shares` · `audit_log`
+`document_files` · `records` · `reminders` · `shares` · `audit_log` · `consents`
 
-Категории и виды записей — enum: `doc_category`
+Категории, виды записей и согласия — enum: `doc_category`
 (`identity/education/medical/financial/legal/other`), `record_kind`
-(`medical_analysis/prescription/nutrition/vaccination/note/other`), роли —
-`household_role` (`owner/editor/viewer`).
+(`medical_analysis/prescription/nutrition/vaccination/note/other`), `consent_kind`
+(`privacy_policy/medical/marketing`); роли — `household_role` (`owner/editor/viewer`).
 
 ## Модель доступа
 
@@ -26,7 +26,7 @@
 | `is_household_owner(hid)` | `owner` (управление семьёй) |
 
 **Унифицированный паттерн RLS** на `members / documents / document_files /
-records / reminders / shares`:
+records / reminders / shares / consents`:
 
 ```sql
 create policy "<t> read"  on <t> for select using (is_household_member(household_id));
@@ -44,7 +44,7 @@ create policy "<t> write" on <t> for all
 | Функция | Назначение | Кому |
 |---|---|---|
 | `create_household(name)` | создать семью и сделать создателя `owner` (атомарно) | authenticated |
-| `get_shared_document(token)` | публичный доступ по ссылке: валидация срока/отзыва/`max_views`, инкремент `view_count`, аудит, минимум полей + пути файлов | anon, authenticated |
+| `get_shared_document(token)` | публичный доступ по ссылке: валидация срока/отзыва/`max_views`, инкремент `view_count`, аудит, минимум полей + флаги (`watermark`/`allow_download`) + пути файлов | anon, authenticated |
 | `revoke_share(share_id)` | отозвать ссылку (только `editor`/`owner`) | authenticated |
 | `log_audit(...)` | единая точка записи аудита (`actor = auth.uid()`) | authenticated |
 
@@ -60,15 +60,28 @@ create policy "<t> write" on <t> for all
 - RLS на `storage.objects`: select/insert/delete разрешены, только если первый
   сегмент пути (`household_id`) входит в `current_user_household_ids()`.
 
+## Применение и hardening
+
+Схема применена к проекту Supabase `uuopxzlcmzdtwebottar` миграциями
+`init_family_vault_schema` и `harden_function_grants`: 10 таблиц, RLS на всех,
+приватный bucket `vault-files`.
+
+Права на функции: `revoke execute … from public, anon` для хелперов и пишущих
+RPC, `grant … to authenticated` (их вызывают RLS-политики). Анонимам открыта
+только `get_shared_document` (share-ссылки).
+
+Security-advisors просмотрены: оставшиеся предупреждения уровня WARN —
+`SECURITY DEFINER`-функции, исполнимые `authenticated`. Это by-design (нужны
+политикам RLS). Дальнейшее ужесточение — вынести хелперы в схему вне PostgREST
+(см. [08-open-questions.md](08-open-questions.md)).
+
 ## Чего в схеме пока НЕТ (осознанно)
 
-- **`tags`** у документов — поиск пока по `category` / `subtype` / датам.
-- **Водяной знак / запрет скачивания** у `shares`.
-- **Таблица согласий (`consents`)** — медицина как спец-категория ПДн отмечена
-  в примечаниях схемы; отдельная таблица — кандидат на добавление.
 - **`profiles`** / профиль пользователя — пользователь живёт в `auth.users`.
+- Отдельный, более строгий контур доступа к медицине (сейчас единый паттерн
+  «чтение — любой член семьи»).
 
-Все они вынесены в [08-open-questions.md](08-open-questions.md).
+Прочее вынесено в [08-open-questions.md](08-open-questions.md).
 
 ## Примечания к безопасности из схемы
 

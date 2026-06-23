@@ -24,15 +24,16 @@
 | **households** | Семья: `name`, `created_by`. Корень доступа |
 | **household_members** | Кто состоит в семье + `role`: `owner` / `editor` / `viewer` |
 | **members** | Человек: `full_name`, `birth_date`, `relation`, `photo_url` |
-| **documents** | Документ: `category`, `subtype`, `title`, `issuer`, `doc_number`, `issued_at`, `expires_at`, `notes` |
+| **documents** | Документ: `category`, `subtype`, `title`, `issuer`, `doc_number`, `issued_at`, `expires_at`, `notes`, `tags` |
 | **document_files** | Файл(ы) документа: `storage_path`, `file_name`, `mime_type`, `size_bytes` |
 | **records** | Структурная запись без файла: `kind`, `title`, `data` (jsonb), `recorded_at` |
 | **reminders** | Напоминание о сроке: `due_at`, `message`, `done` |
-| **shares** | Ссылка на **один** документ: `token`, `expires_at`, `revoked_at`, `max_views`, `view_count` |
+| **shares** | Ссылка на **один** документ: `token`, `expires_at`, `revoked_at`, `max_views`, `view_count`, `watermark`, `allow_download` |
 | **audit_log** | Журнал: `action`, `entity_type`, `entity_id`, `metadata`, `actor_user_id` |
+| **consents** | Согласия (ПДн/медицина): `kind`, `version`, `granted_at`, `revoked_at` |
 
-Категории и виды записей — **PostgreSQL enum**, а не таблицы-справочники:
-`doc_category` и `record_kind` (см. ниже).
+Категории, виды записей и согласия — **PostgreSQL enum**, а не таблицы-справочники:
+`doc_category`, `record_kind`, `consent_kind` (см. ниже).
 
 ## Доступ и роли
 
@@ -65,17 +66,19 @@
 Запись (`records`) хранит структурированные данные **без файла** в поле `data`
 (jsonb) — например, результат анализа, назначение врача, план питания, прививку.
 
+Согласия — enum `consent_kind`: `privacy_policy` · `medical` · `marketing`
+(таблица `consents`; медицина — спец-категория ПДн).
+
 ## Обмен — `shares`
 
 - `document_id` — делимся **одним** документом, не профилем человека.
 - `token` — случайный, в URL.
 - `expires_at` — ссылка истекает; `revoked_at` — можно отозвать.
 - `max_views` / `view_count` — опциональный лимит просмотров и счётчик.
+- `watermark` (по умолчанию `true`) / `allow_download` (по умолчанию `false`) —
+  водяной знак на превью и разрешение скачивать оригинал.
 - Доступ получателя — **не** через RLS, а через RPC `get_shared_document`
-  (проверяет срок/отзыв/лимит, пишет аудит, отдаёт минимум полей + пути файлов).
-
-> Водяной знак и запрет скачивания в текущей схеме отсутствуют — возможное
-> расширение (см. [08-open-questions.md](08-open-questions.md)).
+  (проверяет срок/отзыв/лимит, пишет аудит, отдаёт минимум полей + флаги + пути файлов).
 
 ## Аудит — `audit_log`
 
