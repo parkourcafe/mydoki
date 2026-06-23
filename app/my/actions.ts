@@ -11,6 +11,13 @@ export async function signOut() {
   redirect("/login");
 }
 
+/** Завершить сессии на всех устройствах (отзыв всех refresh-токенов). */
+export async function signOutEverywhere() {
+  const supabase = await getSupabaseServer();
+  await supabase.auth.signOut({ scope: "global" });
+  redirect("/login");
+}
+
 export async function createMember(formData: FormData) {
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();

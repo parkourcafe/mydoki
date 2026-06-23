@@ -57,6 +57,45 @@ async function sendNewDeviceEmail(
   }
 }
 
+async function sendSms(to: string, text: string) {
+  const phone = to.replace(/[^\d+]/g, "");
+  if (!phone) return;
+  try {
+    // 1) SMS.ru — простой REST, удобно для номеров РФ
+    const smsruId = process.env.SMSRU_API_ID;
+    if (smsruId) {
+      const u = new URL("https://sms.ru/sms/send");
+      u.searchParams.set("api_id", smsruId);
+      u.searchParams.set("to", phone);
+      u.searchParams.set("msg", text);
+      u.searchParams.set("json", "1");
+      await fetch(u.toString());
+      return;
+    }
+    // 2) Twilio — международный
+    const sid = process.env.TWILIO_ACCOUNT_SID;
+    const token = process.env.TWILIO_AUTH_TOKEN;
+    const from = process.env.TWILIO_FROM;
+    if (sid && token && from) {
+      const body = new URLSearchParams({ To: phone, From: from, Body: text });
+      await fetch(
+        `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`,
+        {
+          method: "POST",
+          headers: {
+            Authorization:
+              "Basic " + Buffer.from(`${sid}:${token}`).toString("base64"),
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: body.toString(),
+        }
+      );
+    }
+  } catch {
+    // SMS не должен мешать входу
+  }
+}
+
 /** Пишет вход в журнал; при входе с нового устройства — шлёт письмо. */
 async function recordLogin(supabase: SupabaseClient) {
   try {
@@ -90,13 +129,19 @@ async function recordLogin(supabase: SupabaseClient) {
       is_new_device: isNew,
     });
 
-    // Письмо — только для нового устройства и не на самый первый вход (регистрация).
-    if (isNew && (totalPrior ?? 0) > 0 && user.email) {
-      await sendNewDeviceEmail(user.email, {
-        device: deviceLabel(ua),
-        ip,
-        when: new Date(),
-      });
+    // Оповещения — только для нового устройства и не на самый первый вход.
+    if (isNew && (totalPrior ?? 0) > 0) {
+      const device = deviceLabel(ua);
+      if (user.email) {
+        await sendNewDeviceEmail(user.email, { device, ip, when: new Date() });
+      }
+      const phone = (user.user_metadata?.alert_phone as string | undefined) ?? "";
+      if (phone) {
+        await sendSms(
+          phone,
+          `Семейный сейф: вход с нового устройства (${device}). Если это не вы — смените пароль.`
+        );
+      }
     }
   } catch {
     // журнал входов не должен ломать сам вход
