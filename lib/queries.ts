@@ -1,6 +1,12 @@
 import "server-only";
 import { getSupabaseServer } from "./supabase/server";
-import type { DocumentFile, DocumentRow, Member, Share } from "./types";
+import type {
+  DocumentFile,
+  DocumentRow,
+  Member,
+  RecordRow,
+  Share,
+} from "./types";
 
 export async function getUser() {
   const supabase = await getSupabaseServer();
@@ -134,6 +140,46 @@ export async function listExpiring(
     .not("expires_at", "is", null)
     .lte("expires_at", until.toISOString().slice(0, 10))
     .order("expires_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as DocumentRow[];
+}
+
+export async function listRecordsByMember(
+  memberId: string
+): Promise<RecordRow[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("records")
+    .select("*")
+    .eq("member_id", memberId)
+    .order("recorded_at", { ascending: false, nullsFirst: false });
+  if (error) throw error;
+  return (data ?? []) as RecordRow[];
+}
+
+export async function searchDocuments(
+  householdId: string,
+  q: string,
+  category?: string
+): Promise<DocumentRow[]> {
+  const supabase = await getSupabaseServer();
+  let query = supabase
+    .from("documents")
+    .select("*")
+    .eq("household_id", householdId);
+
+  const term = q.trim();
+  if (term) {
+    const safe = term.replace(/[%,()]/g, " ");
+    query = query.or(
+      `title.ilike.%${safe}%,subtype.ilike.%${safe}%,issuer.ilike.%${safe}%`
+    );
+  }
+  if (category) query = query.eq("category", category);
+
+  const { data, error } = await query
+    .order("created_at", { ascending: false })
+    .limit(50);
   if (error) throw error;
   return (data ?? []) as DocumentRow[];
 }

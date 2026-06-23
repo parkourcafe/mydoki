@@ -9,11 +9,16 @@ export default async function MyHome() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold">Семья</h1>
-        <p className="mt-1 text-sm text-slate-500">
-          Для каждого человека — его документы и записи в одном месте.
-        </p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold">Семья</h1>
+          <p className="mt-1 text-sm text-slate-500">
+            Для каждого человека — его документы и записи в одном месте.
+          </p>
+        </div>
+        <a href="/my/export" className="btn-ghost shrink-0">
+          ↓ Экспорт
+        </a>
       </div>
 
       {members.length === 0 ? (

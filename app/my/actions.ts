@@ -116,6 +116,37 @@ export async function deleteDocument(formData: FormData) {
   redirect(`/my/members/${memberId}`);
 }
 
+export async function createRecord(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+
+  const member_id = String(formData.get("member_id") ?? "");
+  const title = String(formData.get("title") ?? "").trim();
+  if (!member_id || !title) return;
+
+  const note = String(formData.get("note") ?? "").trim();
+  const { error } = await supabase.from("records").insert({
+    household_id: householdId,
+    member_id,
+    kind: String(formData.get("kind") ?? "note"),
+    title,
+    recorded_at: emptyToNull(formData.get("recorded_at")),
+    data: note ? { note } : {},
+  });
+  if (error) throw error;
+  revalidatePath(`/my/members/${member_id}`);
+}
+
+export async function deleteRecord(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  const member_id = String(formData.get("member_id") ?? "");
+  if (!id) return;
+  const { error } = await supabase.from("records").delete().eq("id", id);
+  if (error) throw error;
+  revalidatePath(`/my/members/${member_id}`);
+}
+
 export async function createShare(formData: FormData) {
   const supabase = await getSupabaseServer();
   const document_id = String(formData.get("document_id") ?? "");

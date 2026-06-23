@@ -1,4 +1,4 @@
-import type { DocCategory } from "./categories";
+import type { DocCategory, RecordKind } from "./categories";
 
 export type Member = {
   id: string;
@@ -34,6 +34,17 @@ export type DocumentFile = {
   file_name: string | null;
   mime_type: string | null;
   size_bytes: number | null;
+  created_at: string;
+};
+
+export type RecordRow = {
+  id: string;
+  household_id: string;
+  member_id: string;
+  kind: RecordKind;
+  title: string;
+  data: Record<string, unknown>;
+  recorded_at: string | null;
   created_at: string;
 };
 

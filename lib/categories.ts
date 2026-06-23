@@ -30,3 +30,24 @@ export const RELATIONS: { key: string; label: string }[] = [
 export const RELATION_LABEL: Record<string, string> = Object.fromEntries(
   RELATIONS.map((r) => [r.key, r.label])
 );
+
+export type RecordKind =
+  | "medical_analysis"
+  | "prescription"
+  | "nutrition"
+  | "vaccination"
+  | "note"
+  | "other";
+
+export const RECORD_KINDS: { key: RecordKind; label: string; emoji: string }[] = [
+  { key: "medical_analysis", label: "Анализ", emoji: "🧪" },
+  { key: "prescription", label: "Назначение", emoji: "💊" },
+  { key: "vaccination", label: "Прививка", emoji: "💉" },
+  { key: "nutrition", label: "Питание", emoji: "🥗" },
+  { key: "note", label: "Заметка", emoji: "📝" },
+  { key: "other", label: "Другое", emoji: "•" },
+];
+
+export const RECORD_KIND_LABEL: Record<RecordKind, string> = Object.fromEntries(
+  RECORD_KINDS.map((r) => [r.key, r.label])
+) as Record<RecordKind, string>;

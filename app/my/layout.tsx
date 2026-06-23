@@ -29,6 +29,12 @@ export default async function MyLayout({
               Семья
             </Link>
             <Link
+              href="/my/search"
+              className="rounded-lg px-3 py-1.5 hover:bg-slate-100"
+            >
+              Поиск
+            </Link>
+            <Link
               href="/my/reminders"
               className="rounded-lg px-3 py-1.5 hover:bg-slate-100"
             >

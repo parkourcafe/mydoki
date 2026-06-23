@@ -1,13 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getMember, listDocumentsByMember } from "@/lib/queries";
+import {
+  getMember,
+  listDocumentsByMember,
+  listRecordsByMember,
+} from "@/lib/queries";
 import {
   CATEGORIES,
-  CATEGORY_LABEL,
+  RECORD_KINDS,
+  RECORD_KIND_LABEL,
   RELATION_LABEL,
   type DocCategory,
 } from "@/lib/categories";
-import { createDocument } from "@/app/my/actions";
+import { createDocument, createRecord, deleteRecord } from "@/app/my/actions";
 
 export default async function MemberPage({
   params,
@@ -18,7 +23,11 @@ export default async function MemberPage({
   const member = await getMember(id);
   if (!member) notFound();
 
-  const docs = await listDocumentsByMember(id);
+  const [docs, records] = await Promise.all([
+    listDocumentsByMember(id),
+    listRecordsByMember(id),
+  ]);
+
   const byCategory = new Map<DocCategory, typeof docs>();
   for (const d of docs) {
     const arr = byCategory.get(d.category) ?? [];
@@ -39,6 +48,7 @@ export default async function MemberPage({
         </p>
       </div>
 
+      {/* Документы */}
       {docs.length === 0 ? (
         <div className="card text-center text-slate-500">
           Документов пока нет. Добавьте первый ниже.
@@ -94,7 +104,7 @@ export default async function MemberPage({
           </div>
           <div>
             <label className="label">Тип / подтип</label>
-            <input name="subtype" className="input" placeholder="паспорт, диплom…" />
+            <input name="subtype" className="input" placeholder="паспорт, диплом…" />
           </div>
           <div>
             <label className="label">Кем выдан</label>
@@ -138,6 +148,83 @@ export default async function MemberPage({
           </div>
         </form>
       </details>
+
+      {/* Записи (медкарта/заметки без файла) */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          Записи
+        </h2>
+        {records.length === 0 ? (
+          <p className="text-sm text-slate-400">
+            Структурные записи без файла: анализы, назначения, прививки, питание.
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {records.map((r) => (
+              <li
+                key={r.id}
+                className="flex items-start justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2"
+              >
+                <div className="text-sm">
+                  <div className="font-medium">
+                    {RECORD_KIND_LABEL[r.kind] ?? r.kind}: {r.title}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {r.recorded_at ?? "без даты"}
+                    {typeof r.data?.note === "string" && r.data.note
+                      ? ` · ${r.data.note}`
+                      : ""}
+                  </div>
+                </div>
+                <form action={deleteRecord}>
+                  <input type="hidden" name="id" value={r.id} />
+                  <input type="hidden" name="member_id" value={member.id} />
+                  <button className="text-xs text-red-500 hover:underline">
+                    удалить
+                  </button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <details className="card">
+          <summary className="cursor-pointer font-medium">+ Добавить запись</summary>
+          <form action={createRecord} className="mt-4 grid gap-4 sm:grid-cols-2">
+            <input type="hidden" name="member_id" value={member.id} />
+            <div>
+              <label className="label">Тип</label>
+              <select name="kind" className="input" defaultValue="medical_analysis">
+                {RECORD_KINDS.map((k) => (
+                  <option key={k.key} value={k.key}>
+                    {k.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="label">Дата</label>
+              <input name="recorded_at" type="date" className="input" />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="label">Название</label>
+              <input
+                name="title"
+                required
+                className="input"
+                placeholder="Общий анализ крови"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="label">Заметка</label>
+              <textarea name="note" rows={2} className="input" />
+            </div>
+            <div className="sm:col-span-2">
+              <button className="btn-primary">Сохранить запись</button>
+            </div>
+          </form>
+        </details>
+      </section>
     </div>
   );
 }
