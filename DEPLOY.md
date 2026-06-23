@@ -19,11 +19,25 @@
 
 3. Deploy.
 
+## 1a. Свой домен — doki.help
+
+Выбранный домен проекта: **doki.help**. Привязка к деплою:
+
+1. Vercel → Project → **Settings → Domains → Add** → ввести `doki.help`
+   (и при желании `www.doki.help`).
+2. Vercel покажет DNS-записи — добавить их у регистратора домена:
+   - `A` запись `@` → IP от Vercel (обычно `76.76.21.21`), **или**
+   - `CNAME` `@`/`www` → `cname.vercel-dns.com` (как покажет Vercel).
+3. Дождаться проверки (от пары минут до часа) — SSL-сертификат Vercel выпустит сам.
+4. В Supabase → Auth → URL Configuration выставить Site URL = `https://doki.help`.
+
+Пока DNS не настроен (или до деплоя) приложение доступно по `<проект>.vercel.app`.
+
 ## 2. Supabase Auth
 
-- **Site URL / Redirect URLs**: добавить домен с Vercel (например
-  `https://family-vault.vercel.app`) в Authentication → URL Configuration —
-  иначе письма подтверждения и редиректы будут вести на localhost.
+- **Site URL / Redirect URLs**: указать рабочий адрес (`https://doki.help`, а до
+  привязки домена — `https://<проект>.vercel.app`) в Authentication → URL
+  Configuration — иначе письма подтверждения и редиректы будут вести на localhost.
 - **2FA (MFA)**: Authentication → включить TOTP (приложение умеет enroll на
   `/my/security`).
 - **Leaked password protection**: Authentication → Password security — включить.
