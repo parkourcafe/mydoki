@@ -6,6 +6,12 @@ import { recordLogin } from "@/lib/loginEvents";
 
 export type AuthState = { error?: string; message?: string };
 
+/** Записать текущий вход в журнал (вызывается после клиентского OAuth-обмена). */
+export async function recordCurrentLogin() {
+  const supabase = await getSupabaseServer();
+  await recordLogin(supabase);
+}
+
 export async function login(
   _prev: AuthState,
   formData: FormData
