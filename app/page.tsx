@@ -2,51 +2,61 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/queries";
 
-const HERO_DOCS: { icon: string; title: string; status?: string; warn?: boolean }[] = [
-  { icon: "🩺", title: "Анализы · Аня", status: "ОАК, биохимия — 6 файлов" },
-  { icon: "🛂", title: "Паспорт РФ · Миша", status: "распознано: до 2031" },
-  { icon: "🚗", title: "ОСАГО · Toyota", status: "истекает через 12 дней", warn: true },
-  { icon: "🎓", title: "Диплом · Аня", status: "оригинал" },
-];
-
-const STORE_CATS: { icon: string; title: string; items: string[] }[] = [
+const CATS: { icon: string; title: string; items: string[] }[] = [
   {
     icon: "📄",
-    title: "Личные документы",
-    items: ["Паспорта и загранпаспорта", "СНИЛС, ИНН, военный билет", "Дипломы, аттестаты, сертификаты"],
+    title: "Личные и миграционные документы",
+    items: ["Паспорта и загранпаспорта", "Визы и визовые документы", "Документы на гражданство", "СНИЛС, ИНН, военный билет", "Дипломы, аттестаты, сертификаты"],
+  },
+  {
+    icon: "✈️",
+    title: "Поездки и путешествия",
+    items: ["Путёвки и ваучеры", "Билеты и бронирования", "Страховки для поездок", "Документы для въезда/выезда", "Согласия на выезд ребёнка"],
   },
   {
     icon: "🚗",
     title: "Авто и недвижимость",
-    items: ["ОСАГО и КАСКО", "ПТС и СТС", "Выписки ЕГРН"],
+    items: ["ОСАГО и КАСКО", "ПТС и СТС", "Выписки ЕГРН и договоры"],
+  },
+  {
+    icon: "🧾",
+    title: "Квитанции и справки",
+    items: ["Квитанции и чеки об оплате", "Справки с работы / учёбы", "Доверенности"],
   },
 ];
 
 const STEPS: { n: string; title: string; text: string }[] = [
-  { n: "1", title: "Загрузи фото или скан документа", text: "Паспорт, анализ, ОСАГО, диплом — любой документ." },
-  { n: "2", title: "ИИ распознаёт даты", text: "Система сама находит дату истечения и предлагает её сохранить." },
-  { n: "3", title: "Подтверди дату и включи напоминания", text: "Особенно удобно для анализов — не нужно вводить даты вручную." },
-  { n: "4", title: "Получай напоминания заранее", text: "Система предупредит, когда пора пересдать анализы или продлить документы." },
+  { n: "1", title: "Загрузи фото или скан", text: "Паспорт, виза, анализ, путёвка — любой документ." },
+  { n: "2", title: "Укажи дату истечения", text: "В бесплатной версии — вручную. В премиум ИИ распознаёт дату сам." },
+  { n: "3", title: "Получай напоминания", text: "Система заранее предупредит об истечении визы, анализа или ОСАГО." },
+  { n: "4", title: "Управляй доступом", text: "Отправляй временные ссылки врачам, в банк или родственникам." },
 ];
 
-const SECURITY: { icon: string; text: string }[] = [
-  { icon: "🔒", text: "Данные изолированы по семье (RLS) — чужой их не увидит" },
-  { icon: "🗂️", text: "Приватное хранилище + временные отзываемые ссылки" },
-  { icon: "🔑", text: "Двухфакторный вход и уведомления о входе с нового устройства" },
-  { icon: "🎚️", text: "Вы сами управляете доступом к каждому документу" },
+const PLAN_ROWS: { feature: string; free: boolean; premium: boolean }[] = [
+  { feature: "Загрузка документов", free: true, premium: true },
+  { feature: "Ручной ввод дат и напоминания", free: true, premium: true },
+  { feature: "Авто-распознавание дат (ИИ)", free: false, premium: true },
+  { feature: "Умные напоминания (анализы, визы, ОСАГО)", free: false, premium: true },
+  { feature: "AI-юрист (вопросы по документам и поездкам)", free: false, premium: true },
+  { feature: "Безопасный шаринг по ссылке", free: true, premium: true },
+  { feature: "Доступ с любого устройства", free: true, premium: true },
+  { feature: "Изоляция данных по семье (RLS)", free: true, premium: true },
+  { feature: "Больше места для документов", free: false, premium: true },
+  { feature: "Приоритетная поддержка", free: false, premium: true },
 ];
 
-function GoogleMark() {
-  return (
-    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white">
-      <svg width="14" height="14" viewBox="0 0 18 18" aria-hidden="true">
-        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z" />
-        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z" />
-        <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z" />
-        <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
-      </svg>
-    </span>
-  );
+const SECURITY: { icon: string; title: string; text: string }[] = [
+  { icon: "👨‍👩‍👧", title: "Только ваша семья видит документы", text: "Доступ изолирован на уровне базы (RLS). Никто посторонний, включая нас, не открывает ваши файлы." },
+  { icon: "🛡️", title: "Шифрование и контроль входов", text: "Файлы в приватном хранилище, двухфакторный вход и уведомления о входе с нового устройства." },
+  { icon: "🎚️", title: "Вы управляете доступом", text: "Делитесь документом по временной ссылке и отзываете её в любой момент." },
+  { icon: "🙅", title: "Не продаём ваши данные", text: "Мы не передаём и не продаём ваши данные третьим лицам." },
+];
+
+function Check() {
+  return <span className="font-semibold text-[#b85c38]">✓</span>;
+}
+function Dash() {
+  return <span className="text-[#b9ac9b]">—</span>;
 }
 
 export default async function Home() {
@@ -69,75 +79,75 @@ export default async function Home() {
                 <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
               </div>
             </div>
-
-            <div className="hidden items-center gap-x-8 text-sm font-medium md:flex">
-              <a href="#what-to-store" className="nav-link">Что хранить</a>
-              <a href="#how" className="nav-link">Как это работает</a>
-              <a href="#security" className="nav-link">Безопасность</a>
+            <div className="flex items-center gap-x-3">
+              <Link href="/login" className="hidden rounded-3xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white md:block">
+                Войти
+              </Link>
+              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
+                Начать бесплатно
+              </Link>
             </div>
-
-            <Link href="/login" className="accent-btn rounded-3xl px-5 py-2.5 text-sm font-semibold">
-              Войти
-            </Link>
           </div>
         </div>
       </nav>
 
       {/* HERO */}
-      <section className="mx-auto max-w-screen-xl px-5 pb-10 pt-10">
-        <div className="grid items-center gap-x-12 lg:grid-cols-2">
-          <div>
+      <section className="mx-auto max-w-screen-xl px-5 pb-8 pt-10">
+        <div className="grid items-center gap-x-8 lg:grid-cols-12">
+          <div className="lg:col-span-7">
             <div className="mb-6 inline-flex items-center gap-x-2 rounded-full border border-[#e8e0d5] bg-white px-4 py-1.5 text-sm">
               <span className="h-2 w-2 rounded-full bg-[#b85c38]" />
               <span className="font-medium text-[#5c5248]">Личный сейф для документов всей семьи</span>
             </div>
 
-            <h1 className="heading-font mb-5 text-[2.65rem] leading-[1.08] tracking-[-1.3px] text-[#2c2522] sm:text-6xl">
+            <h1 className="heading-font mb-5 text-[2.65rem] leading-[1.05] tracking-[-1.4px] text-[#2c2522] lg:text-[3.5rem]">
               Все важные документы<br />
               вашей семьи —<br />
-              в одном месте
+              всегда под рукой
             </h1>
 
-            <p className="mb-7 max-w-md text-[19px] leading-snug text-[#5c5248]">
-              Паспорта, анализы, дипломы, справки и квитанции.
-              Даты распознаются автоматически. Напоминания — тоже.
+            <p className="mb-8 max-w-md text-[19px] leading-snug text-[#5c5248]">
+              Паспорта, анализы, визы, дипломы, справки и путёвки.
+              Доступ с любого устройства. Напоминания работают сами.
             </p>
 
-            <div className="mb-6 flex max-w-md flex-col gap-3">
-              <Link href="/login" className="accent-btn flex items-center justify-center gap-x-3 rounded-3xl px-8 py-[17px] text-[17px] font-semibold active:scale-[0.985]">
-                <GoogleMark />
-                <span>Войти через Google — сразу начать</span>
+            <div className="mb-8 flex max-w-lg flex-col gap-3 sm:flex-row">
+              <Link href="/login" className="accent-btn flex flex-1 items-center justify-center rounded-3xl px-8 py-[17px] text-[17px] font-semibold active:scale-[0.985]">
+                Начать бесплатно
               </Link>
-              <a href="#how" className="flex items-center justify-center rounded-3xl border border-[#d4c9b8] px-8 py-[17px] text-[17px] font-semibold transition-colors hover:bg-white">
+              <a href="#how" className="flex flex-1 items-center justify-center rounded-3xl border border-[#d4c9b8] px-8 py-[17px] text-[17px] font-semibold transition-colors hover:bg-white">
                 Как это работает
               </a>
             </div>
 
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#5c5248]">
-              <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Распознавание дат</span>
-              <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Бесплатно</span>
-              <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Без карты</span>
+            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#5c5248]">
+              <span className="flex items-center gap-x-2"><Check /> С любого устройства</span>
+              <span className="flex items-center gap-x-2"><Check /> Бесплатный тариф</span>
+              <span className="flex items-center gap-x-2"><Check /> Вход через Google</span>
             </div>
           </div>
 
           {/* Визуал вместо фото */}
-          <div className="mt-9 lg:mt-0">
-            <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-5 shadow-xl">
+          <div className="mt-8 lg:col-span-5 lg:mt-0">
+            <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-5 shadow-2xl">
               <div className="mb-4 flex items-center justify-between px-1">
                 <span className="text-sm font-semibold text-[#8a7c6d]">Семейный архив</span>
                 <span className="text-xs text-[#b9ac9b]">4 документа</span>
               </div>
               <div className="space-y-3">
-                {HERO_DOCS.map((d) => (
+                {[
+                  { icon: "🩺", title: "Анализы · Аня", status: "ОАК, биохимия — 6 файлов" },
+                  { icon: "🛂", title: "Виза · Миша", status: "истекает через 30 дней", warn: true },
+                  { icon: "🚗", title: "ОСАГО · Toyota", status: "действует до 2027" },
+                  { icon: "✈️", title: "Путёвка · Турция", status: "вылет 14 июля" },
+                ].map((d) => (
                   <div key={d.title} className="flex items-center gap-x-3 rounded-2xl border border-[#eee4d6] bg-white px-4 py-3">
                     <div className="text-2xl">{d.icon}</div>
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-semibold">{d.title}</div>
-                      {d.status && (
-                        <div className={"text-xs " + (d.warn ? "font-medium text-[#b85c38]" : "text-[#8a7c6d]")}>
-                          {d.warn ? "⏰ " : ""}{d.status}
-                        </div>
-                      )}
+                      <div className={"text-xs " + (d.warn ? "font-medium text-[#b85c38]" : "text-[#8a7c6d]")}>
+                        {d.warn ? "⏰ " : ""}{d.status}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -148,48 +158,53 @@ export default async function Home() {
       </section>
 
       {/* ЧТО МОЖНО ХРАНИТЬ */}
-      <section id="what-to-store" className="mx-auto max-w-screen-xl px-5 py-10">
-        <div className="mb-7">
+      <section id="what-to-store" className="mx-auto max-w-screen-xl px-5 py-12">
+        <div className="mb-8">
           <h2 className="section-header mb-2">Что можно хранить в архиве</h2>
-          <p className="text-lg text-[#5c5248]">Всё важное — по людям и категориям, в одном месте.</p>
+          <p className="text-xl text-[#5c5248]">Всё самое важное для семьи — в одном защищённом месте.</p>
         </div>
 
         <div className="grid gap-4">
           {/* Анализы — акцент */}
-          <div className="warm-card rounded-3xl border border-[#e8e0d5] p-6 ring-2 ring-[#b85c38]/20">
-            <div className="flex items-start gap-x-4">
-              <div className="mt-1 text-4xl">🩺</div>
+          <div className="warm-card rounded-3xl border border-[#e8e0d5] p-7">
+            <div className="flex items-start gap-x-5">
+              <div className="mt-1 text-5xl">🩺</div>
               <div className="flex-1">
-                <div className="mb-2 text-xl font-semibold">Анализы и медицинские исследования</div>
-                <div className="grid grid-cols-1 gap-x-6 text-sm text-[#5c5248] sm:grid-cols-2">
-                  <ul className="space-y-1">
+                <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <div className="text-2xl font-semibold">Анализы и медицинские исследования</div>
+                  <span className="rounded-full bg-gradient-to-r from-[#b85c38] to-[#d4a373] px-3 py-0.5 text-xs font-semibold text-white">
+                    ИИ в премиум
+                  </span>
+                </div>
+                <div className="grid grid-cols-1 gap-x-8 text-[#5c5248] md:grid-cols-2">
+                  <ul className="space-y-1.5 text-[15px]">
                     <li>• Результаты лабораторных анализов</li>
-                    <li>• Биохимия, ОАК, ОАМ, гормоны</li>
+                    <li>• Биохимия, ОАК, гормоны, ОАМ</li>
                     <li>• УЗИ, МРТ, КТ, рентген</li>
                   </ul>
-                  <ul className="mt-2 space-y-1 sm:mt-0">
+                  <ul className="mt-3 space-y-1.5 text-[15px] md:mt-0">
                     <li>• Заключения врачей</li>
                     <li>• Прививочные сертификаты</li>
                     <li>• Медицинские справки</li>
                   </ul>
                 </div>
-                <div className="mt-3 text-sm font-medium text-[#b85c38]">
-                  + Распознавание дат и напоминания о пересдаче
+                <div className="mt-4 text-sm font-medium text-[#b85c38]">
+                  В премиум: автоматическое распознавание дат + умные напоминания
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {STORE_CATS.map((c) => (
-              <div key={c.title} className="warm-card rounded-3xl border border-[#e8e0d5] p-5">
-                <div className="mb-3 flex items-center gap-x-2 font-semibold">
-                  <span className="text-xl">{c.icon}</span>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {CATS.map((c) => (
+              <div key={c.title} className="warm-card rounded-3xl border border-[#e8e0d5] p-6">
+                <div className="mb-3 flex items-center gap-x-2 text-xl font-semibold">
+                  <span>{c.icon}</span>
                   <span>{c.title}</span>
                 </div>
-                <ul className="space-y-1 pl-1 text-sm text-[#5c5248]">
+                <ul className="space-y-1.5 text-[15px] text-[#5c5248]">
                   {c.items.map((it) => (
-                    <li key={it}>• {it}</li>
+                    <li key={it}>{it}</li>
                   ))}
                 </ul>
               </div>
@@ -199,19 +214,19 @@ export default async function Home() {
       </section>
 
       {/* КАК ЭТО РАБОТАЕТ */}
-      <section id="how" className="mx-auto max-w-screen-xl px-5 py-12">
-        <div className="mx-auto mb-9 max-w-2xl text-center">
-          <h2 className="section-header mb-2">Как это работает</h2>
-          <p className="text-lg text-[#5c5248]">Загрузи документ — остальное система сделает сама</p>
+      <section id="how" className="mx-auto max-w-screen-xl rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] px-5 py-12">
+        <div className="mx-auto mb-10 max-w-2xl text-center">
+          <h2 className="section-header mb-3">Как это работает</h2>
+          <p className="text-xl text-[#5c5248]">Загрузи документ — остальное система сделает сама</p>
         </div>
-        <div className="mx-auto grid max-w-2xl gap-6">
+        <div className="mx-auto grid max-w-3xl gap-x-8 gap-y-8 md:grid-cols-2">
           {STEPS.map((s) => (
             <div key={s.n} className="flex gap-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#f0e6d9] text-2xl font-semibold text-[#b85c38]">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#e8e0d5] bg-white text-2xl font-semibold text-[#b85c38]">
                 {s.n}
               </div>
               <div>
-                <div className="mb-1 text-xl font-semibold">{s.title}</div>
+                <div className="mb-1.5 text-xl font-semibold">{s.title}</div>
                 <p className="text-[#5c5248]">{s.text}</p>
               </div>
             </div>
@@ -219,41 +234,97 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ТАРИФЫ */}
+      <section id="pricing" className="mx-auto max-w-screen-xl px-5 py-14">
+        <div className="mx-auto mb-8 max-w-4xl text-center">
+          <h2 className="section-header mb-3">Тарифы</h2>
+          <p className="text-xl text-[#5c5248]">Базовое — бесплатно. ИИ-функции — в премиуме.</p>
+        </div>
+
+        <div className="mx-auto max-w-4xl overflow-x-auto">
+          <table className="w-full border-collapse overflow-hidden rounded-3xl border border-[#e8e0d5] bg-white">
+            <thead>
+              <tr className="bg-[#fdfaf5]">
+                <th className="p-5 text-left text-lg font-semibold">Функция</th>
+                <th className="p-5 text-center text-lg font-semibold">Бесплатно</th>
+                <th className="bg-[#f0e6d9] p-5 text-center text-lg font-semibold">
+                  <span className="inline-flex items-center gap-x-2">
+                    Премиум
+                    <span className="rounded-full bg-[#b85c38] px-3 py-0.5 text-xs text-white">скоро</span>
+                  </span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="text-[#5c5248]">
+              {PLAN_ROWS.map((r) => (
+                <tr key={r.feature} className="border-t border-[#e8e0d5]">
+                  <td className="p-5 font-medium">{r.feature}</td>
+                  <td className="p-5 text-center">{r.free ? <Check /> : <Dash />}</td>
+                  <td className="bg-[#fdfaf5] p-5 text-center">{r.premium ? <Check /> : <Dash />}</td>
+                </tr>
+              ))}
+              <tr className="border-t border-[#e8e0d5] font-semibold">
+                <td className="p-5">Цена</td>
+                <td className="p-5 text-center text-xl">0 ₽</td>
+                <td className="bg-[#fdfaf5] p-5 text-center">
+                  <div className="text-xl">99 ₽/мес</div>
+                  <div className="text-xs font-normal text-[#8a7c6d]">или 990 ₽ в год</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mx-auto mt-5 max-w-4xl text-center text-sm text-[#8a7c6d]">
+          На время теста премиум-функции открыты бесплатно — оплата появится позже.
+        </p>
+
+        <div className="mx-auto mt-6 flex max-w-4xl flex-col justify-center gap-4 sm:flex-row">
+          <Link href="/login" className="rounded-3xl border border-[#d4c9b8] px-8 py-3.5 text-center font-semibold transition-colors hover:bg-white">
+            Начать бесплатно
+          </Link>
+        </div>
+      </section>
+
       {/* БЕЗОПАСНОСТЬ */}
-      <section id="security" className="mx-auto max-w-screen-xl px-5 py-10">
-        <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-6 sm:p-8">
-          <h2 className="section-header mb-5 leading-tight">Надёжное хранение семейных документов</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {SECURITY.map((s) => (
-              <div key={s.text} className="flex gap-x-4">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[#f0e6d9] text-lg">
-                  {s.icon}
+      <section id="security" className="mx-auto max-w-screen-xl px-5 py-14">
+        <div className="mx-auto mb-10 max-w-3xl text-center">
+          <h2 className="section-header mb-3">Ваши документы в безопасности</h2>
+          <p className="text-xl text-[#5c5248]">Мы понимаем, насколько важны эти документы — и сделали всё, чтобы вы были спокойны.</p>
+        </div>
+        <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
+          {SECURITY.map((s) => (
+            <div key={s.title} className="warm-card rounded-3xl border border-[#e8e0d5] p-7">
+              <div className="flex gap-x-4">
+                <div className="text-3xl">{s.icon}</div>
+                <div>
+                  <div className="mb-2 text-xl font-semibold">{s.title}</div>
+                  <p className="text-[#5c5248]">{s.text}</p>
                 </div>
-                <span className="text-sm text-[#5c5248]">{s.text}</span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* ФИНАЛЬНЫЙ CTA */}
       <section className="mx-auto max-w-screen-xl px-5 py-10">
-        <div className="rounded-3xl bg-[#2c2522] px-6 py-10 text-center text-[#f9f5f0] sm:px-10">
-          <h2 className="mb-3 text-3xl font-semibold tracking-tight">Готовы собрать все документы семьи?</h2>
-          <p className="mb-6 text-sm text-[#d4c9b8]">Меньше 15 минут — и порядок надолго.</p>
-          <Link href="/login" className="mx-auto flex w-full max-w-sm items-center justify-center gap-x-3 rounded-3xl bg-[#b85c38] px-7 py-3.5 text-base font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]">
-            <GoogleMark />
-            <span>Войти через Google — сразу начать</span>
+        <div className="rounded-3xl bg-[#2c2522] px-8 py-10 text-center text-[#f9f5f0]">
+          <h2 className="mb-4 text-3xl font-semibold tracking-tight">Готовы собрать все документы семьи?</h2>
+          <p className="mx-auto mb-7 max-w-sm text-[#d4c9b8]">Меньше 15 минут — и порядок надолго.</p>
+          <Link href="/login" className="inline-flex items-center justify-center rounded-3xl bg-[#b85c38] px-10 py-4 text-lg font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]">
+            Начать пользоваться бесплатно
           </Link>
         </div>
       </section>
 
       {/* FOOTER */}
-      <footer className="border-t border-[#e8e0d5] bg-[#fdfaf5] px-5 py-7 text-xs text-[#8a7c6d]">
-        <div className="mx-auto flex max-w-screen-xl flex-col items-center gap-y-2 text-center">
+      <footer className="border-t border-[#e8e0d5] bg-[#fdfaf5] px-5 py-8 text-sm text-[#8a7c6d]">
+        <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
           <div>© 2026 doki.help — Семейный архив документов</div>
-          <div className="flex gap-x-4">
+          <div className="flex gap-x-6">
             <a href="#security" className="hover:text-[#2c2522]">Безопасность</a>
+            <a href="#pricing" className="hover:text-[#2c2522]">Тарифы</a>
             <Link href="/login" className="hover:text-[#2c2522]">Войти</Link>
           </div>
         </div>
