@@ -61,6 +61,11 @@
       таблица `invitations` + RPC `accept_invitation`/`get_invitation`.
 - [x] **AI-распознавание** (`doc-classify`): `/api/classify` + кнопка «Распознать»
       в форме документа (Anthropic vision; нужен `ANTHROPIC_API_KEY`).
+- [x] **Hardening**: RLS-хелперы вынесены в схему `private` (вне PostgREST),
+      advisor-warn по ним сняты.
+- [x] **Медкарта** по человеку (`/my/members/[id]/health`) — таймлайн записей.
+- [x] **Тесты в репо**: RLS-SQL (`tests/rls/`) + Playwright E2E (`tests/e2e/`).
+- [x] **Деплой**: `vercel.json`, `DEPLOY.md`, `supabase/migrations/`, security-заголовки.
 - [x] Покрыты все этапы [MVP-роадмапа](07-mvp-roadmap.md) (1–5 + AI).
 - [x] Сборка и типы зелёные; **RLS-изоляция проверена** реальными тестами:
       изоляция семей (members/records) и сценарий приглашения (B получает доступ

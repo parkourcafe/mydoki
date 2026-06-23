@@ -1,0 +1,58 @@
+# Деплой Family Vault
+
+Стек: Next.js (App Router) + Supabase + Vercel. БД проекта Supabase
+`uuopxzlcmzdtwebottar` уже содержит всю схему.
+
+## 1. Vercel
+
+1. Импортировать репозиторий `parkourcafe/mydoki` в Vercel (Framework: Next.js —
+   определится автоматически; регион задан в `vercel.json` = `fra1`).
+2. Указать переменные окружения (Project → Settings → Environment Variables):
+
+| Переменная | Где взять | Видимость |
+|---|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Settings → API → Project URL | публичная |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → API → publishable/anon key | публичная |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → API → service_role | **секрет (server)** |
+| `ANTHROPIC_API_KEY` | console.anthropic.com (опц., для AI) | секрет |
+| `ANTHROPIC_MODEL` | напр. `claude-sonnet-4-6` (опц.) | — |
+
+3. Deploy.
+
+## 2. Supabase Auth
+
+- **Site URL / Redirect URLs**: добавить домен с Vercel (например
+  `https://family-vault.vercel.app`) в Authentication → URL Configuration —
+  иначе письма подтверждения и редиректы будут вести на localhost.
+- **2FA (MFA)**: Authentication → включить TOTP (приложение умеет enroll на
+  `/my/security`).
+- **Leaked password protection**: Authentication → Password security — включить.
+- (Опц.) выключить email-подтверждение для тест-окружения.
+
+## 3. База данных на свежем проекте
+
+БД уже развёрнута в `uuopxzlcmzdtwebottar`. Для нового проекта Supabase:
+
+```bash
+supabase link --project-ref <NEW_REF>
+supabase db push          # применит supabase/migrations/0001_init_family_vault.sql
+```
+
+Либо вставить `supabase/migrations/0001_init_family_vault.sql` в SQL Editor и Run.
+
+## 4. Пост-деплой проверки
+
+- [ ] Регистрация → вход работает, редирект на `/my`.
+- [ ] Загрузка документа + файла; файл открывается по signed URL.
+- [ ] AI «Распознать» заполняет поля (если задан `ANTHROPIC_API_KEY`).
+- [ ] Share-ссылка открывается на `/s/[token]` и показывает файл (нужен
+      `SUPABASE_SERVICE_ROLE_KEY`); отзыв ссылки работает.
+- [ ] Приглашение `/invite/[token]` добавляет второго пользователя.
+- [ ] RLS-скрипты из `tests/rls/` зелёные (см. `tests/README.md`).
+- [ ] Supabase Advisors (Security) без новых ошибок.
+
+## Замечания по безопасности
+
+- `vault-files` — приватный bucket; файлы наружу только короткими signed URL.
+- RLS включена на всех таблицах; хелперы доступа — в схеме `private` вне REST.
+- Security-заголовки (HSTS, X-Frame-Options DENY и т.п.) заданы в `next.config.mjs`.
