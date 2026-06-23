@@ -41,6 +41,12 @@ export default async function MyLayout({
               Сроки
             </Link>
             <Link
+              href="/my/family"
+              className="rounded-lg px-3 py-1.5 hover:bg-slate-100"
+            >
+              Доступ
+            </Link>
+            <Link
               href="/my/security"
               className="rounded-lg px-3 py-1.5 hover:bg-slate-100"
             >

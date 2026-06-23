@@ -178,3 +178,31 @@ export async function revokeShare(formData: FormData) {
   if (error) throw error;
   revalidatePath(`/my/documents/${document_id}`);
 }
+
+export async function createInvitation(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const role = String(formData.get("role") ?? "viewer");
+  const { error } = await supabase
+    .from("invitations")
+    .insert({ household_id: householdId, role });
+  if (error) throw error;
+  revalidatePath("/my/family");
+}
+
+export async function deleteInvitation(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const { error } = await supabase.from("invitations").delete().eq("id", id);
+  if (error) throw error;
+  revalidatePath("/my/family");
+}
+
+export async function acceptInvitation(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const token = String(formData.get("token") ?? "");
+  const { error } = await supabase.rpc("accept_invitation", { p_token: token });
+  if (error) throw error;
+  redirect("/my");
+}

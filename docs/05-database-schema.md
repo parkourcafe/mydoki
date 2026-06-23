@@ -6,7 +6,8 @@
 ## Таблицы
 
 `households` · `household_members` · `members` · `documents` ·
-`document_files` · `records` · `reminders` · `shares` · `audit_log` · `consents`
+`document_files` · `records` · `reminders` · `shares` · `audit_log` ·
+`consents` · `invitations`
 
 Категории, виды записей и согласия — enum: `doc_category`
 (`identity/education/medical/financial/legal/other`), `record_kind`
