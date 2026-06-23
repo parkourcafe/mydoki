@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { lawyerChat } from "@/lib/llm";
+import { allowAiCall } from "@/lib/ratelimit";
 
 export const maxDuration = 60;
 
@@ -10,6 +11,13 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  if (!(await allowAiCall(supabase, user.id))) {
+    return NextResponse.json(
+      { error: "Дневной лимит ИИ-запросов исчерпан. Попробуйте завтра." },
+      { status: 429 }
+    );
+  }
 
   let body: { messages?: { role?: string; content?: string }[] };
   try {
