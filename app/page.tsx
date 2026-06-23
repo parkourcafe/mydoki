@@ -4,7 +4,7 @@ import { getUser } from "@/lib/queries";
 
 const HERO_DOCS: { icon: string; title: string; status?: string; warn?: boolean }[] = [
   { icon: "🩺", title: "Анализы · Аня", status: "ОАК, биохимия — 6 файлов" },
-  { icon: "🛂", title: "Паспорт РФ · Миша", status: "действует до 2031" },
+  { icon: "🛂", title: "Паспорт РФ · Миша", status: "распознано: до 2031" },
   { icon: "🚗", title: "ОСАГО · Toyota", status: "истекает через 12 дней", warn: true },
   { icon: "🎓", title: "Диплом · Аня", status: "оригинал" },
 ];
@@ -18,24 +18,15 @@ const STORE_CATS: { icon: string; title: string; items: string[] }[] = [
   {
     icon: "🚗",
     title: "Авто и недвижимость",
-    items: ["ОСАГО и КАСКО", "ПТС и СТС", "Выписки ЕГРН и договоры"],
-  },
-  {
-    icon: "🧾",
-    title: "Квитанции и справки",
-    items: ["Квитанции и чеки об оплате", "Справки с работы / учёбы", "Доверенности и прочее"],
-  },
-  {
-    icon: "👨‍👩‍👧",
-    title: "Семейные документы",
-    items: ["Документы детей (все этапы)", "Медкарты всей семьи", "Договоры и соглашения"],
+    items: ["ОСАГО и КАСКО", "ПТС и СТС", "Выписки ЕГРН"],
   },
 ];
 
 const STEPS: { n: string; title: string; text: string }[] = [
-  { n: "1", title: "Создайте профили близких", text: "Добавьте взрослых и детей. У каждого будет свой раздел." },
-  { n: "2", title: "Загрузите документы", text: "Анализы, дипломы, справки, квитанции — просто сфотографируйте." },
-  { n: "3", title: "Получайте напоминания", text: "Система заранее предупредит об истечении документов." },
+  { n: "1", title: "Загрузи фото или скан документа", text: "Паспорт, анализ, ОСАГО, диплом — любой документ." },
+  { n: "2", title: "ИИ распознаёт даты", text: "Система сама находит дату истечения и предлагает её сохранить." },
+  { n: "3", title: "Подтверди дату и включи напоминания", text: "Особенно удобно для анализов — не нужно вводить даты вручную." },
+  { n: "4", title: "Получай напоминания заранее", text: "Система предупредит, когда пора пересдать анализы или продлить документы." },
 ];
 
 const SECURITY: { icon: string; text: string }[] = [
@@ -108,8 +99,8 @@ export default async function Home() {
             </h1>
 
             <p className="mb-7 max-w-md text-[19px] leading-snug text-[#5c5248]">
-              Паспорта, анализы, дипломы, справки, квитанции и ОСАГО.
-              Без хаоса. С напоминаниями об истечении.
+              Паспорта, анализы, дипломы, справки и квитанции.
+              Даты распознаются автоматически. Напоминания — тоже.
             </p>
 
             <div className="mb-6 flex max-w-md flex-col gap-3">
@@ -117,13 +108,13 @@ export default async function Home() {
                 <GoogleMark />
                 <span>Войти через Google — сразу начать</span>
               </Link>
-              <a href="#what-to-store" className="flex items-center justify-center rounded-3xl border border-[#d4c9b8] px-8 py-[17px] text-[17px] font-semibold transition-colors hover:bg-white">
-                Что можно хранить
+              <a href="#how" className="flex items-center justify-center rounded-3xl border border-[#d4c9b8] px-8 py-[17px] text-[17px] font-semibold transition-colors hover:bg-white">
+                Как это работает
               </a>
             </div>
 
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-[#5c5248]">
-              <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Регистрация за минуту</span>
+              <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Распознавание дат</span>
               <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Бесплатно</span>
               <span className="flex items-center gap-x-1.5"><span className="text-[#b85c38]">✓</span> Без карты</span>
             </div>
@@ -179,8 +170,11 @@ export default async function Home() {
                   <ul className="mt-2 space-y-1 sm:mt-0">
                     <li>• Заключения врачей</li>
                     <li>• Прививочные сертификаты</li>
-                    <li>• Справки для школы / работы</li>
+                    <li>• Медицинские справки</li>
                   </ul>
+                </div>
+                <div className="mt-3 text-sm font-medium text-[#b85c38]">
+                  + Распознавание дат и напоминания о пересдаче
                 </div>
               </div>
             </div>
@@ -205,10 +199,10 @@ export default async function Home() {
       </section>
 
       {/* КАК ЭТО РАБОТАЕТ */}
-      <section id="how" className="mx-auto max-w-screen-xl px-5 py-10">
-        <div className="mx-auto mb-8 max-w-2xl text-center">
+      <section id="how" className="mx-auto max-w-screen-xl px-5 py-12">
+        <div className="mx-auto mb-9 max-w-2xl text-center">
           <h2 className="section-header mb-2">Как это работает</h2>
-          <p className="text-lg text-[#5c5248]">Соберите все документы семьи за один вечер</p>
+          <p className="text-lg text-[#5c5248]">Загрузи документ — остальное система сделает сама</p>
         </div>
         <div className="mx-auto grid max-w-2xl gap-6">
           {STEPS.map((s) => (

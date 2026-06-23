@@ -51,6 +51,7 @@ export default function DocumentForm({
   const [saveErr, setSaveErr] = useState<string | null>(null);
   const pickRef = useRef<HTMLInputElement>(null);
   const camRef = useRef<HTMLInputElement>(null);
+  const autoRan = useRef(false);
 
   const set = (k: keyof Fields, v: string) => setF((p) => ({ ...p, [k]: v }));
 
@@ -61,19 +62,27 @@ export default function DocumentForm({
       const seen = new Set(prev.map((x) => x.name + x.size));
       return [...prev, ...incoming.filter((x) => !seen.has(x.name + x.size))];
     });
+    // Авто-распознавание по первому файлу (один раз). Тихо — если ИИ не настроен.
+    const first = incoming.find(
+      (x) => x.type.startsWith("image/") || x.type === "application/pdf"
+    );
+    if (first && !autoRan.current) {
+      autoRan.current = true;
+      classify(first, true);
+    }
   }
 
   function removeFile(i: number) {
     setFiles((prev) => prev.filter((_, idx) => idx !== i));
   }
 
-  async function classify() {
-    const file = files[0];
+  async function classify(picked?: File, silent = false) {
+    const file = picked ?? files[0];
     if (!file) {
-      setMsg("Сначала выберите файл или сфотографируйте документ.");
+      if (!silent) setMsg("Сначала выберите файл или сфотографируйте документ.");
       return;
     }
-    setMsg(null);
+    if (!silent) setMsg(null);
     setBusy(true);
     try {
       const body = new FormData();
@@ -81,7 +90,7 @@ export default function DocumentForm({
       const res = await fetch("/api/classify", { method: "POST", body });
       const data = await res.json();
       if (!res.ok) {
-        setMsg(data.error ?? "Не удалось распознать.");
+        if (!silent) setMsg(data.error ?? "Не удалось распознать.");
       } else {
         setF((p) => ({
           ...p,
@@ -100,7 +109,7 @@ export default function DocumentForm({
         setMsg("Поля заполнены автоматически — проверьте и сохраните.");
       }
     } catch {
-      setMsg("Сеть недоступна — попробуйте ещё раз.");
+      if (!silent) setMsg("Сеть недоступна — попробуйте ещё раз.");
     } finally {
       setBusy(false);
     }
@@ -203,11 +212,11 @@ export default function DocumentForm({
           </button>
           <button
             type="button"
-            onClick={classify}
+            onClick={() => classify()}
             disabled={busy || !files.length}
             className="btn-ghost"
           >
-            {busy ? "Распознаю…" : "✨ Распознать (AI)"}
+            {busy ? "Распознаю…" : "✨ Распознать даты (AI)"}
           </button>
         </div>
 
