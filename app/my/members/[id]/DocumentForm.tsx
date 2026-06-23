@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CATEGORIES } from "@/lib/categories";
-import { createDocument } from "@/app/my/actions";
+import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { attachDocumentFile, createDocumentMeta } from "@/app/my/actions";
 
 type Fields = {
   title: string;
@@ -35,9 +37,12 @@ export default function DocumentForm({
   memberId?: string;
   assetId?: string;
 }) {
+  const router = useRouter();
   const [f, setF] = useState<Fields>(EMPTY);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveErr, setSaveErr] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const set = (k: keyof Fields, v: string) => setF((p) => ({ ...p, [k]: v }));
@@ -78,20 +83,71 @@ export default function DocumentForm({
     }
   }
 
-  return (
-    <form
-      action={createDocument}
-      className="mt-4 grid gap-4 sm:grid-cols-2"
-      encType="multipart/form-data"
-    >
-      {memberId && <input type="hidden" name="member_id" value={memberId} />}
-      {assetId && <input type="hidden" name="asset_id" value={assetId} />}
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSaveErr(null);
+    if (!f.title.trim()) {
+      setSaveErr("Введите название документа.");
+      return;
+    }
+    setSaving(true);
+    try {
+      const tags = f.tags
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
 
+      const { id, householdId } = await createDocumentMeta({
+        member_id: memberId ?? null,
+        asset_id: assetId ?? null,
+        title: f.title,
+        category: f.category,
+        subtype: f.subtype,
+        issuer: f.issuer,
+        doc_number: f.doc_number,
+        issued_at: f.issued_at,
+        expires_at: f.expires_at,
+        notes: f.notes,
+        tags,
+      });
+
+      const files = Array.from(fileRef.current?.files ?? []);
+      if (files.length) {
+        const supabase = getSupabaseBrowser();
+        for (const file of files) {
+          const safe = file.name.replace(/[^\w.\-]+/g, "_");
+          const path = `${householdId}/${id}/${Date.now()}-${safe}`;
+          const { error } = await supabase.storage
+            .from("vault-files")
+            .upload(path, file, {
+              contentType: file.type || "application/octet-stream",
+              upsert: false,
+            });
+          if (error) throw new Error(`Файл «${file.name}»: ${error.message}`);
+          await attachDocumentFile({
+            documentId: id,
+            householdId,
+            storagePath: path,
+            fileName: file.name,
+            mimeType: file.type || null,
+            sizeBytes: file.size,
+          });
+        }
+      }
+
+      router.push(`/my/documents/${id}`);
+    } catch (err) {
+      setSaveErr(err instanceof Error ? err.message : "Не удалось сохранить.");
+      setSaving(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
       <div className="sm:col-span-2 rounded-lg border border-dashed border-brand-300 bg-brand-50/40 p-3">
         <label className="label">Файлы (сканы / фото)</label>
         <input
           ref={fileRef}
-          name="files"
           type="file"
           multiple
           accept="image/*,application/pdf"
@@ -107,7 +163,8 @@ export default function DocumentForm({
             {busy ? "Распознаю…" : "✨ Распознать (AI)"}
           </button>
           <span className="text-xs text-slate-500">
-            Заполнит поля по первому файлу. Загружаются в приватный bucket.
+            Заполнит поля по первому файлу. Файлы грузятся напрямую в приватное
+            хранилище.
           </span>
         </div>
         {msg && <p className="mt-2 text-xs text-slate-600">{msg}</p>}
@@ -116,7 +173,6 @@ export default function DocumentForm({
       <div className="sm:col-span-2">
         <label className="label">Название</label>
         <input
-          name="title"
           required
           value={f.title}
           onChange={(e) => set("title", e.target.value)}
@@ -127,7 +183,6 @@ export default function DocumentForm({
       <div>
         <label className="label">Категория</label>
         <select
-          name="category"
           value={f.category}
           onChange={(e) => set("category", e.target.value)}
           className="input"
@@ -142,7 +197,6 @@ export default function DocumentForm({
       <div>
         <label className="label">Тип / подтип</label>
         <input
-          name="subtype"
           value={f.subtype}
           onChange={(e) => set("subtype", e.target.value)}
           className="input"
@@ -152,7 +206,6 @@ export default function DocumentForm({
       <div>
         <label className="label">Кем выдан</label>
         <input
-          name="issuer"
           value={f.issuer}
           onChange={(e) => set("issuer", e.target.value)}
           className="input"
@@ -161,7 +214,6 @@ export default function DocumentForm({
       <div>
         <label className="label">Номер</label>
         <input
-          name="doc_number"
           value={f.doc_number}
           onChange={(e) => set("doc_number", e.target.value)}
           className="input"
@@ -170,7 +222,6 @@ export default function DocumentForm({
       <div>
         <label className="label">Дата выдачи</label>
         <input
-          name="issued_at"
           type="date"
           value={f.issued_at}
           onChange={(e) => set("issued_at", e.target.value)}
@@ -180,7 +231,6 @@ export default function DocumentForm({
       <div>
         <label className="label">Действует до</label>
         <input
-          name="expires_at"
           type="date"
           value={f.expires_at}
           onChange={(e) => set("expires_at", e.target.value)}
@@ -190,7 +240,6 @@ export default function DocumentForm({
       <div className="sm:col-span-2">
         <label className="label">Теги (через запятую)</label>
         <input
-          name="tags"
           value={f.tags}
           onChange={(e) => set("tags", e.target.value)}
           className="input"
@@ -200,15 +249,23 @@ export default function DocumentForm({
       <div className="sm:col-span-2">
         <label className="label">Заметки</label>
         <textarea
-          name="notes"
           rows={2}
           value={f.notes}
           onChange={(e) => set("notes", e.target.value)}
           className="input"
         />
       </div>
+
+      {saveErr && (
+        <p className="sm:col-span-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          {saveErr}
+        </p>
+      )}
+
       <div className="sm:col-span-2">
-        <button className="btn-primary">Сохранить документ</button>
+        <button type="submit" disabled={saving} className="btn-primary">
+          {saving ? "Сохраняю…" : "Сохранить документ"}
+        </button>
       </div>
     </form>
   );

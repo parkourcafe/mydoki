@@ -59,20 +59,32 @@ function emptyToNull(v: FormDataEntryValue | null): string | null {
   return s.length ? s : null;
 }
 
-export async function createDocument(formData: FormData) {
+export async function createDocumentMeta(input: {
+  member_id?: string | null;
+  asset_id?: string | null;
+  title: string;
+  category: string;
+  subtype?: string;
+  issuer?: string;
+  doc_number?: string;
+  issued_at?: string;
+  expires_at?: string;
+  notes?: string;
+  tags?: string[];
+}): Promise<{ id: string; householdId: string }> {
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
 
-  const member_id = String(formData.get("member_id") ?? "") || null;
-  const asset_id = String(formData.get("asset_id") ?? "") || null;
-  const title = String(formData.get("title") ?? "").trim();
+  const member_id = input.member_id || null;
+  const asset_id = input.asset_id || null;
+  const title = (input.title ?? "").trim();
   if ((!member_id && !asset_id) || !title)
     throw new Error("Нужен владелец (человек или объект) и название");
 
-  const tags = String(formData.get("tags") ?? "")
-    .split(",")
-    .map((t) => t.trim())
-    .filter(Boolean);
+  const clean = (v?: string) => {
+    const s = (v ?? "").trim();
+    return s.length ? s : null;
+  };
 
   const { data: doc, error } = await supabase
     .from("documents")
@@ -81,49 +93,44 @@ export async function createDocument(formData: FormData) {
       member_id,
       asset_id,
       title,
-      category: String(formData.get("category") ?? "other"),
-      subtype: emptyToNull(formData.get("subtype")),
-      issuer: emptyToNull(formData.get("issuer")),
-      doc_number: emptyToNull(formData.get("doc_number")),
-      issued_at: emptyToNull(formData.get("issued_at")),
-      expires_at: emptyToNull(formData.get("expires_at")),
-      notes: emptyToNull(formData.get("notes")),
-      tags,
+      category: input.category || "other",
+      subtype: clean(input.subtype),
+      issuer: clean(input.issuer),
+      doc_number: clean(input.doc_number),
+      issued_at: clean(input.issued_at),
+      expires_at: clean(input.expires_at),
+      notes: clean(input.notes),
+      tags: input.tags ?? [],
     })
     .select("id")
     .single();
   if (error) throw error;
 
-  const docId = doc.id as string;
-  const files = formData.getAll("files").filter((f): f is File => f instanceof File && f.size > 0);
+  if (member_id) revalidatePath(`/my/members/${member_id}`);
+  if (asset_id) revalidatePath(`/my/assets/${asset_id}`);
+  return { id: doc.id as string, householdId };
+}
 
-  for (const file of files) {
-    const safeName = file.name.replace(/[^\w.\-]+/g, "_");
-    const path = `${householdId}/${docId}/${Date.now()}-${safeName}`;
-    const bytes = await file.arrayBuffer();
-    const { error: upErr } = await supabase.storage
-      .from("vault-files")
-      .upload(path, bytes, {
-        contentType: file.type || "application/octet-stream",
-        upsert: false,
-      });
-    if (upErr) throw upErr;
-
-    const { error: fErr } = await supabase.from("document_files").insert({
-      document_id: docId,
-      household_id: householdId,
-      storage_path: path,
-      file_name: file.name,
-      mime_type: file.type || null,
-      size_bytes: file.size,
-    });
-    if (fErr) throw fErr;
-  }
-
-  revalidatePath(
-    member_id ? `/my/members/${member_id}` : `/my/assets/${asset_id}`
-  );
-  redirect(`/my/documents/${docId}`);
+// Файл уже загружен браузером в storage — здесь только запись метаданных.
+export async function attachDocumentFile(input: {
+  documentId: string;
+  householdId: string;
+  storagePath: string;
+  fileName: string;
+  mimeType: string | null;
+  sizeBytes: number;
+}) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.from("document_files").insert({
+    document_id: input.documentId,
+    household_id: input.householdId,
+    storage_path: input.storagePath,
+    file_name: input.fileName,
+    mime_type: input.mimeType,
+    size_bytes: input.sizeBytes,
+  });
+  if (error) throw error;
+  revalidatePath(`/my/documents/${input.documentId}`);
 }
 
 export async function deleteDocument(formData: FormData) {
