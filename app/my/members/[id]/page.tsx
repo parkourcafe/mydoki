@@ -1,0 +1,143 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getMember, listDocumentsByMember } from "@/lib/queries";
+import {
+  CATEGORIES,
+  CATEGORY_LABEL,
+  RELATION_LABEL,
+  type DocCategory,
+} from "@/lib/categories";
+import { createDocument } from "@/app/my/actions";
+
+export default async function MemberPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const member = await getMember(id);
+  if (!member) notFound();
+
+  const docs = await listDocumentsByMember(id);
+  const byCategory = new Map<DocCategory, typeof docs>();
+  for (const d of docs) {
+    const arr = byCategory.get(d.category) ?? [];
+    arr.push(d);
+    byCategory.set(d.category, arr);
+  }
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <Link href="/my" className="text-sm text-slate-500 hover:underline">
+          ← Семья
+        </Link>
+        <h1 className="mt-2 text-2xl font-semibold">{member.full_name}</h1>
+        <p className="text-sm text-slate-500">
+          {member.relation ? RELATION_LABEL[member.relation] ?? member.relation : "—"}
+          {member.birth_date ? ` · ${member.birth_date}` : ""}
+        </p>
+      </div>
+
+      {docs.length === 0 ? (
+        <div className="card text-center text-slate-500">
+          Документов пока нет. Добавьте первый ниже.
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {CATEGORIES.filter((c) => byCategory.has(c.key)).map((c) => (
+            <section key={c.key}>
+              <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+                {c.emoji} {c.label}
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {byCategory.get(c.key)!.map((d) => (
+                  <Link
+                    key={d.id}
+                    href={`/my/documents/${d.id}`}
+                    className="card transition hover:border-brand-300 hover:shadow"
+                  >
+                    <div className="font-medium">{d.title}</div>
+                    <div className="mt-1 text-xs text-slate-500">
+                      {d.subtype ? `${d.subtype} · ` : ""}
+                      {d.expires_at ? `действует до ${d.expires_at}` : "без срока"}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      )}
+
+      <details className="card">
+        <summary className="cursor-pointer font-medium">+ Добавить документ</summary>
+        <form
+          action={createDocument}
+          className="mt-4 grid gap-4 sm:grid-cols-2"
+          encType="multipart/form-data"
+        >
+          <input type="hidden" name="member_id" value={member.id} />
+          <div className="sm:col-span-2">
+            <label className="label">Название</label>
+            <input name="title" required className="input" placeholder="Паспорт РФ" />
+          </div>
+          <div>
+            <label className="label">Категория</label>
+            <select name="category" className="input" defaultValue="identity">
+              {CATEGORIES.map((c) => (
+                <option key={c.key} value={c.key}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="label">Тип / подтип</label>
+            <input name="subtype" className="input" placeholder="паспорт, диплom…" />
+          </div>
+          <div>
+            <label className="label">Кем выдан</label>
+            <input name="issuer" className="input" />
+          </div>
+          <div>
+            <label className="label">Номер</label>
+            <input name="doc_number" className="input" />
+          </div>
+          <div>
+            <label className="label">Дата выдачи</label>
+            <input name="issued_at" type="date" className="input" />
+          </div>
+          <div>
+            <label className="label">Действует до</label>
+            <input name="expires_at" type="date" className="input" />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="label">Теги (через запятую)</label>
+            <input name="tags" className="input" placeholder="срочно, оригинал" />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="label">Заметки</label>
+            <textarea name="notes" rows={2} className="input" />
+          </div>
+          <div className="sm:col-span-2">
+            <label className="label">Файлы (сканы / фото)</label>
+            <input
+              name="files"
+              type="file"
+              multiple
+              accept="image/*,application/pdf"
+              className="input"
+            />
+            <p className="mt-1 text-xs text-slate-400">
+              Загружаются в приватный bucket. Наружу — только по signed URL.
+            </p>
+          </div>
+          <div className="sm:col-span-2">
+            <button className="btn-primary">Сохранить документ</button>
+          </div>
+        </form>
+      </details>
+    </div>
+  );
+}
