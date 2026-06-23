@@ -14,7 +14,7 @@ export default async function LoginPage() {
           </div>
           <h1 className="text-balance text-3xl font-extrabold leading-[1.15] tracking-tight text-slate-900 sm:text-[2.6rem]">
             Все документы вашей семьи —{" "}
-            <span className="bg-gradient-to-r from-brand-600 via-brand-500 to-sky-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-brand-600 via-brand-500 to-[#d4a373] bg-clip-text text-transparent">
               в одном защищённом месте
             </span>
           </h1>
