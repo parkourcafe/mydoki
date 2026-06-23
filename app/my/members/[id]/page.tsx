@@ -47,6 +47,12 @@ export default async function MemberPage({
           {member.relation ? RELATION_LABEL[member.relation] ?? member.relation : "—"}
           {member.birth_date ? ` · ${member.birth_date}` : ""}
         </p>
+        <Link
+          href={`/my/members/${member.id}/health`}
+          className="mt-2 inline-block text-sm font-medium text-brand-600 hover:underline"
+        >
+          🩺 Медкарта →
+        </Link>
       </div>
 
       {/* Документы */}
