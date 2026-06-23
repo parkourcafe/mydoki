@@ -30,6 +30,11 @@ export default async function LoginPage() {
         <p className="mt-6 text-center text-xs text-slate-400">
           Приватно по умолчанию · RLS · приватный storage
         </p>
+        <p className="mt-2 text-center text-xs text-slate-400">
+          <a href="/privacy" className="hover:underline">Конфиденциальность</a>
+          {" · "}
+          <a href="/terms" className="hover:underline">Условия</a>
+        </p>
       </div>
     </main>
   );

@@ -167,6 +167,23 @@ export default function LoginForm() {
           />
         </div>
 
+        {mode === "signup" && (
+          <label className="flex items-start gap-2 text-xs text-slate-500">
+            <input type="checkbox" required className="mt-0.5" />
+            <span>
+              Я принимаю{" "}
+              <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
+                Условия
+              </a>{" "}
+              и{" "}
+              <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
+                Политику конфиденциальности
+              </a>{" "}
+              и даю согласие на обработку персональных данных.
+            </span>
+          </label>
+        )}
+
         {state.error && (
           <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
             {state.error}

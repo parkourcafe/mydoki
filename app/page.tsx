@@ -322,9 +322,11 @@ export default async function Home() {
       <footer className="border-t border-[#e8e0d5] bg-[#fdfaf5] px-5 py-8 text-sm text-[#8a7c6d]">
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
           <div>© 2026 doki.help — Семейный архив документов</div>
-          <div className="flex gap-x-6">
+          <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
             <a href="#security" className="hover:text-[#2c2522]">Безопасность</a>
             <a href="#pricing" className="hover:text-[#2c2522]">Тарифы</a>
+            <Link href="/privacy" className="hover:text-[#2c2522]">Конфиденциальность</Link>
+            <Link href="/terms" className="hover:text-[#2c2522]">Условия</Link>
             <Link href="/login" className="hover:text-[#2c2522]">Войти</Link>
           </div>
         </div>
