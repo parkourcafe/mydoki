@@ -6,7 +6,7 @@
 Next.js (App Router) + Supabase + Vercel
   ├─ Auth (email + ОБЯЗАТЕЛЬНО 2FA)
   ├─ RSC / route handlers → lib/queries → getSupabaseServer()
-  ├─ Postgres + RLS (всё привязано к owner_user_id / членству в household)
+  ├─ Postgres + RLS (всё привязано к household_id + ролям owner/editor/viewer)
   ├─ Storage: ПРИВАТНЫЙ bucket, доступ только по signed URL с коротким TTL
   └─ AI (Claude) — авто-распознавание и категоризация документов
 ```
@@ -27,14 +27,14 @@ Next.js (App Router) + Supabase + Vercel
 
 ## Переиспользуемые паттерны из PET ID
 
-| Паттерн PET ID | Как применяем в MyDoc |
+| Паттерн PET ID | Как применяем в Family Vault |
 |---|---|
 | `document-vault.tsx` | Экран хранилища документов члена семьи |
 | Приватный bucket + `createSignedUrls` | Тот же подход, но **без** публичных QR |
 | `doc-classify` (AI-классификация) | Авто-определение типа и метаданных при загрузке |
 | `reminders` | Напоминания о сроках действия |
 | Кабинет `/my/*` | Личный кабинет владельца аккаунта |
-| RPC по образцу `get_pet_passport` | **Приватная** RPC выдачи по share-токену (см. ниже) |
+| RPC по образцу `get_pet_passport` | **Приватная, истекающая** RPC `get_shared_document` (см. ниже) |
 
 ## Важно: отдельный проект, а не модуль PET ID
 
@@ -48,13 +48,18 @@ Next.js (App Router) + Supabase + Vercel
 
 ## RPC выдачи по ссылке
 
-В PET ID `get_pet_passport` отдаёт публичный профиль питомца. В MyDoc
-аналогичная RPC, но:
+В PET ID `get_pet_passport` отдаёт публичный профиль питомца. В Family Vault
+аналог — **`get_shared_document(token)`**, но:
 
-- **приватная** — вызывается только по валидному share-токену,
-- проверяет `expires_at` и `revoked_at`,
-- отдаёт **один документ**, а не профиль человека,
-- пишет событие в `audit_log`.
+- доступ только по валидному токену (хоть grant и для `anon`),
+- проверяет `expires_at`, `revoked_at` и **лимит просмотров** (`max_views` / `view_count`),
+- инкрементит счётчик и пишет событие в `audit_log`,
+- отдаёт **минимум** (allowlist полей) одного документа + пути файлов, не профиль человека,
+- **короткие signed URL** к файлам сервер генерит уже после успешного вызова — bucket остаётся приватным.
+
+Другие RPC: `create_household` (создать семью + сделать создателя `owner`),
+`revoke_share` (отозвать ссылку), `log_audit` (единая точка записи аудита).
+Хелперы доступа: `is_household_member` / `is_household_editor` / `is_household_owner`.
 
 ## Окружения и секреты
 
