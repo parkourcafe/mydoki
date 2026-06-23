@@ -1,6 +1,7 @@
 import "server-only";
 import { getSupabaseServer } from "./supabase/server";
 import type {
+  Asset,
   DocumentFile,
   DocumentRow,
   Member,
@@ -82,6 +83,40 @@ export async function listDocumentsByMember(
     .from("documents")
     .select("*")
     .eq("member_id", memberId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as DocumentRow[];
+}
+
+export async function listAssets(householdId: string): Promise<Asset[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("assets")
+    .select("*")
+    .eq("household_id", householdId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as Asset[];
+}
+
+export async function getAsset(id: string): Promise<Asset | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase
+    .from("assets")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  return (data as Asset) ?? null;
+}
+
+export async function listDocumentsByAsset(
+  assetId: string
+): Promise<DocumentRow[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("documents")
+    .select("*")
+    .eq("asset_id", assetId)
     .order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as DocumentRow[];

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import {
+  getAsset,
   getDocument,
   getMember,
   listFiles,
@@ -32,11 +33,12 @@ export default async function DocumentPage({
   const doc = await getDocument(id);
   if (!doc) notFound();
 
-  const [member, files, shares] = await Promise.all([
-    getMember(doc.member_id),
+  const [files, shares] = await Promise.all([
     listFiles(id),
     listSharesByDocument(id),
   ]);
+  const member = doc.member_id ? await getMember(doc.member_id) : null;
+  const asset = doc.asset_id ? await getAsset(doc.asset_id) : null;
   const signed = await signFiles(files);
 
   const h = await headers();
@@ -66,6 +68,14 @@ export default async function DocumentPage({
             className="text-sm text-slate-500 hover:underline"
           >
             ← {member.full_name}
+          </Link>
+        )}
+        {asset && (
+          <Link
+            href={`/my/assets/${asset.id}`}
+            className="text-sm text-slate-500 hover:underline"
+          >
+            ← {asset.title}
           </Link>
         )}
         <h1 className="mt-2 text-2xl font-semibold">{doc.title}</h1>
@@ -228,7 +238,8 @@ export default async function DocumentPage({
       <section>
         <form action={deleteDocument}>
           <input type="hidden" name="id" value={doc.id} />
-          <input type="hidden" name="member_id" value={doc.member_id} />
+          <input type="hidden" name="member_id" value={doc.member_id ?? ""} />
+          <input type="hidden" name="asset_id" value={doc.asset_id ?? ""} />
           <button className="btn-danger">Удалить документ</button>
         </form>
       </section>

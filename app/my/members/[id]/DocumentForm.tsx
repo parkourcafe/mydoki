@@ -28,7 +28,13 @@ const EMPTY: Fields = {
   notes: "",
 };
 
-export default function DocumentForm({ memberId }: { memberId: string }) {
+export default function DocumentForm({
+  memberId,
+  assetId,
+}: {
+  memberId?: string;
+  assetId?: string;
+}) {
   const [f, setF] = useState<Fields>(EMPTY);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -78,7 +84,8 @@ export default function DocumentForm({ memberId }: { memberId: string }) {
       className="mt-4 grid gap-4 sm:grid-cols-2"
       encType="multipart/form-data"
     >
-      <input type="hidden" name="member_id" value={memberId} />
+      {memberId && <input type="hidden" name="member_id" value={memberId} />}
+      {assetId && <input type="hidden" name="asset_id" value={assetId} />}
 
       <div className="sm:col-span-2 rounded-lg border border-dashed border-brand-300 bg-brand-50/40 p-3">
         <label className="label">Файлы (сканы / фото)</label>

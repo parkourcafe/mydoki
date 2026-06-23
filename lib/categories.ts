@@ -51,3 +51,15 @@ export const RECORD_KINDS: { key: RecordKind; label: string; emoji: string }[] =
 export const RECORD_KIND_LABEL: Record<RecordKind, string> = Object.fromEntries(
   RECORD_KINDS.map((r) => [r.key, r.label])
 ) as Record<RecordKind, string>;
+
+export type AssetType = "vehicle" | "real_estate" | "other";
+
+export const ASSET_TYPES: { key: AssetType; label: string; emoji: string }[] = [
+  { key: "vehicle", label: "Транспорт", emoji: "🚗" },
+  { key: "real_estate", label: "Недвижимость", emoji: "🏠" },
+  { key: "other", label: "Другое", emoji: "📦" },
+];
+
+export const ASSET_TYPE_LABEL: Record<AssetType, string> = Object.fromEntries(
+  ASSET_TYPES.map((a) => [a.key, a.label])
+) as Record<AssetType, string>;

@@ -45,7 +45,7 @@ export default async function RemindersPage() {
                   <div>
                     <div className="font-medium">{d.title}</div>
                     <div className="text-xs text-slate-500">
-                      {nameOf.get(d.member_id) ?? "—"} · до {d.expires_at}
+                      {nameOf.get(d.member_id ?? "") ?? "—"} · до {d.expires_at}
                     </div>
                   </div>
                   <span

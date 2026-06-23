@@ -30,6 +30,30 @@ export async function createMember(formData: FormData) {
   revalidatePath("/my");
 }
 
+export async function createAsset(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const title = String(formData.get("title") ?? "").trim();
+  if (!title) return;
+  const { error } = await supabase.from("assets").insert({
+    household_id: householdId,
+    type: String(formData.get("type") ?? "other"),
+    title,
+    details: emptyToNull(formData.get("details")),
+  });
+  if (error) throw error;
+  revalidatePath("/my/assets");
+}
+
+export async function deleteAsset(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const { error } = await supabase.from("assets").delete().eq("id", id);
+  if (error) throw error;
+  redirect("/my/assets");
+}
+
 function emptyToNull(v: FormDataEntryValue | null): string | null {
   const s = String(v ?? "").trim();
   return s.length ? s : null;
@@ -39,9 +63,11 @@ export async function createDocument(formData: FormData) {
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
 
-  const member_id = String(formData.get("member_id") ?? "");
+  const member_id = String(formData.get("member_id") ?? "") || null;
+  const asset_id = String(formData.get("asset_id") ?? "") || null;
   const title = String(formData.get("title") ?? "").trim();
-  if (!member_id || !title) throw new Error("member_id и title обязательны");
+  if ((!member_id && !asset_id) || !title)
+    throw new Error("Нужен владелец (человек или объект) и название");
 
   const tags = String(formData.get("tags") ?? "")
     .split(",")
@@ -53,6 +79,7 @@ export async function createDocument(formData: FormData) {
     .insert({
       household_id: householdId,
       member_id,
+      asset_id,
       title,
       category: String(formData.get("category") ?? "other"),
       subtype: emptyToNull(formData.get("subtype")),
@@ -93,14 +120,17 @@ export async function createDocument(formData: FormData) {
     if (fErr) throw fErr;
   }
 
-  revalidatePath(`/my/members/${member_id}`);
+  revalidatePath(
+    member_id ? `/my/members/${member_id}` : `/my/assets/${asset_id}`
+  );
   redirect(`/my/documents/${docId}`);
 }
 
 export async function deleteDocument(formData: FormData) {
   const supabase = await getSupabaseServer();
   const id = String(formData.get("id") ?? "");
-  const memberId = String(formData.get("member_id") ?? "");
+  const member_id = String(formData.get("member_id") ?? "");
+  const asset_id = String(formData.get("asset_id") ?? "");
   if (!id) return;
 
   // удалить файлы из storage, затем строку (document_files уйдут по cascade)
@@ -113,7 +143,7 @@ export async function deleteDocument(formData: FormData) {
 
   const { error } = await supabase.from("documents").delete().eq("id", id);
   if (error) throw error;
-  redirect(`/my/members/${memberId}`);
+  redirect(member_id ? `/my/members/${member_id}` : `/my/assets/${asset_id}`);
 }
 
 export async function createRecord(formData: FormData) {

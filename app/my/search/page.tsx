@@ -67,7 +67,7 @@ export default async function SearchPage({
               >
                 <div className="font-medium">{d.title}</div>
                 <div className="mt-1 text-xs text-slate-500">
-                  {CATEGORY_LABEL[d.category]} · {nameOf.get(d.member_id) ?? "—"}
+                  {CATEGORY_LABEL[d.category]} · {nameOf.get(d.member_id ?? "") ?? "—"}
                   {d.expires_at ? ` · до ${d.expires_at}` : ""}
                 </div>
               </Link>

@@ -1,4 +1,4 @@
-import type { DocCategory, RecordKind } from "./categories";
+import type { AssetType, DocCategory, RecordKind } from "./categories";
 
 export type Member = {
   id: string;
@@ -10,10 +10,20 @@ export type Member = {
   created_at: string;
 };
 
+export type Asset = {
+  id: string;
+  household_id: string;
+  type: AssetType;
+  title: string;
+  details: string | null;
+  created_at: string;
+};
+
 export type DocumentRow = {
   id: string;
   household_id: string;
-  member_id: string;
+  member_id: string | null;
+  asset_id: string | null;
   category: DocCategory;
   subtype: string | null;
   title: string;
