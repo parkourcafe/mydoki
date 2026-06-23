@@ -47,6 +47,12 @@ export default async function MyLayout({
               Сроки
             </Link>
             <Link
+              href="/my/lawyer"
+              className="rounded-lg px-3 py-1.5 hover:bg-slate-100"
+            >
+              AI-юрист <span className="align-middle text-amber-500">✨</span>
+            </Link>
+            <Link
               href="/my/family"
               className="rounded-lg px-3 py-1.5 hover:bg-slate-100"
             >
