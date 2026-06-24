@@ -85,12 +85,6 @@ function mapAuthError(
   return fallback;
 }
 
-/** Записать текущий вход в журнал (вызывается после клиентского OAuth-обмена). */
-export async function recordCurrentLogin() {
-  const supabase = await getSupabaseServer();
-  await recordLogin(supabase);
-}
-
 export async function login(
   _prev: AuthState,
   formData: FormData

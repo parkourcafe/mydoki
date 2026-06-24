@@ -124,20 +124,16 @@ const M = {
 function GoogleButton({ locale, next }: { locale: Locale; next?: string }) {
   const t = M[locale];
   async function google() {
-    // Куда вернуться после OAuth: кладём в sessionStorage (переживает редирект
-    // на Google в той же вкладке), чтобы не трогать список redirect-URL Supabase.
-    if (next) {
-      try {
-        sessionStorage.setItem("postLoginNext", next);
-      } catch {
-        // приватный режим без storage — не критично
-      }
-    }
     const supabase = getSupabaseBrowser();
+    // Куда вернуться после OAuth — передаём в query самого callback-URL.
+    // Обмен кода на сессию и редирект делает серверный route-handler
+    // /auth/callback, поэтому sessionStorage здесь не нужен.
+    const callback = new URL("/auth/callback", window.location.origin);
+    if (next) callback.searchParams.set("next", next);
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: callback.toString(),
       },
     });
   }
