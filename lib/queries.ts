@@ -63,8 +63,8 @@ export async function listSpaces(): Promise<{ id: string; name: string }[]> {
   return (data ?? []) as { id: string; name: string }[];
 }
 
-/** Лимит хранилища по умолчанию, если в households не задан (500 МБ). */
-export const DEFAULT_STORAGE_LIMIT = 524_288_000;
+/** Лимит хранилища по умолчанию, если в households не задан (2 ГБ). */
+export const DEFAULT_STORAGE_LIMIT = 2_147_483_648;
 
 /**
  * Сколько места занято файлами пространства и каков лимит (в байтах).
