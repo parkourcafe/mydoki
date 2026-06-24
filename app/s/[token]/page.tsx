@@ -67,6 +67,21 @@ const M = {
     footer:
       "🔐 Tautan aman “Brankas Keluarga”. Akses dibatasi waktu dan dicatat.",
   },
+  uz: {
+    invalidTitle: "Havola yaroqsiz",
+    invalidIntro:
+      "Uning muddati oʻtgan, koʻrishlar chegarasiga yetilgan yoki havola bekor qilingan.",
+    sharedWithYou: "Siz bilan ulashilgan hujjat",
+    validUntil: "amal qiladi",
+    noServiceKey: "Fayllarni oldindan koʻrish imkonsiz: serverda yoʻq",
+    noFiles: "Bu hujjatga fayllar biriktirilmagan.",
+    file: "fayl",
+    watermark: "Oilaviy seyf · faqat koʻrish",
+    open: "Ochish",
+    download: "↓ Asl nusxasini yuklab olish",
+    footer:
+      "🔐 «Oilaviy seyf»ning xavfsiz havolasi. Kirish vaqt bilan cheklangan va qayd etiladi.",
+  },
 } as const;
 
 function Shell({ children }: { children: React.ReactNode }) {

@@ -32,6 +32,18 @@ const M = {
     until: "until",
     prompt: "Enter a query or pick a category.",
   },
+  uz: {
+    title: "Qidiruv",
+    subtitle: "Nomi, turi yoki kim tomonidan berilgani boʻyicha — oilangiz doirasida.",
+    query: "Soʻrov",
+    queryPlaceholder: "pasport, diplom, sugʻurta…",
+    category: "Toifa",
+    all: "Barchasi",
+    searchBtn: "Qidirish",
+    notFound: "Hech narsa topilmadi.",
+    until: "gacha",
+    prompt: "Soʻrov kiriting yoki toifani tanlang.",
+  },
   id: {
     title: "Cari",
     subtitle: "Berdasarkan judul, jenis, atau penerbit — dalam keluarga Anda.",

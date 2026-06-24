@@ -20,6 +20,11 @@ const ROLE_LABEL: Record<Locale, Record<string, string>> = {
     editor: "Editor",
     viewer: "Peninjau",
   },
+  uz: {
+    owner: "Egasi",
+    editor: "Muharrir",
+    viewer: "Koʻruvchi",
+  },
 };
 
 const M = {
@@ -49,6 +54,15 @@ const M = {
     roleLine: (role: string, email: string) =>
       `Peran: ${role}. Anda akan bergabung sebagai ${email}.`,
     accept: "Terima undangan",
+  },
+  uz: {
+    invalidTitle: "Taklifnoma yaroqsiz",
+    invalidIntro: "Havolaning muddati oʻtgan yoki allaqachon ishlatilgan.",
+    toDashboard: "Boshqaruv paneliga",
+    inviteTo: (h: string) => `«${h}»ga taklifnoma`,
+    roleLine: (role: string, email: string) =>
+      `Rol: ${role}. Siz ${email} sifatida qoʻshilasiz.`,
+    accept: "Taklifnomani qabul qilish",
   },
 } as const;
 

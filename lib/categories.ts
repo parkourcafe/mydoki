@@ -18,40 +18,47 @@ export type RecordKind =
 
 export type AssetType = "vehicle" | "real_estate" | "other";
 
-type L<K extends string> = { key: K; emoji: string; ru: string; en: string; id: string };
+type L<K extends string> = {
+  key: K;
+  emoji: string;
+  ru: string;
+  en: string;
+  id: string;
+  uz: string;
+};
 
 /* ── Данные (многоязычные) ───────────────────────────────────────── */
 
 const CAT: L<DocCategory>[] = [
-  { key: "identity", emoji: "🪪", ru: "Удостоверения", en: "ID documents", id: "Dokumen identitas" },
-  { key: "education", emoji: "🎓", ru: "Образование", en: "Education", id: "Pendidikan" },
-  { key: "medical", emoji: "🩺", ru: "Медицина", en: "Medical", id: "Medis" },
-  { key: "financial", emoji: "💳", ru: "Финансы", en: "Finance", id: "Keuangan" },
-  { key: "legal", emoji: "📜", ru: "Юридические", en: "Legal", id: "Hukum" },
-  { key: "other", emoji: "🗂️", ru: "Прочее", en: "Other", id: "Lainnya" },
+  { key: "identity", emoji: "🪪", ru: "Удостоверения", en: "ID documents", id: "Dokumen identitas", uz: "Shaxsiy hujjatlar" },
+  { key: "education", emoji: "🎓", ru: "Образование", en: "Education", id: "Pendidikan", uz: "Ta'lim" },
+  { key: "medical", emoji: "🩺", ru: "Медицина", en: "Medical", id: "Medis", uz: "Tibbiyot" },
+  { key: "financial", emoji: "💳", ru: "Финансы", en: "Finance", id: "Keuangan", uz: "Moliya" },
+  { key: "legal", emoji: "📜", ru: "Юридические", en: "Legal", id: "Hukum", uz: "Yuridik" },
+  { key: "other", emoji: "🗂️", ru: "Прочее", en: "Other", id: "Lainnya", uz: "Boshqa" },
 ];
 
 const REL: L<string>[] = [
-  { key: "self", emoji: "", ru: "Я", en: "Me", id: "Saya" },
-  { key: "spouse", emoji: "", ru: "Супруг(а)", en: "Spouse", id: "Pasangan" },
-  { key: "child", emoji: "", ru: "Ребёнок", en: "Child", id: "Anak" },
-  { key: "parent", emoji: "", ru: "Родитель", en: "Parent", id: "Orang tua" },
-  { key: "other", emoji: "", ru: "Другое", en: "Other", id: "Lainnya" },
+  { key: "self", emoji: "", ru: "Я", en: "Me", id: "Saya", uz: "Men" },
+  { key: "spouse", emoji: "", ru: "Супруг(а)", en: "Spouse", id: "Pasangan", uz: "Turmush o'rtoq" },
+  { key: "child", emoji: "", ru: "Ребёнок", en: "Child", id: "Anak", uz: "Farzand" },
+  { key: "parent", emoji: "", ru: "Родитель", en: "Parent", id: "Orang tua", uz: "Ota-ona" },
+  { key: "other", emoji: "", ru: "Другое", en: "Other", id: "Lainnya", uz: "Boshqa" },
 ];
 
 const REC: L<RecordKind>[] = [
-  { key: "medical_analysis", emoji: "🧪", ru: "Анализ", en: "Lab test", id: "Hasil lab" },
-  { key: "prescription", emoji: "💊", ru: "Назначение", en: "Prescription", id: "Resep" },
-  { key: "vaccination", emoji: "💉", ru: "Прививка", en: "Vaccination", id: "Vaksinasi" },
-  { key: "nutrition", emoji: "🥗", ru: "Питание", en: "Nutrition", id: "Nutrisi" },
-  { key: "note", emoji: "📝", ru: "Заметка", en: "Note", id: "Catatan" },
-  { key: "other", emoji: "•", ru: "Другое", en: "Other", id: "Lainnya" },
+  { key: "medical_analysis", emoji: "🧪", ru: "Анализ", en: "Lab test", id: "Hasil lab", uz: "Tahlil" },
+  { key: "prescription", emoji: "💊", ru: "Назначение", en: "Prescription", id: "Resep", uz: "Retsept" },
+  { key: "vaccination", emoji: "💉", ru: "Прививка", en: "Vaccination", id: "Vaksinasi", uz: "Emlash" },
+  { key: "nutrition", emoji: "🥗", ru: "Питание", en: "Nutrition", id: "Nutrisi", uz: "Ovqatlanish" },
+  { key: "note", emoji: "📝", ru: "Заметка", en: "Note", id: "Catatan", uz: "Eslatma" },
+  { key: "other", emoji: "•", ru: "Другое", en: "Other", id: "Lainnya", uz: "Boshqa" },
 ];
 
 const AST: L<AssetType>[] = [
-  { key: "vehicle", emoji: "🚗", ru: "Транспорт", en: "Vehicle", id: "Kendaraan" },
-  { key: "real_estate", emoji: "🏠", ru: "Недвижимость", en: "Real estate", id: "Properti" },
-  { key: "other", emoji: "📦", ru: "Другое", en: "Other", id: "Lainnya" },
+  { key: "vehicle", emoji: "🚗", ru: "Транспорт", en: "Vehicle", id: "Kendaraan", uz: "Transport" },
+  { key: "real_estate", emoji: "🏠", ru: "Недвижимость", en: "Real estate", id: "Properti", uz: "Ko'chmas mulk" },
+  { key: "other", emoji: "📦", ru: "Другое", en: "Other", id: "Lainnya", uz: "Boshqa" },
 ];
 
 /* ── Локализованные аксессоры ────────────────────────────────────── */

@@ -6,6 +6,7 @@ import type { Locale } from "@/lib/i18n";
 const M = {
   ru: { open: "Открыть", download: "Скачать", share: "Поделиться" },
   en: { open: "Open", download: "Download", share: "Share" },
+  uz: { open: "Ochish", download: "Yuklab olish", share: "Ulashish" },
   id: { open: "Buka", download: "Unduh", share: "Bagikan" },
 } as const;
 

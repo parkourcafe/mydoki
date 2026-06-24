@@ -20,6 +20,11 @@ const M = {
     saved: "Tersimpan.",
     save: "Simpan",
   },
+  uz: {
+    label: "SMS ogohlantirishlari uchun telefon",
+    saved: "Saqlandi.",
+    save: "Saqlash",
+  },
 } as const;
 
 /** Телефон для SMS-оповещений — хранится в метаданных пользователя. */

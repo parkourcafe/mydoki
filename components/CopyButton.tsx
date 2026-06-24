@@ -6,6 +6,7 @@ import type { Locale } from "@/lib/i18n";
 const M = {
   ru: { copied: "Скопировано ✓", copy: "Копировать ссылку" },
   en: { copied: "Copied ✓", copy: "Copy link" },
+  uz: { copied: "Nusxalandi ✓", copy: "Havoladan nusxa olish" },
   id: { copied: "Tersalin ✓", copy: "Salin tautan" },
 } as const;
 

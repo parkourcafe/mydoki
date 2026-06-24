@@ -26,6 +26,12 @@ const M = {
     confirmEmail:
       "Akun berhasil dibuat. Konfirmasikan email Anda melalui tautan yang kami kirim, lalu masuk.",
   },
+  uz: {
+    missingCredentials: "Email va parolni kiriting.",
+    signupRequirements: "Email va parol (kamida 8 ta belgi) talab qilinadi.",
+    confirmEmail:
+      "Hisob yaratildi. Biz yuborgan havola orqali emailingizni tasdiqlang, soʻngra kiring.",
+  },
 } as const;
 
 /** Записать текущий вход в журнал (вызывается после клиентского OAuth-обмена). */

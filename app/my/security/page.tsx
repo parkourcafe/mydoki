@@ -89,6 +89,34 @@ const M = {
     fallbackBrowser: "peramban",
     dateLocale: "id-ID",
   },
+  uz: {
+    title: "Xavfsizlik",
+    account: "Hisob",
+    twoFa: "Ikki bosqichli autentifikatsiya (2FA)",
+    loginAlerts: "Kirish haqida ogohlantirishlar",
+    chipEmail: "email",
+    chipSms: "SMS",
+    alertsIntro:
+      "Kimdir yangi qurilmadan kirsa, sizni xabardor qilamiz. Email hisobingiz manziliga; SMS esa quyidagi raqamga yuboriladi (agar SMS xizmati ulangan boʻlsa).",
+    recentLogins: "Soʻnggi kirishlar",
+    noRecords: "Hozircha yozuvlar yoʻq.",
+    newDevice: "yangi qurilma",
+    ipUnknown: "IP nomaʼlum",
+    seeUnknown:
+      "Oʻzingiz amalga oshirmagan kirishni koʻryapsizmi? Hamma joydan chiqing va parolni oʻzgartiring.",
+    signOutAll: "Barcha qurilmalardan chiqish",
+    howProtected: "Himoya qanday ishlaydi",
+    p1: "Hujjatlar maʼlumotlar bazasi darajasida har bir oila boʻyicha izolyatsiya qilingan (RLS).",
+    p2: "Fayllar shaxsiy bucketda saqlanadi, faqat imzolangan URL orqali ochiladi.",
+    p3: "Ulashish bitta hujjatga muddati oʻtadigan, bekor qilinadigan havolalar orqali amalga oshiriladi.",
+    p4: "Havola orqali har bir kirish audit jurnaliga yoziladi.",
+    on: "yoqilgan",
+    off: "oʻchirilgan",
+    unknownDevice: "Nomaʼlum qurilma",
+    fallbackDevice: "qurilma",
+    fallbackBrowser: "brauzer",
+    dateLocale: "uz-UZ",
+  },
 } as const;
 
 function deviceLabel(ua: string | null, t: (typeof M)[Locale]): string {

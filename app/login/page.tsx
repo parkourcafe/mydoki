@@ -34,6 +34,16 @@ const M = {
     privacy: "Privasi",
     terms: "Ketentuan",
   },
+  uz: {
+    badge: "Oilaviy seyf",
+    headingLead: "Oilangizning barcha hujjatlari —",
+    headingAccent: "bitta xavfsiz joyda",
+    subtitle:
+      "Pasportlar, diplomlar, tibbiy kartalar va mulk — qoʻl ostida va himoyalangan.",
+    security: "Standart boʻyicha maxfiy · RLS · maxfiy saqlash",
+    privacy: "Maxfiylik",
+    terms: "Shartlar",
+  },
 } as const;
 
 export default async function LoginPage() {

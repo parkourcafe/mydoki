@@ -6,6 +6,7 @@ const LOCALES: { code: Locale; label: string }[] = [
   { code: "ru", label: "RU" },
   { code: "en", label: "EN" },
   { code: "id", label: "ID" },
+  { code: "uz", label: "UZ" },
 ];
 
 function set(locale: Locale) {

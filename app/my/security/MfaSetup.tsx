@@ -49,6 +49,20 @@ const M = {
     codeLabel: "Kode dari aplikasi",
     confirm: "Konfirmasi",
   },
+  uz: {
+    loading: "Yuklanmoqda…",
+    enabled: "✓ Ikki bosqichli himoya yoqilgan.",
+    authenticatorApp: "Autentifikator ilovasi (TOTP)",
+    remove: "Oʻchirish",
+    notConfigured:
+      "2FA hali sozlanmagan. Autentifikator ilovasini qoʻshing (Google Authenticator, 1Password, Authy va h.k.).",
+    setup: "2FA ni sozlash",
+    scanQr: "QR kodni autentifikator ilovangizda skanerlang:",
+    qrAlt: "2FA sozlash uchun QR kod",
+    enterKey: "Yoki kalitni qoʻlda kiriting:",
+    codeLabel: "Ilovadagi kod",
+    confirm: "Tasdiqlash",
+  },
 } as const;
 
 export default function MfaSetup({ locale }: { locale: Locale }) {

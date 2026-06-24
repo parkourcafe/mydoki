@@ -198,6 +198,60 @@ const M: Record<Locale, Dict> = {
     },
     footer: { copyright: "© 2026 doki.help — Brankas dokumen keluarga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
   },
+  uz: {
+    nav: { login: "Kirish", start: "Bepul boshlash" },
+    hero: {
+      badge: "Butun oilangiz hujjatlari uchun shaxsiy seyf",
+      title: ["Oilangizning barcha", "muhim hujjatlari —", "doimo qoʻl ostida"],
+      subtitle:
+        "Pasportlar, tibbiy natijalar, vizalar, diplomlar, sertifikatlar va sayohat hujjatlari. Istalgan qurilmadan kiring. Eslatmalar oʻzi ishlaydi.",
+      cta1: "Bepul boshlash",
+      cta2: "Bu qanday ishlaydi",
+      trust: ["Istalgan qurilma", "Bepul", "Google orqali kirish"],
+      imgAlt: "Oila hujjatlari — tartibli va qoʻl ostida",
+    },
+    store: {
+      heading: "Seyfingizda nimalarni saqlashingiz mumkin",
+      sub: "Oilangiz uchun muhim boʻlgan hamma narsa — bitta xavfsiz joyda.",
+      medTitle: "Tibbiy natijalar va tahlillar",
+      medBadge: "Sanani aniqlash — bepul",
+      medCol1: ["Laboratoriya tahlili natijalari", "Qon tahlillari, UQT, gormonlar, siydik tahlili", "UTT, MRT, KT, rentgen"],
+      medCol2: ["Shifokor xulosalari", "Emlash sertifikatlari", "Tibbiy maʼlumotnomalar"],
+      medNote: "Sanani aniqlash va aqlli eslatmalar — bepul.",
+      cats: [
+        { icon: "📄", title: "Shaxsiy va migratsiya hujjatlari", items: ["Pasportlar va xalqaro pasportlar", "Vizalar va viza hujjatlari", "Fuqarolik hujjatlari", "Soliq va ijtimoiy sugʻurta raqamlari", "Diplomlar va sertifikatlar"] },
+        { icon: "✈️", title: "Sayohatlar va sayyohlik", items: ["Tur paketlari va voucherlar", "Chiptalar va bronlar", "Sayohat sugʻurtasi", "Kirish/chiqish hujjatlari", "Bolaning sayohatiga ruxsatnomalar"] },
+        { icon: "🚗", title: "Transport va mulk", items: ["Avtomobil sugʻurtasi", "Transport guvohnomalari va roʻyxati", "Mulk hujjatlari va shartnomalar"] },
+        { icon: "🧾", title: "Kvitansiyalar va maʼlumotnomalar", items: ["Toʻlov kvitansiyalari", "Ish / oʻqish maʼlumotnomalari", "Ishonchnomalar"] },
+      ],
+    },
+    how: {
+      heading: "Bu qanday ishlaydi",
+      sub: "Hujjatni yuklang — qolganini ilova bajaradi",
+      steps: [
+        { n: "1", title: "Rasm yoki skan yuklang", text: "Pasport, viza, tibbiy natija, sayohat hujjati — istalgan hujjat." },
+        { n: "2", title: "AI sana oʻqib beradi", text: "U amal qilish muddatini topadi va uni saqlashni taklif qiladi — bepul." },
+        { n: "3", title: "Eslatmalar oling", text: "Viza, tahlil yoki sugʻurta muddati tugashidan oldin ogohlantiriladi." },
+        { n: "4", title: "Kirishni boshqaring", text: "Shifokorlar, banklar yoki qarindoshlarga muddatli havolalar yuboring." },
+      ],
+    },
+    security: {
+      heading: "Hujjatlaringiz xavfsiz",
+      sub: "Bu hujjatlar qanchalik muhimligini bilamiz — va xotirjam boʻlishingiz uchun hammasini puxta qurdik.",
+      items: [
+        { icon: "👨‍👩‍👧", title: "Hujjatlarni faqat oilangiz koʻradi", text: "Kirish maʼlumotlar bazasi darajasida ajratilgan (RLS). Hech bir begona, jumladan biz ham, fayllaringizni ocholmaydi." },
+        { icon: "🛡️", title: "Shifrlash va kirish ogohlantirishlari", text: "Fayllar shaxsiy xotirada, ikki bosqichli kirish va yangi qurilmadan kirishda ogohlantirishlar." },
+        { icon: "🎚️", title: "Kirishni siz boshqarasiz", text: "Hujjatni muddatli havola orqali ulashing va istalgan vaqtda bekor qiling." },
+        { icon: "🙅", title: "Maʼlumotlaringizni sotmaymiz", text: "Maʼlumotlaringizni hech qachon uchinchi shaxslarga bermaymiz yoki sotmaymiz." },
+      ],
+    },
+    cta: {
+      heading: "Oilangizning barcha hujjatlarini yigʻishga tayyormisiz?",
+      sub: "15 daqiqadan kam vaqt — va uzoq saqlanadigan tartib.",
+      button: "Bepul boshlash",
+    },
+    footer: { copyright: "© 2026 doki.help — Oila hujjatlari seyfi", security: "Xavfsizlik", privacy: "Maxfiylik", login: "Kirish" },
+  },
 };
 
 function Check() {

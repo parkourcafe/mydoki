@@ -6,7 +6,7 @@ import { getLocale } from "@/lib/i18n";
 import CopyButton from "@/components/CopyButton";
 import { createInvitation, deleteInvitation } from "../actions";
 
-const ROLE_LABEL: Record<"ru" | "en" | "id", Record<string, string>> = {
+const ROLE_LABEL: Record<"ru" | "en" | "id" | "uz", Record<string, string>> = {
   ru: {
     owner: "Владелец",
     editor: "Редактор",
@@ -16,6 +16,11 @@ const ROLE_LABEL: Record<"ru" | "en" | "id", Record<string, string>> = {
     owner: "Owner",
     editor: "Editor",
     viewer: "Viewer",
+  },
+  uz: {
+    owner: "Egasi",
+    editor: "Muharrir",
+    viewer: "Koʻruvchi",
   },
   id: {
     owner: "Pemilik",
@@ -68,6 +73,28 @@ const M = {
     footerLink: "Family",
     footerRelations: "Available relations:",
     dateLocale: "en-US",
+  },
+  uz: {
+    title: "Oilaga kirish huquqi",
+    subtitle:
+      "Yaqinlaringizni taklif qiling. Rollar: egasi (hammasi), muharrir (oʻqish + tahrirlash), koʻruvchi (faqat oʻqish).",
+    members: "Ishtirokchilar",
+    you: "Siz",
+    notOwner: "Ishtirokchilarni faqat oila egasi taklif qila oladi.",
+    invitations: "Takliflar",
+    noInvitations: "Faol takliflar yoʻq.",
+    until: "gacha",
+    delete: "Oʻchirish",
+    role: "Rol",
+    viewer: "Koʻruvchi",
+    editor: "Muharrir",
+    createInvite: "Taklif yaratish",
+    inviteHint:
+      "Havolani nusxalab, odamga istalgan usulda yuboring. Havola 14 kun amal qiladi.",
+    footerA: "«Ishtirokchilar» — bu oila hisobiga kirish huquqiga ega odamlar. «Oila aʼzolari» (hujjatlari bilan) sahifada qoʻshiladi",
+    footerLink: "Oila",
+    footerRelations: "Mavjud qarindoshlik turlari:",
+    dateLocale: "uz-UZ",
   },
   id: {
     title: "Akses keluarga",

@@ -85,6 +85,32 @@ const M = {
     signUp: "Daftar",
     or: "atau",
   },
+  uz: {
+    googleSignIn: "Google orqali kirish",
+    enterEmail: "Emailingizni kiriting.",
+    resetSent:
+      "Agar bunday email mavjud boʻlsa, biz parolni tiklash havolasini yubordik. Pochtangizni (va “Spam” jildini) tekshiring.",
+    backToLogin: "← Kirish sahifasiga qaytish",
+    resetHint:
+      "Emailingizni kiriting — yangi parol oʻrnatish uchun havola yuboramiz.",
+    email: "Email",
+    sending: "Yuborilmoqda…",
+    sendLink: "Havola yuborish",
+    password: "Parol",
+    forgotPassword: "Parolni unutdingizmi?",
+    consentLead: "Men qabul qilaman",
+    consentTerms: "Shartlar",
+    consentAnd: "va",
+    consentPrivacy: "Maxfiylik siyosati",
+    consentTrail: "hamda shaxsiy maʼlumotlarimni qayta ishlashga rozilik beraman.",
+    submitting: "Bir lahza…",
+    signIn: "Kirish",
+    createAccount: "Hisob yaratish",
+    noAccount: "Hisobingiz yoʻqmi? ",
+    haveAccount: "Hisobingiz bormi? ",
+    signUp: "Roʻyxatdan oʻtish",
+    or: "yoki",
+  },
 } as const;
 
 function GoogleButton({ locale }: { locale: Locale }) {

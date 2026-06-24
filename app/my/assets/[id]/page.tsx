@@ -35,6 +35,14 @@ const M = {
     addDocument: "+ Tambah dokumen",
     deleteObject: "Hapus barang",
   },
+  uz: {
+    back: "← Mol-mulk",
+    empty: "Bu obʼyekt boʻyicha hozircha hujjatlar yoʻq. Quyida birinchisini qoʻshing.",
+    validUntil: "amal qiladi",
+    noExpiry: "muddatsiz",
+    addDocument: "+ Hujjat qoʻshish",
+    deleteObject: "Obʼyektni oʻchirish",
+  },
 } as const;
 
 export default async function AssetPage({

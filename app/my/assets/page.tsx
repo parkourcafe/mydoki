@@ -47,6 +47,20 @@ const M = {
     detailsPlaceholder: "nomor pelat, VIN, alamat, nomor sertifikat…",
     add: "Tambah",
   },
+  uz: {
+    title: "Mol-mulk",
+    intro:
+      "Mashinalar, koʻchmas mulk va boshqa obʼyektlar — har biri oʻz hujjatlari bilan (texpasport, sugʻurta, shartnomalar, kvitansiyalar).",
+    empty:
+      "Hozircha obʼyektlar yoʻq. Quyida birinchisini qoʻshing — masalan, mashina yoki kvartira.",
+    addObject: "+ Obʼyekt qoʻshish",
+    type: "Turi",
+    name: "Nomi",
+    namePlaceholder: "BMW X5 / Lenin koʻchasidagi kvartira",
+    details: "Tafsilotlar (ixtiyoriy)",
+    detailsPlaceholder: "davlat raqami, VIN, manzil, kadastr raqami…",
+    add: "Qoʻshish",
+  },
 } as const;
 
 export default async function AssetsPage() {

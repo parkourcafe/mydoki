@@ -29,6 +29,18 @@ const M = {
     birthDate: "Date of birth",
     add: "Add",
   },
+  uz: {
+    title: "Oila",
+    subtitle: "Har bir insonning hujjatlari va yozuvlari bir joyda.",
+    export: "↓ Eksport",
+    empty: "Hozircha hech kim yoʻq. Quyida birinchi oila aʼzosini qoʻshing.",
+    addMember: "+ Oila aʼzosini qoʻshish",
+    name: "Ism",
+    namePlaceholder: "Ali Valiyev",
+    relation: "Qarindoshlik",
+    birthDate: "Tugʻilgan sana",
+    add: "Qoʻshish",
+  },
   id: {
     title: "Keluarga",
     subtitle: "Dokumen dan catatan setiap orang di satu tempat.",

@@ -23,6 +23,14 @@ const M = {
     overdue: (n: number) => `overdue by ${n} d.`,
     daysLeft: (n: number) => `${n} d.`,
   },
+  uz: {
+    title: "Muddatlar",
+    subtitle: "Keyingi 60 kun ichida amal qilish muddati tugaydigan hujjatlar.",
+    empty: "Yaqin orada hech narsaning muddati tugamaydi 🎉",
+    until: "gacha",
+    overdue: (n: number) => `${n} kunga kechikkan`,
+    daysLeft: (n: number) => `${n} kun`,
+  },
   id: {
     title: "Tenggat waktu",
     subtitle: "Dokumen yang masa berlakunya habis dalam 60 hari ke depan.",

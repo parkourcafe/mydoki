@@ -33,6 +33,18 @@ const M = {
     until: (d: string) => `until ${d}`,
     noExpiry: "no expiry",
   },
+  uz: {
+    healthCard: "Tibbiy karta",
+    intro: "Yozuvlar tarixi: tahlillar, emlashlar, retseptlar, ovqatlanish.",
+    all: "Barchasi",
+    records: "Yozuvlar",
+    emptyOfKind: "Bu turdagi yozuvlar hozircha yoʻq. Ularni shaxs sahifasida qoʻshishingiz mumkin.",
+    empty: "Hozircha yozuvlar yoʻq. Ularni shaxs sahifasida qoʻshishingiz mumkin.",
+    noDate: "sanasiz",
+    medDocs: "🩺 Tibbiy hujjatlar",
+    until: (d: string) => `${d} gacha`,
+    noExpiry: "muddatsiz",
+  },
   id: {
     healthCard: "Kartu kesehatan",
     intro: "Riwayat catatan: hasil lab, vaksinasi, resep, nutrisi.",

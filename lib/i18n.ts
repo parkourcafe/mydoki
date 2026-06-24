@@ -1,20 +1,22 @@
 import "server-only";
 import { cookies, headers } from "next/headers";
 
-export type Locale = "ru" | "en" | "id";
+export type Locale = "ru" | "en" | "id" | "uz";
+
+const LOCALES: Locale[] = ["ru", "en", "id", "uz"];
 
 /**
  * Язык интерфейса: явный выбор из cookie `locale`, иначе — по языку браузера
- * (Accept-Language). Русский → ru, индонезийский → id, остальное → en.
+ * (Accept-Language). ru → русский, id → индонезийский, uz → узбекский, остальное → en.
  */
 export async function getLocale(): Promise<Locale> {
-  const fromCookie = (await cookies()).get("locale")?.value;
-  if (fromCookie === "ru" || fromCookie === "en" || fromCookie === "id")
-    return fromCookie;
+  const fromCookie = (await cookies()).get("locale")?.value as Locale | undefined;
+  if (fromCookie && LOCALES.includes(fromCookie)) return fromCookie;
 
   const al = (await headers()).get("accept-language") ?? "";
   const primary = al.split(",")[0]?.trim().toLowerCase() ?? "";
   if (primary.startsWith("ru")) return "ru";
   if (primary.startsWith("id")) return "id";
+  if (primary.startsWith("uz")) return "uz";
   return "en";
 }

@@ -21,6 +21,13 @@ const DICT = {
     create: "Create space",
     hint: "For example: “Personal”, “My company”.",
   },
+  uz: {
+    space: "Makon",
+    spaces: "Makonlar",
+    newSpace: "Yangi makon",
+    create: "Makon yaratish",
+    hint: "Masalan: «Shaxsiy», «Mening kompaniyam».",
+  },
   id: {
     space: "Ruang",
     spaces: "Ruang",

@@ -42,6 +42,18 @@ const M = {
     saving: "Menyimpan…",
     savePassword: "Simpan kata sandi",
   },
+  uz: {
+    heading: "Yangi parol",
+    pwTooShort: "Parol kamida 8 ta belgidan iborat boʻlishi kerak.",
+    pwMismatch: "Parollar mos kelmaydi.",
+    updated: "Parol yangilandi. Hisobingizga yoʻnaltirilmoqda…",
+    notFromLink:
+      "Bu sahifani emaildagi havolasiz ochdingizmi? Kirish sahifasida parolni tiklashni qaytadan soʻrang. Havola cheklangan vaqt davomida amal qiladi.",
+    newPassword: "Yangi parol",
+    repeatPassword: "Parolni takrorlang",
+    saving: "Saqlanmoqda…",
+    savePassword: "Parolni saqlash",
+  },
 } as const;
 
 export default function ResetPasswordPage() {
