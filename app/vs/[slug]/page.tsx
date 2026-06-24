@@ -68,7 +68,8 @@ export async function generateMetadata({
   const { slug } = await params;
   const cmp = getComparison(slug);
   if (!cmp) return {};
-  const c = cmp.locales[await getLocale()];
+  const loc = await getLocale();
+  const c = cmp.locales[loc] ?? cmp.locales.ru;
   return {
     title: c.title,
     description: c.subtitle,
@@ -99,8 +100,10 @@ export default async function ComparisonPage({
   if (!cmp) notFound();
 
   const locale: Locale = await getLocale();
-  const c = cmp.locales[locale];
-  const t = UI[locale];
+  // RU-only сравнения (например, Госуслуги) показываем на русском при любом языке.
+  const contentLocale: Locale = cmp.locales[locale] ? locale : "ru";
+  const c = cmp.locales[contentLocale]!;
+  const t = UI[contentLocale];
 
   const breadcrumb = {
     "@context": "https://schema.org",
@@ -122,7 +125,7 @@ export default async function ComparisonPage({
   };
 
   return (
-    <div lang={locale} className="min-h-screen bg-[#f9f5f0] text-[#2c2522]">
+    <div lang={contentLocale} className="min-h-screen bg-[#f9f5f0] text-[#2c2522]">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }}
@@ -237,7 +240,7 @@ export default async function ComparisonPage({
       <section className="mx-auto max-w-screen-xl px-5 py-6">
         <h2 className="section-header mb-4">{t.seeAlso}</h2>
         <div className="flex flex-wrap gap-2.5">
-          {segmentLinks(locale).map((s) => (
+          {segmentLinks(contentLocale).map((s) => (
             <Link
               key={s.key}
               href={`/for/${s.key}`}

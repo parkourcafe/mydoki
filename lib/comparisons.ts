@@ -1,8 +1,8 @@
 import type { Locale } from "./i18n";
 
-export type ComparisonKey = "paper" | "cloud" | "gallery";
+export type ComparisonKey = "paper" | "cloud" | "gallery" | "notary" | "gosuslugi";
 
-export const COMPARISON_KEYS: ComparisonKey[] = ["paper", "cloud", "gallery"];
+export const COMPARISON_KEYS: ComparisonKey[] = ["paper", "cloud", "gallery", "notary", "gosuslugi"];
 
 export type ComparisonRow = { aspect: string; alt: string; doki: string };
 export type ComparisonFaq = { q: string; a: string };
@@ -18,7 +18,12 @@ export type ComparisonContent = {
   faq: ComparisonFaq[];
 };
 
-type Comparison = { emoji: string; locales: Record<Locale, ComparisonContent> };
+// `ru` обязателен; остальные локали опциональны — некоторые сравнения
+// (например, Госуслуги) релевантны только русскому рынку.
+type Comparison = {
+  emoji: string;
+  locales: { ru: ComparisonContent } & Partial<Record<Locale, ComparisonContent>>;
+};
 
 const DATA: Record<ComparisonKey, Comparison> = {
   paper: {
@@ -432,18 +437,194 @@ const DATA: Record<ComparisonKey, Comparison> = {
       },
     },
   },
+  notary: {
+    emoji: "📜",
+    locales: {
+      ru: {
+        navLabel: "vs нотариус",
+        altName: "Нотариальные копии",
+        title: "Нотариальные копии или электронные документы: что под рукой",
+        subtitle:
+          "Заверенные копии лежат в папке и стоят денег за каждую. Сравниваем нотариальные копии и цифровые документы в doki.help.",
+        intro:
+          "Нотариальная копия нужна для официальных процедур, но в быту чаще требуется просто быстро показать или отправить документ. Платить за копию и хранить её в папке ради этого — лишнее. doki.help держит рабочие копии под рукой, а к нотариусу вы идёте только когда это действительно нужно.",
+        rows: [
+          { aspect: "Сколько стоит", alt: "Платно за каждую копию", doki: "Бесплатно, копий сколько нужно" },
+          { aspect: "Где лежит", alt: "В бумажной папке дома", doki: "В телефоне, доступ из любой точки" },
+          { aspect: "Быстро показать", alt: "Достать из папки, а она дома", doki: "Открыть на телефоне за секунды" },
+          { aspect: "Передать другому", alt: "Отдать копию из рук в руки", doki: "Поделиться по защищённой ссылке" },
+          { aspect: "Когда нужна", alt: "Для официальных процедур", doki: "Для повседневного доступа и обмена" },
+          { aspect: "Потеря", alt: "Сделать и оплатить заново", doki: "Копия в облаке, не потеряется" },
+        ],
+        verdict:
+          "Нотариальная копия незаменима там, где нужна официально заверенная бумага. Но для повседневных задач — показать, отправить, не потерять — удобнее цифровая копия в doki.help.",
+        faq: [
+          {
+            q: "Заменяет ли doki.help нотариально заверенную копию?",
+            a: "Нет. Для официальных процедур нужна заверенная копия. doki.help хранит рабочие копии для повседневного доступа, поиска и обмена.",
+          },
+          {
+            q: "Зачем хранить документы цифрово, если есть нотариальные копии?",
+            a: "Заверенная копия нужна редко и стоит денег. Цифровая копия под рукой всегда — её можно показать, отправить и не платить за каждую.",
+          },
+          {
+            q: "Это безопасно?",
+            a: "Документы лежат в защищённом облаке, доступ — только у вас и тех, кому вы дали временную ссылку.",
+          },
+        ],
+      },
+      en: {
+        navLabel: "vs notary",
+        altName: "Notarized copies",
+        title: "Notarized copies vs digital documents: what's at hand",
+        subtitle:
+          "Certified copies sit in a folder and cost money each time. We compare notarized copies and digital documents in doki.help.",
+        intro:
+          "A notarized copy is needed for official procedures, but day to day you usually just need to show or send a document quickly. Paying for a copy and keeping it in a folder for that is overkill. doki.help keeps working copies at hand, and you visit a notary only when it's truly required.",
+        rows: [
+          { aspect: "What it costs", alt: "Paid for each copy", doki: "Free, as many copies as you need" },
+          { aspect: "Where it lives", alt: "In a paper folder at home", doki: "On your phone, accessible anywhere" },
+          { aspect: "Showing it quickly", alt: "Dig it out of the folder, which is at home", doki: "Open it on your phone in seconds" },
+          { aspect: "Handing to someone", alt: "Hand over a copy in person", doki: "Share via a secure link" },
+          { aspect: "When it's needed", alt: "For official procedures", doki: "For everyday access and sharing" },
+          { aspect: "Loss", alt: "Make and pay for it again", doki: "A copy in the cloud, never lost" },
+        ],
+        verdict:
+          "A notarized copy is irreplaceable where an officially certified paper is required. But for everyday tasks — show, send, don't lose — a digital copy in doki.help is handier.",
+        faq: [
+          {
+            q: "Does doki.help replace a notarized copy?",
+            a: "No. Official procedures need a certified copy. doki.help keeps working copies for everyday access, search and sharing.",
+          },
+          {
+            q: "Why keep documents digitally if I have notarized copies?",
+            a: "A certified copy is rarely needed and costs money. A digital copy is always at hand — show it, send it, and pay nothing per copy.",
+          },
+          {
+            q: "Is it secure?",
+            a: "Documents are kept in a secure cloud, accessible only to you and those you give a temporary link.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "vs notaris",
+        altName: "Salinan ternotarisasi",
+        title: "Salinan ternotarisasi vs dokumen digital: mana yang siap pakai",
+        subtitle:
+          "Salinan tersertifikasi tersimpan di map dan berbiaya tiap kali. Kami membandingkan salinan notaris dan dokumen digital di doki.help.",
+        intro:
+          "Salinan ternotarisasi diperlukan untuk prosedur resmi, tapi sehari-hari Anda biasanya hanya perlu menunjukkan atau mengirim dokumen dengan cepat. Membayar salinan dan menyimpannya di map untuk itu berlebihan. doki.help menyimpan salinan kerja yang siap pakai, dan Anda ke notaris hanya saat benar-benar perlu.",
+        rows: [
+          { aspect: "Berapa biayanya", alt: "Berbayar tiap salinan", doki: "Gratis, sebanyak yang dibutuhkan" },
+          { aspect: "Di mana tersimpan", alt: "Di map kertas di rumah", doki: "Di ponsel, bisa diakses di mana saja" },
+          { aspect: "Menunjukkan cepat", alt: "Mengeluarkannya dari map yang ada di rumah", doki: "Buka di ponsel dalam hitungan detik" },
+          { aspect: "Menyerahkan ke orang lain", alt: "Menyerahkan salinan langsung", doki: "Bagikan lewat tautan aman" },
+          { aspect: "Kapan diperlukan", alt: "Untuk prosedur resmi", doki: "Untuk akses dan berbagi sehari-hari" },
+          { aspect: "Hilang", alt: "Buat dan bayar lagi", doki: "Salinan di cloud, tak akan hilang" },
+        ],
+        verdict:
+          "Salinan ternotarisasi tak tergantikan di mana dokumen tersertifikasi resmi diperlukan. Tapi untuk tugas sehari-hari — menunjukkan, mengirim, tak kehilangan — salinan digital di doki.help lebih praktis.",
+        faq: [
+          {
+            q: "Apakah doki.help menggantikan salinan ternotarisasi?",
+            a: "Tidak. Prosedur resmi memerlukan salinan tersertifikasi. doki.help menyimpan salinan kerja untuk akses, pencarian, dan berbagi sehari-hari.",
+          },
+          {
+            q: "Mengapa menyimpan dokumen digital jika punya salinan notaris?",
+            a: "Salinan tersertifikasi jarang dibutuhkan dan berbiaya. Salinan digital selalu siap — tunjukkan, kirim, tanpa bayar per salinan.",
+          },
+          {
+            q: "Apakah aman?",
+            a: "Dokumen disimpan di cloud aman, hanya bisa diakses Anda dan orang yang Anda beri tautan sementara.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "vs notarius",
+        altName: "Notarial nusxalar",
+        title: "Notarial nusxalar yoki raqamli hujjatlar: qaysi biri qoʻl ostida",
+        subtitle:
+          "Tasdiqlangan nusxalar papkada turadi va har safar pul turadi. Notarial nusxalar va doki.help’dagi raqamli hujjatlarni taqqoslaymiz.",
+        intro:
+          "Notarial nusxa rasmiy jarayonlar uchun kerak, lekin kundalik hayotda odatda hujjatni tez koʻrsatish yoki yuborish kifoya. Buning uchun nusxaga pul toʻlab, uni papkada saqlash ortiqcha. doki.help ishchi nusxalarni qoʻl ostida saqlaydi, notariusga esa faqat haqiqatan kerak boʻlganda borasiz.",
+        rows: [
+          { aspect: "Qancha turadi", alt: "Har nusxa uchun pullik", doki: "Bepul, kerakli miqdorda nusxa" },
+          { aspect: "Qayerda turadi", alt: "Uydagi qogʻoz papkada", doki: "Telefonda, istalgan joydan kirish" },
+          { aspect: "Tez koʻrsatish", alt: "Uydagi papkadan olish", doki: "Telefonda soniyalarda ochish" },
+          { aspect: "Boshqaga berish", alt: "Nusxani qoʻlma-qoʻl berish", doki: "Xavfsiz havola orqali ulashish" },
+          { aspect: "Qachon kerak", alt: "Rasmiy jarayonlar uchun", doki: "Kundalik kirish va ulashish uchun" },
+          { aspect: "Yoʻqolish", alt: "Qaytadan qilish va toʻlash", doki: "Bulutdagi nusxa yoʻqolmaydi" },
+        ],
+        verdict:
+          "Notarial nusxa rasmiy tasdiqlangan qogʻoz talab qilinadigan joyda oʻrnini bosib boʻlmaydi. Lekin kundalik ishlar uchun — koʻrsatish, yuborish, yoʻqotmaslik — doki.help’dagi raqamli nusxa qulayroq.",
+        faq: [
+          {
+            q: "doki.help notarial nusxani almashtiradimi?",
+            a: "Yoʻq. Rasmiy jarayonlar tasdiqlangan nusxani talab qiladi. doki.help kundalik kirish, qidiruv va ulashish uchun ishchi nusxalarni saqlaydi.",
+          },
+          {
+            q: "Notarial nusxalar boʻlsa, nega hujjatlarni raqamli saqlash kerak?",
+            a: "Tasdiqlangan nusxa kamdan-kam kerak va pullik. Raqamli nusxa doim qoʻl ostida — koʻrsating, yuboring va har nusxa uchun toʻlamang.",
+          },
+          {
+            q: "Bu xavfsizmi?",
+            a: "Hujjatlar xavfsiz bulutda saqlanadi, kirish — faqat sizda va vaqtinchalik havola berganlaringizda.",
+          },
+        ],
+      },
+    },
+  },
+  gosuslugi: {
+    emoji: "🏛️",
+    locales: {
+      ru: {
+        navLabel: "vs Госуслуги",
+        altName: "Папка на Госуслугах",
+        title: "Документы на Госуслугах или в doki.help: в чём разница",
+        subtitle:
+          "На Госуслугах часть документов появляется автоматически, но не все и не для всей семьи. Сравниваем госпортал и личное хранилище документов.",
+        intro:
+          "Госуслуги удобны для части документов — тех, что есть в государственных базах. Но загранпаспорт супруга, прививочный сертификат ребёнка, договор аренды или диплом туда не положишь. doki.help — это ваше личное хранилище для всех документов семьи, а не только тех, что завёл портал.",
+        rows: [
+          { aspect: "Какие документы", alt: "Только из госбаз", doki: "Любые: сканы, фото, договоры, дипломы" },
+          { aspect: "Документы семьи", alt: "В основном только ваши", doki: "Профиль на каждого члена семьи" },
+          { aspect: "Загрузить своё", alt: "Нельзя добавить произвольный документ", doki: "Загрузите любой скан или фото" },
+          { aspect: "Поделиться", alt: "Не предназначено для обмена", doki: "Защищённая ссылка с возможностью отзыва" },
+          { aspect: "Офлайн-доступ", alt: "Нужен вход и интернет", doki: "Открытые документы доступны офлайн" },
+          { aspect: "Напоминания о сроках", alt: "Только по части услуг", doki: "По любому документу: паспорт, виза, ОСАГО" },
+        ],
+        verdict:
+          "Госуслуги — отличный источник государственных документов. doki.help дополняет их: хранит то, чего на портале нет, собирает документы всей семьи и даёт безопасно делиться ими.",
+        faq: [
+          {
+            q: "Зачем хранить документы в doki.help, если есть Госуслуги?",
+            a: "На Госуслугах есть только документы из госбаз и в основном ваши. doki.help хранит любые сканы и фото — договоры, дипломы, медкарту — и документы всей семьи.",
+          },
+          {
+            q: "Можно ли сохранить документы с Госуслуг в doki.help?",
+            a: "Да. Скачайте PDF или сделайте скан и загрузите в doki.help — он подскажет категорию, и документ будет под рукой даже офлайн.",
+          },
+          {
+            q: "Чем удобнее обмен через doki.help?",
+            a: "Можно поделиться конкретным документом по временной ссылке и отозвать доступ в любой момент — портал для этого не предназначен.",
+          },
+        ],
+      },
+    },
+  },
 };
 
 export function getComparison(key: string): Comparison | null {
   return (DATA as Record<string, Comparison>)[key] ?? null;
 }
 
-/** Короткие ссылки на сравнения для внутренней перелинковки. */
+/** Короткие ссылки на сравнения для внутренней перелинковки.
+ *  Сравнения без перевода на текущий язык (RU-only) показываются только в ru. */
 export function comparisonLinks(locale: Locale) {
-  return COMPARISON_KEYS.map((key) => ({
+  return COMPARISON_KEYS.filter((key) => DATA[key].locales[locale]).map((key) => ({
     key,
     emoji: DATA[key].emoji,
-    label: DATA[key].locales[locale].navLabel,
+    label: DATA[key].locales[locale]!.navLabel,
   }));
 }
 
