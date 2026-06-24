@@ -34,6 +34,8 @@ type Dict = {
   security: { heading: string; sub: string; items: Sec[] };
   cta: { heading: string; sub: string; button: string };
   faq: { heading: string; items: Faq[] };
+  forWhom: { heading: string; items: string[] };
+  diff: { heading: string; intro: string; items: { t: string; d: string }[] };
   operator: { heading: string; line: string; contactLabel: string };
   footer: { copyright: string; security: string; privacy: string; login: string };
 };
@@ -100,6 +102,26 @@ const M: Record<Locale, Dict> = {
         { q: "Как работают напоминания?", a: "Вы указываете срок действия документа (например, загранпаспорта или ОСАГО), а сервис заранее присылает напоминание на email." },
         { q: "Можно ли поделиться документом?", a: "Да — по временной ссылке, которую можно отозвать в любой момент." },
         { q: "Где хранятся данные?", a: "В защищённом облачном хранилище, передача — по HTTPS. Мы не продаём и не передаём ваши данные третьим лицам." },
+      ],
+    },
+    forWhom: {
+      heading: "Кому подходит",
+      items: [
+        "Семьям, которые хотят собрать все важные документы в одном месте",
+        "Родителям — хранить и не терять документы детей",
+        "Тем, кто часто путешествует: паспорта, визы, страховки под рукой",
+        "Кто боится забыть про срок — продление визы, ОСАГО, паспорта",
+        "Кто делится документами с врачом или юристом по защищённой ссылке",
+      ],
+    },
+    diff: {
+      heading: "Чем это лучше обычного облака",
+      intro: "doki.help — не ещё один файловый диск, а сервис под документы:",
+      items: [
+        { t: "Напоминает о сроках", d: "Указываете дату — напоминание приходит заранее. Обычное облако так не умеет." },
+        { t: "Порядок по людям и категориям", d: "Документы разложены по членам семьи и типам, а не свалены в папки." },
+        { t: "Безопасный обмен по одному документу", d: "Временная ссылка на конкретный файл, которую можно отозвать." },
+        { t: "Работает офлайн", d: "Нужные документы открываются без интернета — в поездке или роуминге." },
       ],
     },
     operator: {
@@ -172,6 +194,26 @@ const M: Record<Locale, Dict> = {
         { q: "Where is my data stored?", a: "In secure cloud storage, with transfer over HTTPS. We never sell or share your data with third parties." },
       ],
     },
+    forWhom: {
+      heading: "Who it's for",
+      items: [
+        "Families who want all important documents in one place",
+        "Parents — keep and never lose your children's documents",
+        "Frequent travelers: passports, visas, insurance at hand",
+        "Anyone afraid of missing a deadline — visa, insurance, passport renewal",
+        "Those who share documents with a doctor or lawyer via a secure link",
+      ],
+    },
+    diff: {
+      heading: "Why it beats a regular cloud",
+      intro: "doki.help isn't just another file drive — it's built for documents:",
+      items: [
+        { t: "Reminds you of deadlines", d: "Set a date and a reminder comes in advance. A regular cloud can't do that." },
+        { t: "Organized by people and categories", d: "Documents are sorted by family member and type, not dumped into folders." },
+        { t: "Safe per-document sharing", d: "A temporary link to a single file that you can revoke." },
+        { t: "Works offline", d: "Open the documents you need with no internet — on a trip or in roaming." },
+      ],
+    },
     operator: {
       heading: "Who runs the service",
       line: "Operator: the owner of the doki.help service, TIN 780728592634.",
@@ -240,6 +282,26 @@ const M: Record<Locale, Dict> = {
         { q: "Bagaimana pengingat bekerja?", a: "Anda menetapkan tanggal berlaku dokumen (misalnya paspor atau asuransi), dan layanan mengirim pengingat ke email lebih awal." },
         { q: "Bisakah saya membagikan dokumen?", a: "Ya — lewat tautan berbatas waktu yang bisa Anda cabut kapan saja." },
         { q: "Di mana data saya disimpan?", a: "Di penyimpanan awan yang aman, dengan transfer lewat HTTPS. Kami tidak pernah menjual atau membagikan data Anda ke pihak ketiga." },
+      ],
+    },
+    forWhom: {
+      heading: "Untuk siapa",
+      items: [
+        "Keluarga yang ingin semua dokumen penting di satu tempat",
+        "Orang tua — menyimpan dan tidak kehilangan dokumen anak",
+        "Sering bepergian: paspor, visa, asuransi selalu siap",
+        "Siapa pun yang takut melewatkan tenggat — visa, asuransi, perpanjangan paspor",
+        "Yang berbagi dokumen dengan dokter atau pengacara lewat tautan aman",
+      ],
+    },
+    diff: {
+      heading: "Kenapa lebih baik dari cloud biasa",
+      intro: "doki.help bukan sekadar drive berkas — dibuat khusus untuk dokumen:",
+      items: [
+        { t: "Mengingatkan tenggat", d: "Tetapkan tanggal dan pengingat datang lebih awal. Cloud biasa tidak bisa." },
+        { t: "Tertata per orang dan kategori", d: "Dokumen disusun per anggota keluarga dan jenis, bukan ditumpuk di folder." },
+        { t: "Berbagi aman per dokumen", d: "Tautan sementara ke satu berkas yang bisa Anda cabut." },
+        { t: "Berfungsi offline", d: "Buka dokumen yang Anda butuhkan tanpa internet — saat bepergian atau roaming." },
       ],
     },
     operator: {
@@ -312,6 +374,26 @@ const M: Record<Locale, Dict> = {
         { q: "Maʼlumotlarim qayerda saqlanadi?", a: "HTTPS orqali uzatiladigan xavfsiz bulutli xotirada. Maʼlumotlaringizni hech qachon uchinchi shaxslarga sotmaymiz yoki bermaymiz." },
       ],
     },
+    forWhom: {
+      heading: "Kimga mos",
+      items: [
+        "Barcha muhim hujjatlarni bitta joyda saqlamoqchi oilalarga",
+        "Ota-onalarga — farzandlar hujjatlarini saqlash va yoʻqotmaslik",
+        "Tez-tez sayohat qiluvchilarga: pasport, viza, sugʻurta qoʻl ostida",
+        "Muddatni unutishdan qoʻrqadiganlarga — viza, sugʻurta, pasportni yangilash",
+        "Hujjatni shifokor yoki yurist bilan xavfsiz havola orqali ulashadiganlarga",
+      ],
+    },
+    diff: {
+      heading: "Oddiy bulutdan nimasi yaxshi",
+      intro: "doki.help — shunchaki fayl diski emas, hujjatlar uchun yaratilgan:",
+      items: [
+        { t: "Muddatlarni eslatadi", d: "Sanani belgilang — eslatma oldindan keladi. Oddiy bulut buni qila olmaydi." },
+        { t: "Odamlar va toifalar boʻyicha tartib", d: "Hujjatlar oila aʼzolari va turlari boʻyicha joylangan, papkalarga tashlanmagan." },
+        { t: "Har bir hujjat uchun xavfsiz ulashish", d: "Bitta faylga vaqtinchalik havola, uni bekor qilish mumkin." },
+        { t: "Oflayn ishlaydi", d: "Kerakli hujjatlarni internetsiz oching — sayohatda yoki roumingda." },
+      ],
+    },
     operator: {
       heading: "Xizmat ortida kim turadi",
       line: "Operator: doki.help xizmati egasi, STIR 780728592634.",
@@ -325,13 +407,60 @@ function Check() {
   return <span className="font-semibold text-[#b85c38]">✓</span>;
 }
 
+/** Структурированные данные для поисковиков (без выдуманных рейтингов/отзывов). */
+function buildJsonLd(t: Dict, locale: Locale, appUrl: string) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${appUrl}/#org`,
+        name: "doki.help",
+        url: appUrl,
+        email: "support@doki.help",
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${appUrl}/#website`,
+        url: appUrl,
+        name: "doki.help",
+        inLanguage: locale,
+        publisher: { "@id": `${appUrl}/#org` },
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: "doki.help",
+        applicationCategory: "ProductivityApplication",
+        operatingSystem: "Web",
+        description: t.hero.subtitle,
+        url: appUrl,
+        offers: { "@type": "Offer", price: "0", priceCurrency: "RUB" },
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: t.faq.items.map((f) => ({
+          "@type": "Question",
+          name: f.q,
+          acceptedAnswer: { "@type": "Answer", text: f.a },
+        })),
+      },
+    ],
+  };
+}
+
 export default async function Home() {
   if (await getUser()) redirect("/my");
   const locale = await getLocale();
   const t = M[locale];
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+  const jsonLd = buildJsonLd(t, locale, appUrl);
 
   return (
     <div lang={locale} className="min-h-screen bg-[#f9f5f0] text-[#2c2522]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* NAV */}
       <nav className="sticky top-0 z-50 border-b border-[#e8e0d5] bg-[#fdfaf5]">
         <div className="mx-auto max-w-screen-xl px-5">
@@ -407,6 +536,20 @@ export default async function Home() {
               className="h-auto w-full rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl"
             />
           </div>
+        </div>
+      </section>
+
+      {/* FOR WHOM */}
+      <section className="mx-auto max-w-screen-xl px-5 py-8">
+        <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-7">
+          <h2 className="section-header mb-5">{t.forWhom.heading}</h2>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {t.forWhom.items.map((it) => (
+              <li key={it} className="flex items-start gap-x-2 text-[#5c5248]">
+                <Check /> <span>{it}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -494,6 +637,22 @@ export default async function Home() {
                   <p className="text-[#5c5248]">{s.text}</p>
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* WHY BETTER THAN A REGULAR CLOUD */}
+      <section className="mx-auto max-w-screen-xl px-5 py-12">
+        <div className="mb-6">
+          <h2 className="section-header mb-2">{t.diff.heading}</h2>
+          <p className="text-xl text-[#5c5248]">{t.diff.intro}</p>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {t.diff.items.map((d) => (
+            <div key={d.t} className="warm-card rounded-3xl border border-[#e8e0d5] p-6">
+              <div className="mb-1.5 text-xl font-semibold">{d.t}</div>
+              <p className="text-[#5c5248]">{d.d}</p>
             </div>
           ))}
         </div>
