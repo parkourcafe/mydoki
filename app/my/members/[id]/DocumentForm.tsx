@@ -16,7 +16,11 @@ const M = {
     filesLabel: "Файлы документа",
     remove: "убрать",
     filesHint:
-      "На телефоне «Сфотографировать» откроет камеру. Файлы грузятся напрямую в приватное хранилище — размер не ограничен.",
+      "На телефоне «Сфотографировать» откроет камеру. Файлы хранятся в приватном хранилище семьи.",
+    free: "Свободно",
+    gb: "ГБ",
+    quotaExceeded:
+      "Не хватает места в хранилище семьи. Удалите ненужные файлы — или напишите нам, чтобы поднять лимит.",
     title: "Название",
     titlePh: "Паспорт РФ",
     category: "Категория",
@@ -49,7 +53,11 @@ const M = {
     filesLabel: "Document files",
     remove: "remove",
     filesHint:
-      "On a phone, “Take a photo” opens the camera. Files are uploaded directly to private storage — no size limit.",
+      "On a phone, “Take a photo” opens the camera. Files are kept in your family's private storage.",
+    free: "Free",
+    gb: "GB",
+    quotaExceeded:
+      "Not enough space in your family's storage. Delete files you don't need — or contact us to raise the limit.",
     title: "Title",
     titlePh: "Passport",
     category: "Category",
@@ -82,7 +90,11 @@ const M = {
     filesLabel: "Hujjat fayllari",
     remove: "olib tashlash",
     filesHint:
-      "Telefonda “Suratga olish” kamerani ochadi. Fayllar toʻgʻridan-toʻgʻri shaxsiy xotiraga yuklanadi — hajmi cheklanmagan.",
+      "Telefonda “Suratga olish” kamerani ochadi. Fayllar oilaning shaxsiy xotirasida saqlanadi.",
+    free: "Boʻsh",
+    gb: "GB",
+    quotaExceeded:
+      "Oila xotirasida joy yetarli emas. Keraksiz fayllarni oʻchiring — yoki limitni oshirish uchun bizga yozing.",
     title: "Nomi",
     titlePh: "Pasport",
     category: "Toifa",
@@ -115,7 +127,11 @@ const M = {
     filesLabel: "Berkas dokumen",
     remove: "hapus",
     filesHint:
-      "Di ponsel, “Ambil foto” membuka kamera. Berkas diunggah langsung ke penyimpanan pribadi — tanpa batas ukuran.",
+      "Di ponsel, “Ambil foto” membuka kamera. Berkas disimpan di penyimpanan pribadi keluarga.",
+    free: "Tersisa",
+    gb: "GB",
+    quotaExceeded:
+      "Ruang penyimpanan keluarga tidak cukup. Hapus berkas yang tidak perlu — atau hubungi kami untuk menaikkan batas.",
     title: "Judul",
     titlePh: "Paspor",
     category: "Kategori",
@@ -167,6 +183,8 @@ const EMPTY: Fields = {
 };
 
 function fmtSize(n: number, t: (typeof M)[Locale]) {
+  if (n >= 1024 * 1024 * 1024)
+    return `${(n / 1024 / 1024 / 1024).toFixed(1)} ${t.gb}`;
   if (n < 1024 * 1024) return `${Math.round(n / 1024)} ${t.kb}`;
   return `${(n / 1024 / 1024).toFixed(1)} ${t.mb}`;
 }
@@ -175,12 +193,18 @@ export default function DocumentForm({
   memberId,
   assetId,
   locale,
+  storageUsed = 0,
+  storageLimit,
 }: {
   memberId?: string;
   assetId?: string;
   locale: Locale;
+  storageUsed?: number;
+  storageLimit?: number;
 }) {
   const t = M[locale];
+  const remaining =
+    storageLimit != null ? Math.max(0, storageLimit - storageUsed) : null;
   const router = useRouter();
   const [f, setF] = useState<Fields>(EMPTY);
   const [files, setFiles] = useState<File[]>([]);
@@ -261,6 +285,14 @@ export default function DocumentForm({
       setSaveErr(t.enterTitle);
       return;
     }
+    // Предпроверка лимита хранилища — не грузим файлы, если места не хватит.
+    if (files.length && storageLimit != null) {
+      const addBytes = files.reduce((s, file) => s + file.size, 0);
+      if (storageUsed + addBytes > storageLimit) {
+        setSaveErr(t.quotaExceeded);
+        return;
+      }
+    }
     setSaving(true);
     try {
       const tags = f.tags
@@ -307,7 +339,8 @@ export default function DocumentForm({
 
       router.push(`/my/documents/${id}`);
     } catch (err) {
-      setSaveErr(err instanceof Error ? err.message : t.saveFail);
+      const m = err instanceof Error ? err.message : "";
+      setSaveErr(m === "QUOTA_EXCEEDED" ? t.quotaExceeded : m || t.saveFail);
       setSaving(false);
     }
   }
@@ -385,6 +418,11 @@ export default function DocumentForm({
         )}
 
         <p className="mt-2 text-xs text-slate-500">{t.filesHint}</p>
+        {remaining != null && storageLimit != null && (
+          <p className="mt-1 text-xs text-slate-400">
+            {t.free}: {fmtSize(remaining, t)} / {fmtSize(storageLimit, t)}
+          </p>
+        )}
         {msg && <p className="mt-1 text-xs text-slate-600">{msg}</p>}
       </div>
 

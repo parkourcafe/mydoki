@@ -4,7 +4,11 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { getDocument, getOrCreateHouseholdId } from "@/lib/queries";
+import {
+  getDocument,
+  getOrCreateHouseholdId,
+  getStorageInfo,
+} from "@/lib/queries";
 
 export async function signOut() {
   const supabase = await getSupabaseServer();
@@ -170,6 +174,15 @@ export async function attachDocumentFile(input: {
   sizeBytes: number;
 }) {
   const supabase = await getSupabaseServer();
+
+  // Лимит хранилища пространства: не даём превысить.
+  const { used, limit } = await getStorageInfo(input.householdId);
+  if (used + input.sizeBytes > limit) {
+    // файл уже залит браузером — убираем «сироту», чтобы не копить мусор
+    await supabase.storage.from("vault-files").remove([input.storagePath]);
+    throw new Error("QUOTA_EXCEEDED");
+  }
+
   const { error } = await supabase.from("document_files").insert({
     document_id: input.documentId,
     household_id: input.householdId,

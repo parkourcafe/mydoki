@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   getMember,
+  getStorageInfo,
   listDocumentsByMember,
   listRecordsByMember,
 } from "@/lib/queries";
@@ -115,9 +116,10 @@ export default async function MemberPage({
   const member = await getMember(id);
   if (!member) notFound();
 
-  const [docs, records] = await Promise.all([
+  const [docs, records, storage] = await Promise.all([
     listDocumentsByMember(id),
     listRecordsByMember(id),
+    getStorageInfo(member.household_id),
   ]);
 
   const byCategory = new Map<DocCategory, typeof docs>();
@@ -180,7 +182,12 @@ export default async function MemberPage({
 
       <details className="card">
         <summary className="cursor-pointer font-medium">{t.addDocument}</summary>
-        <DocumentForm memberId={member.id} locale={locale} />
+        <DocumentForm
+          memberId={member.id}
+          locale={locale}
+          storageUsed={storage.used}
+          storageLimit={storage.limit}
+        />
       </details>
 
       {/* Записи (медкарта/заметки без файла) */}

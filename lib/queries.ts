@@ -63,6 +63,37 @@ export async function listSpaces(): Promise<{ id: string; name: string }[]> {
   return (data ?? []) as { id: string; name: string }[];
 }
 
+/** Лимит хранилища по умолчанию, если в households не задан (500 МБ). */
+export const DEFAULT_STORAGE_LIMIT = 524_288_000;
+
+/**
+ * Сколько места занято файлами пространства и каков лимит (в байтах).
+ * Сумма считается по document_files; RLS отдаёт только доступные строки.
+ */
+export async function getStorageInfo(
+  householdId: string
+): Promise<{ used: number; limit: number }> {
+  const supabase = await getSupabaseServer();
+  const [filesRes, hhRes] = await Promise.all([
+    supabase
+      .from("document_files")
+      .select("size_bytes")
+      .eq("household_id", householdId),
+    supabase
+      .from("households")
+      .select("storage_limit_bytes")
+      .eq("id", householdId)
+      .maybeSingle(),
+  ]);
+  if (filesRes.error) throw filesRes.error;
+  const used = (filesRes.data ?? []).reduce(
+    (sum, r) => sum + (Number(r.size_bytes) || 0),
+    0
+  );
+  const limit = Number(hhRes.data?.storage_limit_bytes) || DEFAULT_STORAGE_LIMIT;
+  return { used, limit };
+}
+
 export async function getMyRole(householdId: string): Promise<string | null> {
   const supabase = await getSupabaseServer();
   const user = await getUser();

@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { getOrCreateHouseholdId, listMembers } from "@/lib/queries";
+import {
+  getOrCreateHouseholdId,
+  getStorageInfo,
+  listMembers,
+} from "@/lib/queries";
 import { relations, relationLabel } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import StorageBar from "@/components/StorageBar";
 import { createMember } from "./actions";
 
 const M = {
@@ -60,7 +65,10 @@ export default async function MyHome() {
   const t = M[locale];
 
   const householdId = await getOrCreateHouseholdId();
-  const members = await listMembers(householdId);
+  const [members, storage] = await Promise.all([
+    listMembers(householdId),
+    getStorageInfo(householdId),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -75,6 +83,8 @@ export default async function MyHome() {
           {t.export}
         </a>
       </div>
+
+      <StorageBar used={storage.used} limit={storage.limit} locale={locale} />
 
       {members.length === 0 ? (
         <div className="card text-center text-slate-500">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAsset, listDocumentsByAsset } from "@/lib/queries";
+import { getAsset, getStorageInfo, listDocumentsByAsset } from "@/lib/queries";
 import {
   assetTypeLabel,
   categories,
@@ -57,7 +57,10 @@ export default async function AssetPage({
   const asset = await getAsset(id);
   if (!asset) notFound();
 
-  const docs = await listDocumentsByAsset(id);
+  const [docs, storage] = await Promise.all([
+    listDocumentsByAsset(id),
+    getStorageInfo(asset.household_id),
+  ]);
   const byCategory = new Map<DocCategory, typeof docs>();
   for (const d of docs) {
     const arr = byCategory.get(d.category) ?? [];
@@ -111,7 +114,12 @@ export default async function AssetPage({
 
       <details className="card">
         <summary className="cursor-pointer font-medium">{t.addDocument}</summary>
-        <DocumentForm assetId={asset.id} locale={locale} />
+        <DocumentForm
+          assetId={asset.id}
+          locale={locale}
+          storageUsed={storage.used}
+          storageLimit={storage.limit}
+        />
       </details>
 
       <section>
