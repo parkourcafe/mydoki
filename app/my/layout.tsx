@@ -18,9 +18,9 @@ const M = {
     access: "Доступ",
     security: "Безопасность",
     offline: "Офлайн",
-    mfaWarning: "⚠️ Двухфакторная защита не настроена.",
+    mfaWarning: "🔒 Хотите усилить защиту?",
     enable2fa: "Включить 2FA",
-    mfaRecommend: "— это рекомендуется для документов.",
+    mfaRecommend: "— дополнительная защита для ваших документов.",
   },
   en: {
     brand: "Family vault",
@@ -32,9 +32,9 @@ const M = {
     access: "Access",
     security: "Security",
     offline: "Offline",
-    mfaWarning: "⚠️ Two-factor protection is not set up.",
+    mfaWarning: "🔒 Want extra protection?",
     enable2fa: "Enable 2FA",
-    mfaRecommend: "— recommended for your documents.",
+    mfaRecommend: "— an extra layer of security for your documents.",
   },
   uz: {
     brand: "Oilaviy seyf",
@@ -46,9 +46,9 @@ const M = {
     access: "Kirish huquqi",
     security: "Xavfsizlik",
     offline: "Oflayn",
-    mfaWarning: "⚠️ Ikki bosqichli himoya sozlanmagan.",
+    mfaWarning: "🔒 Himoyani kuchaytirasizmi?",
     enable2fa: "2FA ni yoqish",
-    mfaRecommend: "— hujjatlaringiz uchun tavsiya etiladi.",
+    mfaRecommend: "— hujjatlaringiz uchun qoʻshimcha himoya.",
   },
   id: {
     brand: "Brankas keluarga",
@@ -60,9 +60,9 @@ const M = {
     access: "Akses",
     security: "Keamanan",
     offline: "Offline",
-    mfaWarning: "⚠️ Proteksi dua faktor belum diatur.",
+    mfaWarning: "🔒 Mau proteksi ekstra?",
     enable2fa: "Aktifkan 2FA",
-    mfaRecommend: "— direkomendasikan untuk dokumen Anda.",
+    mfaRecommend: "— lapisan keamanan tambahan untuk dokumen Anda.",
   },
 } as const;
 
@@ -86,6 +86,14 @@ export default async function MyLayout({
     listSpaces(),
     getOrCreateHouseholdId(),
   ]);
+
+  // 2FA-подсказку показываем мягко и только когда уже есть что защищать
+  // (хотя бы один документ) — чтобы не пугать нового пользователя на пустом экране.
+  const { count: docCount } = await supabase
+    .from("documents")
+    .select("id", { count: "exact", head: true })
+    .eq("household_id", activeId);
+  const showMfaNudge = !hasMfa && (docCount ?? 0) > 0;
 
   return (
     <div className="min-h-screen">
@@ -141,11 +149,11 @@ export default async function MyLayout({
         </div>
       </header>
 
-      {!hasMfa && (
-        <div className="border-b border-amber-200 bg-amber-50">
-          <div className="mx-auto max-w-5xl px-4 py-2 text-sm text-amber-800">
+      {showMfaNudge && (
+        <div className="border-b border-[#e8e0d5] bg-[#fdfaf5]">
+          <div className="mx-auto max-w-5xl px-4 py-2 text-sm text-[#5c5248]">
             {t.mfaWarning}{" "}
-            <Link href="/my/security" className="font-medium underline">
+            <Link href="/my/security" className="font-medium text-[#b85c38] underline">
               {t.enable2fa}
             </Link>{" "}
             {t.mfaRecommend}

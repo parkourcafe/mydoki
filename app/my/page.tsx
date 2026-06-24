@@ -25,6 +25,11 @@ const M = {
     soon: "Скоро истекают сроки",
     allDates: "Все сроки →",
     until: "до",
+    welcomeTitle: "Добро пожаловать! 👋",
+    welcomeText: "Наведём порядок за пару шагов:",
+    step1: "Добавьте члена семьи — можно начать с себя",
+    step2: "Загрузите первый документ: фото или скан",
+    step3: "Укажите срок действия — и мы напомним заранее",
   },
   en: {
     title: "Family",
@@ -40,6 +45,11 @@ const M = {
     soon: "Expiring soon",
     allDates: "All deadlines →",
     until: "until",
+    welcomeTitle: "Welcome! 👋",
+    welcomeText: "Let's get organized in a couple of steps:",
+    step1: "Add a family member — you can start with yourself",
+    step2: "Upload the first document: a photo or scan",
+    step3: "Set the expiry date — and we'll remind you in advance",
   },
   uz: {
     title: "Oila",
@@ -55,6 +65,11 @@ const M = {
     soon: "Muddati tugayapti",
     allDates: "Barcha muddatlar →",
     until: "gacha",
+    welcomeTitle: "Xush kelibsiz! 👋",
+    welcomeText: "Bir necha qadamda tartibga solamiz:",
+    step1: "Oila aʼzosini qoʻshing — oʻzingizdan boshlashingiz mumkin",
+    step2: "Birinchi hujjatni yuklang: rasm yoki skan",
+    step3: "Amal qilish muddatini koʻrsating — oldindan eslatamiz",
   },
   id: {
     title: "Keluarga",
@@ -70,6 +85,11 @@ const M = {
     soon: "Segera kedaluwarsa",
     allDates: "Semua tenggat →",
     until: "sampai",
+    welcomeTitle: "Selamat datang! 👋",
+    welcomeText: "Mari berbenah dalam beberapa langkah:",
+    step1: "Tambahkan anggota keluarga — bisa mulai dari diri sendiri",
+    step2: "Unggah dokumen pertama: foto atau pindaian",
+    step3: "Tetapkan tanggal berlaku — kami akan ingatkan lebih awal",
   },
 } as const;
 
@@ -122,8 +142,14 @@ export default async function MyHome() {
       <StorageBar used={storage.used} limit={storage.limit} locale={locale} />
 
       {members.length === 0 ? (
-        <div className="card text-center text-slate-500">
-          {t.empty}
+        <div className="card space-y-3">
+          <div className="text-lg font-semibold">{t.welcomeTitle}</div>
+          <p className="text-sm text-slate-600">{t.welcomeText}</p>
+          <ol className="ml-5 list-decimal space-y-1 text-sm text-slate-600">
+            <li>{t.step1}</li>
+            <li>{t.step2}</li>
+            <li>{t.step3}</li>
+          </ol>
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -150,7 +176,7 @@ export default async function MyHome() {
         </div>
       )}
 
-      <details className="card">
+      <details className="card" open={members.length === 0}>
         <summary className="cursor-pointer font-medium">
           {t.addMember}
         </summary>
