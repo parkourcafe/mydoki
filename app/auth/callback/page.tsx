@@ -38,7 +38,18 @@ export default function AuthCallbackPage() {
       } catch {
         // журнал входа не должен мешать
       }
-      router.replace("/my");
+      // Куда вернуться (например, к принятию приглашения) — из sessionStorage.
+      let dest = "/my";
+      try {
+        const stored = sessionStorage.getItem("postLoginNext");
+        sessionStorage.removeItem("postLoginNext");
+        if (stored && stored.startsWith("/") && !stored.startsWith("//")) {
+          dest = stored;
+        }
+      } catch {
+        // storage недоступен — уходим в кабинет
+      }
+      router.replace(dest);
     })();
   }, [router]);
 

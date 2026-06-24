@@ -76,7 +76,7 @@ export default async function InvitePage({
   const { token } = await params;
 
   const user = await getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect(`/login?next=${encodeURIComponent(`/invite/${token}`)}`);
 
   const supabase = await getSupabaseServer();
   const { data } = await supabase.rpc("get_invitation", { p_token: token });

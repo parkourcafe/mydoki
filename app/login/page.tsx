@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
+import { safeNextPath } from "@/lib/nextPath";
 import LoginForm from "./LoginForm";
 
 const M = {
@@ -46,8 +47,13 @@ const M = {
   },
 } as const;
 
-export default async function LoginPage() {
-  if (await getUser()) redirect("/my");
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ next?: string }>;
+}) {
+  const next = safeNextPath((await searchParams).next);
+  if (await getUser()) redirect(next);
 
   const locale = await getLocale();
   const t = M[locale];
@@ -71,7 +77,7 @@ export default async function LoginPage() {
         </div>
 
         <div className="card shadow-md">
-          <LoginForm locale={locale} />
+          <LoginForm locale={locale} next={next} />
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">

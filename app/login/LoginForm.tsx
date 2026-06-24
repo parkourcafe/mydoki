@@ -113,9 +113,18 @@ const M = {
   },
 } as const;
 
-function GoogleButton({ locale }: { locale: Locale }) {
+function GoogleButton({ locale, next }: { locale: Locale; next?: string }) {
   const t = M[locale];
   async function google() {
+    // Куда вернуться после OAuth: кладём в sessionStorage (переживает редирект
+    // на Google в той же вкладке), чтобы не трогать список redirect-URL Supabase.
+    if (next) {
+      try {
+        sessionStorage.setItem("postLoginNext", next);
+      } catch {
+        // приватный режим без storage — не критично
+      }
+    }
     const supabase = getSupabaseBrowser();
     await supabase.auth.signInWithOAuth({
       provider: "google",
@@ -223,7 +232,13 @@ function ResetRequest({
   );
 }
 
-export default function LoginForm({ locale }: { locale: Locale }) {
+export default function LoginForm({
+  locale,
+  next = "",
+}: {
+  locale: Locale;
+  next?: string;
+}) {
   const t = M[locale];
   const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
   const action = mode === "signup" ? signup : login;
@@ -234,7 +249,7 @@ export default function LoginForm({ locale }: { locale: Locale }) {
 
   return (
     <div className="space-y-4">
-      <GoogleButton locale={locale} />
+      <GoogleButton locale={locale} next={next} />
 
       <div className="flex items-center gap-3 text-xs text-slate-400">
         <span className="h-px flex-1 bg-slate-200" /> {t.or}{" "}
@@ -242,6 +257,7 @@ export default function LoginForm({ locale }: { locale: Locale }) {
       </div>
 
       <form action={formAction} className="space-y-4">
+        <input type="hidden" name="next" value={next} />
         <div>
           <label className="label" htmlFor="email">
             {t.email}
