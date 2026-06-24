@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const metadata = { title: "Офлайн — doki.help" };
 
 export default function OfflinePage() {
@@ -7,10 +9,16 @@ export default function OfflinePage() {
         <div className="mb-3 text-5xl">🔌</div>
         <h1 className="text-xl font-semibold">Нет соединения</h1>
         <p className="mt-2 text-sm text-[#5c5248]">
-          Сейчас нет интернета. Документы хранятся в облаке — откройте приложение
-          снова, когда появится сеть.
+          Сейчас нет интернета. Документы, сохранённые офлайн, доступны без сети.
         </p>
-        <p className="mt-4 text-sm text-[#8a7c6d]">
+        <Link
+          href="/saved"
+          prefetch
+          className="mt-4 inline-block rounded-lg bg-[#b85c38] px-4 py-2 text-sm font-medium text-white"
+        >
+          📥 Открыть сохранённое офлайн
+        </Link>
+        <p className="mt-4 text-xs text-[#8a7c6d]">
           No connection · Tidak ada koneksi · Aloqa yoʻq
         </p>
       </div>

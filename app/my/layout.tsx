@@ -16,6 +16,7 @@ const M = {
     reminders: "Сроки",
     access: "Доступ",
     security: "Безопасность",
+    offline: "Офлайн",
     mfaWarning: "⚠️ Двухфакторная защита не настроена.",
     enable2fa: "Включить 2FA",
     mfaRecommend: "— это рекомендуется для документов.",
@@ -29,6 +30,7 @@ const M = {
     reminders: "Deadlines",
     access: "Access",
     security: "Security",
+    offline: "Offline",
     mfaWarning: "⚠️ Two-factor protection is not set up.",
     enable2fa: "Enable 2FA",
     mfaRecommend: "— recommended for your documents.",
@@ -42,6 +44,7 @@ const M = {
     reminders: "Muddatlar",
     access: "Kirish huquqi",
     security: "Xavfsizlik",
+    offline: "Oflayn",
     mfaWarning: "⚠️ Ikki bosqichli himoya sozlanmagan.",
     enable2fa: "2FA ni yoqish",
     mfaRecommend: "— hujjatlaringiz uchun tavsiya etiladi.",
@@ -55,6 +58,7 @@ const M = {
     reminders: "Tenggat waktu",
     access: "Akses",
     security: "Keamanan",
+    offline: "Offline",
     mfaWarning: "⚠️ Proteksi dua faktor belum diatur.",
     enable2fa: "Aktifkan 2FA",
     mfaRecommend: "— direkomendasikan untuk dokumen Anda.",
@@ -123,6 +127,13 @@ export default async function MyLayout({
             </Link>
             <Link href="/my/security" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
               {t.security}
+            </Link>
+            <Link
+              href="/saved"
+              prefetch
+              className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]"
+            >
+              {t.offline}
             </Link>
           </nav>
         </div>

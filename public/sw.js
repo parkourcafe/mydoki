@@ -1,14 +1,20 @@
-// Консервативный service worker: сеть в приоритете, кэш — только запасной
-// вариант при отсутствии сети. Не кэширует страницы агрессивно (нет «застрявших»
-// старых версий). Предкэширует только офлайн-экран.
-const CACHE = "doki-v1";
+// Service worker для PWA: установка на телефон + офлайн-доступ.
+// Стратегия:
+//  • Неизменяемые ассеты (/_next/static, иконки, шрифты) — cache-first.
+//  • Навигации — network-first, при отсутствии сети отдаём кэш или офлайн-экран.
+//  • Кросс-доменные запросы (файлы из Supabase Storage) — не трогаем и НЕ кэшируем.
+// Файлы документов для офлайна хранятся отдельно в IndexedDB (страница /saved),
+// здесь они не кэшируются.
+const CACHE = "doki-v2";
 const OFFLINE_URL = "/offline";
+const PRECACHE = ["/offline", "/saved"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches
       .open(CACHE)
-      .then((cache) => cache.add(OFFLINE_URL))
+      .then((cache) => cache.addAll(PRECACHE))
+      .catch(() => {})
       .then(() => self.skipWaiting())
   );
 });
@@ -24,16 +30,54 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function isStaticAsset(pathname) {
+  return (
+    pathname.startsWith("/_next/static/") ||
+    pathname.startsWith("/icon-") ||
+    pathname === "/apple-icon" ||
+    pathname === "/manifest.webmanifest" ||
+    /\.(?:woff2?|ttf|otf|png|jpe?g|svg|webp|gif|ico|css|js)$/.test(pathname)
+  );
+}
+
+async function cacheFirst(req) {
+  const cached = await caches.match(req);
+  if (cached) return cached;
+  try {
+    const res = await fetch(req);
+    if (res && res.ok && res.type === "basic") {
+      const cache = await caches.open(CACHE);
+      cache.put(req, res.clone());
+    }
+    return res;
+  } catch {
+    return cached || Response.error();
+  }
+}
+
+async function networkFirstNav(req) {
+  try {
+    return await fetch(req);
+  } catch {
+    const cached = await caches.match(req, { ignoreSearch: true });
+    return cached || (await caches.match(OFFLINE_URL)) || Response.error();
+  }
+}
+
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
 
-  // Навигация: пробуем сеть, при ошибке (нет интернета) — офлайн-экран.
+  const url = new URL(req.url);
+  // Чужие домены (Supabase Storage, аналитика и т.п.) — браузер сам, без кэша.
+  if (url.origin !== self.location.origin) return;
+
+  if (isStaticAsset(url.pathname)) {
+    event.respondWith(cacheFirst(req));
+    return;
+  }
+
   if (req.mode === "navigate") {
-    event.respondWith(
-      fetch(req).catch(() =>
-        caches.match(OFFLINE_URL).then((r) => r || Response.error())
-      )
-    );
+    event.respondWith(networkFirstNav(req));
   }
 });

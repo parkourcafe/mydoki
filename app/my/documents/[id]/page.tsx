@@ -13,6 +13,7 @@ import { categoryLabel } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
 import CopyButton from "@/components/CopyButton";
 import FileActions from "@/components/FileActions";
+import OfflineSave from "@/components/OfflineSave";
 import {
   createShare,
   deleteDocument,
@@ -167,6 +168,32 @@ export default async function DocumentPage({
   const member = doc.member_id ? await getMember(doc.member_id) : null;
   const asset = doc.asset_id ? await getAsset(doc.asset_id) : null;
   const signed = await signFiles(files);
+  // Более длинные ссылки (10 мин) — для скачивания копии в офлайн-хранилище.
+  const offlineSigned = await signFiles(files, 600);
+
+  const ownerName = member?.full_name ?? asset?.title ?? null;
+  const offlineFiles = files
+    .filter((f) => offlineSigned[f.id])
+    .map((f) => ({
+      id: f.id,
+      name: f.file_name ?? t.file,
+      mime: f.mime_type ?? "application/octet-stream",
+      size: f.size_bytes ?? 0,
+      url: offlineSigned[f.id],
+    }));
+  const offlineMeta = {
+    id: doc.id,
+    title: doc.title,
+    category: categoryLabel(locale, doc.category),
+    subtype: doc.subtype,
+    issuer: doc.issuer,
+    docNumber: doc.doc_number,
+    issuedAt: doc.issued_at,
+    expiresAt: doc.expires_at,
+    notes: doc.notes,
+    ownerName,
+    files: offlineFiles.map(({ url: _url, ...rest }) => rest),
+  };
 
   const h = await headers();
   const origin = `https://${h.get("host") ?? ""}`;
@@ -267,6 +294,9 @@ export default async function DocumentPage({
           </ul>
         )}
         <p className="mt-2 text-xs text-slate-400">{t.signedHint}</p>
+        <div className="mt-4 border-t border-slate-100 pt-4">
+          <OfflineSave locale={locale} meta={offlineMeta} files={offlineFiles} />
+        </div>
       </section>
 
       <section className="card">
