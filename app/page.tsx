@@ -127,32 +127,14 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* Визуал вместо фото */}
+          {/* Фото героя */}
           <div className="mt-8 lg:col-span-5 lg:mt-0">
-            <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-5 shadow-2xl">
-              <div className="mb-4 flex items-center justify-between px-1">
-                <span className="text-sm font-semibold text-[#8a7c6d]">Семейный архив</span>
-                <span className="text-xs text-[#b9ac9b]">4 документа</span>
-              </div>
-              <div className="space-y-3">
-                {[
-                  { icon: "🩺", title: "Анализы · Аня", status: "ОАК, биохимия — 6 файлов" },
-                  { icon: "🛂", title: "Виза · Миша", status: "истекает через 30 дней", warn: true },
-                  { icon: "🚗", title: "ОСАГО · Toyota", status: "действует до 2027" },
-                  { icon: "✈️", title: "Путёвка · Турция", status: "вылет 14 июля" },
-                ].map((d) => (
-                  <div key={d.title} className="flex items-center gap-x-3 rounded-2xl border border-[#eee4d6] bg-white px-4 py-3">
-                    <div className="text-2xl">{d.icon}</div>
-                    <div className="min-w-0 flex-1">
-                      <div className="truncate text-sm font-semibold">{d.title}</div>
-                      <div className={"text-xs " + (d.warn ? "font-medium text-[#b85c38]" : "text-[#8a7c6d]")}>
-                        {d.warn ? "⏰ " : ""}{d.status}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="https://d8j0ntlcm91z4.cloudfront.net/user_3EKntK4EDjG8nay4H1dy1TK30mB/hf_20260624_011709_6438e496-ffee-421a-a01a-41cca1abd28f.png"
+              alt="Документы семьи — под рукой и в порядке"
+              className="w-full rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl"
+            />
           </div>
         </div>
       </section>
