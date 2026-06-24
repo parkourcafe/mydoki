@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getAsset, getStorageInfo, listDocumentsByAsset } from "@/lib/queries";
+import { getAsset, getStorageInfo, getUser, listDocumentsByAsset } from "@/lib/queries";
 import {
   assetTypeLabel,
   categories,
   type DocCategory,
 } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
-import { aiConfigured } from "@/lib/classify";
+import { aiConfigured, userWantsAi } from "@/lib/classify";
 import { deleteAsset } from "@/app/my/actions";
 import DocumentForm from "@/app/my/members/[id]/DocumentForm";
 
@@ -58,10 +58,12 @@ export default async function AssetPage({
   const asset = await getAsset(id);
   if (!asset) notFound();
 
-  const [docs, storage] = await Promise.all([
+  const [docs, storage, user] = await Promise.all([
     listDocumentsByAsset(id),
     getStorageInfo(asset.household_id),
+    getUser(),
   ]);
+  const aiEnabled = aiConfigured() && userWantsAi(user);
   const byCategory = new Map<DocCategory, typeof docs>();
   for (const d of docs) {
     const arr = byCategory.get(d.category) ?? [];
@@ -120,7 +122,7 @@ export default async function AssetPage({
           locale={locale}
           storageUsed={storage.used}
           storageLimit={storage.limit}
-          aiEnabled={aiConfigured()}
+          aiEnabled={aiEnabled}
         />
       </details>
 

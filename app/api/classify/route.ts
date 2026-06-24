@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { classifyDocument } from "@/lib/classify";
+import { classifyDocument, userWantsAi } from "@/lib/classify";
 import { allowAiCall } from "@/lib/ratelimit";
 
 export const maxDuration = 60;
@@ -15,6 +15,14 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Распознавание работает только если пользователь сам включил его в настройках.
+  if (!userWantsAi(user)) {
+    return NextResponse.json(
+      { error: "Распознавание не включено в настройках профиля." },
+      { status: 403 }
+    );
+  }
 
   if (!(await allowAiCall(supabase, user.id))) {
     return NextResponse.json(

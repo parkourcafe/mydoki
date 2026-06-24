@@ -11,6 +11,21 @@ export function aiConfigured(): boolean {
   );
 }
 
+/** Человекочитаемое имя активного провайдера (для согласия пользователя). */
+export function aiProviderName(): string | null {
+  if (yandexConfigured()) return "Yandex";
+  if (process.env.GLM_API_KEY) return "GLM (Zhipu)";
+  if (process.env.ANTHROPIC_API_KEY) return "Anthropic";
+  return null;
+}
+
+/** Включил ли пользователь распознавание ИИ в своих настройках. */
+export function userWantsAi(
+  user: { user_metadata?: Record<string, unknown> | null } | null
+): boolean {
+  return Boolean(user?.user_metadata?.ai_recognition);
+}
+
 /**
  * Распознаёт документ через доступного провайдера. Приоритет — российский
  * Yandex Vision (если задан YANDEX_API_KEY + YANDEX_FOLDER_ID), затем GLM (z.ai),

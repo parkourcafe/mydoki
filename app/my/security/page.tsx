@@ -1,13 +1,16 @@
 import { getUser, listLoginEvents } from "@/lib/queries";
 import { getLocale, type Locale } from "@/lib/i18n";
+import { aiConfigured, aiProviderName, userWantsAi } from "@/lib/classify";
 import { signOutEverywhere } from "@/app/my/actions";
 import MfaSetup from "./MfaSetup";
 import AlertPhone from "./AlertPhone";
+import AiRecognitionToggle from "./AiRecognitionToggle";
 import SignOutButton from "@/components/SignOutButton";
 
 const M = {
   ru: {
     title: "Безопасность",
+    aiRecognition: "Распознавание документов (ИИ)",
     account: "Аккаунт",
     twoFa: "Двухфакторная аутентификация (2FA)",
     loginAlerts: "Оповещения о входе",
@@ -36,6 +39,7 @@ const M = {
   },
   en: {
     title: "Security",
+    aiRecognition: "Document recognition (AI)",
     account: "Account",
     twoFa: "Two-factor authentication (2FA)",
     loginAlerts: "Login alerts",
@@ -64,6 +68,7 @@ const M = {
   },
   id: {
     title: "Keamanan",
+    aiRecognition: "Pengenalan dokumen (AI)",
     account: "Akun",
     twoFa: "Autentikasi dua faktor (2FA)",
     loginAlerts: "Peringatan masuk",
@@ -92,6 +97,7 @@ const M = {
   },
   uz: {
     title: "Xavfsizlik",
+    aiRecognition: "Hujjatlarni aniqlash (AI)",
     account: "Hisob",
     twoFa: "Ikki bosqichli autentifikatsiya (2FA)",
     loginAlerts: "Kirish haqida ogohlantirishlar",
@@ -170,6 +176,9 @@ export default async function SecurityPage() {
       process.env.TWILIO_FROM
     );
   const phone = (user?.user_metadata?.alert_phone as string | undefined) ?? "";
+  const aiOn = aiConfigured();
+  const aiProvider = aiProviderName();
+  const aiPref = userWantsAi(user);
 
   return (
     <div className="space-y-6">
@@ -195,6 +204,16 @@ export default async function SecurityPage() {
         </div>
         <p className="text-sm text-slate-500">{t.alertsIntro}</p>
         <AlertPhone initial={phone} locale={locale} />
+      </section>
+
+      <section className="card space-y-3">
+        <h2 className="font-medium">{t.aiRecognition}</h2>
+        <AiRecognitionToggle
+          initial={aiPref}
+          configured={aiOn}
+          provider={aiProvider}
+          locale={locale}
+        />
       </section>
 
       <section className="card">

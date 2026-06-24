@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import {
   getMember,
   getStorageInfo,
+  getUser,
   listDocumentsByMember,
   listRecordsByMember,
 } from "@/lib/queries";
@@ -15,7 +16,7 @@ import {
   type RecordKind,
 } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
-import { aiConfigured } from "@/lib/classify";
+import { aiConfigured, userWantsAi } from "@/lib/classify";
 import { createRecord, deleteRecord } from "@/app/my/actions";
 import DocumentForm from "./DocumentForm";
 
@@ -117,11 +118,13 @@ export default async function MemberPage({
   const member = await getMember(id);
   if (!member) notFound();
 
-  const [docs, records, storage] = await Promise.all([
+  const [docs, records, storage, user] = await Promise.all([
     listDocumentsByMember(id),
     listRecordsByMember(id),
     getStorageInfo(member.household_id),
+    getUser(),
   ]);
+  const aiEnabled = aiConfigured() && userWantsAi(user);
 
   const byCategory = new Map<DocCategory, typeof docs>();
   for (const d of docs) {
@@ -188,7 +191,7 @@ export default async function MemberPage({
           locale={locale}
           storageUsed={storage.used}
           storageLimit={storage.limit}
-          aiEnabled={aiConfigured()}
+          aiEnabled={aiEnabled}
         />
       </details>
 
