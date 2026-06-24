@@ -115,9 +115,12 @@ export default async function Home() {
           <div className="mt-8 lg:col-span-5 lg:mt-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://d8j0ntlcm91z4.cloudfront.net/user_3EKntK4EDjG8nay4H1dy1TK30mB/hf_20260624_011709_6438e496-ffee-421a-a01a-41cca1abd28f.png"
+              src="https://d8j0ntlcm91z4.cloudfront.net/user_3EKntK4EDjG8nay4H1dy1TK30mB/hf_20260624_011709_6438e496-ffee-421a-a01a-41cca1abd28f_min.webp"
               alt="Документы семьи — под рукой и в порядке"
-              className="w-full rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl"
+              width={928}
+              height={1152}
+              loading="eager"
+              className="h-auto w-full rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl"
             />
           </div>
         </div>

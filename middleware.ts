@@ -33,5 +33,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  // Обновление сессии нужно только в кабинете — публичные страницы не делают
+  // лишний запрос к Supabase (быстрее TTFB для гостей лендинга).
+  matcher: ["/my/:path*"],
 };
