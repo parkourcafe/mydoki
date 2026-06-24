@@ -5,6 +5,7 @@ import { getLocale, type Locale } from "@/lib/i18n";
 import LangSwitcher from "@/components/LangSwitcher";
 import { segmentLinks } from "@/lib/segments";
 import { comparisonLinks, comparisonsHeading } from "@/lib/comparisons";
+import { usecaseLinks } from "@/lib/usecases";
 
 type Cat = { icon: string; title: string; items: string[] };
 type Step = { n: string; title: string; text: string };
@@ -598,6 +599,22 @@ export default async function Home({
               ))}
             </div>
           </div>
+          {locale === "ru" && (
+            <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+              <div className="mb-3 text-sm font-medium text-[#8a7c6d]">По документам</div>
+              <div className="flex flex-wrap gap-2">
+                {usecaseLinks().map((uc) => (
+                  <Link
+                    key={uc.key}
+                    href={`/keep/${uc.key}`}
+                    className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+                  >
+                    <span>{uc.emoji}</span> {uc.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
