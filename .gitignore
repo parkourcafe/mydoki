@@ -17,8 +17,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
-.env*.local
+# local env files — игнорируем все .env, кроме шаблона .env.example
+.env
+.env.*
+!.env.example
 
 # typescript
 next-env.d.ts
