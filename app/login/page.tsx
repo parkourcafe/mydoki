@@ -14,6 +14,7 @@ const M = {
     security: "Приватно по умолчанию · RLS · приватный storage",
     privacy: "Конфиденциальность",
     terms: "Условия",
+    oauthError: "Не удалось войти через Google. Попробуйте ещё раз.",
   },
   en: {
     badge: "Family vault",
@@ -24,6 +25,7 @@ const M = {
     security: "Private by default · RLS · private storage",
     privacy: "Privacy",
     terms: "Terms",
+    oauthError: "Couldn't sign in with Google. Please try again.",
   },
   id: {
     badge: "Brankas keluarga",
@@ -34,6 +36,7 @@ const M = {
     security: "Privat secara bawaan · RLS · penyimpanan privat",
     privacy: "Privasi",
     terms: "Ketentuan",
+    oauthError: "Gagal masuk dengan Google. Silakan coba lagi.",
   },
   uz: {
     badge: "Oilaviy seyf",
@@ -44,19 +47,22 @@ const M = {
     security: "Standart boʻyicha maxfiy · RLS · maxfiy saqlash",
     privacy: "Maxfiylik",
     terms: "Shartlar",
+    oauthError: "Google orqali kirib boʻlmadi. Qayta urinib koʻring.",
   },
 } as const;
 
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string }>;
+  searchParams: Promise<{ next?: string; error?: string }>;
 }) {
-  const next = safeNextPath((await searchParams).next);
+  const sp = await searchParams;
+  const next = safeNextPath(sp.next);
   if (await getUser()) redirect(next);
 
   const locale = await getLocale();
   const t = M[locale];
+  const oauthFailed = sp.error === "google";
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-12">
@@ -75,6 +81,12 @@ export default async function LoginPage({
             {t.subtitle}
           </p>
         </div>
+
+        {oauthFailed && (
+          <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-center text-sm text-red-700">
+            {t.oauthError}
+          </p>
+        )}
 
         <div className="card shadow-md">
           <LoginForm locale={locale} next={next} />
