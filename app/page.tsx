@@ -32,7 +32,7 @@ type Dict = {
     cats: Cat[];
   };
   how: { heading: string; sub: string; steps: Step[] };
-  security: { heading: string; sub: string; items: Sec[] };
+  security: { heading: string; sub: string; promise: string; items: Sec[] };
   cta: { heading: string; sub: string; button: string };
   faq: { heading: string; items: Faq[] };
   forWhom: { heading: string; items: string[] };
@@ -82,6 +82,8 @@ const M: Record<Locale, Dict> = {
     security: {
       heading: "Ваши документы в безопасности",
       sub: "Мы понимаем, насколько важны эти документы — и сделали всё, чтобы вы были спокойны.",
+      promise:
+        "Приватность и безопасность — наш главный приоритет. Данные хранятся в защищённом облаке и передаются по HTTPS, а доступ ограничен строгими правилами на уровне базы. Мы не продаём и не обмениваем ваши данные и не передаём их для рекламы.",
       items: [
         { icon: "👨‍👩‍👧", title: "Только ваша семья видит документы", text: "Доступ изолирован на уровне базы (RLS): посторонние не видят ваши документы." },
         { icon: "🛡️", title: "Защищённый вход и хранилище", text: "Файлы — в приватном хранилище, передача по HTTPS. Двухфакторный вход и письмо при входе с нового устройства." },
@@ -172,6 +174,8 @@ const M: Record<Locale, Dict> = {
     security: {
       heading: "Your documents are safe",
       sub: "We know how important these documents are — and built everything so you can feel at ease.",
+      promise:
+        "Your privacy and security are our top priority. Your data is kept in a secure cloud and sent over HTTPS, with access locked down by strict database rules. We never sell or trade your data, and we never share it for advertising.",
       items: [
         { icon: "👨‍👩‍👧", title: "Only your family sees the documents", text: "Access is isolated at the database level (RLS) — outsiders can't see your documents." },
         { icon: "🛡️", title: "Secure sign-in and storage", text: "Files in private storage, transfer over HTTPS. Two-factor sign-in and an email alert on new-device logins." },
@@ -262,6 +266,8 @@ const M: Record<Locale, Dict> = {
     security: {
       heading: "Dokumen Anda aman",
       sub: "Kami paham betapa pentingnya dokumen-dokumen ini — dan membangun semuanya agar Anda merasa tenang.",
+      promise:
+        "Privasi dan keamanan adalah prioritas utama kami. Data Anda disimpan di cloud yang aman dan dikirim melalui HTTPS, dengan akses dibatasi aturan basis data yang ketat. Kami tidak pernah menjual atau memperdagangkan data Anda, dan tidak membagikannya untuk iklan.",
       items: [
         { icon: "👨‍👩‍👧", title: "Hanya keluarga Anda yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS) — pihak luar tidak bisa melihat dokumen Anda." },
         { icon: "🛡️", title: "Masuk dan penyimpanan aman", text: "Berkas di penyimpanan privat, transfer lewat HTTPS. Masuk dua faktor dan email peringatan saat login dari perangkat baru." },
@@ -352,6 +358,8 @@ const M: Record<Locale, Dict> = {
     security: {
       heading: "Hujjatlaringiz xavfsiz",
       sub: "Bu hujjatlar qanchalik muhimligini bilamiz — va xotirjam boʻlishingiz uchun hammasini puxta qurdik.",
+      promise:
+        "Maxfiylik va xavfsizlik — asosiy ustuvorligimiz. Maʼlumotlaringiz xavfsiz bulutda saqlanadi va HTTPS orqali uzatiladi, kirish esa maʼlumotlar bazasi darajasidagi qatʼiy qoidalar bilan cheklangan. Maʼlumotlaringizni hech qachon sotmaymiz yoki almashtirmaymiz va reklama uchun ulashmaymiz.",
       items: [
         { icon: "👨‍👩‍👧", title: "Hujjatlarni faqat oilangiz koʻradi", text: "Kirish maʼlumotlar bazasi darajasida ajratilgan (RLS) — begonalar hujjatlaringizni koʻra olmaydi." },
         { icon: "🛡️", title: "Xavfsiz kirish va xotira", text: "Fayllar shaxsiy xotirada, uzatish HTTPS orqali. Ikki bosqichli kirish va yangi qurilmadan kirishda email ogohlantirish." },
@@ -651,6 +659,7 @@ export default async function Home({
         <div className="mx-auto mb-10 max-w-3xl text-center">
           <h2 className="section-header mb-3">{t.security.heading}</h2>
           <p className="text-xl text-[#5c5248]">{t.security.sub}</p>
+          <p className="mx-auto mt-4 max-w-2xl text-[#5c5248]">{t.security.promise}</p>
         </div>
         <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
           {t.security.items.map((s) => (
