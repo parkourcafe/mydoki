@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/lib/queries";
 import { getLocale, type Locale } from "@/lib/i18n";
 import LangSwitcher from "@/components/LangSwitcher";
+import { segmentLinks } from "@/lib/segments";
 
 type Cat = { icon: string; title: string; items: string[] };
 type Step = { n: string; title: string; text: string };
@@ -550,6 +551,17 @@ export default async function Home() {
               </li>
             ))}
           </ul>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {segmentLinks(locale).map((s) => (
+              <Link
+                key={s.key}
+                href={`/for/${s.key}`}
+                className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+              >
+                <span>{s.emoji}</span> {s.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 
