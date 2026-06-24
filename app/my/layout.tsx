@@ -5,6 +5,7 @@ import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { signOut } from "./actions";
 import SpaceSwitcher from "@/components/SpaceSwitcher";
+import SignOutButton from "@/components/SignOutButton";
 
 const M = {
   ru: {
@@ -103,9 +104,10 @@ export default async function MyLayout({
                 {user.email}
               </span>
               <form action={signOut}>
-                <button className="rounded-lg px-3 py-1.5 text-sm text-slate-500 hover:bg-[#f0e6d9]">
-                  {t.signOut}
-                </button>
+                <SignOutButton
+                  label={t.signOut}
+                  className="rounded-lg px-3 py-1.5 text-sm text-slate-500 hover:bg-[#f0e6d9] disabled:opacity-60"
+                />
               </form>
             </div>
           </div>

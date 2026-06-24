@@ -3,6 +3,7 @@ import { getLocale, type Locale } from "@/lib/i18n";
 import { signOutEverywhere } from "@/app/my/actions";
 import MfaSetup from "./MfaSetup";
 import AlertPhone from "./AlertPhone";
+import SignOutButton from "@/components/SignOutButton";
 
 const M = {
   ru: {
@@ -225,7 +226,7 @@ export default async function SecurityPage() {
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
           <p className="text-xs text-slate-400">{t.seeUnknown}</p>
           <form action={signOutEverywhere}>
-            <button className="btn-danger">{t.signOutAll}</button>
+            <SignOutButton label={t.signOutAll} className="btn-danger disabled:opacity-60" />
           </form>
         </div>
       </section>
