@@ -3,8 +3,10 @@ import type { Locale } from "./i18n";
 export type DocCategory =
   | "identity"
   | "education"
+  | "career"
   | "medical"
   | "financial"
+  | "tax"
   | "legal"
   | "other";
 
@@ -32,8 +34,10 @@ type L<K extends string> = {
 const CAT: L<DocCategory>[] = [
   { key: "identity", emoji: "🪪", ru: "Удостоверения", en: "ID documents", id: "Dokumen identitas", uz: "Shaxsiy hujjatlar" },
   { key: "education", emoji: "🎓", ru: "Образование", en: "Education", id: "Pendidikan", uz: "Ta'lim" },
+  { key: "career", emoji: "💼", ru: "Работа и карьера", en: "Work & career", id: "Pekerjaan & karier", uz: "Ish va martaba" },
   { key: "medical", emoji: "🩺", ru: "Медицина", en: "Medical", id: "Medis", uz: "Tibbiyot" },
   { key: "financial", emoji: "💳", ru: "Финансы", en: "Finance", id: "Keuangan", uz: "Moliya" },
+  { key: "tax", emoji: "🧾", ru: "Налоги", en: "Taxes", id: "Pajak", uz: "Soliqlar" },
   { key: "legal", emoji: "📜", ru: "Юридические", en: "Legal", id: "Hukum", uz: "Yuridik" },
   { key: "other", emoji: "🗂️", ru: "Прочее", en: "Other", id: "Lainnya", uz: "Boshqa" },
 ];
@@ -101,7 +105,6 @@ const SUBTYPES_RU: Record<DocCategory, string[]> = {
     "Загранпаспорт",
     "Свидетельство о рождении",
     "СНИЛС",
-    "ИНН",
     "Военный билет",
     "Водительское удостоверение",
     "Свидетельство о браке",
@@ -130,6 +133,15 @@ const SUBTYPES_RU: Record<DocCategory, string[]> = {
     "Документы школы",
     "Грамота / сертификат",
   ],
+  career: [
+    "Трудовой договор",
+    "Трудовая книжка",
+    "Справка с места работы",
+    "Резюме / CV",
+    "Рекомендательное письмо",
+    "Сертификат о повышении квалификации",
+    "Должностная инструкция",
+  ],
   financial: [
     "ОСАГО",
     "КАСКО",
@@ -143,8 +155,15 @@ const SUBTYPES_RU: Record<DocCategory, string[]> = {
     "Кредитный договор",
     "Ипотечный договор",
     "Квитанция ЖКХ",
+  ],
+  tax: [
+    "ИНН",
     "Справка 2-НДФЛ",
     "Налоговое уведомление",
+    "Декларация 3-НДФЛ",
+    "Налоговый вычет",
+    "Патент",
+    "Квитанция по налогам",
   ],
   legal: [
     "Доверенность",
