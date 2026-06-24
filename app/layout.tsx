@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import SwRegister from "@/components/SwRegister";
+import YandexMetrika from "@/components/YandexMetrika";
 import "./globals.css";
 
 const inter = Inter({
@@ -78,6 +79,7 @@ export default function RootLayout({
         {children}
         <SwRegister />
         <Analytics />
+        <YandexMetrika />
       </body>
     </html>
   );
