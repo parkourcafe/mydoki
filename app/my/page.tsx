@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   getOrCreateHouseholdId,
   getStorageInfo,
+  listExpiring,
   listMembers,
 } from "@/lib/queries";
 import { relations, relationLabel } from "@/lib/categories";
@@ -21,6 +22,9 @@ const M = {
     relation: "Связь",
     birthDate: "Дата рождения",
     add: "Добавить",
+    soon: "Скоро истекают сроки",
+    allDates: "Все сроки →",
+    until: "до",
   },
   en: {
     title: "Family",
@@ -33,6 +37,9 @@ const M = {
     relation: "Relation",
     birthDate: "Date of birth",
     add: "Add",
+    soon: "Expiring soon",
+    allDates: "All deadlines →",
+    until: "until",
   },
   uz: {
     title: "Oila",
@@ -45,6 +52,9 @@ const M = {
     relation: "Qarindoshlik",
     birthDate: "Tugʻilgan sana",
     add: "Qoʻshish",
+    soon: "Muddati tugayapti",
+    allDates: "Barcha muddatlar →",
+    until: "gacha",
   },
   id: {
     title: "Keluarga",
@@ -57,6 +67,9 @@ const M = {
     relation: "Hubungan",
     birthDate: "Tanggal lahir",
     add: "Tambah",
+    soon: "Segera kedaluwarsa",
+    allDates: "Semua tenggat →",
+    until: "sampai",
   },
 } as const;
 
@@ -65,9 +78,10 @@ export default async function MyHome() {
   const t = M[locale];
 
   const householdId = await getOrCreateHouseholdId();
-  const [members, storage] = await Promise.all([
+  const [members, storage, expiring] = await Promise.all([
     listMembers(householdId),
     getStorageInfo(householdId),
+    listExpiring(householdId, 30),
   ]);
 
   return (
@@ -83,6 +97,27 @@ export default async function MyHome() {
           {t.export}
         </a>
       </div>
+
+      {expiring.length > 0 && (
+        <Link
+          href="/my/reminders"
+          className="block rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 transition hover:bg-amber-100"
+        >
+          <div className="flex items-center justify-between gap-3">
+            <div className="font-medium text-amber-800">
+              ⏰ {t.soon} · {expiring.length}
+            </div>
+            <span className="shrink-0 text-sm text-amber-700">{t.allDates}</span>
+          </div>
+          <div className="mt-1 truncate text-sm text-amber-700">
+            {expiring
+              .slice(0, 3)
+              .map((d) => `${d.title} (${t.until} ${d.expires_at})`)
+              .join(" · ")}
+            {expiring.length > 3 ? " …" : ""}
+          </div>
+        </Link>
+      )}
 
       <StorageBar used={storage.used} limit={storage.limit} locale={locale} />
 

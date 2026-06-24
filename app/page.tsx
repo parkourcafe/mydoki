@@ -81,6 +81,7 @@ const M: Record<Locale, Dict> = {
         { icon: "🛡️", title: "Шифрование и контроль входов", text: "Файлы в приватном хранилище, двухфакторный вход и уведомления о входе с нового устройства." },
         { icon: "🎚️", title: "Вы управляете доступом", text: "Делитесь документом по временной ссылке и отзываете её в любой момент." },
         { icon: "🙅", title: "Не продаём ваши данные", text: "Мы не передаём и не продаём ваши данные третьим лицам." },
+        { icon: "📥", title: "Работают без интернета", text: "Нужные документы можно сохранить на телефон и открыть даже без связи — в поездке или роуминге." },
       ],
     },
     cta: {
@@ -135,6 +136,7 @@ const M: Record<Locale, Dict> = {
         { icon: "🛡️", title: "Encryption and login alerts", text: "Files in private storage, two-factor sign-in and alerts on new-device logins." },
         { icon: "🎚️", title: "You control access", text: "Share a document via an expiring link and revoke it anytime." },
         { icon: "🙅", title: "We don't sell your data", text: "We never share or sell your data to third parties." },
+        { icon: "📥", title: "Available offline", text: "Save the documents you need to your phone and open them even with no connection — on a trip or in roaming." },
       ],
     },
     cta: {
@@ -189,6 +191,7 @@ const M: Record<Locale, Dict> = {
         { icon: "🛡️", title: "Enkripsi dan peringatan login", text: "Berkas di penyimpanan privat, masuk dua faktor, dan peringatan saat login dari perangkat baru." },
         { icon: "🎚️", title: "Anda yang mengendalikan akses", text: "Bagikan dokumen lewat tautan berbatas waktu dan cabut kapan saja." },
         { icon: "🙅", title: "Kami tidak menjual data Anda", text: "Kami tidak pernah membagikan atau menjual data Anda ke pihak ketiga." },
+        { icon: "📥", title: "Tersedia offline", text: "Simpan dokumen yang Anda butuhkan ke ponsel dan buka meski tanpa koneksi — saat bepergian atau roaming." },
       ],
     },
     cta: {
@@ -243,6 +246,7 @@ const M: Record<Locale, Dict> = {
         { icon: "🛡️", title: "Shifrlash va kirish ogohlantirishlari", text: "Fayllar shaxsiy xotirada, ikki bosqichli kirish va yangi qurilmadan kirishda ogohlantirishlar." },
         { icon: "🎚️", title: "Kirishni siz boshqarasiz", text: "Hujjatni muddatli havola orqali ulashing va istalgan vaqtda bekor qiling." },
         { icon: "🙅", title: "Maʼlumotlaringizni sotmaymiz", text: "Maʼlumotlaringizni hech qachon uchinchi shaxslarga bermaymiz yoki sotmaymiz." },
+        { icon: "📥", title: "Internetsiz ishlaydi", text: "Kerakli hujjatlarni telefonga saqlang va aloqa boʻlmasa ham oching — sayohatda yoki roumingda." },
       ],
     },
     cta: {
