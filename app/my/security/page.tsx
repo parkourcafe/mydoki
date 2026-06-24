@@ -1,25 +1,93 @@
 import { getUser, listLoginEvents } from "@/lib/queries";
+import { getLocale, type Locale } from "@/lib/i18n";
 import { signOutEverywhere } from "@/app/my/actions";
 import MfaSetup from "./MfaSetup";
 import AlertPhone from "./AlertPhone";
 
-function deviceLabel(ua: string | null): string {
-  if (!ua) return "Неизвестное устройство";
+const M = {
+  ru: {
+    title: "Безопасность",
+    account: "Аккаунт",
+    twoFa: "Двухфакторная аутентификация (2FA)",
+    loginAlerts: "Оповещения о входе",
+    chipEmail: "почта",
+    chipSms: "SMS",
+    alertsIntro:
+      "При входе с нового устройства отправим уведомление. Письмо — на email аккаунта; SMS — на номер ниже (если подключён SMS-сервис).",
+    recentLogins: "Недавние входы",
+    noRecords: "Записей пока нет.",
+    newDevice: "новое устройство",
+    ipUnknown: "IP неизвестен",
+    seeUnknown:
+      "Видите вход, который не совершали? Выйдите везде и смените пароль.",
+    signOutAll: "Выйти со всех устройств",
+    howProtected: "Как устроена защита",
+    p1: "Документы изолированы по семье на уровне БД (RLS).",
+    p2: "Файлы — в приватном bucket, наружу только по signed URL.",
+    p3: "Обмен — истекающие отзываемые ссылки на один документ.",
+    p4: "Каждый доступ по ссылке пишется в журнал (audit log).",
+    on: "вкл",
+    off: "выкл",
+    unknownDevice: "Неизвестное устройство",
+    fallbackDevice: "устройство",
+    fallbackBrowser: "браузер",
+    dateLocale: "ru-RU",
+  },
+  en: {
+    title: "Security",
+    account: "Account",
+    twoFa: "Two-factor authentication (2FA)",
+    loginAlerts: "Login alerts",
+    chipEmail: "email",
+    chipSms: "SMS",
+    alertsIntro:
+      "We'll notify you when someone signs in from a new device. The email goes to your account address; the SMS to the number below (if an SMS service is connected).",
+    recentLogins: "Recent logins",
+    noRecords: "No records yet.",
+    newDevice: "new device",
+    ipUnknown: "IP unknown",
+    seeUnknown:
+      "See a login you didn't make? Sign out everywhere and change your password.",
+    signOutAll: "Sign out of all devices",
+    howProtected: "How protection works",
+    p1: "Documents are isolated per family at the database level (RLS).",
+    p2: "Files live in a private bucket, exposed only via signed URLs.",
+    p3: "Sharing uses expiring, revocable links to a single document.",
+    p4: "Every link access is written to the audit log.",
+    on: "on",
+    off: "off",
+    unknownDevice: "Unknown device",
+    fallbackDevice: "device",
+    fallbackBrowser: "browser",
+    dateLocale: "en-US",
+  },
+} as const;
+
+function deviceLabel(ua: string | null, t: (typeof M)[Locale]): string {
+  if (!ua) return t.unknownDevice;
   const os =
     /iPhone|iPad/.test(ua) ? "iPhone/iPad" :
     /Android/.test(ua) ? "Android" :
     /Windows/.test(ua) ? "Windows" :
     /Macintosh|Mac OS/.test(ua) ? "Mac" :
-    /Linux/.test(ua) ? "Linux" : "устройство";
+    /Linux/.test(ua) ? "Linux" : t.fallbackDevice;
   const br =
     /Edg\//.test(ua) ? "Edge" :
     /Chrome\//.test(ua) ? "Chrome" :
     /Firefox\//.test(ua) ? "Firefox" :
-    /Safari\//.test(ua) ? "Safari" : "браузер";
+    /Safari\//.test(ua) ? "Safari" : t.fallbackBrowser;
   return `${br} · ${os}`;
 }
 
-function Chip({ on, label }: { on: boolean; label: string }) {
+function Chip({
+  on,
+  label,
+  t,
+}: {
+  on: boolean;
+  label: string;
+  t: (typeof M)[Locale];
+}) {
   return (
     <span
       className={
@@ -27,12 +95,14 @@ function Chip({ on, label }: { on: boolean; label: string }) {
         (on ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500")
       }
     >
-      {label}: {on ? "вкл" : "выкл"}
+      {label}: {on ? t.on : t.off}
     </span>
   );
 }
 
 export default async function SecurityPage() {
+  const locale = await getLocale();
+  const t = M[locale];
   const [user, logins] = await Promise.all([getUser(), listLoginEvents(10)]);
   const emailOn = !!process.env.RESEND_API_KEY;
   const smsOn =
@@ -47,50 +117,49 @@ export default async function SecurityPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Безопасность</h1>
-        <p className="mt-1 text-sm text-slate-500">Аккаунт: {user?.email}</p>
+        <h1 className="text-2xl font-semibold">{t.title}</h1>
+        <p className="mt-1 text-sm text-slate-500">
+          {t.account}: {user?.email}
+        </p>
       </div>
 
       <section className="card">
-        <h2 className="mb-3 font-medium">Двухфакторная аутентификация (2FA)</h2>
-        <MfaSetup />
+        <h2 className="mb-3 font-medium">{t.twoFa}</h2>
+        <MfaSetup locale={locale} />
       </section>
 
       <section className="card space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="font-medium">Оповещения о входе</h2>
+          <h2 className="font-medium">{t.loginAlerts}</h2>
           <div className="flex gap-1">
-            <Chip on={emailOn} label="почта" />
-            <Chip on={smsOn} label="SMS" />
+            <Chip on={emailOn} label={t.chipEmail} t={t} />
+            <Chip on={smsOn} label={t.chipSms} t={t} />
           </div>
         </div>
-        <p className="text-sm text-slate-500">
-          При входе с нового устройства отправим уведомление. Письмо — на email
-          аккаунта; SMS — на номер ниже (если подключён SMS-сервис).
-        </p>
-        <AlertPhone initial={phone} />
+        <p className="text-sm text-slate-500">{t.alertsIntro}</p>
+        <AlertPhone initial={phone} locale={locale} />
       </section>
 
       <section className="card">
-        <h2 className="mb-3 font-medium">Недавние входы</h2>
+        <h2 className="mb-3 font-medium">{t.recentLogins}</h2>
         {logins.length === 0 ? (
-          <p className="text-sm text-slate-400">Записей пока нет.</p>
+          <p className="text-sm text-slate-400">{t.noRecords}</p>
         ) : (
           <ul className="divide-y divide-slate-100">
             {logins.map((e) => (
               <li key={e.id} className="flex items-center justify-between py-2 text-sm">
                 <div>
                   <div className="font-medium">
-                    {deviceLabel(e.user_agent)}
+                    {deviceLabel(e.user_agent, t)}
                     {e.is_new_device && (
                       <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-700">
-                        новое устройство
+                        {t.newDevice}
                       </span>
                     )}
                   </div>
                   <div className="text-xs text-slate-400">
-                    {e.ip ?? "IP неизвестен"} ·{" "}
-                    {new Date(e.created_at).toLocaleString("ru-RU")}
+                    {e.ip ?? t.ipUnknown} ·{" "}
+                    {new Date(e.created_at).toLocaleString(t.dateLocale)}
                   </div>
                 </div>
               </li>
@@ -98,22 +167,20 @@ export default async function SecurityPage() {
           </ul>
         )}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-4">
-          <p className="text-xs text-slate-400">
-            Видите вход, который не совершали? Выйдите везде и смените пароль.
-          </p>
+          <p className="text-xs text-slate-400">{t.seeUnknown}</p>
           <form action={signOutEverywhere}>
-            <button className="btn-danger">Выйти со всех устройств</button>
+            <button className="btn-danger">{t.signOutAll}</button>
           </form>
         </div>
       </section>
 
       <section className="card text-sm text-slate-600">
-        <h2 className="mb-2 font-medium text-slate-900">Как устроена защита</h2>
+        <h2 className="mb-2 font-medium text-slate-900">{t.howProtected}</h2>
         <ul className="list-disc space-y-1 pl-5">
-          <li>Документы изолированы по семье на уровне БД (RLS).</li>
-          <li>Файлы — в приватном bucket, наружу только по signed URL.</li>
-          <li>Обмен — истекающие отзываемые ссылки на один документ.</li>
-          <li>Каждый доступ по ссылке пишется в журнал (audit log).</li>
+          <li>{t.p1}</li>
+          <li>{t.p2}</li>
+          <li>{t.p3}</li>
+          <li>{t.p4}</li>
         </ul>
       </section>
     </div>

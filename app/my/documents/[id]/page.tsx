@@ -9,7 +9,8 @@ import {
   listSharesByDocument,
   signFiles,
 } from "@/lib/queries";
-import { CATEGORY_LABEL } from "@/lib/categories";
+import { categoryLabel } from "@/lib/categories";
+import { getLocale } from "@/lib/i18n";
 import CopyButton from "@/components/CopyButton";
 import FileActions from "@/components/FileActions";
 import {
@@ -17,6 +18,69 @@ import {
   deleteDocument,
   revokeShare,
 } from "@/app/my/actions";
+
+const M = {
+  ru: {
+    data: "Данные",
+    category: "Категория",
+    type: "Тип",
+    issuer: "Кем выдан",
+    number: "Номер",
+    issued: "Выдан",
+    validUntil: "Действует до",
+    files: "Файлы",
+    noFiles: "Файлы не прикреплены.",
+    file: "файл",
+    noAccess: "нет доступа",
+    signedHint: "Ссылки на файлы временные (signed URL, ~2 мин).",
+    share: "Поделиться",
+    active: "Активна",
+    revoked: "Отозвана",
+    expired: "Истекла",
+    until: "до",
+    views: "просмотров",
+    download: "скачивание",
+    revoke: "Отозвать",
+    days: "Действует, дней",
+    viewsLimit: "Лимит просмотров",
+    noLimit: "0 — без лимита",
+    watermark: "Водяной знак",
+    downloadLabel: "Скачивание",
+    createLink: "Создать ссылку",
+    deleteDoc: "Удалить документ",
+    dateLocale: "ru-RU",
+  },
+  en: {
+    data: "Details",
+    category: "Category",
+    type: "Type",
+    issuer: "Issued by",
+    number: "Number",
+    issued: "Issued",
+    validUntil: "Valid until",
+    files: "Files",
+    noFiles: "No files attached.",
+    file: "file",
+    noAccess: "no access",
+    signedHint: "File links are temporary (signed URL, ~2 min).",
+    share: "Share",
+    active: "Active",
+    revoked: "Revoked",
+    expired: "Expired",
+    until: "until",
+    views: "views",
+    download: "download",
+    revoke: "Revoke",
+    days: "Valid, days",
+    viewsLimit: "View limit",
+    noLimit: "0 — no limit",
+    watermark: "Watermark",
+    downloadLabel: "Download",
+    createLink: "Create link",
+    deleteDoc: "Delete document",
+    dateLocale: "en-US",
+  },
+} as const;
 
 function fmtBytes(n: number | null) {
   if (!n) return "";
@@ -30,6 +94,8 @@ export default async function DocumentPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const locale = await getLocale();
+  const t = M[locale];
   const { id } = await params;
   const doc = await getDocument(id);
   if (!doc) notFound();
@@ -46,12 +112,12 @@ export default async function DocumentPage({
   const origin = `https://${h.get("host") ?? ""}`;
 
   const meta: [string, string | null][] = [
-    ["Категория", CATEGORY_LABEL[doc.category]],
-    ["Тип", doc.subtype],
-    ["Кем выдан", doc.issuer],
-    ["Номер", doc.doc_number],
-    ["Выдан", doc.issued_at],
-    ["Действует до", doc.expires_at],
+    [t.category, categoryLabel(locale, doc.category)],
+    [t.type, doc.subtype],
+    [t.issuer, doc.issuer],
+    [t.number, doc.doc_number],
+    [t.issued, doc.issued_at],
+    [t.validUntil, doc.expires_at],
   ];
 
   const now = Date.now();
@@ -84,7 +150,7 @@ export default async function DocumentPage({
 
       <section className="card">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Данные
+          {t.data}
         </h2>
         <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
           {meta
@@ -117,37 +183,35 @@ export default async function DocumentPage({
 
       <section className="card">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Файлы
+          {t.files}
         </h2>
         {files.length === 0 ? (
-          <p className="text-sm text-slate-400">Файлы не прикреплены.</p>
+          <p className="text-sm text-slate-400">{t.noFiles}</p>
         ) : (
           <ul className="divide-y divide-slate-100">
             {files.map((f) => (
               <li key={f.id} className="flex items-center justify-between py-2">
                 <div className="text-sm">
-                  <div className="font-medium">{f.file_name ?? "файл"}</div>
+                  <div className="font-medium">{f.file_name ?? t.file}</div>
                   <div className="text-xs text-slate-400">
                     {f.mime_type} {fmtBytes(f.size_bytes)}
                   </div>
                 </div>
                 {signed[f.id] ? (
-                  <FileActions url={signed[f.id]} name={f.file_name ?? "файл"} />
+                  <FileActions url={signed[f.id]} name={f.file_name ?? t.file} locale={locale} />
                 ) : (
-                  <span className="text-xs text-slate-400">нет доступа</span>
+                  <span className="text-xs text-slate-400">{t.noAccess}</span>
                 )}
               </li>
             ))}
           </ul>
         )}
-        <p className="mt-2 text-xs text-slate-400">
-          Ссылки на файлы временные (signed URL, ~2 мин).
-        </p>
+        <p className="mt-2 text-xs text-slate-400">{t.signedHint}</p>
       </section>
 
       <section className="card">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Поделиться
+          {t.share}
         </h2>
 
         {shares.length > 0 && (
@@ -168,22 +232,22 @@ export default async function DocumentPage({
                           : "font-medium text-slate-400"
                       }
                     >
-                      {active ? "Активна" : s.revoked_at ? "Отозвана" : "Истекла"}
+                      {active ? t.active : s.revoked_at ? t.revoked : t.expired}
                     </span>
                     <span className="ml-2 text-slate-500">
-                      до {new Date(s.expires_at).toLocaleDateString("ru-RU")} ·{" "}
-                      просмотров {s.view_count}
+                      {t.until} {new Date(s.expires_at).toLocaleDateString(t.dateLocale)} ·{" "}
+                      {t.views} {s.view_count}
                       {s.max_views ? `/${s.max_views}` : ""}
-                      {s.allow_download ? " · скачивание" : ""}
+                      {s.allow_download ? ` · ${t.download}` : ""}
                     </span>
                   </div>
                   <div className="flex gap-2">
-                    {active && <CopyButton text={url} />}
+                    {active && <CopyButton text={url} locale={locale} />}
                     {active && (
                       <form action={revokeShare}>
                         <input type="hidden" name="id" value={s.id} />
                         <input type="hidden" name="document_id" value={doc.id} />
-                        <button className="btn-danger">Отозвать</button>
+                        <button className="btn-danger">{t.revoke}</button>
                       </form>
                     )}
                   </div>
@@ -196,7 +260,7 @@ export default async function DocumentPage({
         <form action={createShare} className="grid gap-3 sm:grid-cols-4">
           <input type="hidden" name="document_id" value={doc.id} />
           <div>
-            <label className="label">Действует, дней</label>
+            <label className="label">{t.days}</label>
             <input
               name="days"
               type="number"
@@ -207,24 +271,24 @@ export default async function DocumentPage({
             />
           </div>
           <div>
-            <label className="label">Лимит просмотров</label>
+            <label className="label">{t.viewsLimit}</label>
             <input
               name="max_views"
               type="number"
               min={0}
               defaultValue={0}
               className="input"
-              placeholder="0 — без лимита"
+              placeholder={t.noLimit}
             />
           </div>
           <label className="flex items-end gap-2 pb-2 text-sm">
-            <input type="checkbox" name="watermark" defaultChecked /> Водяной знак
+            <input type="checkbox" name="watermark" defaultChecked /> {t.watermark}
           </label>
           <label className="flex items-end gap-2 pb-2 text-sm">
-            <input type="checkbox" name="allow_download" /> Скачивание
+            <input type="checkbox" name="allow_download" /> {t.downloadLabel}
           </label>
           <div className="sm:col-span-4">
-            <button className="btn-primary">Создать ссылку</button>
+            <button className="btn-primary">{t.createLink}</button>
           </div>
         </form>
       </section>
@@ -234,7 +298,7 @@ export default async function DocumentPage({
           <input type="hidden" name="id" value={doc.id} />
           <input type="hidden" name="member_id" value={doc.member_id ?? ""} />
           <input type="hidden" name="asset_id" value={doc.asset_id ?? ""} />
-          <button className="btn-danger">Удалить документ</button>
+          <button className="btn-danger">{t.deleteDoc}</button>
         </form>
       </section>
     </div>

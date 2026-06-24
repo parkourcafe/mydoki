@@ -2,10 +2,43 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
+import type { Locale } from "@/lib/i18n";
 
 type Factor = { id: string; friendly_name?: string | null; status: string };
 
-export default function MfaSetup() {
+const M = {
+  ru: {
+    loading: "Загрузка…",
+    enabled: "✓ Двухфакторная защита включена.",
+    authenticatorApp: "Приложение-аутентификатор (TOTP)",
+    remove: "Удалить",
+    notConfigured:
+      "2FA пока не настроена. Добавьте приложение-аутентификатор (Google Authenticator, 1Password, Authy и т.п.).",
+    setup: "Настроить 2FA",
+    scanQr: "Отсканируйте QR в приложении-аутентификаторе:",
+    qrAlt: "QR для настройки 2FA",
+    enterKey: "Или введите ключ вручную:",
+    codeLabel: "Код из приложения",
+    confirm: "Подтвердить",
+  },
+  en: {
+    loading: "Loading…",
+    enabled: "✓ Two-factor protection enabled.",
+    authenticatorApp: "Authenticator app (TOTP)",
+    remove: "Remove",
+    notConfigured:
+      "2FA isn't set up yet. Add an authenticator app (Google Authenticator, 1Password, Authy, etc.).",
+    setup: "Set up 2FA",
+    scanQr: "Scan the QR code in your authenticator app:",
+    qrAlt: "QR code for 2FA setup",
+    enterKey: "Or enter the key manually:",
+    codeLabel: "Code from the app",
+    confirm: "Confirm",
+  },
+} as const;
+
+export default function MfaSetup({ locale }: { locale: Locale }) {
+  const t = M[locale];
   const supabase = getSupabaseBrowser();
   const [factors, setFactors] = useState<Factor[]>([]);
   const [loading, setLoading] = useState(true);
@@ -80,59 +113,52 @@ export default function MfaSetup() {
   return (
     <div className="space-y-5">
       {loading ? (
-        <p className="text-sm text-slate-400">Загрузка…</p>
+        <p className="text-sm text-slate-400">{t.loading}</p>
       ) : verified.length > 0 ? (
         <div className="space-y-2">
-          <p className="text-sm text-emerald-600">
-            ✓ Двухфакторная защита включена.
-          </p>
+          <p className="text-sm text-emerald-600">{t.enabled}</p>
           {verified.map((f) => (
             <div
               key={f.id}
               className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm"
             >
-              <span>Приложение-аутентификатор (TOTP)</span>
+              <span>{t.authenticatorApp}</span>
               <button
                 className="btn-danger"
                 disabled={busy}
                 onClick={() => remove(f.id)}
               >
-                Удалить
+                {t.remove}
               </button>
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-sm text-slate-500">
-          2FA пока не настроена. Добавьте приложение-аутентификатор (Google
-          Authenticator, 1Password, Authy и т.п.).
-        </p>
+        <p className="text-sm text-slate-500">{t.notConfigured}</p>
       )}
 
       {!enroll && verified.length === 0 && (
         <button className="btn-primary" disabled={busy} onClick={startEnroll}>
-          Настроить 2FA
+          {t.setup}
         </button>
       )}
 
       {enroll && (
         <div className="space-y-3 rounded-lg border border-slate-200 p-4">
-          <p className="text-sm text-slate-600">
-            Отсканируйте QR в приложении-аутентификаторе:
-          </p>
+          <p className="text-sm text-slate-600">{t.scanQr}</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={enroll.qr}
-            alt="QR для настройки 2FA"
+            alt={t.qrAlt}
             className="h-44 w-44"
           />
           <p className="text-xs text-slate-400">
-            Или введите ключ вручную:{" "}
+            {t.enterKey}{" "}
             <code className="rounded bg-slate-100 px-1">{enroll.secret}</code>
           </p>
           <div className="flex items-end gap-2">
             <div>
-              <label className="label">Код из приложения</label>
+              <label className="label">{t.codeLabel}</label>
               <input
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
@@ -142,7 +168,7 @@ export default function MfaSetup() {
               />
             </div>
             <button className="btn-primary" disabled={busy} onClick={verify}>
-              Подтвердить
+              {t.confirm}
             </button>
           </div>
         </div>

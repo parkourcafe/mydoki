@@ -5,7 +5,35 @@ import {
   listDocumentsByMember,
   listRecordsByMember,
 } from "@/lib/queries";
-import { RECORD_KINDS, RECORD_KIND_LABEL, type RecordKind } from "@/lib/categories";
+import { recordKinds, recordKindLabel, type RecordKind } from "@/lib/categories";
+import { getLocale } from "@/lib/i18n";
+
+const M = {
+  ru: {
+    healthCard: "Медкарта",
+    intro: "История записей: анализы, прививки, назначения, питание.",
+    all: "Все",
+    records: "Записи",
+    emptyOfKind: "Записей этого вида пока нет. Добавить можно на странице человека.",
+    empty: "Записей пока нет. Добавить можно на странице человека.",
+    noDate: "без даты",
+    medDocs: "🩺 Медицинские документы",
+    until: (d: string) => `до ${d}`,
+    noExpiry: "без срока",
+  },
+  en: {
+    healthCard: "Health card",
+    intro: "Record history: lab tests, vaccinations, prescriptions, nutrition.",
+    all: "All",
+    records: "Records",
+    emptyOfKind: "No records of this kind yet. You can add them on the person’s page.",
+    empty: "No records yet. You can add them on the person’s page.",
+    noDate: "no date",
+    medDocs: "🩺 Medical documents",
+    until: (d: string) => `until ${d}`,
+    noExpiry: "no expiry",
+  },
+} as const;
 
 export default async function HealthPage({
   params,
@@ -14,6 +42,8 @@ export default async function HealthPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ kind?: string }>;
 }) {
+  const locale = await getLocale();
+  const t = M[locale];
   const { id } = await params;
   const { kind } = await searchParams;
   const member = await getMember(id);
@@ -41,17 +71,15 @@ export default async function HealthPage({
         >
           ← {member.full_name}
         </Link>
-        <h1 className="mt-2 text-2xl font-semibold">Медкарта · {member.full_name}</h1>
-        <p className="text-sm text-slate-500">
-          История записей: анализы, прививки, назначения, питание.
-        </p>
+        <h1 className="mt-2 text-2xl font-semibold">{t.healthCard} · {member.full_name}</h1>
+        <p className="text-sm text-slate-500">{t.intro}</p>
       </div>
 
       <div className="flex flex-wrap gap-2">
         <Link href={`/my/members/${member.id}/health`} className={chip(!kind)}>
-          Все
+          {t.all}
         </Link>
-        {RECORD_KINDS.map((k) => (
+        {recordKinds(locale).map((k) => (
           <Link
             key={k.key}
             href={`/my/members/${member.id}/health?kind=${k.key}`}
@@ -64,17 +92,16 @@ export default async function HealthPage({
 
       <section>
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Записи
+          {t.records}
         </h2>
         {filtered.length === 0 ? (
           <div className="card text-center text-slate-500">
-            Записей{kind ? " этого вида" : ""} пока нет. Добавить можно на
-            странице человека.
+            {kind ? t.emptyOfKind : t.empty}
           </div>
         ) : (
           <ol className="relative space-y-3 border-l border-slate-200 pl-5">
             {filtered.map((r) => {
-              const meta = RECORD_KINDS.find((k) => k.key === r.kind);
+              const meta = recordKinds(locale).find((k) => k.key === r.kind);
               return (
                 <li key={r.id} className="relative">
                   <span className="absolute -left-[27px] top-1 text-base">
@@ -84,11 +111,11 @@ export default async function HealthPage({
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{r.title}</span>
                       <span className="text-xs text-slate-400">
-                        {r.recorded_at ?? "без даты"}
+                        {r.recorded_at ?? t.noDate}
                       </span>
                     </div>
                     <div className="mt-1 text-xs text-slate-500">
-                      {RECORD_KIND_LABEL[r.kind as RecordKind] ?? r.kind}
+                      {recordKindLabel(locale, r.kind as RecordKind)}
                       {typeof r.data?.note === "string" && r.data.note
                         ? ` · ${r.data.note}`
                         : ""}
@@ -104,7 +131,7 @@ export default async function HealthPage({
       {medDocs.length > 0 && (
         <section>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-            🩺 Медицинские документы
+            {t.medDocs}
           </h2>
           <div className="grid gap-3 sm:grid-cols-2">
             {medDocs.map((d) => (
@@ -116,7 +143,7 @@ export default async function HealthPage({
                 <div className="font-medium">{d.title}</div>
                 <div className="mt-1 text-xs text-slate-500">
                   {d.subtype ? `${d.subtype} · ` : ""}
-                  {d.expires_at ? `до ${d.expires_at}` : "без срока"}
+                  {d.expires_at ? t.until(d.expires_at) : t.noExpiry}
                 </div>
               </Link>
             ))}

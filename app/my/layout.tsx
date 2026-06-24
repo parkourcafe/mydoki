@@ -2,14 +2,47 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
+import { getLocale } from "@/lib/i18n";
 import { signOut } from "./actions";
 import SpaceSwitcher from "@/components/SpaceSwitcher";
+
+const M = {
+  ru: {
+    brand: "Семейный сейф",
+    signOut: "Выйти",
+    family: "Семья",
+    assets: "Имущество",
+    search: "Поиск",
+    reminders: "Сроки",
+    access: "Доступ",
+    security: "Безопасность",
+    mfaWarning: "⚠️ Двухфакторная защита не настроена.",
+    enable2fa: "Включить 2FA",
+    mfaRecommend: "— это рекомендуется для документов.",
+  },
+  en: {
+    brand: "Family vault",
+    signOut: "Sign out",
+    family: "Family",
+    assets: "Assets",
+    search: "Search",
+    reminders: "Deadlines",
+    access: "Access",
+    security: "Security",
+    mfaWarning: "⚠️ Two-factor protection is not set up.",
+    enable2fa: "Enable 2FA",
+    mfaRecommend: "— recommended for your documents.",
+  },
+} as const;
 
 export default async function MyLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
+  const t = M[locale];
+
   const user = await getUser();
   if (!user) redirect("/login");
 
@@ -31,9 +64,9 @@ export default async function MyLayout({
             <div className="flex items-center gap-3">
               <Link href="/my" className="flex items-center gap-2 font-semibold">
                 <span className="text-xl">🔐</span>
-                <span className="hidden sm:inline">Семейный сейф</span>
+                <span className="hidden sm:inline">{t.brand}</span>
               </Link>
-              <SpaceSwitcher spaces={spaces} activeId={activeId} />
+              <SpaceSwitcher spaces={spaces} activeId={activeId} locale={locale} />
             </div>
             <div className="flex items-center gap-3">
               <span className="hidden text-xs text-slate-500 sm:inline">
@@ -41,29 +74,29 @@ export default async function MyLayout({
               </span>
               <form action={signOut}>
                 <button className="rounded-lg px-3 py-1.5 text-sm text-slate-500 hover:bg-[#f0e6d9]">
-                  Выйти
+                  {t.signOut}
                 </button>
               </form>
             </div>
           </div>
           <nav className="-mx-4 flex gap-1 overflow-x-auto whitespace-nowrap px-4 pb-2 text-sm">
             <Link href="/my" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              Семья
+              {t.family}
             </Link>
             <Link href="/my/assets" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              Имущество
+              {t.assets}
             </Link>
             <Link href="/my/search" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              Поиск
+              {t.search}
             </Link>
             <Link href="/my/reminders" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              Сроки
+              {t.reminders}
             </Link>
             <Link href="/my/family" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              Доступ
+              {t.access}
             </Link>
             <Link href="/my/security" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              Безопасность
+              {t.security}
             </Link>
           </nav>
         </div>
@@ -72,11 +105,11 @@ export default async function MyLayout({
       {!hasMfa && (
         <div className="border-b border-amber-200 bg-amber-50">
           <div className="mx-auto max-w-5xl px-4 py-2 text-sm text-amber-800">
-            ⚠️ Двухфакторная защита не настроена.{" "}
+            {t.mfaWarning}{" "}
             <Link href="/my/security" className="font-medium underline">
-              Включить 2FA
+              {t.enable2fa}
             </Link>{" "}
-            — это рекомендуется для документов.
+            {t.mfaRecommend}
           </div>
         </div>
       )}

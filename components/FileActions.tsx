@@ -1,9 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import type { Locale } from "@/lib/i18n";
+
+const M = {
+  ru: { open: "Открыть", download: "Скачать", share: "Поделиться" },
+  en: { open: "Open", download: "Download", share: "Share" },
+} as const;
 
 /** Открыть / Скачать / Поделиться файлом по временной signed-ссылке. */
-export default function FileActions({ url, name }: { url: string; name: string }) {
+export default function FileActions({
+  url,
+  name,
+  locale,
+}: {
+  url: string;
+  name: string;
+  locale: Locale;
+}) {
+  const t = M[locale];
   const [busy, setBusy] = useState(false);
   const downloadUrl =
     url + (url.includes("?") ? "&" : "?") + "download=" + encodeURIComponent(name);
@@ -39,13 +54,13 @@ export default function FileActions({ url, name }: { url: string; name: string }
   return (
     <div className="flex gap-1">
       <a href={url} target="_blank" rel="noreferrer" className="btn-ghost">
-        Открыть
+        {t.open}
       </a>
       <a href={downloadUrl} className="btn-ghost">
-        Скачать
+        {t.download}
       </a>
       <button type="button" onClick={share} disabled={busy} className="btn-ghost">
-        {busy ? "…" : "Поделиться"}
+        {busy ? "…" : t.share}
       </button>
     </div>
   );

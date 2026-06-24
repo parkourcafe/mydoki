@@ -1,6 +1,7 @@
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
-import { CATEGORY_LABEL, type DocCategory } from "@/lib/categories";
+import { categoryLabel, type DocCategory } from "@/lib/categories";
+import { getLocale } from "@/lib/i18n";
 
 type SharedFile = {
   storage_path: string;
@@ -20,6 +21,39 @@ type SharedDoc = {
   files: SharedFile[];
 };
 
+const M = {
+  ru: {
+    invalidTitle: "Ссылка недействительна",
+    invalidIntro:
+      "Срок действия истёк, лимит просмотров исчерпан или ссылка отозвана.",
+    sharedWithYou: "Документ, которым с вами поделились",
+    validUntil: "действует до",
+    noServiceKey: "Предпросмотр файлов недоступен: на сервере не задан",
+    noFiles: "К документу не прикреплены файлы.",
+    file: "файл",
+    watermark: "Семейный сейф · только просмотр",
+    open: "Открыть",
+    download: "↓ Скачать оригинал",
+    footer:
+      "🔐 Защищённая ссылка «Семейного сейфа». Доступ ограничен по времени и логируется.",
+  },
+  en: {
+    invalidTitle: "Link is invalid",
+    invalidIntro:
+      "It has expired, the view limit has been reached, or the link was revoked.",
+    sharedWithYou: "A document shared with you",
+    validUntil: "valid until",
+    noServiceKey: "File preview is unavailable: the server has no",
+    noFiles: "No files are attached to this document.",
+    file: "file",
+    watermark: "Family Vault · view only",
+    open: "Open",
+    download: "↓ Download original",
+    footer:
+      "🔐 Secure “Family Vault” link. Access is time-limited and logged.",
+  },
+} as const;
+
 function Shell({ children }: { children: React.ReactNode }) {
   return (
     <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-12">
@@ -33,6 +67,8 @@ export default async function SharePage({
 }: {
   params: Promise<{ token: string }>;
 }) {
+  const locale = await getLocale();
+  const t = M[locale];
   const { token } = await params;
 
   const supabase = await getSupabaseServer();
@@ -44,10 +80,8 @@ export default async function SharePage({
       <Shell>
         <div className="card text-center">
           <div className="mb-2 text-3xl">⛔</div>
-          <h1 className="text-lg font-semibold">Ссылка недействительна</h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Срок действия истёк, лимит просмотров исчерпан или ссылка отозвана.
-          </p>
+          <h1 className="text-lg font-semibold">{t.invalidTitle}</h1>
+          <p className="mt-1 text-sm text-slate-500">{t.invalidIntro}</p>
         </div>
       </Shell>
     );
@@ -73,28 +107,28 @@ export default async function SharePage({
       <div className="card space-y-5">
         <div>
           <p className="text-xs uppercase tracking-wide text-slate-400">
-            Документ, которым с вами поделились
+            {t.sharedWithYou}
           </p>
           <h1 className="mt-1 text-xl font-semibold">{doc.title}</h1>
           <p className="text-sm text-slate-500">
-            {CATEGORY_LABEL[doc.category]}
+            {categoryLabel(locale, doc.category)}
             {doc.subtype ? ` · ${doc.subtype}` : ""}
             {doc.issuer ? ` · ${doc.issuer}` : ""}
           </p>
           {doc.expires_at && (
             <p className="text-xs text-slate-400">
-              действует до {doc.expires_at}
+              {t.validUntil} {doc.expires_at}
             </p>
           )}
         </div>
 
         {!admin ? (
           <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
-            Предпросмотр файлов недоступен: на сервере не задан
+            {t.noServiceKey}
             <code className="mx-1">SUPABASE_SERVICE_ROLE_KEY</code>.
           </p>
         ) : files.length === 0 ? (
-          <p className="text-sm text-slate-400">К документу не прикреплены файлы.</p>
+          <p className="text-sm text-slate-400">{t.noFiles}</p>
         ) : (
           <div className="space-y-4">
             {files.map((f) => {
@@ -105,18 +139,18 @@ export default async function SharePage({
                   {isImage && url ? (
                     <div className="relative overflow-hidden rounded-lg border border-slate-200">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={url} alt={f.file_name ?? "файл"} className="w-full" />
+                      <img src={url} alt={f.file_name ?? t.file} className="w-full" />
                       {share.watermark && (
                         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
                           <span className="rotate-[-25deg] select-none text-2xl font-bold text-black/10">
-                            Семейный сейф · только просмотр
+                            {t.watermark}
                           </span>
                         </div>
                       )}
                     </div>
                   ) : (
                     <div className="flex items-center justify-between rounded-lg border border-slate-200 px-3 py-2 text-sm">
-                      <span>{f.file_name ?? "файл"}</span>
+                      <span>{f.file_name ?? t.file}</span>
                       {url && (
                         <a
                           href={url}
@@ -124,7 +158,7 @@ export default async function SharePage({
                           rel="noreferrer"
                           className="btn-ghost"
                         >
-                          Открыть
+                          {t.open}
                         </a>
                       )}
                     </div>
@@ -135,7 +169,7 @@ export default async function SharePage({
                       download={f.file_name ?? true}
                       className="mt-1 inline-block text-sm text-brand-600 hover:underline"
                     >
-                      ↓ Скачать оригинал
+                      {t.download}
                     </a>
                   )}
                 </div>
@@ -145,8 +179,7 @@ export default async function SharePage({
         )}
 
         <p className="border-t border-slate-100 pt-3 text-center text-xs text-slate-400">
-          🔐 Защищённая ссылка «Семейного сейфа». Доступ ограничен по времени и
-          логируется.
+          {t.footer}
         </p>
       </div>
     </Shell>

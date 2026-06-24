@@ -4,6 +4,26 @@ import {
   listExpiring,
   listMembers,
 } from "@/lib/queries";
+import { getLocale } from "@/lib/i18n";
+
+const M = {
+  ru: {
+    title: "Сроки",
+    subtitle: "Документы, срок действия которых истекает в ближайшие 60 дней.",
+    empty: "Ничего не истекает в ближайшее время 🎉",
+    until: "до",
+    overdue: (n: number) => `просрочен на ${n} дн.`,
+    daysLeft: (n: number) => `${n} дн.`,
+  },
+  en: {
+    title: "Deadlines",
+    subtitle: "Documents expiring within the next 60 days.",
+    empty: "Nothing expires anytime soon 🎉",
+    until: "until",
+    overdue: (n: number) => `overdue by ${n} d.`,
+    daysLeft: (n: number) => `${n} d.`,
+  },
+} as const;
 
 function daysLeft(date: string) {
   const ms = new Date(date).getTime() - Date.now();
@@ -11,6 +31,9 @@ function daysLeft(date: string) {
 }
 
 export default async function RemindersPage() {
+  const locale = await getLocale();
+  const t = M[locale];
+
   const householdId = await getOrCreateHouseholdId();
   const [docs, members] = await Promise.all([
     listExpiring(householdId, 60),
@@ -21,15 +44,15 @@ export default async function RemindersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Сроки</h1>
+        <h1 className="text-2xl font-semibold">{t.title}</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Документы, срок действия которых истекает в ближайшие 60 дней.
+          {t.subtitle}
         </p>
       </div>
 
       {docs.length === 0 ? (
         <div className="card text-center text-slate-500">
-          Ничего не истекает в ближайшее время 🎉
+          {t.empty}
         </div>
       ) : (
         <ul className="space-y-2">
@@ -45,7 +68,7 @@ export default async function RemindersPage() {
                   <div>
                     <div className="font-medium">{d.title}</div>
                     <div className="text-xs text-slate-500">
-                      {nameOf.get(d.member_id ?? "") ?? "—"} · до {d.expires_at}
+                      {nameOf.get(d.member_id ?? "") ?? "—"} · {t.until} {d.expires_at}
                     </div>
                   </div>
                   <span
@@ -57,7 +80,7 @@ export default async function RemindersPage() {
                           : "rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-600"
                     }
                   >
-                    {overdue ? `просрочен на ${-left} дн.` : `${left} дн.`}
+                    {overdue ? t.overdue(-left) : t.daysLeft(left)}
                   </span>
                 </Link>
               </li>

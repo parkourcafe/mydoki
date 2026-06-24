@@ -3,10 +3,66 @@
 import { useActionState, useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { login, signup, type AuthState } from "./actions";
+import type { Locale } from "@/lib/i18n";
 
 const initial: AuthState = {};
 
-function GoogleButton() {
+const M = {
+  ru: {
+    googleSignIn: "Войти через Google",
+    enterEmail: "Введите email.",
+    resetSent:
+      "Если такой email есть — мы отправили ссылку для сброса пароля. Проверьте почту (и папку «Спам»).",
+    backToLogin: "← Вернуться ко входу",
+    resetHint: "Укажите email — пришлём ссылку, чтобы задать новый пароль.",
+    email: "Email",
+    sending: "Отправляю…",
+    sendLink: "Прислать ссылку",
+    password: "Пароль",
+    forgotPassword: "Забыли пароль?",
+    consentLead: "Я принимаю",
+    consentTerms: "Условия",
+    consentAnd: "и",
+    consentPrivacy: "Политику конфиденциальности",
+    consentTrail: "и даю согласие на обработку персональных данных.",
+    submitting: "Минутку…",
+    signIn: "Войти",
+    createAccount: "Создать аккаунт",
+    noAccount: "Нет аккаунта? ",
+    haveAccount: "Уже есть аккаунт? ",
+    signUp: "Зарегистрироваться",
+    or: "или",
+  },
+  en: {
+    googleSignIn: "Sign in with Google",
+    enterEmail: "Enter your email.",
+    resetSent:
+      "If that email exists, we've sent a password reset link. Check your inbox (and the “Spam” folder).",
+    backToLogin: "← Back to sign in",
+    resetHint:
+      "Enter your email — we'll send a link to set a new password.",
+    email: "Email",
+    sending: "Sending…",
+    sendLink: "Send link",
+    password: "Password",
+    forgotPassword: "Forgot password?",
+    consentLead: "I accept the",
+    consentTerms: "Terms",
+    consentAnd: "and",
+    consentPrivacy: "Privacy Policy",
+    consentTrail: "and consent to the processing of my personal data.",
+    submitting: "Just a moment…",
+    signIn: "Sign in",
+    createAccount: "Create account",
+    noAccount: "No account? ",
+    haveAccount: "Already have an account? ",
+    signUp: "Sign up",
+    or: "or",
+  },
+} as const;
+
+function GoogleButton({ locale }: { locale: Locale }) {
+  const t = M[locale];
   async function google() {
     const supabase = getSupabaseBrowser();
     await supabase.auth.signInWithOAuth({
@@ -28,12 +84,19 @@ function GoogleButton() {
         <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z" />
         <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
       </svg>
-      Войти через Google
+      {t.googleSignIn}
     </button>
   );
 }
 
-function ResetRequest({ onBack }: { onBack: () => void }) {
+function ResetRequest({
+  onBack,
+  locale,
+}: {
+  onBack: () => void;
+  locale: Locale;
+}) {
+  const t = M[locale];
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
@@ -43,7 +106,7 @@ function ResetRequest({ onBack }: { onBack: () => void }) {
     e.preventDefault();
     setErr(null);
     if (!email.trim()) {
-      setErr("Введите email.");
+      setErr(t.enterEmail);
       return;
     }
     setBusy(true);
@@ -60,11 +123,10 @@ function ResetRequest({ onBack }: { onBack: () => void }) {
     return (
       <div className="space-y-4 text-sm">
         <p className="rounded-lg bg-emerald-50 px-3 py-2 text-emerald-700">
-          Если такой email есть — мы отправили ссылку для сброса пароля.
-          Проверьте почту (и папку «Спам»).
+          {t.resetSent}
         </p>
         <button onClick={onBack} className="font-medium text-brand-600 hover:underline">
-          ← Вернуться ко входу
+          {t.backToLogin}
         </button>
       </div>
     );
@@ -73,11 +135,11 @@ function ResetRequest({ onBack }: { onBack: () => void }) {
   return (
     <form onSubmit={submit} className="space-y-4">
       <p className="text-sm text-slate-500">
-        Укажите email — пришлём ссылку, чтобы задать новый пароль.
+        {t.resetHint}
       </p>
       <div>
         <label className="label" htmlFor="reset-email">
-          Email
+          {t.email}
         </label>
         <input
           id="reset-email"
@@ -94,7 +156,7 @@ function ResetRequest({ onBack }: { onBack: () => void }) {
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{err}</p>
       )}
       <button type="submit" disabled={busy} className="btn-primary w-full">
-        {busy ? "Отправляю…" : "Прислать ссылку"}
+        {busy ? t.sending : t.sendLink}
       </button>
       <p className="text-center text-sm">
         <button
@@ -102,33 +164,35 @@ function ResetRequest({ onBack }: { onBack: () => void }) {
           onClick={onBack}
           className="font-medium text-brand-600 hover:underline"
         >
-          ← Вернуться ко входу
+          {t.backToLogin}
         </button>
       </p>
     </form>
   );
 }
 
-export default function LoginForm() {
+export default function LoginForm({ locale }: { locale: Locale }) {
+  const t = M[locale];
   const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
   const action = mode === "signup" ? signup : login;
   const [state, formAction, pending] = useActionState(action, initial);
 
-  if (mode === "reset") return <ResetRequest onBack={() => setMode("login")} />;
+  if (mode === "reset")
+    return <ResetRequest onBack={() => setMode("login")} locale={locale} />;
 
   return (
     <div className="space-y-4">
-      <GoogleButton />
+      <GoogleButton locale={locale} />
 
       <div className="flex items-center gap-3 text-xs text-slate-400">
-        <span className="h-px flex-1 bg-slate-200" /> или{" "}
+        <span className="h-px flex-1 bg-slate-200" /> {t.or}{" "}
         <span className="h-px flex-1 bg-slate-200" />
       </div>
 
       <form action={formAction} className="space-y-4">
         <div>
           <label className="label" htmlFor="email">
-            Email
+            {t.email}
           </label>
           <input
             id="email"
@@ -143,7 +207,7 @@ export default function LoginForm() {
         <div>
           <div className="flex items-center justify-between">
             <label className="label" htmlFor="password">
-              Пароль
+              {t.password}
             </label>
             {mode === "login" && (
               <button
@@ -151,7 +215,7 @@ export default function LoginForm() {
                 onClick={() => setMode("reset")}
                 className="text-xs font-medium text-brand-600 hover:underline"
               >
-                Забыли пароль?
+                {t.forgotPassword}
               </button>
             )}
           </div>
@@ -171,15 +235,15 @@ export default function LoginForm() {
           <label className="flex items-start gap-2 text-xs text-slate-500">
             <input type="checkbox" required className="mt-0.5" />
             <span>
-              Я принимаю{" "}
+              {t.consentLead}{" "}
               <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
-                Условия
+                {t.consentTerms}
               </a>{" "}
-              и{" "}
+              {t.consentAnd}{" "}
               <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
-                Политику конфиденциальности
+                {t.consentPrivacy}
               </a>{" "}
-              и даю согласие на обработку персональных данных.
+              {t.consentTrail}
             </span>
           </label>
         )}
@@ -197,20 +261,20 @@ export default function LoginForm() {
 
         <button type="submit" disabled={pending} className="btn-primary w-full">
           {pending
-            ? "Минутку…"
+            ? t.submitting
             : mode === "login"
-              ? "Войти"
-              : "Создать аккаунт"}
+              ? t.signIn
+              : t.createAccount}
         </button>
 
         <p className="text-center text-sm text-slate-500">
-          {mode === "login" ? "Нет аккаунта? " : "Уже есть аккаунт? "}
+          {mode === "login" ? t.noAccount : t.haveAccount}
           <button
             type="button"
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
             className="font-medium text-brand-600 hover:underline"
           >
-            {mode === "login" ? "Зарегистрироваться" : "Войти"}
+            {mode === "login" ? t.signUp : t.signIn}
           </button>
         </p>
       </form>

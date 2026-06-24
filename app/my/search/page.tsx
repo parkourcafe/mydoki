@@ -4,13 +4,44 @@ import {
   listMembers,
   searchDocuments,
 } from "@/lib/queries";
-import { CATEGORIES, CATEGORY_LABEL } from "@/lib/categories";
+import { categories, categoryLabel } from "@/lib/categories";
+import { getLocale } from "@/lib/i18n";
+
+const M = {
+  ru: {
+    title: "Поиск",
+    subtitle: "По названию, типу, кем выдан — в пределах вашей семьи.",
+    query: "Запрос",
+    queryPlaceholder: "паспорт, диплом, страховка…",
+    category: "Категория",
+    all: "Все",
+    searchBtn: "Искать",
+    notFound: "Ничего не найдено.",
+    until: "до",
+    prompt: "Введите запрос или выберите категорию.",
+  },
+  en: {
+    title: "Search",
+    subtitle: "By title, type, or issuer — within your family.",
+    query: "Query",
+    queryPlaceholder: "passport, diploma, insurance…",
+    category: "Category",
+    all: "All",
+    searchBtn: "Search",
+    notFound: "Nothing found.",
+    until: "until",
+    prompt: "Enter a query or pick a category.",
+  },
+} as const;
 
 export default async function SearchPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string; category?: string }>;
 }) {
+  const locale = await getLocale();
+  const t = M[locale];
+
   const { q = "", category = "" } = await searchParams;
   const householdId = await getOrCreateHouseholdId();
   const members = await listMembers(householdId);
@@ -24,39 +55,39 @@ export default async function SearchPage({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">Поиск</h1>
+        <h1 className="text-2xl font-semibold">{t.title}</h1>
         <p className="mt-1 text-sm text-slate-500">
-          По названию, типу, кем выдан — в пределах вашей семьи.
+          {t.subtitle}
         </p>
       </div>
 
       <form method="get" className="flex flex-wrap items-end gap-3">
         <div className="grow">
-          <label className="label">Запрос</label>
+          <label className="label">{t.query}</label>
           <input
             name="q"
             defaultValue={q}
             className="input"
-            placeholder="паспорт, диплом, страховка…"
+            placeholder={t.queryPlaceholder}
           />
         </div>
         <div>
-          <label className="label">Категория</label>
+          <label className="label">{t.category}</label>
           <select name="category" defaultValue={category} className="input">
-            <option value="">Все</option>
-            {CATEGORIES.map((c) => (
+            <option value="">{t.all}</option>
+            {categories(locale).map((c) => (
               <option key={c.key} value={c.key}>
                 {c.label}
               </option>
             ))}
           </select>
         </div>
-        <button className="btn-primary">Искать</button>
+        <button className="btn-primary">{t.searchBtn}</button>
       </form>
 
       {q || category ? (
         results.length === 0 ? (
-          <div className="card text-center text-slate-500">Ничего не найдено.</div>
+          <div className="card text-center text-slate-500">{t.notFound}</div>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2">
             {results.map((d) => (
@@ -67,15 +98,15 @@ export default async function SearchPage({
               >
                 <div className="font-medium">{d.title}</div>
                 <div className="mt-1 text-xs text-slate-500">
-                  {CATEGORY_LABEL[d.category]} · {nameOf.get(d.member_id ?? "") ?? "—"}
-                  {d.expires_at ? ` · до ${d.expires_at}` : ""}
+                  {categoryLabel(locale, d.category)} · {nameOf.get(d.member_id ?? "") ?? "—"}
+                  {d.expires_at ? ` · ${t.until} ${d.expires_at}` : ""}
                 </div>
               </Link>
             ))}
           </div>
         )
       ) : (
-        <p className="text-sm text-slate-400">Введите запрос или выберите категорию.</p>
+        <p className="text-sm text-slate-400">{t.prompt}</p>
       )}
     </div>
   );

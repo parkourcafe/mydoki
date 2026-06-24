@@ -3,16 +3,52 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
+import type { Locale } from "@/lib/i18n";
+
+const M = {
+  ru: {
+    heading: "Новый пароль",
+    pwTooShort: "Пароль должен быть от 8 символов.",
+    pwMismatch: "Пароли не совпадают.",
+    updated: "Пароль обновлён. Перенаправляем в кабинет…",
+    notFromLink:
+      "Открыли эту страницу не по ссылке из письма? Запросите сброс пароля заново на странице входа. Ссылка действует ограниченное время.",
+    newPassword: "Новый пароль",
+    repeatPassword: "Повторите пароль",
+    saving: "Сохраняю…",
+    savePassword: "Сохранить пароль",
+  },
+  en: {
+    heading: "New password",
+    pwTooShort: "Password must be at least 8 characters.",
+    pwMismatch: "Passwords don't match.",
+    updated: "Password updated. Redirecting to your account…",
+    notFromLink:
+      "Opened this page without the link from the email? Request a password reset again on the sign-in page. The link is valid for a limited time.",
+    newPassword: "New password",
+    repeatPassword: "Repeat password",
+    saving: "Saving…",
+    savePassword: "Save password",
+  },
+} as const;
 
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [supabase] = useState(() => getSupabaseBrowser());
+  const [locale, setLocale] = useState<Locale>("en");
+  const t = M[locale];
   const [ready, setReady] = useState(false);
   const [pw, setPw] = useState("");
   const [pw2, setPw2] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    const fromCookie = /(?:^|;\s*)locale=(ru|en)/.exec(document.cookie)?.[1];
+    if (fromCookie === "ru" || fromCookie === "en") setLocale(fromCookie);
+    else setLocale(navigator.language.startsWith("ru") ? "ru" : "en");
+  }, []);
 
   useEffect(() => {
     // Ссылка из письма содержит recovery-токен — клиент сам обменяет его на сессию.
@@ -29,11 +65,11 @@ export default function ResetPasswordPage() {
     e.preventDefault();
     setErr(null);
     if (pw.length < 8) {
-      setErr("Пароль должен быть от 8 символов.");
+      setErr(t.pwTooShort);
       return;
     }
     if (pw !== pw2) {
-      setErr("Пароли не совпадают.");
+      setErr(t.pwMismatch);
       return;
     }
     setBusy(true);
@@ -52,23 +88,22 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <div className="mb-2 text-4xl">🔐</div>
-          <h1 className="text-2xl font-semibold text-slate-900">Новый пароль</h1>
+          <h1 className="text-2xl font-semibold text-slate-900">{t.heading}</h1>
         </div>
         <div className="card">
           {done ? (
             <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-              Пароль обновлён. Перенаправляем в кабинет…
+              {t.updated}
             </p>
           ) : !ready ? (
             <p className="text-sm text-slate-500">
-              Открыли эту страницу не по ссылке из письма? Запросите сброс пароля
-              заново на странице входа. Ссылка действует ограниченное время.
+              {t.notFromLink}
             </p>
           ) : (
             <form onSubmit={submit} className="space-y-4">
               <div>
                 <label className="label" htmlFor="pw">
-                  Новый пароль
+                  {t.newPassword}
                 </label>
                 <input
                   id="pw"
@@ -84,7 +119,7 @@ export default function ResetPasswordPage() {
               </div>
               <div>
                 <label className="label" htmlFor="pw2">
-                  Повторите пароль
+                  {t.repeatPassword}
                 </label>
                 <input
                   id="pw2"
@@ -103,7 +138,7 @@ export default function ResetPasswordPage() {
                 </p>
               )}
               <button type="submit" disabled={busy} className="btn-primary w-full">
-                {busy ? "Сохраняю…" : "Сохранить пароль"}
+                {busy ? t.saving : t.savePassword}
               </button>
             </form>
           )}

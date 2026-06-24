@@ -2,9 +2,79 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CATEGORIES } from "@/lib/categories";
+import { categories } from "@/lib/categories";
+import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { attachDocumentFile, createDocumentMeta } from "@/app/my/actions";
+
+const M = {
+  ru: {
+    pickFile: "📎 Выбрать файл",
+    photo: "📷 Сфотографировать",
+    recognizing: "Распознаю…",
+    recognize: "✨ Распознать даты (AI)",
+    filesLabel: "Файлы документа",
+    remove: "убрать",
+    filesHint:
+      "На телефоне «Сфотографировать» откроет камеру. Файлы грузятся напрямую в приватное хранилище — размер не ограничен.",
+    title: "Название",
+    titlePh: "Паспорт РФ",
+    category: "Категория",
+    subtype: "Тип / подтип",
+    subtypePh: "паспорт, диплом…",
+    issuer: "Кем выдан",
+    docNumber: "Номер",
+    issuedAt: "Дата выдачи",
+    expiresAt: "Действует до",
+    tags: "Теги (через запятую)",
+    tagsPh: "срочно, оригинал",
+    notes: "Заметки",
+    saving: "Сохраняю…",
+    save: "Сохранить документ",
+    pickFirst: "Сначала выберите файл или сфотографируйте документ.",
+    recognizeFail: "Не удалось распознать.",
+    autofilled: "Поля заполнены автоматически — проверьте и сохраните.",
+    networkFail: "Сеть недоступна — попробуйте ещё раз.",
+    enterTitle: "Введите название документа.",
+    fileErr: (name: string, m: string) => `Файл «${name}»: ${m}`,
+    saveFail: "Не удалось сохранить.",
+    kb: "КБ",
+    mb: "МБ",
+  },
+  en: {
+    pickFile: "📎 Choose file",
+    photo: "📷 Take a photo",
+    recognizing: "Recognizing…",
+    recognize: "✨ Recognize dates (AI)",
+    filesLabel: "Document files",
+    remove: "remove",
+    filesHint:
+      "On a phone, “Take a photo” opens the camera. Files are uploaded directly to private storage — no size limit.",
+    title: "Title",
+    titlePh: "Passport",
+    category: "Category",
+    subtype: "Type / subtype",
+    subtypePh: "passport, diploma…",
+    issuer: "Issued by",
+    docNumber: "Number",
+    issuedAt: "Issue date",
+    expiresAt: "Valid until",
+    tags: "Tags (comma-separated)",
+    tagsPh: "urgent, original",
+    notes: "Notes",
+    saving: "Saving…",
+    save: "Save document",
+    pickFirst: "First choose a file or take a photo of the document.",
+    recognizeFail: "Could not recognize.",
+    autofilled: "Fields filled in automatically — review and save.",
+    networkFail: "Network unavailable — please try again.",
+    enterTitle: "Enter the document title.",
+    fileErr: (name: string, m: string) => `File “${name}”: ${m}`,
+    saveFail: "Could not save.",
+    kb: "KB",
+    mb: "MB",
+  },
+} as const;
 
 type Fields = {
   title: string;
@@ -30,18 +100,21 @@ const EMPTY: Fields = {
   notes: "",
 };
 
-function fmtSize(n: number) {
-  if (n < 1024 * 1024) return `${Math.round(n / 1024)} КБ`;
-  return `${(n / 1024 / 1024).toFixed(1)} МБ`;
+function fmtSize(n: number, t: (typeof M)[Locale]) {
+  if (n < 1024 * 1024) return `${Math.round(n / 1024)} ${t.kb}`;
+  return `${(n / 1024 / 1024).toFixed(1)} ${t.mb}`;
 }
 
 export default function DocumentForm({
   memberId,
   assetId,
+  locale,
 }: {
   memberId?: string;
   assetId?: string;
+  locale: Locale;
 }) {
+  const t = M[locale];
   const router = useRouter();
   const [f, setF] = useState<Fields>(EMPTY);
   const [files, setFiles] = useState<File[]>([]);
@@ -79,7 +152,7 @@ export default function DocumentForm({
   async function classify(picked?: File, silent = false) {
     const file = picked ?? files[0];
     if (!file) {
-      if (!silent) setMsg("Сначала выберите файл или сфотографируйте документ.");
+      if (!silent) setMsg(t.pickFirst);
       return;
     }
     if (!silent) setMsg(null);
@@ -90,7 +163,7 @@ export default function DocumentForm({
       const res = await fetch("/api/classify", { method: "POST", body });
       const data = await res.json();
       if (!res.ok) {
-        if (!silent) setMsg(data.error ?? "Не удалось распознать.");
+        if (!silent) setMsg(data.error ?? t.recognizeFail);
       } else {
         setF((p) => ({
           ...p,
@@ -106,10 +179,10 @@ export default function DocumentForm({
               ? data.tags.join(", ")
               : p.tags,
         }));
-        setMsg("Поля заполнены автоматически — проверьте и сохраните.");
+        setMsg(t.autofilled);
       }
     } catch {
-      if (!silent) setMsg("Сеть недоступна — попробуйте ещё раз.");
+      if (!silent) setMsg(t.networkFail);
     } finally {
       setBusy(false);
     }
@@ -119,7 +192,7 @@ export default function DocumentForm({
     e.preventDefault();
     setSaveErr(null);
     if (!f.title.trim()) {
-      setSaveErr("Введите название документа.");
+      setSaveErr(t.enterTitle);
       return;
     }
     setSaving(true);
@@ -154,7 +227,7 @@ export default function DocumentForm({
               contentType: file.type || "application/octet-stream",
               upsert: false,
             });
-          if (error) throw new Error(`Файл «${file.name}»: ${error.message}`);
+          if (error) throw new Error(t.fileErr(file.name, error.message));
           await attachDocumentFile({
             documentId: id,
             householdId,
@@ -168,7 +241,7 @@ export default function DocumentForm({
 
       router.push(`/my/documents/${id}`);
     } catch (err) {
-      setSaveErr(err instanceof Error ? err.message : "Не удалось сохранить.");
+      setSaveErr(err instanceof Error ? err.message : t.saveFail);
       setSaving(false);
     }
   }
@@ -176,7 +249,7 @@ export default function DocumentForm({
   return (
     <form onSubmit={handleSubmit} className="mt-4 grid gap-4 sm:grid-cols-2">
       <div className="sm:col-span-2 rounded-lg border border-dashed border-brand-300 bg-brand-50/40 p-3">
-        <label className="label">Файлы документа</label>
+        <label className="label">{t.filesLabel}</label>
 
         <input
           ref={pickRef}
@@ -201,14 +274,14 @@ export default function DocumentForm({
             onClick={() => pickRef.current?.click()}
             className="btn-ghost"
           >
-            📎 Выбрать файл
+            {t.pickFile}
           </button>
           <button
             type="button"
             onClick={() => camRef.current?.click()}
             className="btn-ghost"
           >
-            📷 Сфотографировать
+            {t.photo}
           </button>
           <button
             type="button"
@@ -216,7 +289,7 @@ export default function DocumentForm({
             disabled={busy || !files.length}
             className="btn-ghost"
           >
-            {busy ? "Распознаю…" : "✨ Распознать даты (AI)"}
+            {busy ? t.recognizing : t.recognize}
           </button>
         </div>
 
@@ -230,7 +303,7 @@ export default function DocumentForm({
                 <span className="truncate">
                   {file.name}{" "}
                   <span className="text-xs text-slate-400">
-                    {fmtSize(file.size)}
+                    {fmtSize(file.size, t)}
                   </span>
                 </span>
                 <button
@@ -238,38 +311,35 @@ export default function DocumentForm({
                   onClick={() => removeFile(i)}
                   className="ml-2 text-xs text-red-500 hover:underline"
                 >
-                  убрать
+                  {t.remove}
                 </button>
               </li>
             ))}
           </ul>
         )}
 
-        <p className="mt-2 text-xs text-slate-500">
-          На телефоне «Сфотографировать» откроет камеру. Файлы грузятся напрямую
-          в приватное хранилище — размер не ограничен.
-        </p>
+        <p className="mt-2 text-xs text-slate-500">{t.filesHint}</p>
         {msg && <p className="mt-1 text-xs text-slate-600">{msg}</p>}
       </div>
 
       <div className="sm:col-span-2">
-        <label className="label">Название</label>
+        <label className="label">{t.title}</label>
         <input
           required
           value={f.title}
           onChange={(e) => set("title", e.target.value)}
           className="input"
-          placeholder="Паспорт РФ"
+          placeholder={t.titlePh}
         />
       </div>
       <div>
-        <label className="label">Категория</label>
+        <label className="label">{t.category}</label>
         <select
           value={f.category}
           onChange={(e) => set("category", e.target.value)}
           className="input"
         >
-          {CATEGORIES.map((c) => (
+          {categories(locale).map((c) => (
             <option key={c.key} value={c.key}>
               {c.label}
             </option>
@@ -277,16 +347,16 @@ export default function DocumentForm({
         </select>
       </div>
       <div>
-        <label className="label">Тип / подтип</label>
+        <label className="label">{t.subtype}</label>
         <input
           value={f.subtype}
           onChange={(e) => set("subtype", e.target.value)}
           className="input"
-          placeholder="паспорт, диплом…"
+          placeholder={t.subtypePh}
         />
       </div>
       <div>
-        <label className="label">Кем выдан</label>
+        <label className="label">{t.issuer}</label>
         <input
           value={f.issuer}
           onChange={(e) => set("issuer", e.target.value)}
@@ -294,7 +364,7 @@ export default function DocumentForm({
         />
       </div>
       <div>
-        <label className="label">Номер</label>
+        <label className="label">{t.docNumber}</label>
         <input
           value={f.doc_number}
           onChange={(e) => set("doc_number", e.target.value)}
@@ -302,7 +372,7 @@ export default function DocumentForm({
         />
       </div>
       <div>
-        <label className="label">Дата выдачи</label>
+        <label className="label">{t.issuedAt}</label>
         <input
           type="date"
           value={f.issued_at}
@@ -311,7 +381,7 @@ export default function DocumentForm({
         />
       </div>
       <div>
-        <label className="label">Действует до</label>
+        <label className="label">{t.expiresAt}</label>
         <input
           type="date"
           value={f.expires_at}
@@ -320,16 +390,16 @@ export default function DocumentForm({
         />
       </div>
       <div className="sm:col-span-2">
-        <label className="label">Теги (через запятую)</label>
+        <label className="label">{t.tags}</label>
         <input
           value={f.tags}
           onChange={(e) => set("tags", e.target.value)}
           className="input"
-          placeholder="срочно, оригинал"
+          placeholder={t.tagsPh}
         />
       </div>
       <div className="sm:col-span-2">
-        <label className="label">Заметки</label>
+        <label className="label">{t.notes}</label>
         <textarea
           rows={2}
           value={f.notes}
@@ -346,7 +416,7 @@ export default function DocumentForm({
 
       <div className="sm:col-span-2">
         <button type="submit" disabled={saving} className="btn-primary">
-          {saving ? "Сохраняю…" : "Сохранить документ"}
+          {saving ? t.saving : t.save}
         </button>
       </div>
     </form>

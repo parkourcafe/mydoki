@@ -2,18 +2,41 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAsset, listDocumentsByAsset } from "@/lib/queries";
 import {
-  ASSET_TYPE_LABEL,
-  CATEGORIES,
+  assetTypeLabel,
+  categories,
   type DocCategory,
 } from "@/lib/categories";
+import { getLocale } from "@/lib/i18n";
 import { deleteAsset } from "@/app/my/actions";
 import DocumentForm from "@/app/my/members/[id]/DocumentForm";
+
+const M = {
+  ru: {
+    back: "← Имущество",
+    empty: "Документов по объекту пока нет. Добавьте первый ниже.",
+    validUntil: "действует до",
+    noExpiry: "без срока",
+    addDocument: "+ Добавить документ",
+    deleteObject: "Удалить объект",
+  },
+  en: {
+    back: "← Assets",
+    empty: "No documents for this item yet. Add the first one below.",
+    validUntil: "valid until",
+    noExpiry: "no expiry",
+    addDocument: "+ Add document",
+    deleteObject: "Delete item",
+  },
+} as const;
 
 export default async function AssetPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const locale = await getLocale();
+  const t = M[locale];
+  const cats = categories(locale);
   const { id } = await params;
   const asset = await getAsset(id);
   if (!asset) notFound();
@@ -30,22 +53,20 @@ export default async function AssetPage({
     <div className="space-y-8">
       <div>
         <Link href="/my/assets" className="text-sm text-slate-500 hover:underline">
-          ← Имущество
+          {t.back}
         </Link>
         <h1 className="mt-2 text-2xl font-semibold">{asset.title}</h1>
         <p className="text-sm text-slate-500">
-          {ASSET_TYPE_LABEL[asset.type]}
+          {assetTypeLabel(locale, asset.type)}
           {asset.details ? ` · ${asset.details}` : ""}
         </p>
       </div>
 
       {docs.length === 0 ? (
-        <div className="card text-center text-slate-500">
-          Документов по объекту пока нет. Добавьте первый ниже.
-        </div>
+        <div className="card text-center text-slate-500">{t.empty}</div>
       ) : (
         <div className="space-y-6">
-          {CATEGORIES.filter((c) => byCategory.has(c.key)).map((c) => (
+          {cats.filter((c) => byCategory.has(c.key)).map((c) => (
             <section key={c.key}>
               <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
                 {c.emoji} {c.label}
@@ -60,7 +81,9 @@ export default async function AssetPage({
                     <div className="font-medium">{d.title}</div>
                     <div className="mt-1 text-xs text-slate-500">
                       {d.subtype ? `${d.subtype} · ` : ""}
-                      {d.expires_at ? `действует до ${d.expires_at}` : "без срока"}
+                      {d.expires_at
+                        ? `${t.validUntil} ${d.expires_at}`
+                        : t.noExpiry}
                     </div>
                   </Link>
                 ))}
@@ -71,14 +94,14 @@ export default async function AssetPage({
       )}
 
       <details className="card">
-        <summary className="cursor-pointer font-medium">+ Добавить документ</summary>
-        <DocumentForm assetId={asset.id} />
+        <summary className="cursor-pointer font-medium">{t.addDocument}</summary>
+        <DocumentForm assetId={asset.id} locale={locale} />
       </details>
 
       <section>
         <form action={deleteAsset}>
           <input type="hidden" name="id" value={asset.id} />
-          <button className="btn-danger">Удалить объект</button>
+          <button className="btn-danger">{t.deleteObject}</button>
         </form>
       </section>
     </div>

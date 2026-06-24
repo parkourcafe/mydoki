@@ -1,17 +1,75 @@
 import { headers } from "next/headers";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getOrCreateHouseholdId, getMyRole, getUser } from "@/lib/queries";
-import { RELATIONS } from "@/lib/categories";
+import { relations } from "@/lib/categories";
+import { getLocale } from "@/lib/i18n";
 import CopyButton from "@/components/CopyButton";
 import { createInvitation, deleteInvitation } from "../actions";
 
-const ROLE_LABEL: Record<string, string> = {
-  owner: "Владелец",
-  editor: "Редактор",
-  viewer: "Просмотр",
+const ROLE_LABEL: Record<"ru" | "en", Record<string, string>> = {
+  ru: {
+    owner: "Владелец",
+    editor: "Редактор",
+    viewer: "Просмотр",
+  },
+  en: {
+    owner: "Owner",
+    editor: "Editor",
+    viewer: "Viewer",
+  },
 };
 
+const M = {
+  ru: {
+    title: "Доступ к семье",
+    subtitle:
+      "Пригласите близких. Роли: владелец (всё), редактор (чтение + правка), просмотр (только чтение).",
+    members: "Участники",
+    you: "Вы",
+    notOwner: "Приглашать участников может только владелец семьи.",
+    invitations: "Приглашения",
+    noInvitations: "Активных приглашений нет.",
+    until: "до",
+    delete: "Удалить",
+    role: "Роль",
+    viewer: "Просмотр",
+    editor: "Редактор",
+    createInvite: "Создать приглашение",
+    inviteHint:
+      "Скопируйте ссылку и передайте человеку любым способом. Ссылка действует 14 дней.",
+    footerA: "«Участники» — это люди с доступом к аккаунту семьи. «Члены семьи» (с их документами) добавляются на странице",
+    footerLink: "Семья",
+    footerRelations: "Доступные связи:",
+    dateLocale: "ru-RU",
+  },
+  en: {
+    title: "Family access",
+    subtitle:
+      "Invite your loved ones. Roles: owner (everything), editor (read + edit), viewer (read only).",
+    members: "Members",
+    you: "You",
+    notOwner: "Only the family owner can invite members.",
+    invitations: "Invitations",
+    noInvitations: "No active invitations.",
+    until: "until",
+    delete: "Delete",
+    role: "Role",
+    viewer: "Viewer",
+    editor: "Editor",
+    createInvite: "Create invitation",
+    inviteHint:
+      "Copy the link and share it with the person any way you like. The link is valid for 14 days.",
+    footerA: "“Members” are people with access to the family account. “Family members” (with their documents) are added on the",
+    footerLink: "Family",
+    footerRelations: "Available relations:",
+    dateLocale: "en-US",
+  },
+} as const;
+
 export default async function FamilyAccessPage() {
+  const locale = await getLocale();
+  const t = M[locale];
+
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
   const user = await getUser();
@@ -38,16 +96,15 @@ export default async function FamilyAccessPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">Доступ к семье</h1>
+        <h1 className="text-2xl font-semibold">{t.title}</h1>
         <p className="mt-1 text-sm text-slate-500">
-          Пригласите близких. Роли: владелец (всё), редактор (чтение + правка),
-          просмотр (только чтение).
+          {t.subtitle}
         </p>
       </div>
 
       <section className="card">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-          Участники
+          {t.members}
         </h2>
         <ul className="divide-y divide-slate-100">
           {(hmembers ?? []).map((m) => (
@@ -57,7 +114,7 @@ export default async function FamilyAccessPage() {
             >
               <span>
                 {m.user_id === user?.id ? (
-                  <span className="font-medium">Вы</span>
+                  <span className="font-medium">{t.you}</span>
                 ) : (
                   <span className="text-slate-500">
                     {String(m.user_id).slice(0, 8)}…
@@ -65,7 +122,7 @@ export default async function FamilyAccessPage() {
                 )}
               </span>
               <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs">
-                {ROLE_LABEL[m.role] ?? m.role}
+                {ROLE_LABEL[locale][m.role] ?? m.role}
               </span>
             </li>
           ))}
@@ -74,16 +131,16 @@ export default async function FamilyAccessPage() {
 
       {!isOwner ? (
         <p className="text-sm text-slate-400">
-          Приглашать участников может только владелец семьи.
+          {t.notOwner}
         </p>
       ) : (
         <>
           <section className="card">
             <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
-              Приглашения
+              {t.invitations}
             </h2>
             {(invites ?? []).length === 0 ? (
-              <p className="text-sm text-slate-400">Активных приглашений нет.</p>
+              <p className="text-sm text-slate-400">{t.noInvitations}</p>
             ) : (
               <ul className="space-y-2">
                 {(invites ?? []).map((inv) => {
@@ -94,14 +151,14 @@ export default async function FamilyAccessPage() {
                       className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm"
                     >
                       <span>
-                        {ROLE_LABEL[inv.role] ?? inv.role} · до{" "}
-                        {new Date(inv.expires_at).toLocaleDateString("ru-RU")}
+                        {ROLE_LABEL[locale][inv.role] ?? inv.role} · {t.until}{" "}
+                        {new Date(inv.expires_at).toLocaleDateString(t.dateLocale)}
                       </span>
                       <span className="flex gap-2">
-                        <CopyButton text={url} />
+                        <CopyButton text={url} locale={locale} />
                         <form action={deleteInvitation}>
                           <input type="hidden" name="id" value={inv.id} />
-                          <button className="btn-danger">Удалить</button>
+                          <button className="btn-danger">{t.delete}</button>
                         </form>
                       </span>
                     </li>
@@ -112,17 +169,16 @@ export default async function FamilyAccessPage() {
 
             <form action={createInvitation} className="mt-4 flex items-end gap-3">
               <div>
-                <label className="label">Роль</label>
+                <label className="label">{t.role}</label>
                 <select name="role" defaultValue="viewer" className="input">
-                  <option value="viewer">Просмотр</option>
-                  <option value="editor">Редактор</option>
+                  <option value="viewer">{t.viewer}</option>
+                  <option value="editor">{t.editor}</option>
                 </select>
               </div>
-              <button className="btn-primary">Создать приглашение</button>
+              <button className="btn-primary">{t.createInvite}</button>
             </form>
             <p className="mt-2 text-xs text-slate-400">
-              Скопируйте ссылку и передайте человеку любым способом. Ссылка
-              действует 14 дней.
+              {t.inviteHint}
             </p>
           </section>
         </>
@@ -130,12 +186,12 @@ export default async function FamilyAccessPage() {
 
       {/* Подсказка по людям (members) vs участникам (users) */}
       <p className="text-xs text-slate-400">
-        «Участники» — это люди с доступом к аккаунту семьи. «Члены семьи» (с их
-        документами) добавляются на странице{" "}
+        {t.footerA}{" "}
         <a href="/my" className="underline">
-          Семья
+          {t.footerLink}
         </a>
-        . Доступные связи: {RELATIONS.map((r) => r.label).join(", ")}.
+        {locale === "ru" ? "" : " page"}. {t.footerRelations}{" "}
+        {relations(locale).map((r) => r.label).join(", ")}.
       </p>
     </div>
   );
