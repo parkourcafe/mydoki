@@ -27,7 +27,7 @@ const CATS: { icon: string; title: string; items: string[] }[] = [
 
 const STEPS: { n: string; title: string; text: string }[] = [
   { n: "1", title: "Загрузи фото или скан", text: "Паспорт, виза, анализ, путёвка — любой документ." },
-  { n: "2", title: "Укажи дату истечения", text: "В бесплатной версии — вручную. В премиум ИИ распознаёт дату сам." },
+  { n: "2", title: "ИИ распознаёт дату сам", text: "Система сама находит дату истечения и предлагает её сохранить — бесплатно." },
   { n: "3", title: "Получай напоминания", text: "Система заранее предупредит об истечении визы, анализа или ОСАГО." },
   { n: "4", title: "Управляй доступом", text: "Отправляй временные ссылки врачам, в банк или родственникам." },
 ];
@@ -35,8 +35,8 @@ const STEPS: { n: string; title: string; text: string }[] = [
 const PLAN_ROWS: { feature: string; free: boolean; premium: boolean }[] = [
   { feature: "Загрузка документов", free: true, premium: true },
   { feature: "Ручной ввод дат и напоминания", free: true, premium: true },
-  { feature: "Авто-распознавание дат (ИИ)", free: false, premium: true },
-  { feature: "Умные напоминания (анализы, визы, ОСАГО)", free: false, premium: true },
+  { feature: "Авто-распознавание дат (ИИ)", free: true, premium: true },
+  { feature: "Умные напоминания (анализы, визы, ОСАГО)", free: true, premium: true },
   { feature: "AI-юрист (вопросы по документам и поездкам)", free: false, premium: true },
   { feature: "Безопасный шаринг по ссылке", free: true, premium: true },
   { feature: "Доступ с любого устройства", free: true, premium: true },
@@ -155,7 +155,7 @@ export default async function Home() {
                 <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
                   <div className="text-2xl font-semibold">Анализы и медицинские исследования</div>
                   <span className="rounded-full bg-gradient-to-r from-[#b85c38] to-[#d4a373] px-3 py-0.5 text-xs font-semibold text-white">
-                    ИИ в премиум
+                    Распознавание дат — бесплатно
                   </span>
                 </div>
                 <div className="grid grid-cols-1 gap-x-8 text-[#5c5248] md:grid-cols-2">
@@ -171,7 +171,7 @@ export default async function Home() {
                   </ul>
                 </div>
                 <div className="mt-4 text-sm font-medium text-[#b85c38]">
-                  В премиум: автоматическое распознавание дат + умные напоминания
+                  Распознавание дат и умные напоминания — бесплатно.
                 </div>
               </div>
             </div>
