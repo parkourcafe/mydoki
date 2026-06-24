@@ -449,7 +449,20 @@ function buildJsonLd(t: Dict, locale: Locale, appUrl: string) {
   };
 }
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ code?: string; next?: string }>;
+}) {
+  // Подстраховка: если в Supabase не разрешён redirect на /auth/callback,
+  // он возвращает OAuth-код на Site URL (главную). Перехватываем код здесь
+  // и отправляем в callback-роут, который завершит обмен на сессию.
+  const sp = await searchParams;
+  if (sp.code) {
+    const qs = new URLSearchParams({ code: sp.code });
+    if (sp.next) qs.set("next", sp.next);
+    redirect(`/auth/callback?${qs.toString()}`);
+  }
   if (await getUser()) redirect("/my");
   const locale = await getLocale();
   const t = M[locale];
