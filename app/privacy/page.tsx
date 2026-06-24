@@ -31,6 +31,9 @@ const M = {
     h3: "3. Цели и основание",
     purpose:
       "Мы обрабатываем данные, чтобы предоставлять Сервис: хранить и упорядочивать ваши документы, напоминать о сроках, обеспечивать безопасный доступ и поддержку. Правовое основание — ваше согласие, которое вы даёте при регистрации, и исполнение договора (оказание услуг Сервиса).",
+    hSpecial: "3.1. Специальные категории ПДн (сведения о здоровье)",
+    special:
+      "Если вы загружаете медицинские документы (анализы, заключения, прививочные сертификаты и т.п.), Сервис обрабатывает специальные категории персональных данных — сведения о здоровье. Такая обработка ведётся только при вашем отдельном явном согласии, которое вы даёте при регистрации, и только в отношении данных, которые вы сами загрузили. Вы можете в любой момент удалить эти документы или аккаунт, что прекращает обработку; согласие можно отозвать, написав на support@doki.help.",
     h4: "4. Обработка с помощью ИИ",
     ai: "При использовании функций распознавания документов и AI-помощника часть данных (изображение документа или текст вашего запроса) передаётся стороннему поставщику ИИ для обработки и формирования ответа. Эти функции включаются по вашему действию. Если вы не хотите такой обработки — не пользуйтесь ИИ-функциями.",
     h5: "5. Где хранятся данные",
@@ -73,6 +76,9 @@ const M = {
     h3: "3. Purposes and legal basis",
     purpose:
       "We process data to provide the Service: to store and organize your documents, remind you of deadlines, and ensure secure access and support. The legal basis is your consent, given upon registration, and the performance of the contract (provision of the Service).",
+    hSpecial: "3.1. Special categories of personal data (health information)",
+    special:
+      "If you upload medical documents (test results, reports, vaccination certificates, etc.), the Service processes special categories of personal data — health information. Such processing is carried out only with your separate explicit consent, given at registration, and only in respect of the data you upload yourself. You can delete these documents or your account at any time, which stops the processing; consent can be withdrawn by writing to support@doki.help.",
     h4: "4. AI processing",
     ai: "When using document recognition and AI assistant features, part of your data (the document image or the text of your request) is transferred to a third-party AI provider for processing and generating a response. These features are activated by your action. If you do not want such processing — do not use the AI features.",
     h5: "5. Where data is stored",
@@ -115,6 +121,9 @@ const M = {
     h3: "3. Tujuan dan dasar hukum",
     purpose:
       "Kami memproses data untuk menyediakan Layanan: menyimpan dan menata dokumen Anda, mengingatkan tenggat waktu, serta memastikan akses dan dukungan yang aman. Dasar hukumnya adalah persetujuan Anda yang diberikan saat pendaftaran, dan pelaksanaan perjanjian (penyediaan Layanan).",
+    hSpecial: "3.1. Kategori khusus data pribadi (informasi kesehatan)",
+    special:
+      "Jika Anda mengunggah dokumen medis (hasil tes, laporan, sertifikat vaksinasi, dll.), Layanan memproses kategori khusus data pribadi — informasi kesehatan. Pemrosesan tersebut hanya dilakukan dengan persetujuan eksplisit terpisah dari Anda yang diberikan saat pendaftaran, dan hanya atas data yang Anda unggah sendiri. Anda dapat menghapus dokumen ini atau akun Anda kapan saja, yang menghentikan pemrosesan; persetujuan dapat ditarik dengan menulis ke support@doki.help.",
     h4: "4. Pemrosesan dengan AI",
     ai: "Saat menggunakan fitur pengenalan dokumen dan asisten AI, sebagian data (gambar dokumen atau teks permintaan Anda) dikirim ke penyedia AI pihak ketiga untuk diproses dan menghasilkan tanggapan. Fitur ini diaktifkan oleh tindakan Anda. Jika Anda tidak menginginkan pemrosesan seperti itu — jangan gunakan fitur AI.",
     h5: "5. Di mana data disimpan",
@@ -157,6 +166,9 @@ const M = {
     h3: "3. Maqsadlar va asos",
     purpose:
       "Biz ma’lumotlarni Xizmatni taqdim etish uchun qayta ishlaymiz: hujjatlaringizni saqlash va tartibga solish, muddatlar haqida eslatish, xavfsiz kirish va qo‘llab-quvvatlashni ta’minlash. Huquqiy asos — ro‘yxatdan o‘tishda bergan roziligingiz va shartnomani bajarish (Xizmat ko‘rsatish).",
+    hSpecial: "3.1. Shaxsiy ma’lumotlarning maxsus toifalari (sog‘liq haqidagi ma’lumotlar)",
+    special:
+      "Agar siz tibbiy hujjatlarni (tahlillar, xulosalar, emlash sertifikatlari va h.k.) yuklasangiz, Xizmat shaxsiy ma’lumotlarning maxsus toifalarini — sog‘liq haqidagi ma’lumotlarni qayta ishlaydi. Bunday qayta ishlash faqat ro‘yxatdan o‘tishda bergan alohida aniq roziligingiz bilan va faqat siz yuklagan ma’lumotlarga nisbatan amalga oshiriladi. Siz istalgan vaqtda ushbu hujjatlarni yoki hisobingizni o‘chirishingiz mumkin, bu qayta ishlashni to‘xtatadi; rozilikni support@doki.help manziliga yozib qaytarib olish mumkin.",
     h4: "4. AI yordamida qayta ishlash",
     ai: "Hujjatlarni aniqlash va AI-yordamchi funksiyalaridan foydalanganda ma’lumotlarning bir qismi (hujjat tasviri yoki so‘rovingiz matni) qayta ishlash va javob shakllantirish uchun uchinchi tomon AI-yetkazib beruvchisiga uzatiladi. Bu funksiyalar sizning harakatingiz bilan yoqiladi. Agar bunday qayta ishlashni istamasangiz — AI-funksiyalardan foydalanmang.",
     h5: "5. Ma’lumotlar qayerda saqlanadi",
@@ -217,6 +229,9 @@ export default async function PrivacyPage() {
 
         <H>{t.h3}</H>
         <P>{t.purpose}</P>
+
+        <H>{t.hSpecial}</H>
+        <P>{t.special}</P>
 
         <H>{t.h4}</H>
         <P>{t.ai}</P>

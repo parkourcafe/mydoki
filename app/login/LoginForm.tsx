@@ -25,6 +25,8 @@ const M = {
     consentAnd: "и",
     consentPrivacy: "Политику конфиденциальности",
     consentTrail: "и даю согласие на обработку персональных данных.",
+    consentHealth:
+      "Отдельно даю согласие на обработку специальных категорий ПДн — сведений о здоровье — если я загружаю медицинские документы.",
     submitting: "Минутку…",
     signIn: "Войти",
     createAccount: "Создать аккаунт",
@@ -51,6 +53,8 @@ const M = {
     consentAnd: "and",
     consentPrivacy: "Privacy Policy",
     consentTrail: "and consent to the processing of my personal data.",
+    consentHealth:
+      "I separately consent to the processing of special categories of personal data — health information — if I upload medical documents.",
     submitting: "Just a moment…",
     signIn: "Sign in",
     createAccount: "Create account",
@@ -77,6 +81,8 @@ const M = {
     consentAnd: "dan",
     consentPrivacy: "Kebijakan Privasi",
     consentTrail: "serta menyetujui pemrosesan data pribadi saya.",
+    consentHealth:
+      "Saya secara terpisah menyetujui pemrosesan kategori khusus data pribadi — informasi kesehatan — jika saya mengunggah dokumen medis.",
     submitting: "Sebentar…",
     signIn: "Masuk",
     createAccount: "Buat akun",
@@ -103,6 +109,8 @@ const M = {
     consentAnd: "va",
     consentPrivacy: "Maxfiylik siyosati",
     consentTrail: "hamda shaxsiy maʼlumotlarimni qayta ishlashga rozilik beraman.",
+    consentHealth:
+      "Tibbiy hujjatlarni yuklasam, shaxsiy maʼlumotlarning maxsus toifalari — sogʻliq haqidagi maʼlumotlarni qayta ishlashga alohida rozilik beraman.",
     submitting: "Bir lahza…",
     signIn: "Kirish",
     createAccount: "Hisob yaratish",
@@ -300,20 +308,26 @@ export default function LoginForm({
         </div>
 
         {mode === "signup" && (
-          <label className="flex items-start gap-2 text-xs text-slate-500">
-            <input type="checkbox" required className="mt-0.5" />
-            <span>
-              {t.consentLead}{" "}
-              <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
-                {t.consentTerms}
-              </a>{" "}
-              {t.consentAnd}{" "}
-              <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
-                {t.consentPrivacy}
-              </a>{" "}
-              {t.consentTrail}
-            </span>
-          </label>
+          <>
+            <label className="flex items-start gap-2 text-xs text-slate-500">
+              <input type="checkbox" required className="mt-0.5" />
+              <span>
+                {t.consentLead}{" "}
+                <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
+                  {t.consentTerms}
+                </a>{" "}
+                {t.consentAnd}{" "}
+                <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
+                  {t.consentPrivacy}
+                </a>{" "}
+                {t.consentTrail}
+              </span>
+            </label>
+            <label className="flex items-start gap-2 text-xs text-slate-500">
+              <input type="checkbox" required className="mt-0.5" />
+              <span>{t.consentHealth}</span>
+            </label>
+          </>
         )}
 
         {state.error && (
