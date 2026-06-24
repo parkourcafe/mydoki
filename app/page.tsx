@@ -7,6 +7,7 @@ import LangSwitcher from "@/components/LangSwitcher";
 type Cat = { icon: string; title: string; items: string[] };
 type Step = { n: string; title: string; text: string };
 type Sec = { icon: string; title: string; text: string };
+type Faq = { q: string; a: string };
 
 type Dict = {
   nav: { login: string; start: string };
@@ -32,6 +33,8 @@ type Dict = {
   how: { heading: string; sub: string; steps: Step[] };
   security: { heading: string; sub: string; items: Sec[] };
   cta: { heading: string; sub: string; button: string };
+  faq: { heading: string; items: Faq[] };
+  operator: { heading: string; line: string; contactLabel: string };
   footer: { copyright: string; security: string; privacy: string; login: string };
 };
 
@@ -89,6 +92,21 @@ const M: Record<Locale, Dict> = {
       sub: "Меньше 15 минут — и порядок надолго.",
       button: "Начать пользоваться бесплатно",
     },
+    faq: {
+      heading: "Частые вопросы",
+      items: [
+        { q: "Это бесплатно?", a: "Да. Сейчас бесплатно: 2 ГБ места, напоминания о сроках, общий доступ для семьи и работа офлайн. Позже появится платный тариф с бóльшим объёмом — то, что доступно сейчас, останется." },
+        { q: "Кто видит мои документы?", a: "Только вы и те члены семьи, кому вы открыли доступ. Доступ изолирован на уровне базы данных (RLS), файлы — в приватном хранилище." },
+        { q: "Как работают напоминания?", a: "Вы указываете срок действия документа (например, загранпаспорта или ОСАГО), а сервис заранее присылает напоминание на email." },
+        { q: "Можно ли поделиться документом?", a: "Да — по временной ссылке, которую можно отозвать в любой момент." },
+        { q: "Где хранятся данные?", a: "В защищённом облачном хранилище, передача — по HTTPS. Мы не продаём и не передаём ваши данные третьим лицам." },
+      ],
+    },
+    operator: {
+      heading: "Кто за сервисом",
+      line: "Оператор: владелец сервиса doki.help, ИНН 780728592634.",
+      contactLabel: "Поддержка:",
+    },
     footer: { copyright: "© 2026 doki.help — Семейный архив документов", security: "Безопасность", privacy: "Конфиденциальность", login: "Войти" },
   },
   en: {
@@ -143,6 +161,21 @@ const M: Record<Locale, Dict> = {
       heading: "Ready to gather all your family's documents?",
       sub: "Less than 15 minutes — and order that lasts.",
       button: "Start for free",
+    },
+    faq: {
+      heading: "Frequently asked questions",
+      items: [
+        { q: "Is it free?", a: "Yes. Right now you get 2 GB of storage, deadline reminders, family sharing and offline access — for free. A paid plan with more storage will come later; what's available now stays." },
+        { q: "Who can see my documents?", a: "Only you and the family members you grant access to. Access is isolated at the database level (RLS), and files are kept in private storage." },
+        { q: "How do reminders work?", a: "You set a document's expiry date (e.g. a passport or insurance), and the service emails you a reminder in advance." },
+        { q: "Can I share a document?", a: "Yes — via a time-limited link you can revoke at any moment." },
+        { q: "Where is my data stored?", a: "In secure cloud storage, with transfer over HTTPS. We never sell or share your data with third parties." },
+      ],
+    },
+    operator: {
+      heading: "Who runs the service",
+      line: "Operator: the owner of the doki.help service, TIN 780728592634.",
+      contactLabel: "Support:",
     },
     footer: { copyright: "© 2026 doki.help — Family document vault", security: "Security", privacy: "Privacy", login: "Sign in" },
   },
@@ -199,6 +232,21 @@ const M: Record<Locale, Dict> = {
       sub: "Kurang dari 15 menit — dan tertata rapi untuk seterusnya.",
       button: "Mulai gratis",
     },
+    faq: {
+      heading: "Pertanyaan umum",
+      items: [
+        { q: "Apakah gratis?", a: "Ya. Saat ini gratis: penyimpanan 2 GB, pengingat tenggat, berbagi untuk keluarga, dan akses offline. Paket berbayar dengan ruang lebih besar akan hadir nanti — yang tersedia sekarang tetap ada." },
+        { q: "Siapa yang bisa melihat dokumen saya?", a: "Hanya Anda dan anggota keluarga yang Anda beri akses. Akses diisolasi pada tingkat basis data (RLS), dan berkas disimpan di penyimpanan privat." },
+        { q: "Bagaimana pengingat bekerja?", a: "Anda menetapkan tanggal berlaku dokumen (misalnya paspor atau asuransi), dan layanan mengirim pengingat ke email lebih awal." },
+        { q: "Bisakah saya membagikan dokumen?", a: "Ya — lewat tautan berbatas waktu yang bisa Anda cabut kapan saja." },
+        { q: "Di mana data saya disimpan?", a: "Di penyimpanan awan yang aman, dengan transfer lewat HTTPS. Kami tidak pernah menjual atau membagikan data Anda ke pihak ketiga." },
+      ],
+    },
+    operator: {
+      heading: "Siapa di balik layanan",
+      line: "Operator: pemilik layanan doki.help, NPWP 780728592634.",
+      contactLabel: "Dukungan:",
+    },
     footer: { copyright: "© 2026 doki.help — Brankas dokumen keluarga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
   },
   uz: {
@@ -253,6 +301,21 @@ const M: Record<Locale, Dict> = {
       heading: "Oilangizning barcha hujjatlarini yigʻishga tayyormisiz?",
       sub: "15 daqiqadan kam vaqt — va uzoq saqlanadigan tartib.",
       button: "Bepul boshlash",
+    },
+    faq: {
+      heading: "Tez-tez beriladigan savollar",
+      items: [
+        { q: "Bu bepulmi?", a: "Ha. Hozir bepul: 2 GB joy, muddat eslatmalari, oila uchun ulashish va oflayn ishlash. Keyinroq koʻproq joy bilan pullik tarif paydo boʻladi — hozir mavjud imkoniyatlar saqlanadi." },
+        { q: "Hujjatlarimni kim koʻradi?", a: "Faqat siz va siz ruxsat bergan oila aʼzolari. Kirish maʼlumotlar bazasi darajasida ajratilgan (RLS), fayllar shaxsiy xotirada saqlanadi." },
+        { q: "Eslatmalar qanday ishlaydi?", a: "Siz hujjatning amal qilish muddatini (masalan, pasport yoki sugʻurta) belgilaysiz, xizmat esa oldindan emailga eslatma yuboradi." },
+        { q: "Hujjatni ulasha olamanmi?", a: "Ha — istalgan vaqtda bekor qila oladigan muddatli havola orqali." },
+        { q: "Maʼlumotlarim qayerda saqlanadi?", a: "HTTPS orqali uzatiladigan xavfsiz bulutli xotirada. Maʼlumotlaringizni hech qachon uchinchi shaxslarga sotmaymiz yoki bermaymiz." },
+      ],
+    },
+    operator: {
+      heading: "Xizmat ortida kim turadi",
+      line: "Operator: doki.help xizmati egasi, STIR 780728592634.",
+      contactLabel: "Qoʻllab-quvvatlash:",
     },
     footer: { copyright: "© 2026 doki.help — Oila hujjatlari seyfi", security: "Xavfsizlik", privacy: "Maxfiylik", login: "Kirish" },
   },
@@ -433,6 +496,38 @@ export default async function Home() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="mx-auto max-w-screen-xl px-5 py-12">
+        <div className="mx-auto mb-8 max-w-3xl text-center">
+          <h2 className="section-header mb-3">{t.faq.heading}</h2>
+        </div>
+        <div className="mx-auto max-w-3xl divide-y divide-[#e8e0d5] overflow-hidden rounded-3xl border border-[#e8e0d5] bg-white">
+          {t.faq.items.map((f) => (
+            <details key={f.q} className="group px-6 py-5">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-semibold text-[#2c2522]">
+                <span>{f.q}</span>
+                <span className="shrink-0 text-2xl leading-none text-[#b85c38] transition-transform group-open:rotate-45">+</span>
+              </summary>
+              <p className="mt-3 text-[#5c5248]">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* WHO RUNS THE SERVICE */}
+      <section className="mx-auto max-w-screen-xl px-5 pb-2">
+        <div className="mx-auto max-w-3xl rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] px-6 py-5 text-center text-sm text-[#5c5248]">
+          <div className="mb-1 font-semibold text-[#2c2522]">{t.operator.heading}</div>
+          <div>{t.operator.line}</div>
+          <div className="mt-1">
+            {t.operator.contactLabel}{" "}
+            <a href="mailto:support@doki.help" className="text-[#b85c38] hover:underline">
+              support@doki.help
+            </a>
+          </div>
         </div>
       </section>
 
