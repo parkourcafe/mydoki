@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { classifyDocument } from "@/lib/llm";
+import { classifyDocument } from "@/lib/classify";
 import { allowAiCall } from "@/lib/ratelimit";
 
 export const maxDuration = 60;
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
     const msg = e instanceof Error ? e.message : "Ошибка распознавания";
     if (msg === "NO_API_KEY") {
       return NextResponse.json(
-        { error: "AI-распознавание не настроено (нет GLM_API_KEY)." },
+        { error: "AI-распознавание сейчас недоступно." },
         { status: 503 }
       );
     }

@@ -214,7 +214,6 @@ export default function DocumentForm({
   const [saveErr, setSaveErr] = useState<string | null>(null);
   const pickRef = useRef<HTMLInputElement>(null);
   const camRef = useRef<HTMLInputElement>(null);
-  const autoRan = useRef(false);
 
   const set = (k: keyof Fields, v: string) => setF((p) => ({ ...p, [k]: v }));
 
@@ -225,14 +224,8 @@ export default function DocumentForm({
       const seen = new Set(prev.map((x) => x.name + x.size));
       return [...prev, ...incoming.filter((x) => !seen.has(x.name + x.size))];
     });
-    // Авто-распознавание по первому файлу (один раз). Тихо — если ИИ не настроен.
-    const first = incoming.find(
-      (x) => x.type.startsWith("image/") || x.type === "application/pdf"
-    );
-    if (first && !autoRan.current) {
-      autoRan.current = true;
-      classify(first, true);
-    }
+    // Распознавание — только по явному нажатию кнопки (приватность: фото
+    // документа уходит ИИ-провайдеру лишь когда пользователь сам это попросил).
   }
 
   function removeFile(i: number) {
