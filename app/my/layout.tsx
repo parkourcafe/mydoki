@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { getUser } from "@/lib/queries";
+import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
 import { signOut } from "./actions";
+import SpaceSwitcher from "@/components/SpaceSwitcher";
 
 export default async function MyLayout({
   children,
@@ -17,14 +18,23 @@ export default async function MyLayout({
   const { data: factors } = await supabase.auth.mfa.listFactors();
   const hasMfa = (factors?.totp ?? []).some((f) => f.status === "verified");
 
+  const [spaces, activeId] = await Promise.all([
+    listSpaces(),
+    getOrCreateHouseholdId(),
+  ]);
+
   return (
     <div className="min-h-screen">
       <header className="border-b border-[#e8e0d5] bg-[#fdfaf5]">
         <div className="mx-auto max-w-5xl px-4">
           <div className="flex items-center justify-between py-3">
-            <Link href="/my" className="flex items-center gap-2 font-semibold">
-              <span className="text-xl">🔐</span> Семейный сейф
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link href="/my" className="flex items-center gap-2 font-semibold">
+                <span className="text-xl">🔐</span>
+                <span className="hidden sm:inline">Семейный сейф</span>
+              </Link>
+              <SpaceSwitcher spaces={spaces} activeId={activeId} />
+            </div>
             <div className="flex items-center gap-3">
               <span className="hidden text-xs text-slate-500 sm:inline">
                 {user.email}

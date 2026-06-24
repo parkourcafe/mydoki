@@ -1,4 +1,5 @@
 import "server-only";
+import { cookies } from "next/headers";
 import { getSupabaseServer } from "./supabase/server";
 import type {
   Asset,
@@ -22,17 +23,26 @@ export async function getUser() {
  * Возвращает household текущего пользователя; если его нет — создаёт через
  * RPC create_household (атомарно делает пользователя owner).
  */
+/**
+ * Возвращает активное пространство (household) пользователя.
+ * Если в cookie выбрано конкретное и пользователь в нём состоит — оно;
+ * иначе первое по дате; если пространств нет — создаёт «Моя семья».
+ */
 export async function getOrCreateHouseholdId(): Promise<string> {
   const supabase = await getSupabaseServer();
+  const cookieStore = await cookies();
+  const active = cookieStore.get("active_household")?.value;
 
-  const { data: memberships, error } = await supabase
-    .from("household_members")
-    .select("household_id")
-    .limit(1);
+  const { data: spaces, error } = await supabase
+    .from("households")
+    .select("id")
+    .order("created_at", { ascending: true });
   if (error) throw error;
 
-  if (memberships && memberships.length > 0) {
-    return memberships[0].household_id as string;
+  const ids = (spaces ?? []).map((s) => s.id as string);
+  if (ids.length > 0) {
+    if (active && ids.includes(active)) return active;
+    return ids[0];
   }
 
   const { data: hid, error: rpcError } = await supabase.rpc("create_household", {
@@ -40,6 +50,17 @@ export async function getOrCreateHouseholdId(): Promise<string> {
   });
   if (rpcError) throw rpcError;
   return hid as string;
+}
+
+/** Все пространства (households), где пользователь состоит. */
+export async function listSpaces(): Promise<{ id: string; name: string }[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("households")
+    .select("id, name")
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as { id: string; name: string }[];
 }
 
 export async function getMyRole(householdId: string): Promise<string | null> {

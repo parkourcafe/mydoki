@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getDocument, getOrCreateHouseholdId } from "@/lib/queries";
@@ -16,6 +17,47 @@ export async function signOutEverywhere() {
   const supabase = await getSupabaseServer();
   await supabase.auth.signOut({ scope: "global" });
   redirect("/login");
+}
+
+const SPACE_COOKIE = "active_household";
+const SPACE_MAX_AGE = 60 * 60 * 24 * 365;
+
+/** Переключить активное пространство (если пользователь в нём состоит). */
+export async function switchSpace(formData: FormData) {
+  const id = String(formData.get("household_id") ?? "");
+  const supabase = await getSupabaseServer();
+  // RLS вернёт строку только если пользователь — член этого household
+  const { data } = await supabase
+    .from("households")
+    .select("id")
+    .eq("id", id)
+    .maybeSingle();
+  if (data) {
+    const cookieStore = await cookies();
+    cookieStore.set(SPACE_COOKIE, id, {
+      path: "/",
+      maxAge: SPACE_MAX_AGE,
+      sameSite: "lax",
+    });
+  }
+  redirect("/my");
+}
+
+/** Создать новое пространство и сделать его активным. */
+export async function createSpace(formData: FormData) {
+  const name = String(formData.get("name") ?? "").trim() || "Новое пространство";
+  const supabase = await getSupabaseServer();
+  const { data: hid, error } = await supabase.rpc("create_household", {
+    p_name: name,
+  });
+  if (error) throw error;
+  const cookieStore = await cookies();
+  cookieStore.set(SPACE_COOKIE, hid as string, {
+    path: "/",
+    maxAge: SPACE_MAX_AGE,
+    sameSite: "lax",
+  });
+  redirect("/my");
 }
 
 export async function createMember(formData: FormData) {
