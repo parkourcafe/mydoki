@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import SwRegister from "@/components/SwRegister";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,6 +21,15 @@ export const metadata: Metadata = {
   title: "Семейный сейф — все документы семьи в одном месте",
   description:
     "Все документы вашей семьи в одном защищённом месте: удостоверения, образование, медицина. Напоминания о сроках и безопасная отправка по истекающей ссылке.",
+  appleWebApp: {
+    capable: true,
+    title: "doki.help",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#b85c38",
 };
 
 export default function RootLayout({
@@ -31,6 +41,7 @@ export default function RootLayout({
     <html lang="ru" className={`${inter.variable} ${playfair.variable}`}>
       <body>
         {children}
+        <SwRegister />
         <Analytics />
       </body>
     </html>
