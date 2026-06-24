@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { SEGMENT_KEYS } from "@/lib/segments";
+import { COMPARISON_KEYS } from "@/lib/comparisons";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
 
@@ -9,6 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/privacy",
     "/terms",
     ...SEGMENT_KEYS.map((k) => `/for/${k}`),
+    ...COMPARISON_KEYS.map((k) => `/vs/${k}`),
   ];
   return pages.map((path) => ({
     url: `${APP_URL}${path}`,

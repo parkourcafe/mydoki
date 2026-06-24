@@ -4,6 +4,7 @@ import { getUser } from "@/lib/queries";
 import { getLocale, type Locale } from "@/lib/i18n";
 import LangSwitcher from "@/components/LangSwitcher";
 import { segmentLinks } from "@/lib/segments";
+import { comparisonLinks, comparisonsHeading } from "@/lib/comparisons";
 
 type Cat = { icon: string; title: string; items: string[] };
 type Step = { n: string; title: string; text: string };
@@ -582,6 +583,20 @@ export default async function Home({
                 <span>{s.emoji}</span> {s.label}
               </Link>
             ))}
+          </div>
+          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+            <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{comparisonsHeading(locale)}</div>
+            <div className="flex flex-wrap gap-2">
+              {comparisonLinks(locale).map((cmp) => (
+                <Link
+                  key={cmp.key}
+                  href={`/vs/${cmp.key}`}
+                  className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+                >
+                  <span>{cmp.emoji}</span> {cmp.label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
