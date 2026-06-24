@@ -27,8 +27,10 @@ export function yandexConfigured(): boolean {
 const VALID_CATEGORIES = [
   "identity",
   "education",
+  "career",
   "medical",
   "financial",
+  "tax",
   "legal",
   "other",
 ];
@@ -82,7 +84,7 @@ async function visionOcr(base64: string, mediaType: string): Promise<string> {
 
 const SYSTEM_PROMPT = `Ты извлекаешь метаданные из текста личного документа (распознанного с фото).
 Верни ТОЛЬКО JSON-объект (без пояснений, без markdown) со строго такими ключами:
-- "category": одно из ["identity","education","medical","financial","legal","other"]
+- "category": одно из ["identity","education","career","medical","financial","tax","legal","other"] (career — трудовые/карьерные документы; tax — налоговые: ИНН, 2-НДФЛ, уведомления, декларации)
 - "subtype": короткий тип документа по-русски (например "Паспорт РФ", "Диплом", "СНИЛС") или null
 - "title": короткое человекочитаемое название по-русски или null
 - "issuer": кем выдан или null
@@ -207,7 +209,7 @@ const CAT_KEYWORDS: { cat: string; subtype: string; re: RegExp }[] = [
   { cat: "identity", subtype: "Паспорт РФ", re: /паспорт гражданина|паспорт рф|\bпаспорт\b/i },
   { cat: "identity", subtype: "Свидетельство о рождении", re: /о рождении/i },
   { cat: "identity", subtype: "СНИЛС", re: /снилс|страхов\w* свидетельств/i },
-  { cat: "identity", subtype: "ИНН", re: /\bинн\b|идентификационн\w* номер/i },
+  { cat: "tax", subtype: "ИНН", re: /\bинн\b|идентификационн\w* номер/i },
   { cat: "identity", subtype: "Водительское удостоверение", re: /водительск\w* удостоверение|driver/i },
   { cat: "identity", subtype: "Военный билет", re: /военный билет/i },
   { cat: "identity", subtype: "Вид на жительство", re: /вид на жительство/i },
@@ -222,7 +224,10 @@ const CAT_KEYWORDS: { cat: string; subtype: string; re: RegExp }[] = [
   { cat: "financial", subtype: "ПТС", re: /паспорт транспортн|\bптс\b/i },
   { cat: "financial", subtype: "СТС", re: /свидетельств\w* о регистрации тс|\bстс\b/i },
   { cat: "financial", subtype: "Выписка ЕГРН", re: /егрн|единого государственного реестра недвиж/i },
-  { cat: "financial", subtype: "Справка 2-НДФЛ", re: /2-?ндфл/i },
+  { cat: "tax", subtype: "Справка 2-НДФЛ", re: /2-?ндфл/i },
+  { cat: "tax", subtype: "Налоговое уведомление", re: /налогов\w* уведомлени/i },
+  { cat: "career", subtype: "Трудовой договор", re: /трудов\w* договор/i },
+  { cat: "career", subtype: "Трудовая книжка", re: /трудов\w* книжк/i },
   { cat: "education", subtype: "Диплом", re: /\bдиплом/i },
   { cat: "education", subtype: "Аттестат", re: /аттестат/i },
   { cat: "education", subtype: "Сертификат ЕГЭ", re: /\bегэ\b/i },

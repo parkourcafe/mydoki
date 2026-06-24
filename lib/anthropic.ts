@@ -14,15 +14,17 @@ export type ClassifyResult = {
 const VALID_CATEGORIES = [
   "identity",
   "education",
+  "career",
   "medical",
   "financial",
+  "tax",
   "legal",
   "other",
 ];
 
 const SYSTEM_PROMPT = `Ты извлекаешь метаданные из фото/скана личного документа человека.
 Верни ТОЛЬКО JSON-объект (без пояснений, без markdown) со строго такими ключами:
-- "category": одно из ["identity","education","medical","financial","legal","other"]
+- "category": одно из ["identity","education","career","medical","financial","tax","legal","other"] (career — трудовые/карьерные документы: трудовой договор, трудовая книжка, справка с работы; tax — налоговые: ИНН, 2-НДФЛ, налоговые уведомления, декларации)
 - "subtype": короткий тип документа по-русски (например "паспорт", "диплом", "СНИЛС") или null
 - "title": короткое человекочитаемое название по-русски или null
 - "issuer": кем выдан или null
