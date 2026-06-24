@@ -32,19 +32,6 @@ const STEPS: { n: string; title: string; text: string }[] = [
   { n: "4", title: "Управляй доступом", text: "Отправляй временные ссылки врачам, в банк или родственникам." },
 ];
 
-const PLAN_ROWS: { feature: string; free: boolean; premium: boolean }[] = [
-  { feature: "Загрузка документов", free: true, premium: true },
-  { feature: "Ручной ввод дат и напоминания", free: true, premium: true },
-  { feature: "Авто-распознавание дат (ИИ)", free: true, premium: true },
-  { feature: "Умные напоминания (анализы, визы, ОСАГО)", free: true, premium: true },
-  { feature: "AI-юрист (вопросы по документам и поездкам)", free: false, premium: true },
-  { feature: "Безопасный шаринг по ссылке", free: true, premium: true },
-  { feature: "Доступ с любого устройства", free: true, premium: true },
-  { feature: "Изоляция данных по семье (RLS)", free: true, premium: true },
-  { feature: "Больше места для документов", free: false, premium: true },
-  { feature: "Приоритетная поддержка", free: false, premium: true },
-];
-
 const SECURITY: { icon: string; title: string; text: string }[] = [
   { icon: "👨‍👩‍👧", title: "Только ваша семья видит документы", text: "Доступ изолирован на уровне базы (RLS). Никто посторонний, включая нас, не открывает ваши файлы." },
   { icon: "🛡️", title: "Шифрование и контроль входов", text: "Файлы в приватном хранилище, двухфакторный вход и уведомления о входе с нового устройства." },
@@ -54,9 +41,6 @@ const SECURITY: { icon: string; title: string; text: string }[] = [
 
 function Check() {
   return <span className="font-semibold text-[#b85c38]">✓</span>;
-}
-function Dash() {
-  return <span className="text-[#b9ac9b]">—</span>;
 }
 
 export default async function Home() {
@@ -216,58 +200,6 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ТАРИФЫ */}
-      <section id="pricing" className="mx-auto max-w-screen-xl px-5 py-14">
-        <div className="mx-auto mb-8 max-w-4xl text-center">
-          <h2 className="section-header mb-3">Тарифы</h2>
-          <p className="text-xl text-[#5c5248]">Базовое — бесплатно. ИИ-функции — в премиуме.</p>
-        </div>
-
-        <div className="mx-auto max-w-4xl overflow-x-auto">
-          <table className="w-full border-collapse overflow-hidden rounded-3xl border border-[#e8e0d5] bg-white">
-            <thead>
-              <tr className="bg-[#fdfaf5]">
-                <th className="p-5 text-left text-lg font-semibold">Функция</th>
-                <th className="p-5 text-center text-lg font-semibold">Бесплатно</th>
-                <th className="bg-[#f0e6d9] p-5 text-center text-lg font-semibold">
-                  <span className="inline-flex items-center gap-x-2">
-                    Премиум
-                    <span className="rounded-full bg-[#b85c38] px-3 py-0.5 text-xs text-white">скоро</span>
-                  </span>
-                </th>
-              </tr>
-            </thead>
-            <tbody className="text-[#5c5248]">
-              {PLAN_ROWS.map((r) => (
-                <tr key={r.feature} className="border-t border-[#e8e0d5]">
-                  <td className="p-5 font-medium">{r.feature}</td>
-                  <td className="p-5 text-center">{r.free ? <Check /> : <Dash />}</td>
-                  <td className="bg-[#fdfaf5] p-5 text-center">{r.premium ? <Check /> : <Dash />}</td>
-                </tr>
-              ))}
-              <tr className="border-t border-[#e8e0d5] font-semibold">
-                <td className="p-5">Цена</td>
-                <td className="p-5 text-center text-xl">0 ₽</td>
-                <td className="bg-[#fdfaf5] p-5 text-center">
-                  <div className="text-xl">99 ₽/мес</div>
-                  <div className="text-xs font-normal text-[#8a7c6d]">или 990 ₽ в год</div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p className="mx-auto mt-5 max-w-4xl text-center text-sm text-[#8a7c6d]">
-          На время теста премиум-функции открыты бесплатно — оплата появится позже.
-        </p>
-
-        <div className="mx-auto mt-6 flex max-w-4xl flex-col justify-center gap-4 sm:flex-row">
-          <Link href="/login" className="rounded-3xl border border-[#d4c9b8] px-8 py-3.5 text-center font-semibold transition-colors hover:bg-white">
-            Начать бесплатно
-          </Link>
-        </div>
-      </section>
-
       {/* БЕЗОПАСНОСТЬ */}
       <section id="security" className="mx-auto max-w-screen-xl px-5 py-14">
         <div className="mx-auto mb-10 max-w-3xl text-center">
@@ -306,7 +238,6 @@ export default async function Home() {
           <div>© 2026 doki.help — Семейный архив документов</div>
           <div className="flex flex-wrap justify-center gap-x-5 gap-y-2">
             <a href="#security" className="hover:text-[#2c2522]">Безопасность</a>
-            <a href="#pricing" className="hover:text-[#2c2522]">Тарифы</a>
             <Link href="/privacy" className="hover:text-[#2c2522]">Конфиденциальность</Link>
             <Link href="/terms" className="hover:text-[#2c2522]">Условия</Link>
             <Link href="/login" className="hover:text-[#2c2522]">Войти</Link>

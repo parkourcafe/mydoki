@@ -59,9 +59,6 @@ export default async function MyLayout({
             <Link href="/my/reminders" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
               Сроки
             </Link>
-            <Link href="/my/lawyer" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              AI-юрист <span className="text-amber-500">✨</span>
-            </Link>
             <Link href="/my/family" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
               Доступ
             </Link>
