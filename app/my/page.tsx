@@ -8,6 +8,7 @@ import {
 import { relations, relationLabel } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
 import StorageBar from "@/components/StorageBar";
+import SubmitButton from "@/components/SubmitButton";
 import { createMember } from "./actions";
 
 const M = {
@@ -201,7 +202,7 @@ export default async function MyHome() {
             <input name="birth_date" type="date" className="input" />
           </div>
           <div className="sm:col-span-3">
-            <button className="btn-primary">{t.add}</button>
+            <SubmitButton>{t.add}</SubmitButton>
           </div>
         </form>
       </details>

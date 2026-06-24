@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getOrCreateHouseholdId, listAssets } from "@/lib/queries";
 import { assetTypes, type AssetType } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import SubmitButton from "@/components/SubmitButton";
 import { createAsset } from "../actions";
 
 const M = {
@@ -150,7 +151,7 @@ export default async function AssetsPage() {
             />
           </div>
           <div className="sm:col-span-3">
-            <button className="btn-primary">{t.add}</button>
+            <SubmitButton>{t.add}</SubmitButton>
           </div>
         </form>
       </details>

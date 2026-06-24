@@ -18,6 +18,7 @@ import {
 import { getLocale } from "@/lib/i18n";
 import { aiConfigured, userWantsAi } from "@/lib/classify";
 import { createRecord, deleteRecord } from "@/app/my/actions";
+import SubmitButton from "@/components/SubmitButton";
 import DocumentForm from "./DocumentForm";
 
 const M = {
@@ -266,7 +267,7 @@ export default async function MemberPage({
               <textarea name="note" rows={2} className="input" />
             </div>
             <div className="sm:col-span-2">
-              <button className="btn-primary">{t.saveRecord}</button>
+              <SubmitButton>{t.saveRecord}</SubmitButton>
             </div>
           </form>
         </details>
