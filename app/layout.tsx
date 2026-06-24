@@ -17,10 +17,45 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+
+const TITLE = "Семейный сейф — все документы семьи в одном месте";
+const DESCRIPTION =
+  "Все документы вашей семьи в одном защищённом месте: удостоверения, образование, медицина, имущество. Напоминания о сроках (паспорт, ОСАГО, виза) и безопасная отправка по истекающей ссылке.";
+
 export const metadata: Metadata = {
-  title: "Семейный сейф — все документы семьи в одном месте",
-  description:
-    "Все документы вашей семьи в одном защищённом месте: удостоверения, образование, медицина. Напоминания о сроках и безопасная отправка по истекающей ссылке.",
+  metadataBase: new URL(APP_URL),
+  title: { default: TITLE, template: "%s · doki.help" },
+  description: DESCRIPTION,
+  applicationName: "doki.help",
+  keywords: [
+    "семейный архив документов",
+    "хранение документов онлайн",
+    "напоминания о сроках документов",
+    "загранпаспорт ОСАГО виза напоминание",
+    "документы семьи в одном месте",
+    "сейф для документов",
+  ],
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: APP_URL,
+    siteName: "doki.help",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  formatDetection: { telephone: false },
   appleWebApp: {
     capable: true,
     title: "doki.help",

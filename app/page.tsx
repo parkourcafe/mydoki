@@ -77,8 +77,8 @@ const M: Record<Locale, Dict> = {
       heading: "Ваши документы в безопасности",
       sub: "Мы понимаем, насколько важны эти документы — и сделали всё, чтобы вы были спокойны.",
       items: [
-        { icon: "👨‍👩‍👧", title: "Только ваша семья видит документы", text: "Доступ изолирован на уровне базы (RLS). Никто посторонний, включая нас, не открывает ваши файлы." },
-        { icon: "🛡️", title: "Шифрование и контроль входов", text: "Файлы в приватном хранилище, двухфакторный вход и уведомления о входе с нового устройства." },
+        { icon: "👨‍👩‍👧", title: "Только ваша семья видит документы", text: "Доступ изолирован на уровне базы (RLS): посторонние не видят ваши документы." },
+        { icon: "🛡️", title: "Защищённый вход и хранилище", text: "Файлы — в приватном хранилище, передача по HTTPS. Двухфакторный вход и письмо при входе с нового устройства." },
         { icon: "🎚️", title: "Вы управляете доступом", text: "Делитесь документом по временной ссылке и отзываете её в любой момент." },
         { icon: "🙅", title: "Не продаём ваши данные", text: "Мы не передаём и не продаём ваши данные третьим лицам." },
         { icon: "📥", title: "Работают без интернета", text: "Нужные документы можно сохранить на телефон и открыть даже без связи — в поездке или роуминге." },
@@ -132,8 +132,8 @@ const M: Record<Locale, Dict> = {
       heading: "Your documents are safe",
       sub: "We know how important these documents are — and built everything so you can feel at ease.",
       items: [
-        { icon: "👨‍👩‍👧", title: "Only your family sees the documents", text: "Access is isolated at the database level (RLS). No outsider, including us, can open your files." },
-        { icon: "🛡️", title: "Encryption and login alerts", text: "Files in private storage, two-factor sign-in and alerts on new-device logins." },
+        { icon: "👨‍👩‍👧", title: "Only your family sees the documents", text: "Access is isolated at the database level (RLS) — outsiders can't see your documents." },
+        { icon: "🛡️", title: "Secure sign-in and storage", text: "Files in private storage, transfer over HTTPS. Two-factor sign-in and an email alert on new-device logins." },
         { icon: "🎚️", title: "You control access", text: "Share a document via an expiring link and revoke it anytime." },
         { icon: "🙅", title: "We don't sell your data", text: "We never share or sell your data to third parties." },
         { icon: "📥", title: "Available offline", text: "Save the documents you need to your phone and open them even with no connection — on a trip or in roaming." },
@@ -187,8 +187,8 @@ const M: Record<Locale, Dict> = {
       heading: "Dokumen Anda aman",
       sub: "Kami paham betapa pentingnya dokumen-dokumen ini — dan membangun semuanya agar Anda merasa tenang.",
       items: [
-        { icon: "👨‍👩‍👧", title: "Hanya keluarga Anda yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS). Tidak ada pihak luar, termasuk kami, yang bisa membuka berkas Anda." },
-        { icon: "🛡️", title: "Enkripsi dan peringatan login", text: "Berkas di penyimpanan privat, masuk dua faktor, dan peringatan saat login dari perangkat baru." },
+        { icon: "👨‍👩‍👧", title: "Hanya keluarga Anda yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS) — pihak luar tidak bisa melihat dokumen Anda." },
+        { icon: "🛡️", title: "Masuk dan penyimpanan aman", text: "Berkas di penyimpanan privat, transfer lewat HTTPS. Masuk dua faktor dan email peringatan saat login dari perangkat baru." },
         { icon: "🎚️", title: "Anda yang mengendalikan akses", text: "Bagikan dokumen lewat tautan berbatas waktu dan cabut kapan saja." },
         { icon: "🙅", title: "Kami tidak menjual data Anda", text: "Kami tidak pernah membagikan atau menjual data Anda ke pihak ketiga." },
         { icon: "📥", title: "Tersedia offline", text: "Simpan dokumen yang Anda butuhkan ke ponsel dan buka meski tanpa koneksi — saat bepergian atau roaming." },
@@ -242,8 +242,8 @@ const M: Record<Locale, Dict> = {
       heading: "Hujjatlaringiz xavfsiz",
       sub: "Bu hujjatlar qanchalik muhimligini bilamiz — va xotirjam boʻlishingiz uchun hammasini puxta qurdik.",
       items: [
-        { icon: "👨‍👩‍👧", title: "Hujjatlarni faqat oilangiz koʻradi", text: "Kirish maʼlumotlar bazasi darajasida ajratilgan (RLS). Hech bir begona, jumladan biz ham, fayllaringizni ocholmaydi." },
-        { icon: "🛡️", title: "Shifrlash va kirish ogohlantirishlari", text: "Fayllar shaxsiy xotirada, ikki bosqichli kirish va yangi qurilmadan kirishda ogohlantirishlar." },
+        { icon: "👨‍👩‍👧", title: "Hujjatlarni faqat oilangiz koʻradi", text: "Kirish maʼlumotlar bazasi darajasida ajratilgan (RLS) — begonalar hujjatlaringizni koʻra olmaydi." },
+        { icon: "🛡️", title: "Xavfsiz kirish va xotira", text: "Fayllar shaxsiy xotirada, uzatish HTTPS orqali. Ikki bosqichli kirish va yangi qurilmadan kirishda email ogohlantirish." },
         { icon: "🎚️", title: "Kirishni siz boshqarasiz", text: "Hujjatni muddatli havola orqali ulashing va istalgan vaqtda bekor qiling." },
         { icon: "🙅", title: "Maʼlumotlaringizni sotmaymiz", text: "Maʼlumotlaringizni hech qachon uchinchi shaxslarga bermaymiz yoki sotmaymiz." },
         { icon: "📥", title: "Internetsiz ishlaydi", text: "Kerakli hujjatlarni telefonga saqlang va aloqa boʻlmasa ham oching — sayohatda yoki roumingda." },
