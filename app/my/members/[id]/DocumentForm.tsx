@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { categories } from "@/lib/categories";
+import { categories, docSubtypes, type DocCategory } from "@/lib/categories";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { attachDocumentFile, createDocumentMeta } from "@/app/my/actions";
@@ -195,12 +195,14 @@ export default function DocumentForm({
   locale,
   storageUsed = 0,
   storageLimit,
+  aiEnabled = false,
 }: {
   memberId?: string;
   assetId?: string;
   locale: Locale;
   storageUsed?: number;
   storageLimit?: number;
+  aiEnabled?: boolean;
 }) {
   const t = M[locale];
   const remaining =
@@ -375,14 +377,16 @@ export default function DocumentForm({
           >
             {t.photo}
           </button>
-          <button
-            type="button"
-            onClick={() => classify()}
-            disabled={busy || !files.length}
-            className="btn-ghost"
-          >
-            {busy ? t.recognizing : t.recognize}
-          </button>
+          {aiEnabled && (
+            <button
+              type="button"
+              onClick={() => classify()}
+              disabled={busy || !files.length}
+              className="btn-ghost"
+            >
+              {busy ? t.recognizing : t.recognize}
+            </button>
+          )}
         </div>
 
         {files.length > 0 && (
@@ -446,11 +450,17 @@ export default function DocumentForm({
       <div>
         <label className="label">{t.subtype}</label>
         <input
+          list="doc-subtypes"
           value={f.subtype}
           onChange={(e) => set("subtype", e.target.value)}
           className="input"
           placeholder={t.subtypePh}
         />
+        <datalist id="doc-subtypes">
+          {docSubtypes(locale, f.category as DocCategory).map((s) => (
+            <option key={s} value={s} />
+          ))}
+        </datalist>
       </div>
       <div>
         <label className="label">{t.issuer}</label>

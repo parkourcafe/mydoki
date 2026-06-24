@@ -15,6 +15,7 @@ import {
   type RecordKind,
 } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import { aiConfigured } from "@/lib/classify";
 import { createRecord, deleteRecord } from "@/app/my/actions";
 import DocumentForm from "./DocumentForm";
 
@@ -187,6 +188,7 @@ export default async function MemberPage({
           locale={locale}
           storageUsed={storage.used}
           storageLimit={storage.limit}
+          aiEnabled={aiConfigured()}
         />
       </details>
 

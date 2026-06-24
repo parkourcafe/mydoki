@@ -7,6 +7,7 @@ import {
   type DocCategory,
 } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import { aiConfigured } from "@/lib/classify";
 import { deleteAsset } from "@/app/my/actions";
 import DocumentForm from "@/app/my/members/[id]/DocumentForm";
 
@@ -119,6 +120,7 @@ export default async function AssetPage({
           locale={locale}
           storageUsed={storage.used}
           storageLimit={storage.limit}
+          aiEnabled={aiConfigured()}
         />
       </details>
 
