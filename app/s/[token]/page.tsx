@@ -52,6 +52,21 @@ const M = {
     footer:
       "🔐 Secure “Family Vault” link. Access is time-limited and logged.",
   },
+  id: {
+    invalidTitle: "Tautan tidak valid",
+    invalidIntro:
+      "Tautan sudah kedaluwarsa, batas tampilan tercapai, atau tautan telah dicabut.",
+    sharedWithYou: "Dokumen yang dibagikan kepada Anda",
+    validUntil: "berlaku hingga",
+    noServiceKey: "Pratinjau file tidak tersedia: server tidak memiliki",
+    noFiles: "Tidak ada file yang terlampir pada dokumen ini.",
+    file: "file",
+    watermark: "Brankas Keluarga · hanya lihat",
+    open: "Buka",
+    download: "↓ Unduh asli",
+    footer:
+      "🔐 Tautan aman “Brankas Keluarga”. Akses dibatasi waktu dan dicatat.",
+  },
 } as const;
 
 function Shell({ children }: { children: React.ReactNode }) {

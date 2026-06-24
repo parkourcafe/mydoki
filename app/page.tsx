@@ -144,6 +144,60 @@ const M: Record<Locale, Dict> = {
     },
     footer: { copyright: "© 2026 doki.help — Family document vault", security: "Security", privacy: "Privacy", login: "Sign in" },
   },
+  id: {
+    nav: { login: "Masuk", start: "Mulai gratis" },
+    hero: {
+      badge: "Brankas pribadi untuk dokumen seluruh keluarga Anda",
+      title: ["Semua dokumen penting", "keluarga Anda —", "selalu dalam genggaman"],
+      subtitle:
+        "Paspor, hasil medis, visa, ijazah, sertifikat, dan dokumen perjalanan. Akses dari perangkat apa pun. Pengingat berjalan sendiri.",
+      cta1: "Mulai gratis",
+      cta2: "Cara kerjanya",
+      trust: ["Perangkat apa pun", "Gratis", "Masuk dengan Google"],
+      imgAlt: "Dokumen keluarga — tertata rapi dan mudah dijangkau",
+    },
+    store: {
+      heading: "Apa saja yang bisa disimpan di brankas Anda",
+      sub: "Semua yang penting bagi keluarga Anda — di satu tempat yang aman.",
+      medTitle: "Hasil dan pemeriksaan medis",
+      medBadge: "Pengenalan tanggal — gratis",
+      medCol1: ["Hasil pemeriksaan laboratorium", "Panel darah, CBC, hormon, urinalisis", "USG, MRI, CT, rontgen"],
+      medCol2: ["Laporan dokter", "Sertifikat vaksinasi", "Surat keterangan medis"],
+      medNote: "Pengenalan tanggal dan pengingat cerdas — gratis.",
+      cats: [
+        { icon: "📄", title: "Dokumen pribadi & imigrasi", items: ["Paspor & paspor internasional", "Visa dan berkas visa", "Dokumen kewarganegaraan", "NPWP & nomor jaminan sosial", "Ijazah dan sertifikat"] },
+        { icon: "✈️", title: "Perjalanan & wisata", items: ["Paket tur & voucher", "Tiket dan pemesanan", "Asuransi perjalanan", "Dokumen masuk/keluar", "Surat izin perjalanan anak"] },
+        { icon: "🚗", title: "Kendaraan & properti", items: ["Asuransi mobil", "BPKB & STNK kendaraan", "Sertifikat properti & kontrak"] },
+        { icon: "🧾", title: "Kuitansi & surat keterangan", items: ["Bukti pembayaran", "Surat keterangan kerja / studi", "Surat kuasa"] },
+      ],
+    },
+    how: {
+      heading: "Cara kerjanya",
+      sub: "Unggah dokumen — selebihnya aplikasi yang mengurus",
+      steps: [
+        { n: "1", title: "Unggah foto atau pindaian", text: "Paspor, visa, hasil medis, dokumen perjalanan — dokumen apa pun." },
+        { n: "2", title: "AI membaca tanggalnya untuk Anda", text: "AI menemukan tanggal kedaluwarsa dan menawarkan untuk menyimpannya — gratis." },
+        { n: "3", title: "Terima pengingat", text: "Anda akan diingatkan sebelum visa, pemeriksaan, atau asuransi kedaluwarsa." },
+        { n: "4", title: "Kendalikan akses", text: "Kirim tautan berbatas waktu ke dokter, bank, atau kerabat." },
+      ],
+    },
+    security: {
+      heading: "Dokumen Anda aman",
+      sub: "Kami paham betapa pentingnya dokumen-dokumen ini — dan membangun semuanya agar Anda merasa tenang.",
+      items: [
+        { icon: "👨‍👩‍👧", title: "Hanya keluarga Anda yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS). Tidak ada pihak luar, termasuk kami, yang bisa membuka berkas Anda." },
+        { icon: "🛡️", title: "Enkripsi dan peringatan login", text: "Berkas di penyimpanan privat, masuk dua faktor, dan peringatan saat login dari perangkat baru." },
+        { icon: "🎚️", title: "Anda yang mengendalikan akses", text: "Bagikan dokumen lewat tautan berbatas waktu dan cabut kapan saja." },
+        { icon: "🙅", title: "Kami tidak menjual data Anda", text: "Kami tidak pernah membagikan atau menjual data Anda ke pihak ketiga." },
+      ],
+    },
+    cta: {
+      heading: "Siap mengumpulkan semua dokumen keluarga Anda?",
+      sub: "Kurang dari 15 menit — dan tertata rapi untuk seterusnya.",
+      button: "Mulai gratis",
+    },
+    footer: { copyright: "© 2026 doki.help — Brankas dokumen keluarga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
+  },
 };
 
 function Check() {

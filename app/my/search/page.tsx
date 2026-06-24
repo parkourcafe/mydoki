@@ -32,6 +32,18 @@ const M = {
     until: "until",
     prompt: "Enter a query or pick a category.",
   },
+  id: {
+    title: "Cari",
+    subtitle: "Berdasarkan judul, jenis, atau penerbit — dalam keluarga Anda.",
+    query: "Kueri",
+    queryPlaceholder: "paspor, ijazah, asuransi…",
+    category: "Kategori",
+    all: "Semua",
+    searchBtn: "Cari",
+    notFound: "Tidak ada yang ditemukan.",
+    until: "hingga",
+    prompt: "Masukkan kueri atau pilih kategori.",
+  },
 } as const;
 
 export default async function SearchPage({

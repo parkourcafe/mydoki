@@ -33,6 +33,18 @@ const M = {
     until: (d: string) => `until ${d}`,
     noExpiry: "no expiry",
   },
+  id: {
+    healthCard: "Kartu kesehatan",
+    intro: "Riwayat catatan: hasil lab, vaksinasi, resep, nutrisi.",
+    all: "Semua",
+    records: "Catatan",
+    emptyOfKind: "Belum ada catatan jenis ini. Anda dapat menambahkannya di halaman orang tersebut.",
+    empty: "Belum ada catatan. Anda dapat menambahkannya di halaman orang tersebut.",
+    noDate: "tanpa tanggal",
+    medDocs: "🩺 Dokumen medis",
+    until: (d: string) => `sampai ${d}`,
+    noExpiry: "tanpa batas waktu",
+  },
 } as const;
 
 export default async function HealthPage({

@@ -33,6 +33,20 @@ const M = {
     detailsPlaceholder: "plate number, VIN, address, cadastral number…",
     add: "Add",
   },
+  id: {
+    title: "Aset",
+    intro:
+      "Mobil, properti, dan barang lainnya — masing-masing dengan dokumennya sendiri (BPKB, asuransi, kontrak, kuitansi).",
+    empty:
+      "Belum ada barang. Tambahkan yang pertama di bawah — misalnya mobil atau apartemen.",
+    addObject: "+ Tambah barang",
+    type: "Jenis",
+    name: "Nama",
+    namePlaceholder: "BMW X5 / Apartemen di Jl. Sudirman",
+    details: "Detail (opsional)",
+    detailsPlaceholder: "nomor pelat, VIN, alamat, nomor sertifikat…",
+    add: "Tambah",
+  },
 } as const;
 
 export default async function AssetsPage() {

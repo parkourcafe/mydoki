@@ -20,6 +20,12 @@ const M = {
     confirmEmail:
       "Account created. Confirm your email via the link we sent, then sign in.",
   },
+  id: {
+    missingCredentials: "Masukkan email dan kata sandi Anda.",
+    signupRequirements: "Email dan kata sandi (minimal 8 karakter) wajib diisi.",
+    confirmEmail:
+      "Akun berhasil dibuat. Konfirmasikan email Anda melalui tautan yang kami kirim, lalu masuk.",
+  },
 } as const;
 
 /** Записать текущий вход в журнал (вызывается после клиентского OAuth-обмена). */

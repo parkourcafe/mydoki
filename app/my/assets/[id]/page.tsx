@@ -27,6 +27,14 @@ const M = {
     addDocument: "+ Add document",
     deleteObject: "Delete item",
   },
+  id: {
+    back: "← Aset",
+    empty: "Belum ada dokumen untuk barang ini. Tambahkan yang pertama di bawah.",
+    validUntil: "berlaku hingga",
+    noExpiry: "tanpa masa berlaku",
+    addDocument: "+ Tambah dokumen",
+    deleteObject: "Hapus barang",
+  },
 } as const;
 
 export default async function AssetPage({

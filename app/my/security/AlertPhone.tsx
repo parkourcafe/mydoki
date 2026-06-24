@@ -15,6 +15,11 @@ const M = {
     saved: "Saved.",
     save: "Save",
   },
+  id: {
+    label: "Telepon untuk peringatan SMS",
+    saved: "Tersimpan.",
+    save: "Simpan",
+  },
 } as const;
 
 /** Телефон для SMS-оповещений — хранится в метаданных пользователя. */

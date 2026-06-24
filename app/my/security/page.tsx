@@ -61,6 +61,34 @@ const M = {
     fallbackBrowser: "browser",
     dateLocale: "en-US",
   },
+  id: {
+    title: "Keamanan",
+    account: "Akun",
+    twoFa: "Autentikasi dua faktor (2FA)",
+    loginAlerts: "Peringatan masuk",
+    chipEmail: "email",
+    chipSms: "SMS",
+    alertsIntro:
+      "Kami akan memberi tahu Anda saat seseorang masuk dari perangkat baru. Email dikirim ke alamat akun Anda; SMS ke nomor di bawah (jika layanan SMS terhubung).",
+    recentLogins: "Login terbaru",
+    noRecords: "Belum ada catatan.",
+    newDevice: "perangkat baru",
+    ipUnknown: "IP tidak diketahui",
+    seeUnknown:
+      "Melihat login yang tidak Anda lakukan? Keluar dari semua perangkat dan ubah kata sandi Anda.",
+    signOutAll: "Keluar dari semua perangkat",
+    howProtected: "Cara kerja perlindungan",
+    p1: "Dokumen diisolasi per keluarga di tingkat basis data (RLS).",
+    p2: "File berada di bucket privat, hanya diekspos melalui signed URL.",
+    p3: "Berbagi menggunakan tautan yang kedaluwarsa dan dapat dicabut ke satu dokumen.",
+    p4: "Setiap akses tautan dicatat ke dalam audit log.",
+    on: "aktif",
+    off: "nonaktif",
+    unknownDevice: "Perangkat tidak dikenal",
+    fallbackDevice: "perangkat",
+    fallbackBrowser: "peramban",
+    dateLocale: "id-ID",
+  },
 } as const;
 
 function deviceLabel(ua: string | null, t: (typeof M)[Locale]): string {

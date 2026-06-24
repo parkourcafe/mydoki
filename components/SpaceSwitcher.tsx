@@ -21,6 +21,13 @@ const DICT = {
     create: "Create space",
     hint: "For example: “Personal”, “My company”.",
   },
+  id: {
+    space: "Ruang",
+    spaces: "Ruang",
+    newSpace: "Ruang baru",
+    create: "Buat ruang",
+    hint: "Misalnya: “Pribadi”, “Perusahaan saya”.",
+  },
 } as const;
 
 export default function SpaceSwitcher({

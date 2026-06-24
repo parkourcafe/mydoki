@@ -30,6 +30,18 @@ const M = {
     saving: "Saving…",
     savePassword: "Save password",
   },
+  id: {
+    heading: "Kata sandi baru",
+    pwTooShort: "Kata sandi harus terdiri dari minimal 8 karakter.",
+    pwMismatch: "Kata sandi tidak cocok.",
+    updated: "Kata sandi diperbarui. Mengalihkan ke akun Anda…",
+    notFromLink:
+      "Membuka halaman ini tanpa tautan dari email? Minta pengaturan ulang kata sandi lagi di halaman masuk. Tautan ini berlaku untuk waktu terbatas.",
+    newPassword: "Kata sandi baru",
+    repeatPassword: "Ulangi kata sandi",
+    saving: "Menyimpan…",
+    savePassword: "Simpan kata sandi",
+  },
 } as const;
 
 export default function ResetPasswordPage() {

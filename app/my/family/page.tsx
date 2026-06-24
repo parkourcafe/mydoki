@@ -6,7 +6,7 @@ import { getLocale } from "@/lib/i18n";
 import CopyButton from "@/components/CopyButton";
 import { createInvitation, deleteInvitation } from "../actions";
 
-const ROLE_LABEL: Record<"ru" | "en", Record<string, string>> = {
+const ROLE_LABEL: Record<"ru" | "en" | "id", Record<string, string>> = {
   ru: {
     owner: "Владелец",
     editor: "Редактор",
@@ -16,6 +16,11 @@ const ROLE_LABEL: Record<"ru" | "en", Record<string, string>> = {
     owner: "Owner",
     editor: "Editor",
     viewer: "Viewer",
+  },
+  id: {
+    owner: "Pemilik",
+    editor: "Editor",
+    viewer: "Penampil",
   },
 };
 
@@ -63,6 +68,28 @@ const M = {
     footerLink: "Family",
     footerRelations: "Available relations:",
     dateLocale: "en-US",
+  },
+  id: {
+    title: "Akses keluarga",
+    subtitle:
+      "Undang orang terkasih Anda. Peran: pemilik (semua), editor (baca + ubah), penampil (hanya baca).",
+    members: "Anggota",
+    you: "Anda",
+    notOwner: "Hanya pemilik keluarga yang dapat mengundang anggota.",
+    invitations: "Undangan",
+    noInvitations: "Tidak ada undangan aktif.",
+    until: "hingga",
+    delete: "Hapus",
+    role: "Peran",
+    viewer: "Penampil",
+    editor: "Editor",
+    createInvite: "Buat undangan",
+    inviteHint:
+      "Salin tautan dan bagikan kepada orang tersebut dengan cara apa pun yang Anda suka. Tautan berlaku selama 14 hari.",
+    footerA: "“Anggota” adalah orang yang memiliki akses ke akun keluarga. “Anggota keluarga” (beserta dokumennya) ditambahkan di halaman",
+    footerLink: "Keluarga",
+    footerRelations: "Hubungan yang tersedia:",
+    dateLocale: "id-ID",
   },
 } as const;
 

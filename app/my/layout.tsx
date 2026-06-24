@@ -33,6 +33,19 @@ const M = {
     enable2fa: "Enable 2FA",
     mfaRecommend: "— recommended for your documents.",
   },
+  id: {
+    brand: "Brankas keluarga",
+    signOut: "Keluar",
+    family: "Keluarga",
+    assets: "Aset",
+    search: "Cari",
+    reminders: "Tenggat waktu",
+    access: "Akses",
+    security: "Keamanan",
+    mfaWarning: "⚠️ Proteksi dua faktor belum diatur.",
+    enable2fa: "Aktifkan 2FA",
+    mfaRecommend: "— direkomendasikan untuk dokumen Anda.",
+  },
 } as const;
 
 export default async function MyLayout({

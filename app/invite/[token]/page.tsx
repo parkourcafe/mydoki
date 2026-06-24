@@ -15,6 +15,11 @@ const ROLE_LABEL: Record<Locale, Record<string, string>> = {
     editor: "Editor",
     viewer: "Viewer",
   },
+  id: {
+    owner: "Pemilik",
+    editor: "Editor",
+    viewer: "Peninjau",
+  },
 };
 
 const M = {
@@ -35,6 +40,15 @@ const M = {
     roleLine: (role: string, email: string) =>
       `Role: ${role}. You'll join as ${email}.`,
     accept: "Accept invitation",
+  },
+  id: {
+    invalidTitle: "Undangan tidak valid",
+    invalidIntro: "Tautan sudah kedaluwarsa atau telah digunakan.",
+    toDashboard: "Ke dasbor",
+    inviteTo: (h: string) => `Undangan ke “${h}”`,
+    roleLine: (role: string, email: string) =>
+      `Peran: ${role}. Anda akan bergabung sebagai ${email}.`,
+    accept: "Terima undangan",
   },
 } as const;
 

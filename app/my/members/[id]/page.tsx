@@ -60,6 +60,27 @@ const M = {
     note: "Note",
     saveRecord: "Save record",
   },
+  id: {
+    back: "← Keluarga",
+    none: "—",
+    health: "🩺 Kartu kesehatan →",
+    noDocs: "Belum ada dokumen. Tambahkan yang pertama di bawah.",
+    validUntil: (d: string) => `berlaku sampai ${d}`,
+    noExpiry: "tanpa batas waktu",
+    addDocument: "+ Tambah dokumen",
+    records: "Catatan",
+    recordsEmpty:
+      "Catatan terstruktur tanpa berkas: hasil lab, resep, vaksinasi, nutrisi.",
+    noDate: "tanpa tanggal",
+    delete: "hapus",
+    addRecord: "+ Tambah catatan",
+    kind: "Jenis",
+    date: "Tanggal",
+    title: "Judul",
+    titlePh: "Pemeriksaan darah lengkap",
+    note: "Catatan",
+    saveRecord: "Simpan catatan",
+  },
 } as const;
 
 export default async function MemberPage({

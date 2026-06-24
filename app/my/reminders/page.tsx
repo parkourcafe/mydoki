@@ -23,6 +23,14 @@ const M = {
     overdue: (n: number) => `overdue by ${n} d.`,
     daysLeft: (n: number) => `${n} d.`,
   },
+  id: {
+    title: "Tenggat waktu",
+    subtitle: "Dokumen yang masa berlakunya habis dalam 60 hari ke depan.",
+    empty: "Tidak ada yang akan habis masa berlakunya dalam waktu dekat 🎉",
+    until: "hingga",
+    overdue: (n: number) => `terlambat ${n} hr`,
+    daysLeft: (n: number) => `${n} hr`,
+  },
 } as const;
 
 function daysLeft(date: string) {

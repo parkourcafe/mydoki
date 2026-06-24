@@ -35,6 +35,20 @@ const M = {
     codeLabel: "Code from the app",
     confirm: "Confirm",
   },
+  id: {
+    loading: "Memuat…",
+    enabled: "✓ Perlindungan dua faktor aktif.",
+    authenticatorApp: "Aplikasi autentikator (TOTP)",
+    remove: "Hapus",
+    notConfigured:
+      "2FA belum disiapkan. Tambahkan aplikasi autentikator (Google Authenticator, 1Password, Authy, dll.).",
+    setup: "Siapkan 2FA",
+    scanQr: "Pindai kode QR di aplikasi autentikator Anda:",
+    qrAlt: "Kode QR untuk penyiapan 2FA",
+    enterKey: "Atau masukkan kunci secara manual:",
+    codeLabel: "Kode dari aplikasi",
+    confirm: "Konfirmasi",
+  },
 } as const;
 
 export default function MfaSetup({ locale }: { locale: Locale }) {

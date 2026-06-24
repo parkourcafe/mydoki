@@ -29,6 +29,18 @@ const M = {
     birthDate: "Date of birth",
     add: "Add",
   },
+  id: {
+    title: "Keluarga",
+    subtitle: "Dokumen dan catatan setiap orang di satu tempat.",
+    export: "↓ Ekspor",
+    empty: "Belum ada siapa pun di sini. Tambahkan anggota keluarga pertama Anda di bawah.",
+    addMember: "+ Tambah anggota keluarga",
+    name: "Nama",
+    namePlaceholder: "Budi Santoso",
+    relation: "Hubungan",
+    birthDate: "Tanggal lahir",
+    add: "Tambah",
+  },
 } as const;
 
 export default async function MyHome() {

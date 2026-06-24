@@ -59,6 +59,32 @@ const M = {
     signUp: "Sign up",
     or: "or",
   },
+  id: {
+    googleSignIn: "Masuk dengan Google",
+    enterEmail: "Masukkan email Anda.",
+    resetSent:
+      "Jika email tersebut ada, kami telah mengirimkan tautan untuk mengatur ulang kata sandi. Periksa kotak masuk Anda (dan folder “Spam”).",
+    backToLogin: "← Kembali ke halaman masuk",
+    resetHint:
+      "Masukkan email Anda — kami akan mengirimkan tautan untuk membuat kata sandi baru.",
+    email: "Email",
+    sending: "Mengirim…",
+    sendLink: "Kirim tautan",
+    password: "Kata sandi",
+    forgotPassword: "Lupa kata sandi?",
+    consentLead: "Saya menyetujui",
+    consentTerms: "Ketentuan",
+    consentAnd: "dan",
+    consentPrivacy: "Kebijakan Privasi",
+    consentTrail: "serta menyetujui pemrosesan data pribadi saya.",
+    submitting: "Sebentar…",
+    signIn: "Masuk",
+    createAccount: "Buat akun",
+    noAccount: "Belum punya akun? ",
+    haveAccount: "Sudah punya akun? ",
+    signUp: "Daftar",
+    or: "atau",
+  },
 } as const;
 
 function GoogleButton({ locale }: { locale: Locale }) {

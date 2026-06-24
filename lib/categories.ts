@@ -18,40 +18,40 @@ export type RecordKind =
 
 export type AssetType = "vehicle" | "real_estate" | "other";
 
-type L<K extends string> = { key: K; emoji: string; ru: string; en: string };
+type L<K extends string> = { key: K; emoji: string; ru: string; en: string; id: string };
 
-/* ── Данные (двуязычные) ─────────────────────────────────────────── */
+/* ── Данные (многоязычные) ───────────────────────────────────────── */
 
 const CAT: L<DocCategory>[] = [
-  { key: "identity", emoji: "🪪", ru: "Удостоверения", en: "ID documents" },
-  { key: "education", emoji: "🎓", ru: "Образование", en: "Education" },
-  { key: "medical", emoji: "🩺", ru: "Медицина", en: "Medical" },
-  { key: "financial", emoji: "💳", ru: "Финансы", en: "Finance" },
-  { key: "legal", emoji: "📜", ru: "Юридические", en: "Legal" },
-  { key: "other", emoji: "🗂️", ru: "Прочее", en: "Other" },
+  { key: "identity", emoji: "🪪", ru: "Удостоверения", en: "ID documents", id: "Dokumen identitas" },
+  { key: "education", emoji: "🎓", ru: "Образование", en: "Education", id: "Pendidikan" },
+  { key: "medical", emoji: "🩺", ru: "Медицина", en: "Medical", id: "Medis" },
+  { key: "financial", emoji: "💳", ru: "Финансы", en: "Finance", id: "Keuangan" },
+  { key: "legal", emoji: "📜", ru: "Юридические", en: "Legal", id: "Hukum" },
+  { key: "other", emoji: "🗂️", ru: "Прочее", en: "Other", id: "Lainnya" },
 ];
 
 const REL: L<string>[] = [
-  { key: "self", emoji: "", ru: "Я", en: "Me" },
-  { key: "spouse", emoji: "", ru: "Супруг(а)", en: "Spouse" },
-  { key: "child", emoji: "", ru: "Ребёнок", en: "Child" },
-  { key: "parent", emoji: "", ru: "Родитель", en: "Parent" },
-  { key: "other", emoji: "", ru: "Другое", en: "Other" },
+  { key: "self", emoji: "", ru: "Я", en: "Me", id: "Saya" },
+  { key: "spouse", emoji: "", ru: "Супруг(а)", en: "Spouse", id: "Pasangan" },
+  { key: "child", emoji: "", ru: "Ребёнок", en: "Child", id: "Anak" },
+  { key: "parent", emoji: "", ru: "Родитель", en: "Parent", id: "Orang tua" },
+  { key: "other", emoji: "", ru: "Другое", en: "Other", id: "Lainnya" },
 ];
 
 const REC: L<RecordKind>[] = [
-  { key: "medical_analysis", emoji: "🧪", ru: "Анализ", en: "Lab test" },
-  { key: "prescription", emoji: "💊", ru: "Назначение", en: "Prescription" },
-  { key: "vaccination", emoji: "💉", ru: "Прививка", en: "Vaccination" },
-  { key: "nutrition", emoji: "🥗", ru: "Питание", en: "Nutrition" },
-  { key: "note", emoji: "📝", ru: "Заметка", en: "Note" },
-  { key: "other", emoji: "•", ru: "Другое", en: "Other" },
+  { key: "medical_analysis", emoji: "🧪", ru: "Анализ", en: "Lab test", id: "Hasil lab" },
+  { key: "prescription", emoji: "💊", ru: "Назначение", en: "Prescription", id: "Resep" },
+  { key: "vaccination", emoji: "💉", ru: "Прививка", en: "Vaccination", id: "Vaksinasi" },
+  { key: "nutrition", emoji: "🥗", ru: "Питание", en: "Nutrition", id: "Nutrisi" },
+  { key: "note", emoji: "📝", ru: "Заметка", en: "Note", id: "Catatan" },
+  { key: "other", emoji: "•", ru: "Другое", en: "Other", id: "Lainnya" },
 ];
 
 const AST: L<AssetType>[] = [
-  { key: "vehicle", emoji: "🚗", ru: "Транспорт", en: "Vehicle" },
-  { key: "real_estate", emoji: "🏠", ru: "Недвижимость", en: "Real estate" },
-  { key: "other", emoji: "📦", ru: "Другое", en: "Other" },
+  { key: "vehicle", emoji: "🚗", ru: "Транспорт", en: "Vehicle", id: "Kendaraan" },
+  { key: "real_estate", emoji: "🏠", ru: "Недвижимость", en: "Real estate", id: "Properti" },
+  { key: "other", emoji: "📦", ru: "Другое", en: "Other", id: "Lainnya" },
 ];
 
 /* ── Локализованные аксессоры ────────────────────────────────────── */

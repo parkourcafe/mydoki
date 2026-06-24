@@ -24,6 +24,16 @@ const M = {
     privacy: "Privacy",
     terms: "Terms",
   },
+  id: {
+    badge: "Brankas keluarga",
+    headingLead: "Semua dokumen keluarga Anda —",
+    headingAccent: "di satu tempat yang aman",
+    subtitle:
+      "Paspor, ijazah, rekam medis, dan properti — selalu di tangan dan terlindungi.",
+    security: "Privat secara bawaan · RLS · penyimpanan privat",
+    privacy: "Privasi",
+    terms: "Ketentuan",
+  },
 } as const;
 
 export default async function LoginPage() {
