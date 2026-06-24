@@ -28,7 +28,7 @@ const M = {
       "Срок действия истёк, лимит просмотров исчерпан или ссылка отозвана.",
     sharedWithYou: "Документ, которым с вами поделились",
     validUntil: "действует до",
-    noServiceKey: "Предпросмотр файлов недоступен: на сервере не задан",
+    noServiceKey: "Предпросмотр файлов временно недоступен. Попробуйте позже.",
     noFiles: "К документу не прикреплены файлы.",
     file: "файл",
     watermark: "Семейный сейф · только просмотр",
@@ -43,7 +43,7 @@ const M = {
       "It has expired, the view limit has been reached, or the link was revoked.",
     sharedWithYou: "A document shared with you",
     validUntil: "valid until",
-    noServiceKey: "File preview is unavailable: the server has no",
+    noServiceKey: "File preview is temporarily unavailable. Please try again later.",
     noFiles: "No files are attached to this document.",
     file: "file",
     watermark: "Family Vault · view only",
@@ -58,7 +58,7 @@ const M = {
       "Tautan sudah kedaluwarsa, batas tampilan tercapai, atau tautan telah dicabut.",
     sharedWithYou: "Dokumen yang dibagikan kepada Anda",
     validUntil: "berlaku hingga",
-    noServiceKey: "Pratinjau file tidak tersedia: server tidak memiliki",
+    noServiceKey: "Pratinjau file untuk sementara tidak tersedia. Coba lagi nanti.",
     noFiles: "Tidak ada file yang terlampir pada dokumen ini.",
     file: "file",
     watermark: "Brankas Keluarga · hanya lihat",
@@ -73,7 +73,7 @@ const M = {
       "Uning muddati oʻtgan, koʻrishlar chegarasiga yetilgan yoki havola bekor qilingan.",
     sharedWithYou: "Siz bilan ulashilgan hujjat",
     validUntil: "amal qiladi",
-    noServiceKey: "Fayllarni oldindan koʻrish imkonsiz: serverda yoʻq",
+    noServiceKey: "Fayllarni oldindan koʻrish vaqtincha imkonsiz. Keyinroq urinib koʻring.",
     noFiles: "Bu hujjatga fayllar biriktirilmagan.",
     file: "fayl",
     watermark: "Oilaviy seyf · faqat koʻrish",
@@ -155,7 +155,6 @@ export default async function SharePage({
         {!admin ? (
           <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
             {t.noServiceKey}
-            <code className="mx-1">SUPABASE_SERVICE_ROLE_KEY</code>.
           </p>
         ) : files.length === 0 ? (
           <p className="text-sm text-slate-400">{t.noFiles}</p>
