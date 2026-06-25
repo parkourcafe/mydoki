@@ -1,4 +1,3 @@
--- Журнал входов: устройство/IP/время для оповещений о входе с нового устройства.
 create table login_events (
   id            uuid primary key default gen_random_uuid(),
   user_id       uuid not null references auth.users(id) on delete cascade,
