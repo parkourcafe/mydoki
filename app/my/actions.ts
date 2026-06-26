@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { getLocale } from "@/lib/i18n";
 import {
   getDocument,
   getOrCreateHouseholdId,
@@ -49,7 +50,14 @@ export async function switchSpace(formData: FormData) {
 
 /** Создать новое пространство и сделать его активным. */
 export async function createSpace(formData: FormData) {
-  const name = String(formData.get("name") ?? "").trim() || "Новое пространство";
+  const locale = await getLocale();
+  const fallbackName = {
+    ru: "Новое пространство",
+    en: "New space",
+    id: "Ruang baru",
+    uz: "Yangi makon",
+  }[locale];
+  const name = String(formData.get("name") ?? "").trim() || fallbackName;
   const supabase = await getSupabaseServer();
   const { data: hid, error } = await supabase.rpc("create_household", {
     p_name: name,

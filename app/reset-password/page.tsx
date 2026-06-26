@@ -69,9 +69,18 @@ export default function ResetPasswordPage() {
   const [done, setDone] = useState(false);
 
   useEffect(() => {
-    const fromCookie = /(?:^|;\s*)locale=(ru|en)/.exec(document.cookie)?.[1];
-    if (fromCookie === "ru" || fromCookie === "en") setLocale(fromCookie);
-    else setLocale(navigator.language.startsWith("ru") ? "ru" : "en");
+    const fromCookie = /(?:^|;\s*)locale=(ru|en|id|uz)/.exec(document.cookie)?.[1] as
+      | Locale
+      | undefined;
+    if (fromCookie) {
+      setLocale(fromCookie);
+      return;
+    }
+    const lang = navigator.language.toLowerCase();
+    if (lang.startsWith("ru")) setLocale("ru");
+    else if (lang.startsWith("id")) setLocale("id");
+    else if (lang.startsWith("uz")) setLocale("uz");
+    else setLocale("en");
   }, []);
 
   useEffect(() => {
