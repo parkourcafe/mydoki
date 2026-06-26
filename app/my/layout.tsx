@@ -1,16 +1,14 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
-import { signOut } from "./actions";
-import SpaceSwitcher from "@/components/SpaceSwitcher";
-import SignOutButton from "@/components/SignOutButton";
+import AppNav from "@/components/AppNav";
 
 const M = {
   ru: {
     brand: "Семейный сейф",
     signOut: "Выйти",
+    menu: "Меню",
     family: "Семья",
     assets: "Имущество",
     search: "Поиск",
@@ -25,6 +23,7 @@ const M = {
   en: {
     brand: "Family vault",
     signOut: "Sign out",
+    menu: "Menu",
     family: "Family",
     assets: "Assets",
     search: "Search",
@@ -39,6 +38,7 @@ const M = {
   uz: {
     brand: "Oilaviy seyf",
     signOut: "Chiqish",
+    menu: "Menyu",
     family: "Oila",
     assets: "Mulk",
     search: "Qidiruv",
@@ -53,6 +53,7 @@ const M = {
   id: {
     brand: "Brankas keluarga",
     signOut: "Keluar",
+    menu: "Menu",
     family: "Keluarga",
     assets: "Aset",
     search: "Cari",
@@ -95,73 +96,37 @@ export default async function MyLayout({
     .eq("household_id", activeId);
   const showMfaNudge = !hasMfa && (docCount ?? 0) > 0;
 
+  const nav = [
+    { href: "/my", emoji: "👪", label: t.family },
+    { href: "/my/assets", emoji: "🚗", label: t.assets },
+    { href: "/my/search", emoji: "🔍", label: t.search },
+    { href: "/my/reminders", emoji: "⏰", label: t.reminders },
+    { href: "/my/family", emoji: "🔑", label: t.access },
+    { href: "/my/security", emoji: "🛡️", label: t.security },
+    { href: "/saved", emoji: "📥", label: t.offline },
+  ];
+
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-[#e8e0d5] bg-[#fdfaf5]">
-        <div className="mx-auto max-w-5xl px-4">
-          <div className="flex items-center justify-between py-3">
-            <div className="flex items-center gap-3">
-              <Link href="/my" className="flex items-center gap-2 font-semibold">
-                <span className="text-xl">🔐</span>
-                <span className="hidden sm:inline">{t.brand}</span>
-              </Link>
-              <SpaceSwitcher spaces={spaces} activeId={activeId} locale={locale} />
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="hidden text-xs text-slate-500 sm:inline">
-                {user.email}
-              </span>
-              <form action={signOut}>
-                <SignOutButton
-                  label={t.signOut}
-                  className="rounded-lg px-3 py-1.5 text-sm text-slate-500 hover:bg-[#f0e6d9] disabled:opacity-60"
-                />
-              </form>
-            </div>
-          </div>
-          <nav className="-mx-4 flex gap-1 overflow-x-auto whitespace-nowrap px-4 pb-2 text-sm">
-            <Link href="/my" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              {t.family}
-            </Link>
-            <Link href="/my/assets" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              {t.assets}
-            </Link>
-            <Link href="/my/search" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              {t.search}
-            </Link>
-            <Link href="/my/reminders" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              {t.reminders}
-            </Link>
-            <Link href="/my/family" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              {t.access}
-            </Link>
-            <Link href="/my/security" className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]">
-              {t.security}
-            </Link>
-            <Link
-              href="/saved"
-              prefetch
-              className="shrink-0 rounded-lg px-3 py-1.5 hover:bg-[#f0e6d9]"
-            >
-              {t.offline}
-            </Link>
-          </nav>
-        </div>
-      </header>
-
-      {showMfaNudge && (
-        <div className="border-b border-[#e8e0d5] bg-[#fdfaf5]">
-          <div className="mx-auto max-w-5xl px-4 py-2 text-sm text-[#5c5248]">
-            {t.mfaWarning}{" "}
-            <Link href="/my/security" className="font-medium text-[#b85c38] underline">
-              {t.enable2fa}
-            </Link>{" "}
-            {t.mfaRecommend}
-          </div>
-        </div>
-      )}
-
-      <main className="mx-auto max-w-5xl px-4 py-8">{children}</main>
-    </div>
+    <AppNav
+      locale={locale}
+      brand={t.brand}
+      menuLabel={t.menu}
+      signOutLabel={t.signOut}
+      userEmail={user.email ?? ""}
+      spaces={spaces}
+      activeId={activeId}
+      nav={nav}
+      mfa={
+        showMfaNudge
+          ? {
+              warning: t.mfaWarning,
+              enable2fa: t.enable2fa,
+              recommend: t.mfaRecommend,
+            }
+          : null
+      }
+    >
+      {children}
+    </AppNav>
   );
 }
