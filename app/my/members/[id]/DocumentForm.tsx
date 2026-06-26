@@ -21,6 +21,7 @@ const M = {
     gb: "ГБ",
     quotaExceeded:
       "Не хватает места в хранилище семьи. Удалите ненужные файлы — или напишите нам, чтобы поднять лимит.",
+    owner: "Чей документ",
     title: "Название",
     titlePh: "Паспорт РФ",
     category: "Категория",
@@ -58,6 +59,7 @@ const M = {
     gb: "GB",
     quotaExceeded:
       "Not enough space in your family's storage. Delete files you don't need — or contact us to raise the limit.",
+    owner: "Whose document",
     title: "Title",
     titlePh: "Passport",
     category: "Category",
@@ -95,6 +97,7 @@ const M = {
     gb: "GB",
     quotaExceeded:
       "Oila xotirasida joy yetarli emas. Keraksiz fayllarni oʻchiring — yoki limitni oshirish uchun bizga yozing.",
+    owner: "Kimning hujjati",
     title: "Nomi",
     titlePh: "Pasport",
     category: "Toifa",
@@ -132,6 +135,7 @@ const M = {
     gb: "GB",
     quotaExceeded:
       "Ruang penyimpanan keluarga tidak cukup. Hapus berkas yang tidak perlu — atau hubungi kami untuk menaikkan batas.",
+    owner: "Dokumen milik siapa",
     title: "Judul",
     titlePh: "Paspor",
     category: "Kategori",
@@ -196,6 +200,8 @@ export default function DocumentForm({
   storageUsed = 0,
   storageLimit,
   aiEnabled = false,
+  owners,
+  defaultCategory,
 }: {
   memberId?: string;
   assetId?: string;
@@ -203,12 +209,23 @@ export default function DocumentForm({
   storageUsed?: number;
   storageLimit?: number;
   aiEnabled?: boolean;
+  owners?: { id: string; name: string; kind: "member" | "asset" }[];
+  defaultCategory?: string;
 }) {
   const t = M[locale];
   const remaining =
     storageLimit != null ? Math.max(0, storageLimit - storageUsed) : null;
   const router = useRouter();
-  const [f, setF] = useState<Fields>(EMPTY);
+  // Когда форма открыта не у конкретного человека/имущества (например, из
+  // категории документов) — даём выбрать владельца из списка семьи.
+  const pickOwner = !memberId && !assetId && !!owners?.length;
+  const [owner, setOwner] = useState(
+    pickOwner ? `${owners![0].kind}:${owners![0].id}` : ""
+  );
+  const [f, setF] = useState<Fields>(() => ({
+    ...EMPTY,
+    category: defaultCategory || EMPTY.category,
+  }));
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -295,9 +312,17 @@ export default function DocumentForm({
         .map((t) => t.trim())
         .filter(Boolean);
 
+      let member_id = memberId ?? null;
+      let asset_id = assetId ?? null;
+      if (pickOwner && owner) {
+        const [kind, oid] = owner.split(":");
+        if (kind === "member") member_id = oid;
+        else if (kind === "asset") asset_id = oid;
+      }
+
       const { id, householdId } = await createDocumentMeta({
-        member_id: memberId ?? null,
-        asset_id: assetId ?? null,
+        member_id,
+        asset_id,
         title: f.title,
         category: f.category,
         subtype: f.subtype,
@@ -422,6 +447,23 @@ export default function DocumentForm({
         )}
         {msg && <p className="mt-1 text-xs text-slate-600">{msg}</p>}
       </div>
+
+      {pickOwner && (
+        <div className="sm:col-span-2">
+          <label className="label">{t.owner}</label>
+          <select
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
+            className="input"
+          >
+            {owners!.map((o) => (
+              <option key={`${o.kind}:${o.id}`} value={`${o.kind}:${o.id}`}>
+                {o.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       <div className="sm:col-span-2">
         <label className="label">{t.title}</label>
