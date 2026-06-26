@@ -19,12 +19,21 @@ export type Asset = {
   created_at: string;
 };
 
+export type CustomCategory = {
+  id: string;
+  household_id: string;
+  label: string;
+  emoji: string | null;
+  created_at: string;
+};
+
 export type DocumentRow = {
   id: string;
   household_id: string;
   member_id: string | null;
   asset_id: string | null;
   category: DocCategory;
+  custom_category_id: string | null;
   subtype: string | null;
   title: string;
   issuer: string | null;
