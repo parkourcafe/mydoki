@@ -107,6 +107,7 @@ export async function generateMetadata(): Promise<Metadata> {
       follow: true,
       googleBot: { index: true, follow: true },
     },
+    verification: { google: "WjIJcU6oZE269vmJf6pKuQb5nJLExIUEClLb6IPgCBg" },
     formatDetection: { telephone: false },
     appleWebApp: {
       capable: true,
