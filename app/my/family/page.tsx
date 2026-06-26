@@ -4,6 +4,7 @@ import { getOrCreateHouseholdId, getMyRole, getUser } from "@/lib/queries";
 import { relations } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
 import CopyButton from "@/components/CopyButton";
+import SubmitButton from "@/components/SubmitButton";
 import { createInvitation, deleteInvitation } from "../actions";
 
 const ROLE_LABEL: Record<"ru" | "en" | "id" | "uz", Record<string, string>> = {
@@ -229,7 +230,7 @@ export default async function FamilyAccessPage() {
                   <option value="editor">{t.editor}</option>
                 </select>
               </div>
-              <button className="btn-primary">{t.createInvite}</button>
+              <SubmitButton>{t.createInvite}</SubmitButton>
             </form>
             <p className="mt-2 text-xs text-slate-400">
               {t.inviteHint}

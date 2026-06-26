@@ -48,8 +48,8 @@ npm run dev                  # http://localhost:3000
 ### Деплой
 
 Vercel: импортировать репозиторий, задать env-переменные. Схема уже применена к
-проекту Supabase `uuopxzlcmzdtwebottar`; для нового проекта — миграция
-`supabase/migrations/0001_init_family_vault.sql`. Полный чек-лист (env, Supabase
+проекту Supabase `uuopxzlcmzdtwebottar`; для нового проекта — применить миграции
+из `supabase/migrations/` (`supabase db push`). Полный чек-лист (env, Supabase
 Auth, пост-деплой) — в [DEPLOY.md](DEPLOY.md).
 
 ### Статус проверки

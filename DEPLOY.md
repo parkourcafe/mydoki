@@ -49,10 +49,10 @@
 
 ```bash
 supabase link --project-ref <NEW_REF>
-supabase db push          # применит supabase/migrations/0001_init_family_vault.sql
+supabase db push          # применит все миграции из supabase/migrations/
 ```
 
-Либо вставить `supabase/migrations/0001_init_family_vault.sql` в SQL Editor и Run.
+Либо выполнить SQL-файлы из `supabase/migrations/` по порядку (по возрастанию имени) в SQL Editor.
 
 ## 4. Пост-деплой проверки
 
