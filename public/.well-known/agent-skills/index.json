@@ -1,0 +1,12 @@
+{
+  "$schema": "https://agentskills.io/schema/v0.2.0/index.json",
+  "skills": [
+    {
+      "name": "organize-family-documents",
+      "type": "text/markdown",
+      "description": "How to gather and organize a family's important documents by person, asset and category — the taxonomy used by doki, a private family vault.",
+      "url": "https://doki.help/.well-known/agent-skills/organize-family-documents.md",
+      "sha256": "a606e1ffd585a19c19794e2a6e58105d809d7ed76b9ec935ffd2b927fdc3112b"
+    }
+  ]
+}
