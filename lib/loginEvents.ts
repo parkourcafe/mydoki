@@ -1,32 +1,97 @@
 import "server-only";
 import { headers } from "next/headers";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getLocale, type Locale } from "./i18n";
+
+const M = {
+  ru: {
+    subject: "🔐 Новый вход в Семейный сейф",
+    intro: "В ваш аккаунт вошли с нового устройства.",
+    device: "Устройство",
+    ip: "IP",
+    time: "Время",
+    unknownIp: "неизвестно",
+    footer:
+      "Если это были не вы — смените пароль и включите 2FA в разделе «Безопасность».",
+    fallbackDevice: "устройство",
+    fallbackBrowser: "браузер",
+    sms: (device: string) =>
+      `Семейный сейф: вход с нового устройства (${device}). Если это не вы — смените пароль.`,
+    dateTag: "ru-RU",
+  },
+  en: {
+    subject: "🔐 New sign-in to Family Vault",
+    intro: "Your account was accessed from a new device.",
+    device: "Device",
+    ip: "IP",
+    time: "Time",
+    unknownIp: "unknown",
+    footer:
+      "If this wasn't you — change your password and enable 2FA under “Security”.",
+    fallbackDevice: "device",
+    fallbackBrowser: "browser",
+    sms: (device: string) =>
+      `Family Vault: sign-in from a new device (${device}). If this wasn't you — change your password.`,
+    dateTag: "en-US",
+  },
+  id: {
+    subject: "🔐 Masuk baru ke Brankas Keluarga",
+    intro: "Akun Anda diakses dari perangkat baru.",
+    device: "Perangkat",
+    ip: "IP",
+    time: "Waktu",
+    unknownIp: "tidak diketahui",
+    footer:
+      "Jika ini bukan Anda — ubah kata sandi dan aktifkan 2FA di bagian “Keamanan”.",
+    fallbackDevice: "perangkat",
+    fallbackBrowser: "peramban",
+    sms: (device: string) =>
+      `Brankas Keluarga: masuk dari perangkat baru (${device}). Jika ini bukan Anda — ubah kata sandi.`,
+    dateTag: "id-ID",
+  },
+  uz: {
+    subject: "🔐 Oilaviy seyfga yangi kirish",
+    intro: "Hisobingizga yangi qurilmadan kirildi.",
+    device: "Qurilma",
+    ip: "IP",
+    time: "Vaqt",
+    unknownIp: "nomaʼlum",
+    footer:
+      "Agar bu siz boʻlmasangiz — parolni oʻzgartiring va «Xavfsizlik» boʻlimida 2FA ni yoqing.",
+    fallbackDevice: "qurilma",
+    fallbackBrowser: "brauzer",
+    sms: (device: string) =>
+      `Oilaviy seyf: yangi qurilmadan kirish (${device}). Agar bu siz boʻlmasangiz — parolni oʻzgartiring.`,
+    dateTag: "uz-UZ",
+  },
+} as const;
 
 /** Краткая метка устройства из User-Agent (для письма/SMS). */
-function deviceLabel(ua: string): string {
+function deviceLabel(ua: string, t: (typeof M)[Locale]): string {
   const os =
     /iPhone|iPad/.test(ua) ? "iPhone/iPad" :
     /Android/.test(ua) ? "Android" :
     /Windows/.test(ua) ? "Windows" :
     /Macintosh|Mac OS/.test(ua) ? "Mac" :
-    /Linux/.test(ua) ? "Linux" : "устройство";
+    /Linux/.test(ua) ? "Linux" : t.fallbackDevice;
   const br =
     /Edg\//.test(ua) ? "Edge" :
     /Chrome\//.test(ua) ? "Chrome" :
     /Firefox\//.test(ua) ? "Firefox" :
-    /Safari\//.test(ua) ? "Safari" : "браузер";
+    /Safari\//.test(ua) ? "Safari" : t.fallbackBrowser;
   return `${br} · ${os}`;
 }
 
 async function sendNewDeviceEmail(
   to: string,
-  info: { device: string; ip: string | null; when: Date }
+  info: { device: string; ip: string | null; when: Date },
+  t: (typeof M)[Locale]
 ) {
   const key = process.env.RESEND_API_KEY;
   if (!key || !to) return;
   const from =
     process.env.ALERT_EMAIL_FROM || "Семейный сейф <onboarding@resend.dev>";
-  const when = info.when.toLocaleString("ru-RU");
+  const when = info.when.toLocaleString(t.dateTag);
   try {
     await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -37,14 +102,14 @@ async function sendNewDeviceEmail(
       body: JSON.stringify({
         from,
         to,
-        subject: "🔐 Новый вход в Семейный сейф",
-        html: `<p>В ваш аккаунт вошли с нового устройства.</p>
+        subject: t.subject,
+        html: `<p>${t.intro}</p>
 <ul>
-<li><b>Устройство:</b> ${info.device}</li>
-<li><b>IP:</b> ${info.ip ?? "неизвестно"}</li>
-<li><b>Время:</b> ${when}</li>
+<li><b>${t.device}:</b> ${info.device}</li>
+<li><b>${t.ip}:</b> ${info.ip ?? t.unknownIp}</li>
+<li><b>${t.time}:</b> ${when}</li>
 </ul>
-<p>Если это были не вы — смените пароль и включите 2FA в разделе «Безопасность».</p>`,
+<p>${t.footer}</p>`,
       }),
     });
   } catch {
@@ -124,16 +189,14 @@ export async function recordLogin(supabase: SupabaseClient) {
 
     // Оповещения — только для нового устройства и не на самый первый вход.
     if (isNew && (totalPrior ?? 0) > 0) {
-      const device = deviceLabel(ua);
+      const t = M[await getLocale()];
+      const device = deviceLabel(ua, t);
       if (user.email) {
-        await sendNewDeviceEmail(user.email, { device, ip, when: new Date() });
+        await sendNewDeviceEmail(user.email, { device, ip, when: new Date() }, t);
       }
       const phone = (user.user_metadata?.alert_phone as string | undefined) ?? "";
       if (phone) {
-        await sendSms(
-          phone,
-          `Семейный сейф: вход с нового устройства (${device}). Если это не вы — смените пароль.`
-        );
+        await sendSms(phone, t.sms(device));
       }
     }
   } catch {

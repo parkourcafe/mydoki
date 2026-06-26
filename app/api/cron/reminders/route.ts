@@ -83,8 +83,10 @@ async function sendDigest(to: string, rows: DueRow[]): Promise<boolean> {
 
 export async function GET(req: Request) {
   // Защита: Vercel Cron присылает Authorization: Bearer <CRON_SECRET>.
+  // Fail-closed: без заданного секрета эндпоинт закрыт — иначе рассылку писем
+  // мог бы запустить кто угодно.
   const secret = process.env.CRON_SECRET;
-  if (secret && req.headers.get("authorization") !== `Bearer ${secret}`) {
+  if (!secret || req.headers.get("authorization") !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 

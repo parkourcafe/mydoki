@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import SwRegister from "@/components/SwRegister";
 import YandexMetrika from "@/components/YandexMetrika";
+import { getLocale } from "@/lib/i18n";
 import "./globals.css";
 
 const inter = Inter({
@@ -68,13 +69,14 @@ export const viewport: Viewport = {
   themeColor: "#b85c38",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const locale = await getLocale();
   return (
-    <html lang="ru" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body>
         {children}
         <SwRegister />

@@ -1,6 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { getSupabaseServer } from "./supabase/server";
+import { getLocale } from "./i18n";
 import type {
   Asset,
   DocumentFile,
@@ -45,8 +46,15 @@ export async function getOrCreateHouseholdId(): Promise<string> {
     return ids[0];
   }
 
+  const locale = await getLocale();
+  const defaultName = {
+    ru: "Моя семья",
+    en: "My family",
+    id: "Keluarga saya",
+    uz: "Mening oilam",
+  }[locale];
   const { data: hid, error: rpcError } = await supabase.rpc("create_household", {
-    p_name: "Моя семья",
+    p_name: defaultName,
   });
   if (rpcError) throw rpcError;
   return hid as string;
