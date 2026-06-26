@@ -193,6 +193,20 @@ export async function getDocument(id: string): Promise<DocumentRow | null> {
   return (data as DocumentRow) ?? null;
 }
 
+/** Все документы пространства (для обзора «Документы» по категориям). */
+export async function listAllDocuments(
+  householdId: string
+): Promise<DocumentRow[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("documents")
+    .select("*")
+    .eq("household_id", householdId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as DocumentRow[];
+}
+
 export async function listFiles(documentId: string): Promise<DocumentFile[]> {
   const supabase = await getSupabaseServer();
   const { data, error } = await supabase
