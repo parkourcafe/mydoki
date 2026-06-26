@@ -23,6 +23,10 @@ const M = {
       "Не хватает места в хранилище семьи. Удалите ненужные файлы — или напишите нам, чтобы поднять лимит.",
     owner: "Чей документ",
     title: "Название",
+    optional: "необязательно",
+    untitled: "Документ",
+    titleAutoHint:
+      "Можно не заполнять — назовём по файлу или поставим дату. Переименуешь потом.",
     titlePh: "Паспорт РФ",
     category: "Категория",
     subtype: "Тип / подтип",
@@ -61,6 +65,10 @@ const M = {
       "Not enough space in your family's storage. Delete files you don't need — or contact us to raise the limit.",
     owner: "Whose document",
     title: "Title",
+    optional: "optional",
+    untitled: "Document",
+    titleAutoHint:
+      "Leave it blank — we'll name it from the file or use the date. Rename later.",
     titlePh: "Passport",
     category: "Category",
     subtype: "Type / subtype",
@@ -99,6 +107,10 @@ const M = {
       "Oila xotirasida joy yetarli emas. Keraksiz fayllarni oʻchiring — yoki limitni oshirish uchun bizga yozing.",
     owner: "Kimning hujjati",
     title: "Nomi",
+    optional: "ixtiyoriy",
+    untitled: "Hujjat",
+    titleAutoHint:
+      "Toʻldirmasangiz ham boʻladi — fayl nomi yoki sana boʻyicha nomlaymiz. Keyin oʻzgartirasiz.",
     titlePh: "Pasport",
     category: "Toifa",
     subtype: "Turi / kichik turi",
@@ -137,6 +149,10 @@ const M = {
       "Ruang penyimpanan keluarga tidak cukup. Hapus berkas yang tidak perlu — atau hubungi kami untuk menaikkan batas.",
     owner: "Dokumen milik siapa",
     title: "Judul",
+    optional: "opsional",
+    untitled: "Dokumen",
+    titleAutoHint:
+      "Boleh dikosongkan — kami beri nama dari berkas atau tanggal. Ganti nanti.",
     titlePh: "Paspor",
     category: "Kategori",
     subtype: "Tipe / subtipe",
@@ -185,6 +201,12 @@ const EMPTY: Fields = {
   tags: "",
   notes: "",
 };
+
+/** Имя файла без расширения — как авто-название документа. */
+function baseName(name: string): string {
+  const dot = name.lastIndexOf(".");
+  return (dot > 0 ? name.slice(0, dot) : name).trim();
+}
 
 function fmtSize(n: number, t: (typeof M)[Locale]) {
   if (n >= 1024 * 1024 * 1024)
@@ -297,10 +319,13 @@ export default function DocumentForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSaveErr(null);
-    if (!f.title.trim()) {
-      setSaveErr(t.enterTitle);
-      return;
-    }
+    // «Без писанины»: название необязательно. Пусто — берём имя файла, иначе
+    // «Документ + дата». Документ всё равно получит осмысленный заголовок.
+    const today = new Date().toISOString().slice(0, 10);
+    let title = f.title.trim();
+    if (!title)
+      title = files.length ? baseName(files[0].name) : "";
+    if (!title) title = `${t.untitled} ${today}`;
     // Предпроверка лимита хранилища — не грузим файлы, если места не хватит.
     if (files.length && storageLimit != null) {
       const addBytes = files.reduce((s, file) => s + file.size, 0);
@@ -327,7 +352,7 @@ export default function DocumentForm({
       const { id, householdId } = await createDocumentMeta({
         member_id,
         asset_id,
-        title: f.title,
+        title,
         category: f.category,
         custom_category_id: customCategoryId ?? null,
         subtype: f.subtype,
@@ -471,14 +496,17 @@ export default function DocumentForm({
       )}
 
       <div className="sm:col-span-2">
-        <label className="label">{t.title}</label>
+        <label className="label">
+          {t.title}{" "}
+          <span className="font-normal text-slate-400">({t.optional})</span>
+        </label>
         <input
-          required
           value={f.title}
           onChange={(e) => set("title", e.target.value)}
           className="input"
           placeholder={t.titlePh}
         />
+        <p className="mt-1 text-xs text-slate-400">{t.titleAutoHint}</p>
       </div>
       {!customCategoryId && (
         <div>
