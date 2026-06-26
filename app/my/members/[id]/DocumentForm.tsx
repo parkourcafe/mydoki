@@ -202,6 +202,7 @@ export default function DocumentForm({
   aiEnabled = false,
   owners,
   defaultCategory,
+  customCategoryId,
 }: {
   memberId?: string;
   assetId?: string;
@@ -211,6 +212,9 @@ export default function DocumentForm({
   aiEnabled?: boolean;
   owners?: { id: string; name: string; kind: "member" | "asset" }[];
   defaultCategory?: string;
+  // Если документ кладут в пользовательский раздел — встроенную категорию
+  // не показываем, а помечаем документ этим разделом.
+  customCategoryId?: string;
 }) {
   const t = M[locale];
   const remaining =
@@ -325,6 +329,7 @@ export default function DocumentForm({
         asset_id,
         title: f.title,
         category: f.category,
+        custom_category_id: customCategoryId ?? null,
         subtype: f.subtype,
         issuer: f.issuer,
         doc_number: f.doc_number,
@@ -475,20 +480,22 @@ export default function DocumentForm({
           placeholder={t.titlePh}
         />
       </div>
-      <div>
-        <label className="label">{t.category}</label>
-        <select
-          value={f.category}
-          onChange={(e) => set("category", e.target.value)}
-          className="input"
-        >
-          {categories(locale).map((c) => (
-            <option key={c.key} value={c.key}>
-              {c.label}
-            </option>
-          ))}
-        </select>
-      </div>
+      {!customCategoryId && (
+        <div>
+          <label className="label">{t.category}</label>
+          <select
+            value={f.category}
+            onChange={(e) => set("category", e.target.value)}
+            className="input"
+          >
+            {categories(locale).map((c) => (
+              <option key={c.key} value={c.key}>
+                {c.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
       <div>
         <label className="label">{t.subtype}</label>
         <input

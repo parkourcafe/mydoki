@@ -120,11 +120,43 @@ function emptyToNull(v: FormDataEntryValue | null): string | null {
   return s.length ? s : null;
 }
 
+/** Создать свой раздел документов (помимо встроенных категорий). */
+export async function createDocSection(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const label = String(formData.get("label") ?? "").trim();
+  if (!label) return;
+  const emoji = String(formData.get("emoji") ?? "").trim() || null;
+  const { error } = await supabase.from("custom_doc_categories").insert({
+    household_id: householdId,
+    label,
+    emoji,
+  });
+  if (error) throw error;
+  revalidatePath("/my/documents");
+}
+
+/** Удалить пользовательский раздел. Документы не пропадают: их
+ *  custom_category_id обнуляется (on delete set null), они вернутся
+ *  во встроенную категорию. */
+export async function deleteDocSection(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const { error } = await supabase
+    .from("custom_doc_categories")
+    .delete()
+    .eq("id", id);
+  if (error) throw error;
+  redirect("/my/documents");
+}
+
 export async function createDocumentMeta(input: {
   member_id?: string | null;
   asset_id?: string | null;
   title: string;
   category: string;
+  custom_category_id?: string | null;
   subtype?: string;
   issuer?: string;
   doc_number?: string;
@@ -155,6 +187,7 @@ export async function createDocumentMeta(input: {
       asset_id,
       title,
       category: input.category || "other",
+      custom_category_id: input.custom_category_id || null,
       subtype: clean(input.subtype),
       issuer: clean(input.issuer),
       doc_number: clean(input.doc_number),

@@ -4,6 +4,7 @@ import { getSupabaseServer } from "./supabase/server";
 import { getLocale } from "./i18n";
 import type {
   Asset,
+  CustomCategory,
   DocumentFile,
   DocumentRow,
   LoginEvent,
@@ -191,6 +192,32 @@ export async function getDocument(id: string): Promise<DocumentRow | null> {
     .eq("id", id)
     .maybeSingle();
   return (data as DocumentRow) ?? null;
+}
+
+/** Пользовательские разделы документов, заведённые этой семьёй. */
+export async function listCustomCategories(
+  householdId: string
+): Promise<CustomCategory[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("custom_doc_categories")
+    .select("*")
+    .eq("household_id", householdId)
+    .order("created_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as CustomCategory[];
+}
+
+export async function getCustomCategory(
+  id: string
+): Promise<CustomCategory | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase
+    .from("custom_doc_categories")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  return (data as CustomCategory) ?? null;
 }
 
 /** Все документы пространства (для обзора «Документы» по категориям). */
