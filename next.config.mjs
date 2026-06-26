@@ -12,10 +12,23 @@ const securityHeaders = [
   },
 ];
 
+// Link-заголовок главной для обнаружения агентами (RFC 8288): где взять
+// markdown-описание сайта (service-doc) и индекс навыков (describedby).
+const agentLinkHeader = [
+  {
+    key: "Link",
+    value:
+      '</agents.md>; rel="service-doc"; type="text/markdown", </.well-known/agent-skills/index.json>; rel="describedby"; type="application/json"',
+  },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      { source: "/", headers: agentLinkHeader },
+    ];
   },
 };
 
