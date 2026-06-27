@@ -277,17 +277,17 @@ export default async function DocumentPage({
         ) : (
           <ul className="divide-y divide-slate-100">
             {files.map((f) => (
-              <li key={f.id} className="flex items-center justify-between py-2">
-                <div className="text-sm">
-                  <div className="font-medium">{f.file_name ?? t.file}</div>
-                  <div className="text-xs text-slate-400">
+              <li key={f.id} className="flex items-center justify-between gap-3 py-2">
+                <div className="min-w-0 text-sm">
+                  <div className="truncate font-medium">{f.file_name ?? t.file}</div>
+                  <div className="truncate text-xs text-slate-400">
                     {f.mime_type} {fmtBytes(f.size_bytes)}
                   </div>
                 </div>
                 {signed[f.id] ? (
                   <FileActions url={signed[f.id]} name={f.file_name ?? t.file} locale={locale} />
                 ) : (
-                  <span className="text-xs text-slate-400">{t.noAccess}</span>
+                  <span className="shrink-0 text-xs text-slate-400">{t.noAccess}</span>
                 )}
               </li>
             ))}
