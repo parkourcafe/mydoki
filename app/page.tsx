@@ -13,7 +13,7 @@ type Sec = { icon: string; title: string; text: string };
 type Faq = { q: string; a: string };
 
 type Dict = {
-  nav: { login: string; start: string };
+  nav: { login: string; start: string; startShort: string };
   hero: {
     badge: string;
     title: string[];
@@ -45,7 +45,7 @@ type Dict = {
 
 const M: Record<Locale, Dict> = {
   ru: {
-    nav: { login: "Войти", start: "Начать бесплатно" },
+    nav: { login: "Войти", start: "Начать бесплатно", startShort: "Начать" },
     hero: {
       badge: "Личный сейф для документов всей семьи",
       title: ["Все важные документы", "вашей семьи —", "всегда под рукой"],
@@ -137,7 +137,7 @@ const M: Record<Locale, Dict> = {
     footer: { copyright: "© 2026 doki.help — Семейный архив документов", security: "Безопасность", privacy: "Конфиденциальность", login: "Войти" },
   },
   en: {
-    nav: { login: "Sign in", start: "Get started free" },
+    nav: { login: "Sign in", start: "Get started free", startShort: "Start" },
     hero: {
       badge: "A private vault for your whole family's documents",
       title: ["All your family's", "important documents —", "always at hand"],
@@ -229,7 +229,7 @@ const M: Record<Locale, Dict> = {
     footer: { copyright: "© 2026 doki.help — Family document vault", security: "Security", privacy: "Privacy", login: "Sign in" },
   },
   id: {
-    nav: { login: "Masuk", start: "Mulai gratis" },
+    nav: { login: "Masuk", start: "Mulai gratis", startShort: "Mulai" },
     hero: {
       badge: "Brankas pribadi untuk dokumen seluruh keluarga Anda",
       title: ["Semua dokumen penting", "keluarga Anda —", "selalu dalam genggaman"],
@@ -321,7 +321,7 @@ const M: Record<Locale, Dict> = {
     footer: { copyright: "© 2026 doki.help — Brankas dokumen keluarga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
   },
   uz: {
-    nav: { login: "Kirish", start: "Bepul boshlash" },
+    nav: { login: "Kirish", start: "Bepul boshlash", startShort: "Boshlash" },
     hero: {
       badge: "Butun oilangiz hujjatlari uchun shaxsiy seyf",
       title: ["Oilangizning barcha", "muhim hujjatlari —", "doimo qoʻl ostida"],
@@ -487,26 +487,27 @@ export default async function Home({
       />
       {/* NAV */}
       <nav className="sticky top-0 z-50 border-b border-[#e8e0d5] bg-[#fdfaf5]">
-        <div className="mx-auto max-w-screen-xl px-5">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-x-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#b85c38] text-white">
+        <div className="mx-auto max-w-screen-xl px-4 sm:px-5">
+          <div className="flex h-16 items-center justify-between gap-x-2">
+            <div className="flex items-center gap-x-2 sm:gap-x-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[#b85c38] text-white">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
                 </svg>
               </div>
               <div>
-                <span className="text-2xl font-semibold tracking-tighter">doki</span>
-                <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
+                <span className="text-xl font-semibold tracking-tighter sm:text-2xl">doki</span>
+                <span className="text-xl font-semibold tracking-tighter text-[#c17a5e] sm:text-2xl">.help</span>
               </div>
             </div>
-            <div className="flex items-center gap-x-4">
+            <div className="flex items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale={locale} />
               <Link href="/login" className="hidden rounded-3xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white md:block">
                 {t.nav.login}
               </Link>
-              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
-                {t.nav.start}
+              <Link href="/login" className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
+                <span className="sm:hidden">{t.nav.startShort}</span>
+                <span className="hidden sm:inline">{t.nav.start}</span>
               </Link>
             </div>
           </div>
@@ -771,7 +772,7 @@ export default async function Home({
       <footer className="border-t border-[#e8e0d5] bg-[#fdfaf5] px-5 py-8 text-sm text-[#8a7c6d]">
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
           <div>{t.footer.copyright}</div>
-          <div className="flex gap-x-6">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
             <a href="#security" className="hover:text-[#2c2522]">{t.footer.security}</a>
             <Link href="/privacy" className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
             <Link href="/login" className="hover:text-[#2c2522]">{t.footer.login}</Link>

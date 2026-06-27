@@ -182,10 +182,12 @@ export default function MfaSetup({ locale }: { locale: Locale }) {
           />
           <p className="text-xs text-slate-400">
             {t.enterKey}{" "}
-            <code className="rounded bg-slate-100 px-1">{enroll.secret}</code>
+            <code className="break-all rounded bg-slate-100 px-1">
+              {enroll.secret}
+            </code>
           </p>
-          <div className="flex items-end gap-2">
-            <div>
+          <div className="flex flex-wrap items-end gap-2">
+            <div className="flex-1">
               <label className="label">{t.codeLabel}</label>
               <input
                 value={code}

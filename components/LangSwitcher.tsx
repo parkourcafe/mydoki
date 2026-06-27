@@ -16,9 +16,9 @@ function set(locale: Locale) {
 
 export default function LangSwitcher({ locale }: { locale: Locale }) {
   return (
-    <div className="flex items-center gap-1 text-sm">
+    <div className="flex items-center gap-0.5 text-sm sm:gap-1">
       {LOCALES.map((l, i) => (
-        <span key={l.code} className="flex items-center gap-1">
+        <span key={l.code} className="flex items-center gap-0.5 sm:gap-1">
           {i > 0 && <span className="text-[#d4c9b8]">·</span>}
           <button
             type="button"

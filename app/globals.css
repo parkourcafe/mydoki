@@ -14,7 +14,9 @@ body {
 }
 
 .btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition;
+  /* min-h 44px на мобильных — комфортная тач-зона (Apple HIG); на ≥sm
+     возвращаем естественную высоту, чтобы не «толстить» десктоп. */
+  @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition sm:min-h-0;
 }
 .btn-primary {
   @apply btn bg-brand-500 text-white hover:bg-brand-600 disabled:opacity-50;
@@ -64,10 +66,17 @@ body {
   transform: translateY(-1px);
 }
 .section-header {
-  font-size: 2.5rem;
-  line-height: 2.75rem;
+  /* 2rem на мобильных для читаемости и компактности, 2.5rem на ≥sm */
+  font-size: 2rem;
+  line-height: 2.25rem;
   font-weight: 700;
   color: #2c2522;
+}
+@media (min-width: 640px) {
+  .section-header {
+    font-size: 2.5rem;
+    line-height: 2.75rem;
+  }
 }
 .nav-link {
   color: #5c5248;
