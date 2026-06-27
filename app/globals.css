@@ -26,7 +26,9 @@ body {
   @apply btn border border-red-200 bg-white text-red-600 hover:bg-red-50;
 }
 .input {
-  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100;
+  /* text-base (16px) на мобильных — иначе iOS Safari зумит страницу при
+     фокусе на поле; на ≥sm возвращаем компактный 14px. */
+  @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-base outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-100 sm:text-sm;
 }
 .label {
   @apply mb-1 block text-sm font-medium text-slate-700;
