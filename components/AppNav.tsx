@@ -46,6 +46,14 @@ export default function AppNav({
     setOpen(false);
   }, [pathname]);
 
+  // Блокируем прокрутку фона, пока открыто выезжающее меню (мобильный).
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <div className="min-h-screen bg-[#f9f5f0] md:flex">
       {/* Затемнение под меню (только мобильный) */}
@@ -132,7 +140,7 @@ export default function AppNav({
           <button
             onClick={() => setOpen(true)}
             aria-label={menuLabel}
-            className="rounded-lg p-1 text-xl leading-none hover:bg-[#f0e6d9]"
+            className="-ml-1 rounded-lg p-2 text-xl leading-none hover:bg-[#f0e6d9]"
           >
             ☰
           </button>

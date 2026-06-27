@@ -89,10 +89,11 @@ export default function SpaceSwitcher({
                 name="name"
                 required
                 placeholder={t.newSpace}
-                className="w-full rounded-lg border border-slate-200 px-2 py-1 text-sm outline-none focus:border-[#b85c38]"
+                /* text-base на мобильных — иначе iOS зумит при фокусе */
+                className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-base outline-none focus:border-[#b85c38] sm:text-sm"
               />
               <button
-                className="shrink-0 rounded-lg bg-[#b85c38] px-2.5 py-1 text-sm font-semibold text-white hover:bg-[#9f4a2e]"
+                className="shrink-0 rounded-lg bg-[#b85c38] px-3 py-1.5 text-sm font-semibold text-white hover:bg-[#9f4a2e]"
                 title={t.create}
               >
                 +
