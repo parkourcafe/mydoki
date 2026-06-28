@@ -103,7 +103,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: t.metaTitle,
     description: t.metaDesc,
-    alternates: { canonical: "/pricing" },
   };
 }
 

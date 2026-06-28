@@ -4,12 +4,43 @@ import { NextResponse, type NextRequest } from "next/server";
 // Публичные страницы, у которых есть markdown-версия для ИИ-агентов.
 const MD_PATHS = new Set(["/"]);
 
-/** Обновляет сессию Supabase в кабинете; гостям лендинга — markdown по запросу. */
+// Языковой префикс в URL: /ru, /en/security, /id/for/medical …
+const LOCALE_RE = /^\/(ru|en|id|uz)(\/.*)?$/;
+
+/**
+ * Делает три вещи:
+ *  1) Локализованные URL: /ru, /en/… → внутренний rewrite на без-префиксный путь,
+ *     язык кладём в заголовок x-locale и cookie (для hreflang/SEO);
+ *  2) кладёт x-pathname/x-orig-path для метаданных (canonical + hreflang);
+ *  3) обновляет сессию Supabase в кабинете и отдаёт markdown агентам.
+ */
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Markdown negotiation: агент просит text/markdown — отдаём markdown-версию
-  // публичной страницы вместо HTML (внутренний rewrite, URL не меняется).
+  // 1) Языковой префикс — переписываем на без-префиксный путь.
+  const m = pathname.match(LOCALE_RE);
+  if (m) {
+    const locale = m[1];
+    const rest = m[2] && m[2].length > 0 ? m[2] : "/";
+    const url = request.nextUrl.clone();
+    url.pathname = rest;
+
+    const headers = new Headers(request.headers);
+    headers.set("x-locale", locale);
+    headers.set("x-pathname", rest);
+    headers.set("x-orig-path", pathname);
+
+    const res = NextResponse.rewrite(url, { request: { headers } });
+    // Чтобы дальнейшая навигация без префикса осталась на том же языке.
+    res.cookies.set("locale", locale, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+    return res;
+  }
+
+  // 2) Markdown negotiation: агент просит text/markdown — отдаём markdown-версию.
   if (
     request.method === "GET" &&
     MD_PATHS.has(pathname) &&
@@ -20,13 +51,17 @@ export async function middleware(request: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
-  // Сессию Supabase обновляем только в кабинете; публичные страницы (включая
-  // главную из matcher ниже) сюда доходят только для markdown-проверки выше.
+  // Заголовки пути для метаданных (canonical/hreflang) на публичных страницах.
+  const headers = new Headers(request.headers);
+  headers.set("x-pathname", pathname);
+  headers.set("x-orig-path", pathname);
+
+  // 3) Сессию Supabase обновляем только в кабинете.
   if (!pathname.startsWith("/my")) {
-    return NextResponse.next({ request });
+    return NextResponse.next({ request: { headers } });
   }
 
-  let response = NextResponse.next({ request });
+  let response = NextResponse.next({ request: { headers } });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -42,7 +77,7 @@ export async function middleware(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          response = NextResponse.next({ request });
+          response = NextResponse.next({ request: { headers } });
           cookiesToSet.forEach(({ name, value, options }) =>
             response.cookies.set(name, value, options)
           );
@@ -56,7 +91,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // Кабинет — для обновления сессии; "/" — чтобы перехватить запрос агента на
-  // markdown-версию главной (обычные запросы выходят сразу, без Supabase).
-  matcher: ["/my/:path*", "/"],
+  // Все «страничные» пути (кроме _next, api и файлов с расширением).
+  matcher: ["/((?!_next/|api/|.*\\.[a-zA-Z0-9]+$).*)"],
 };
