@@ -24,6 +24,27 @@ export async function signOutEverywhere() {
   redirect("/login");
 }
 
+/**
+ * Удалить свой аккаунт и все данные. RPC delete_my_account() (SECURITY
+ * DEFINER) удаляет пространства-владельца со всем содержимым, файлы из
+ * хранилища, членство в чужих пространствах и сам аккаунт. Операция
+ * необратима.
+ */
+export async function deleteAccount() {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase.rpc("delete_my_account");
+  if (error) throw error;
+
+  // Сессия уже недействительна (пользователя нет) — чистим cookie и уходим.
+  await supabase.auth.signOut().catch(() => {});
+  redirect("/?deleted=1");
+}
+
 const SPACE_COOKIE = "active_household";
 const SPACE_MAX_AGE = 60 * 60 * 24 * 365;
 
