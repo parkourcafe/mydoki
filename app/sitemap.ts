@@ -8,6 +8,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = [
     "",
+    "/demo",
     "/security",
     "/privacy",
     "/terms",

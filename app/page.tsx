@@ -20,6 +20,7 @@ type Dict = {
     subtitle: string;
     cta1: string;
     cta2: string;
+    demo: string;
     trust: string[];
     security: string;
     imgAlt: string;
@@ -54,6 +55,7 @@ const M: Record<Locale, Dict> = {
         "Паспорта, анализы, визы, дипломы, справки и путёвки. Доступ с любого устройства. Напоминания работают сами.",
       cta1: "Начать бесплатно",
       cta2: "Как это работает",
+      demo: "Посмотреть демо без регистрации →",
       trust: ["С любого устройства", "2 ГБ бесплатно", "Вход через Google"],
       security:
         "Приватное хранилище · Доступ только у вашей семьи · ИИ-распознавание — по желанию",
@@ -151,6 +153,7 @@ const M: Record<Locale, Dict> = {
         "Passports, medical results, visas, diplomas, certificates and travel docs. Access from any device. Reminders run on their own.",
       cta1: "Get started free",
       cta2: "How it works",
+      demo: "See the demo — no sign-up →",
       trust: ["Any device", "2 GB free", "Sign in with Google"],
       security:
         "Private storage · Only your family has access · AI recognition is opt-in",
@@ -248,6 +251,7 @@ const M: Record<Locale, Dict> = {
         "Paspor, hasil medis, visa, ijazah, sertifikat, dan dokumen perjalanan. Akses dari perangkat apa pun. Pengingat berjalan sendiri.",
       cta1: "Mulai gratis",
       cta2: "Cara kerjanya",
+      demo: "Lihat demo — tanpa daftar →",
       trust: ["Perangkat apa pun", "2 GB gratis", "Masuk dengan Google"],
       security:
         "Penyimpanan privat · Hanya keluarga Anda yang punya akses · Pengenalan AI opsional",
@@ -345,6 +349,7 @@ const M: Record<Locale, Dict> = {
         "Pasportlar, tibbiy natijalar, vizalar, diplomlar, sertifikatlar va sayohat hujjatlari. Istalgan qurilmadan kiring. Eslatmalar oʻzi ishlaydi.",
       cta1: "Bepul boshlash",
       cta2: "Bu qanday ishlaydi",
+      demo: "Demoni koʻrish — roʻyxatsiz →",
       trust: ["Istalgan qurilma", "2 GB bepul", "Google orqali kirish"],
       security:
         "Maxfiy xotira · Faqat oilangizda kirish · AI-aniqlash — ixtiyoriy",
@@ -563,6 +568,13 @@ export default async function Home({
                 {t.hero.cta2}
               </a>
             </div>
+
+            <Link
+              href="/demo"
+              className="mb-6 inline-block text-sm font-medium text-[#b85c38] hover:underline"
+            >
+              {t.hero.demo}
+            </Link>
 
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#5c5248]">
               {t.hero.trust.map((tr) => (
