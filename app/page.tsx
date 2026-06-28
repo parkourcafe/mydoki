@@ -21,6 +21,7 @@ type Dict = {
     cta1: string;
     cta2: string;
     trust: string[];
+    security: string;
     imgAlt: string;
   };
   store: {
@@ -53,7 +54,9 @@ const M: Record<Locale, Dict> = {
         "Паспорта, анализы, визы, дипломы, справки и путёвки. Доступ с любого устройства. Напоминания работают сами.",
       cta1: "Начать бесплатно",
       cta2: "Как это работает",
-      trust: ["С любого устройства", "Бесплатно", "Вход через Google"],
+      trust: ["С любого устройства", "2 ГБ бесплатно", "Вход через Google"],
+      security:
+        "Приватное хранилище · Доступ только у вашей семьи · ИИ-распознавание — по желанию",
       imgAlt: "Документы семьи — под рукой и в порядке",
     },
     store: {
@@ -107,6 +110,9 @@ const M: Record<Locale, Dict> = {
         { q: "Как работают напоминания?", a: "Вы указываете срок действия документа (например, загранпаспорта или ОСАГО), а сервис заранее присылает напоминание на email." },
         { q: "Можно ли поделиться документом?", a: "Да — по временной ссылке, которую можно отозвать в любой момент." },
         { q: "Где хранятся данные?", a: "В защищённом облачном хранилище, передача — по HTTPS. Мы не продаём и не передаём ваши данные третьим лицам." },
+        { q: "Можно ли выгрузить мои документы?", a: "Да. В личном кабинете есть экспорт — заберёте свои файлы и данные в любой момент, без привязки к сервису." },
+        { q: "Использует ли сервис ИИ для чтения документов?", a: "По умолчанию — нет. Распознавание ИИ выключено; вы включаете его сами в настройках, и только тогда изображение документа отправляется ИИ-провайдеру." },
+        { q: "Чем это лучше Google Drive или галереи телефона?", a: "Обычное облако просто хранит файлы. doki раскладывает документы по людям и категориям, напоминает о сроках и даёт поделиться одним документом по временной ссылке — а не всей папкой." },
       ],
     },
     forWhom: {
@@ -145,7 +151,9 @@ const M: Record<Locale, Dict> = {
         "Passports, medical results, visas, diplomas, certificates and travel docs. Access from any device. Reminders run on their own.",
       cta1: "Get started free",
       cta2: "How it works",
-      trust: ["Any device", "Free", "Sign in with Google"],
+      trust: ["Any device", "2 GB free", "Sign in with Google"],
+      security:
+        "Private storage · Only your family has access · AI recognition is opt-in",
       imgAlt: "A family's documents — organized and at hand",
     },
     store: {
@@ -199,6 +207,9 @@ const M: Record<Locale, Dict> = {
         { q: "How do reminders work?", a: "You set a document's expiry date (e.g. a passport or insurance), and the service emails you a reminder in advance." },
         { q: "Can I share a document?", a: "Yes — via a time-limited link you can revoke at any moment." },
         { q: "Where is my data stored?", a: "In secure cloud storage, with transfer over HTTPS. We never sell or share your data with third parties." },
+        { q: "Can I export my documents?", a: "Yes. The cabinet has an export — take your files and data out at any time, with no lock-in." },
+        { q: "Does the service use AI to read my documents?", a: "By default, no. AI recognition is off; you turn it on yourself in settings, and only then is a document image sent to an AI provider." },
+        { q: "Why is it better than Google Drive or my phone gallery?", a: "A regular cloud just stores files. doki sorts documents by person and category, reminds you of deadlines, and lets you share a single document via an expiring link — not the whole folder." },
       ],
     },
     forWhom: {
@@ -237,7 +248,9 @@ const M: Record<Locale, Dict> = {
         "Paspor, hasil medis, visa, ijazah, sertifikat, dan dokumen perjalanan. Akses dari perangkat apa pun. Pengingat berjalan sendiri.",
       cta1: "Mulai gratis",
       cta2: "Cara kerjanya",
-      trust: ["Perangkat apa pun", "Gratis", "Masuk dengan Google"],
+      trust: ["Perangkat apa pun", "2 GB gratis", "Masuk dengan Google"],
+      security:
+        "Penyimpanan privat · Hanya keluarga Anda yang punya akses · Pengenalan AI opsional",
       imgAlt: "Dokumen keluarga — tertata rapi dan mudah dijangkau",
     },
     store: {
@@ -291,6 +304,9 @@ const M: Record<Locale, Dict> = {
         { q: "Bagaimana pengingat bekerja?", a: "Anda menetapkan tanggal berlaku dokumen (misalnya paspor atau asuransi), dan layanan mengirim pengingat ke email lebih awal." },
         { q: "Bisakah saya membagikan dokumen?", a: "Ya — lewat tautan berbatas waktu yang bisa Anda cabut kapan saja." },
         { q: "Di mana data saya disimpan?", a: "Di penyimpanan awan yang aman, dengan transfer lewat HTTPS. Kami tidak pernah menjual atau membagikan data Anda ke pihak ketiga." },
+        { q: "Bisakah saya mengekspor dokumen saya?", a: "Ya. Di kabinet ada ekspor — ambil berkas dan data Anda kapan saja, tanpa terkunci ke layanan." },
+        { q: "Apakah layanan memakai AI untuk membaca dokumen saya?", a: "Secara bawaan, tidak. Pengenalan AI nonaktif; Anda mengaktifkannya sendiri di pengaturan, dan baru saat itu gambar dokumen dikirim ke penyedia AI." },
+        { q: "Kenapa lebih baik dari Google Drive atau galeri ponsel?", a: "Cloud biasa hanya menyimpan berkas. doki menata dokumen per orang dan kategori, mengingatkan tenggat, dan memungkinkan berbagi satu dokumen lewat tautan berbatas waktu — bukan seluruh folder." },
       ],
     },
     forWhom: {
@@ -329,7 +345,9 @@ const M: Record<Locale, Dict> = {
         "Pasportlar, tibbiy natijalar, vizalar, diplomlar, sertifikatlar va sayohat hujjatlari. Istalgan qurilmadan kiring. Eslatmalar oʻzi ishlaydi.",
       cta1: "Bepul boshlash",
       cta2: "Bu qanday ishlaydi",
-      trust: ["Istalgan qurilma", "Bepul", "Google orqali kirish"],
+      trust: ["Istalgan qurilma", "2 GB bepul", "Google orqali kirish"],
+      security:
+        "Maxfiy xotira · Faqat oilangizda kirish · AI-aniqlash — ixtiyoriy",
       imgAlt: "Oila hujjatlari — tartibli va qoʻl ostida",
     },
     store: {
@@ -383,6 +401,9 @@ const M: Record<Locale, Dict> = {
         { q: "Eslatmalar qanday ishlaydi?", a: "Siz hujjatning amal qilish muddatini (masalan, pasport yoki sugʻurta) belgilaysiz, xizmat esa oldindan emailga eslatma yuboradi." },
         { q: "Hujjatni ulasha olamanmi?", a: "Ha — istalgan vaqtda bekor qila oladigan muddatli havola orqali." },
         { q: "Maʼlumotlarim qayerda saqlanadi?", a: "HTTPS orqali uzatiladigan xavfsiz bulutli xotirada. Maʼlumotlaringizni hech qachon uchinchi shaxslarga sotmaymiz yoki bermaymiz." },
+        { q: "Hujjatlarimni eksport qila olamanmi?", a: "Ha. Shaxsiy kabinetda eksport bor — fayllaringiz va maʼlumotlaringizni istalgan vaqtda olib chiqasiz, xizmatga bogʻlanmagan holda." },
+        { q: "Xizmat hujjatlarni oʻqish uchun AI ishlatadimi?", a: "Standart holatda — yoʻq. AI-aniqlash oʻchirilgan; uni sozlamalarda oʻzingiz yoqasiz, va faqat shundagina hujjat tasviri AI-provayderga yuboriladi." },
+        { q: "Nega bu Google Drive yoki telefon galereyasidan yaxshi?", a: "Oddiy bulut shunchaki fayllarni saqlaydi. doki hujjatlarni odamlar va toifalar boʻyicha tartiblaydi, muddatlarni eslatadi va bitta hujjatni muddatli havola orqali ulashish imkonini beradi — butun papka emas." },
       ],
     },
     forWhom: {
@@ -548,6 +569,7 @@ export default async function Home({
                 <span key={tr} className="flex items-center gap-x-2"><Check /> {tr}</span>
               ))}
             </div>
+            <p className="mt-3 text-xs text-[#8a7c6d]">🔒 {t.hero.security}</p>
           </div>
 
           <div className="mt-8 lg:col-span-5 lg:mt-0">
@@ -707,6 +729,14 @@ export default async function Home({
             </div>
           ))}
         </div>
+        <div className="mt-8 text-center">
+          <Link
+            href="/security"
+            className="text-sm font-medium text-[#b85c38] hover:underline"
+          >
+            {t.footer.security} →
+          </Link>
+        </div>
       </section>
 
       {/* WHY BETTER THAN A REGULAR CLOUD */}
@@ -773,7 +803,7 @@ export default async function Home({
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
           <div>{t.footer.copyright}</div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
-            <a href="#security" className="hover:text-[#2c2522]">{t.footer.security}</a>
+            <Link href="/security" className="hover:text-[#2c2522]">{t.footer.security}</Link>
             <Link href="/privacy" className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
             <Link href="/login" className="hover:text-[#2c2522]">{t.footer.login}</Link>
           </div>
