@@ -5,6 +5,7 @@ import { signOutEverywhere } from "@/app/my/actions";
 import MfaSetup from "./MfaSetup";
 import AlertPhone from "./AlertPhone";
 import AiRecognitionToggle from "./AiRecognitionToggle";
+import DeleteAccount from "./DeleteAccount";
 import SignOutButton from "@/components/SignOutButton";
 
 const M = {
@@ -259,6 +260,8 @@ export default async function SecurityPage() {
           <li>{t.p4}</li>
         </ul>
       </section>
+
+      <DeleteAccount locale={locale} />
     </div>
   );
 }
