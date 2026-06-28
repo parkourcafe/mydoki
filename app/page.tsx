@@ -35,6 +35,7 @@ type Dict = {
     medNote: string;
     cats: Cat[];
   };
+  pain: { heading: string; items: string[] };
   how: { heading: string; sub: string; steps: Step[] };
   security: { heading: string; sub: string; promise: string; items: Sec[] };
   cta: { heading: string; sub: string; button: string };
@@ -42,7 +43,7 @@ type Dict = {
   forWhom: { heading: string; items: string[] };
   diff: { heading: string; intro: string; items: { t: string; d: string }[] };
   operator: { heading: string; line: string; contactLabel: string };
-  footer: { copyright: string; security: string; privacy: string; login: string };
+  footer: { copyright: string; pricing: string; security: string; privacy: string; login: string };
 };
 
 const M: Record<Locale, Dict> = {
@@ -50,10 +51,10 @@ const M: Record<Locale, Dict> = {
     nav: { login: "Войти", start: "Начать бесплатно", startShort: "Начать" },
     hero: {
       badge: "Личный сейф для документов всей семьи",
-      title: ["Все важные документы", "вашей семьи —", "всегда под рукой"],
+      title: ["Семейный сейф", "для всех документов —", "и сроки под контролем"],
       subtitle:
         "Паспорта, анализы, визы, дипломы, справки и путёвки. Доступ с любого устройства. Напоминания работают сами.",
-      cta1: "Начать бесплатно",
+      cta1: "Создать сейф бесплатно",
       cta2: "Как это работает",
       demo: "Посмотреть демо без регистрации →",
       trust: ["С любого устройства", "2 ГБ бесплатно", "Вход через Google"],
@@ -74,6 +75,15 @@ const M: Record<Locale, Dict> = {
         { icon: "✈️", title: "Поездки и путешествия", items: ["Путёвки и ваучеры", "Билеты и бронирования", "Страховки для поездок", "Документы для въезда/выезда", "Согласия на выезд ребёнка"] },
         { icon: "🚗", title: "Авто и недвижимость", items: ["ОСАГО и КАСКО", "ПТС и СТС", "Выписки ЕГРН и договоры"] },
         { icon: "🧾", title: "Квитанции и справки", items: ["Квитанции и чеки об оплате", "Справки с работы / учёбы", "Доверенности"] },
+      ],
+    },
+    pain: {
+      heading: "Знакомо?",
+      items: [
+        "Ребёнку утром в садик — а нужной справки не найти.",
+        "В аэропорту просят полис, а он где-то в переписке.",
+        "Врач просит прошлые анализы — они на старом телефоне.",
+        "Виза или ОСАГО заканчивается, а узнаёшь в последний момент.",
       ],
     },
     how: {
@@ -102,7 +112,7 @@ const M: Record<Locale, Dict> = {
     cta: {
       heading: "Готовы собрать все документы семьи?",
       sub: "Меньше 15 минут — и порядок надолго.",
-      button: "Начать пользоваться бесплатно",
+      button: "Создать сейф бесплатно",
     },
     faq: {
       heading: "Частые вопросы",
@@ -142,16 +152,16 @@ const M: Record<Locale, Dict> = {
       line: "Оператор: владелец сервиса doki.help, ИНН 780728592634.",
       contactLabel: "Поддержка:",
     },
-    footer: { copyright: "© 2026 doki.help — Семейный архив документов", security: "Безопасность", privacy: "Конфиденциальность", login: "Войти" },
+    footer: { copyright: "© 2026 doki.help — Семейный архив документов", pricing: "Цены", security: "Безопасность", privacy: "Конфиденциальность", login: "Войти" },
   },
   en: {
     nav: { login: "Sign in", start: "Get started free", startShort: "Start" },
     hero: {
       badge: "A private vault for your whole family's documents",
-      title: ["All your family's", "important documents —", "always at hand"],
+      title: ["A family vault", "for all your documents —", "with deadlines under control"],
       subtitle:
         "Passports, medical results, visas, diplomas, certificates and travel docs. Access from any device. Reminders run on their own.",
-      cta1: "Get started free",
+      cta1: "Create your vault — free",
       cta2: "How it works",
       demo: "See the demo — no sign-up →",
       trust: ["Any device", "2 GB free", "Sign in with Google"],
@@ -172,6 +182,15 @@ const M: Record<Locale, Dict> = {
         { icon: "✈️", title: "Trips & travel", items: ["Tour packages & vouchers", "Tickets and bookings", "Travel insurance", "Entry/exit documents", "Child travel consents"] },
         { icon: "🚗", title: "Vehicles & property", items: ["Car insurance", "Vehicle titles & registration", "Property records & contracts"] },
         { icon: "🧾", title: "Receipts & certificates", items: ["Payment receipts", "Work / study certificates", "Powers of attorney"] },
+      ],
+    },
+    pain: {
+      heading: "Sound familiar?",
+      items: [
+        "Daycare needs a certificate this morning — and you can't find it.",
+        "The airport asks for your insurance, and it's lost in some chat.",
+        "A doctor wants past lab results — they're on an old phone.",
+        "A visa or insurance is expiring, and you find out at the last minute.",
       ],
     },
     how: {
@@ -200,7 +219,7 @@ const M: Record<Locale, Dict> = {
     cta: {
       heading: "Ready to gather all your family's documents?",
       sub: "Less than 15 minutes — and order that lasts.",
-      button: "Start for free",
+      button: "Create your vault — free",
     },
     faq: {
       heading: "Frequently asked questions",
@@ -240,16 +259,16 @@ const M: Record<Locale, Dict> = {
       line: "Operator: the owner of the doki.help service, TIN 780728592634.",
       contactLabel: "Support:",
     },
-    footer: { copyright: "© 2026 doki.help — Family document vault", security: "Security", privacy: "Privacy", login: "Sign in" },
+    footer: { copyright: "© 2026 doki.help — Family document vault", pricing: "Pricing", security: "Security", privacy: "Privacy", login: "Sign in" },
   },
   id: {
     nav: { login: "Masuk", start: "Mulai gratis", startShort: "Mulai" },
     hero: {
       badge: "Brankas pribadi untuk dokumen seluruh keluarga Anda",
-      title: ["Semua dokumen penting", "keluarga Anda —", "selalu dalam genggaman"],
+      title: ["Brankas keluarga", "untuk semua dokumen —", "dan tenggat terkendali"],
       subtitle:
         "Paspor, hasil medis, visa, ijazah, sertifikat, dan dokumen perjalanan. Akses dari perangkat apa pun. Pengingat berjalan sendiri.",
-      cta1: "Mulai gratis",
+      cta1: "Buat brankas — gratis",
       cta2: "Cara kerjanya",
       demo: "Lihat demo — tanpa daftar →",
       trust: ["Perangkat apa pun", "2 GB gratis", "Masuk dengan Google"],
@@ -270,6 +289,15 @@ const M: Record<Locale, Dict> = {
         { icon: "✈️", title: "Perjalanan & wisata", items: ["Paket tur & voucher", "Tiket dan pemesanan", "Asuransi perjalanan", "Dokumen masuk/keluar", "Surat izin perjalanan anak"] },
         { icon: "🚗", title: "Kendaraan & properti", items: ["Asuransi mobil", "BPKB & STNK kendaraan", "Sertifikat properti & kontrak"] },
         { icon: "🧾", title: "Kuitansi & surat keterangan", items: ["Bukti pembayaran", "Surat keterangan kerja / studi", "Surat kuasa"] },
+      ],
+    },
+    pain: {
+      heading: "Terdengar familier?",
+      items: [
+        "Pagi ini sekolah minta surat — dan Anda tak bisa menemukannya.",
+        "Bandara minta asuransi, tapi entah di chat yang mana.",
+        "Dokter minta hasil lab lama — adanya di ponsel lama.",
+        "Visa atau asuransi hampir habis, dan Anda baru tahu di menit terakhir.",
       ],
     },
     how: {
@@ -298,7 +326,7 @@ const M: Record<Locale, Dict> = {
     cta: {
       heading: "Siap mengumpulkan semua dokumen keluarga Anda?",
       sub: "Kurang dari 15 menit — dan tertata rapi untuk seterusnya.",
-      button: "Mulai gratis",
+      button: "Buat brankas — gratis",
     },
     faq: {
       heading: "Pertanyaan umum",
@@ -338,16 +366,16 @@ const M: Record<Locale, Dict> = {
       line: "Operator: pemilik layanan doki.help, NPWP 780728592634.",
       contactLabel: "Dukungan:",
     },
-    footer: { copyright: "© 2026 doki.help — Brankas dokumen keluarga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
+    footer: { copyright: "© 2026 doki.help — Brankas dokumen keluarga", pricing: "Harga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
   },
   uz: {
     nav: { login: "Kirish", start: "Bepul boshlash", startShort: "Boshlash" },
     hero: {
       badge: "Butun oilangiz hujjatlari uchun shaxsiy seyf",
-      title: ["Oilangizning barcha", "muhim hujjatlari —", "doimo qoʻl ostida"],
+      title: ["Oilaviy seyf", "barcha hujjatlar uchun —", "muddatlar nazoratda"],
       subtitle:
         "Pasportlar, tibbiy natijalar, vizalar, diplomlar, sertifikatlar va sayohat hujjatlari. Istalgan qurilmadan kiring. Eslatmalar oʻzi ishlaydi.",
-      cta1: "Bepul boshlash",
+      cta1: "Seyf yaratish — bepul",
       cta2: "Bu qanday ishlaydi",
       demo: "Demoni koʻrish — roʻyxatsiz →",
       trust: ["Istalgan qurilma", "2 GB bepul", "Google orqali kirish"],
@@ -368,6 +396,15 @@ const M: Record<Locale, Dict> = {
         { icon: "✈️", title: "Sayohatlar va sayyohlik", items: ["Tur paketlari va voucherlar", "Chiptalar va bronlar", "Sayohat sugʻurtasi", "Kirish/chiqish hujjatlari", "Bolaning sayohatiga ruxsatnomalar"] },
         { icon: "🚗", title: "Transport va mulk", items: ["Avtomobil sugʻurtasi", "Transport guvohnomalari va roʻyxati", "Mulk hujjatlari va shartnomalar"] },
         { icon: "🧾", title: "Kvitansiyalar va maʼlumotnomalar", items: ["Toʻlov kvitansiyalari", "Ish / oʻqish maʼlumotnomalari", "Ishonchnomalar"] },
+      ],
+    },
+    pain: {
+      heading: "Tanishmi?",
+      items: [
+        "Ertalab bogʻchaga maʼlumotnoma kerak — topib boʻlmayapti.",
+        "Aeroportda sugʻurta soʻrashadi, u esa qaysidir yozishmada.",
+        "Shifokor eski tahlillarni soʻrayapti — ular eski telefonda.",
+        "Viza yoki sugʻurta tugayapti, buni esa oxirgi daqiqada bilasiz.",
       ],
     },
     how: {
@@ -396,7 +433,7 @@ const M: Record<Locale, Dict> = {
     cta: {
       heading: "Oilangizning barcha hujjatlarini yigʻishga tayyormisiz?",
       sub: "15 daqiqadan kam vaqt — va uzoq saqlanadigan tartib.",
-      button: "Bepul boshlash",
+      button: "Seyf yaratish — bepul",
     },
     faq: {
       heading: "Tez-tez beriladigan savollar",
@@ -436,7 +473,7 @@ const M: Record<Locale, Dict> = {
       line: "Operator: doki.help xizmati egasi, STIR 780728592634.",
       contactLabel: "Qoʻllab-quvvatlash:",
     },
-    footer: { copyright: "© 2026 doki.help — Oila hujjatlari seyfi", security: "Xavfsizlik", privacy: "Maxfiylik", login: "Kirish" },
+    footer: { copyright: "© 2026 doki.help — Oila hujjatlari seyfi", pricing: "Narxlar", security: "Xavfsizlik", privacy: "Maxfiylik", login: "Kirish" },
   },
 };
 
@@ -595,6 +632,21 @@ export default async function Home({
               className="h-auto w-full rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl"
             />
           </div>
+        </div>
+      </section>
+
+      {/* PAIN */}
+      <section className="mx-auto max-w-screen-xl px-4 pb-8 pt-2 sm:px-5">
+        <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-6 sm:p-7">
+          <h2 className="section-header mb-5">{t.pain.heading}</h2>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {t.pain.items.map((it) => (
+              <li key={it} className="flex items-start gap-x-2 text-[#5c5248]">
+                <span className="mt-0.5 shrink-0 text-[#b85c38]">•</span>
+                <span>{it}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
@@ -815,6 +867,7 @@ export default async function Home({
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
           <div>{t.footer.copyright}</div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
+            <Link href="/pricing" className="hover:text-[#2c2522]">{t.footer.pricing}</Link>
             <Link href="/security" className="hover:text-[#2c2522]">{t.footer.security}</Link>
             <Link href="/privacy" className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
             <Link href="/login" className="hover:text-[#2c2522]">{t.footer.login}</Link>
