@@ -10,6 +10,10 @@ const LOCALES: Locale[] = ["ru", "en", "id", "uz"];
  * (Accept-Language). ru → русский, id → индонезийский, uz → узбекский, остальное → en.
  */
 export async function getLocale(): Promise<Locale> {
+  // Языковой префикс в URL (/ru, /en…) — middleware кладёт его в заголовок.
+  const fromPath = (await headers()).get("x-locale") as Locale | undefined;
+  if (fromPath && LOCALES.includes(fromPath)) return fromPath;
+
   const fromCookie = (await cookies()).get("locale")?.value as Locale | undefined;
   if (fromCookie && LOCALES.includes(fromCookie)) return fromCookie;
 

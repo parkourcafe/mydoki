@@ -4,6 +4,7 @@ import { COMPARISON_KEYS } from "@/lib/comparisons";
 import { USECASE_KEYS } from "@/lib/usecases";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const LOCALES = ["ru", "en", "id", "uz"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = [
@@ -17,9 +18,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...COMPARISON_KEYS.map((k) => `/vs/${k}`),
     ...USECASE_KEYS.map((k) => `/keep/${k}`),
   ];
-  return pages.map((path) => ({
-    url: `${APP_URL}${path}`,
-    changeFrequency: path === "" ? "weekly" : "monthly",
-    priority: path === "" ? 1 : 0.5,
-  }));
+  return pages.map((path) => {
+    // hreflang: каждая языковая версия по своему URL (/ru/…, /en/… и т.д.).
+    const languages: Record<string, string> = {};
+    for (const l of LOCALES) languages[l] = `${APP_URL}/${l}${path}`;
+    return {
+      url: `${APP_URL}${path === "" ? "/" : path}`,
+      changeFrequency: path === "" ? "weekly" : "monthly",
+      priority: path === "" ? 1 : 0.5,
+      alternates: { languages },
+    };
+  });
 }

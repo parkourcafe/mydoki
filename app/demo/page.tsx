@@ -166,7 +166,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${t.metaTitle} · doki.help`,
     description: t.metaDesc,
-    alternates: { canonical: "/demo" },
   };
 }
 

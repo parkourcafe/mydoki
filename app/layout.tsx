@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import SwRegister from "@/components/SwRegister";
 import YandexMetrika from "@/components/YandexMetrika";
 import { getLocale } from "@/lib/i18n";
+import { altLangs } from "@/lib/seo";
 import "./globals.css";
 
 const inter = Inter({
@@ -88,7 +89,9 @@ export async function generateMetadata(): Promise<Metadata> {
     description: m.description,
     applicationName: "doki.help",
     keywords: [...m.keywords],
-    alternates: { canonical: "/" },
+    // canonical + hreflang считаются из заголовков пути (см. lib/seo.ts),
+    // поэтому корректны для каждой страницы и языковой версии.
+    alternates: await altLangs(),
     openGraph: {
       type: "website",
       locale: m.ogLocale,
