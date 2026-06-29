@@ -112,7 +112,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     verification: {
       google: "WjIJcU6oZE269vmJf6pKuQb5nJLExIUEClLb6IPgCBg",
-      yandex: ["782bfe115bbb718d", "7410d439c2d113a4", "3042e3fbc4b64ab5"],
+      yandex: ["782bfe115bbb718d", "7410d439c2d113a4"],
     },
     formatDetection: { telephone: false },
     appleWebApp: {
