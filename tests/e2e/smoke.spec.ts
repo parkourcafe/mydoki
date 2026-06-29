@@ -41,23 +41,21 @@ test.describe("public pages", () => {
     await expect(page.getByText("Link is invalid")).toBeVisible();
   });
 
-  // The whole point of the i18n work: every language renders and tags <html lang>.
-  const LANGS = [
-    { loc: "ru", hero: "всегда под рукой" },
-    { loc: "en", hero: "always at hand" },
-    { loc: "id", hero: "selalu dalam genggaman" },
-    { loc: "uz", hero: "doimo qoʻl ostida" },
-  ];
-  for (const { loc, hero } of LANGS) {
-    test(`landing renders in ${loc} with <html lang="${loc}">`, async ({
+  // The point of the i18n work: each locale has its own URL that renders in
+  // that language, tags <html lang> and emits a self-canonical. Asserted via
+  // the i18n contract (lang attr, a visible <h1>, canonical) rather than exact
+  // hero copy, so the test survives landing-copy changes.
+  for (const loc of ["ru", "en", "id", "uz"] as const) {
+    test(`landing at /${loc} tags <html lang="${loc}"> + self-canonical`, async ({
       page,
-      context,
-      baseURL,
     }) => {
-      await useLocale(context, baseURL, loc);
-      await page.goto("/");
+      await page.goto(`/${loc}`);
       await expect(page.locator("html")).toHaveAttribute("lang", loc);
-      await expect(page.getByText(hero)).toBeVisible();
+      await expect(page.locator("h1").first()).toBeVisible();
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+        "href",
+        new RegExp(`/${loc}$`)
+      );
     });
   }
 });

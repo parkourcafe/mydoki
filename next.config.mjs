@@ -22,12 +22,25 @@ const agentLinkHeader = [
   },
 ];
 
+// Приватные/служебные маршруты: страховочный X-Robots-Tag на уровне заголовка.
+// Надёжнее meta-тега (срабатывает и для клиентских страниц, и для route-
+// handler'ов), и покрывает signed/invite токен-URL.
+const noindexHeader = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
+const NOINDEX_SOURCES = [
+  "/s/:path*",
+  "/invite/:path*",
+  "/saved",
+  "/offline",
+  "/auth/:path*",
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
       { source: "/", headers: agentLinkHeader },
+      ...NOINDEX_SOURCES.map((source) => ({ source, headers: noindexHeader })),
     ];
   },
 };

@@ -1,6 +1,9 @@
 import Link from "next/link";
 
-export const metadata = { title: "Офлайн — doki.help" };
+export const metadata = {
+  title: "Офлайн — doki.help",
+  robots: { index: false, follow: false },
+};
 
 export default function OfflinePage() {
   return (

@@ -1,0 +1,99 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getLocale, type Locale } from "@/lib/i18n";
+import LangSwitcher from "@/components/LangSwitcher";
+import { getTrustPage } from "@/lib/trust";
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+
+const UI: Record<Locale, { start: string; home: string; privacy: string; terms: string }> = {
+  ru: { start: "Начать бесплатно", home: "← На главную", privacy: "Конфиденциальность", terms: "Условия" },
+  en: { start: "Start for free", home: "← Home", privacy: "Privacy", terms: "Terms" },
+  id: { start: "Mulai gratis", home: "← Beranda", privacy: "Privasi", terms: "Ketentuan" },
+  uz: { start: "Bepul boshlash", home: "← Bosh sahifa", privacy: "Maxfiylik", terms: "Shartlar" },
+};
+
+export default async function TrustPage({ slug }: { slug: string }) {
+  const p = getTrustPage(slug);
+  if (!p) notFound();
+
+  const locale = await getLocale();
+  const c = p.locales[locale];
+  const t = UI[locale];
+  const base = `/${locale}/${slug}`;
+
+  const breadcrumb = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "doki.help", item: `${APP_URL}/${locale}` },
+      { "@type": "ListItem", position: 2, name: c.h1, item: `${APP_URL}${base}` },
+    ],
+  };
+
+  return (
+    <div lang={locale} className="min-h-screen bg-[#f9f5f0] text-[#2c2522]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
+
+      {/* NAV */}
+      <nav className="sticky top-0 z-50 border-b border-[#e8e0d5] bg-[#fdfaf5]">
+        <div className="mx-auto max-w-screen-xl px-5">
+          <div className="flex h-16 items-center justify-between">
+            <Link href={`/${locale}`} className="flex items-center gap-x-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#b85c38] text-white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+                </svg>
+              </div>
+              <div>
+                <span className="text-2xl font-semibold tracking-tighter">doki</span>
+                <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
+              </div>
+            </Link>
+            <div className="flex items-center gap-x-4">
+              <LangSwitcher locale={locale} />
+              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
+                {t.start}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* CONTENT */}
+      <article className="mx-auto max-w-3xl px-5 py-12">
+        <div className="mb-4 inline-flex items-center gap-x-2 rounded-full border border-[#e8e0d5] bg-white px-4 py-1.5 text-sm">
+          <span>{p.emoji}</span>
+          <span className="font-medium text-[#5c5248]">{c.navLabel}</span>
+        </div>
+        <h1 className="heading-font text-[2.2rem] leading-[1.1] tracking-[-1px] text-[#2c2522] lg:text-[2.7rem]">
+          {c.h1}
+        </h1>
+        <p className="mt-5 text-[17px] leading-relaxed text-[#5c5248]">{c.intro}</p>
+
+        {c.sections.map((s) => (
+          <section key={s.h2} className="mt-8">
+            <h2 className="text-lg font-semibold text-[#2c2522]">{s.h2}</h2>
+            {s.body && <p className="mt-2 text-[15px] leading-relaxed text-[#5c5248]">{s.body}</p>}
+            {s.bullets && (
+              <ul className="mt-2 space-y-2">
+                {s.bullets.map((b) => (
+                  <li key={b} className="flex items-start gap-x-3 text-[15px] leading-relaxed text-[#5c5248]">
+                    <span className="mt-0.5 shrink-0 text-[#b85c38]">•</span>
+                    <span>{b}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+        ))}
+
+        <div className="mt-10 flex flex-wrap gap-x-4 gap-y-1 border-t border-[#e8e0d5] pt-6 text-sm text-[#8a7c6d]">
+          <Link href={`/${locale}`} className="hover:text-[#2c2522]">{t.home}</Link>
+          <Link href={`/${locale}/privacy`} className="hover:text-[#2c2522]">{t.privacy}</Link>
+          <Link href={`/${locale}/terms`} className="hover:text-[#2c2522]">{t.terms}</Link>
+        </div>
+      </article>
+    </div>
+  );
+}
