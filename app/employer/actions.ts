@@ -94,6 +94,15 @@ export async function setApplicationStatus(
   revalidatePath(`/employer/vacancies/${vacancyId}`);
 }
 
+/** Свежий signed URL (2 мин) на файл отклика. RLS пускает только владельца. */
+export async function signApplicationDoc(path: string): Promise<string | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase.storage
+    .from("applications")
+    .createSignedUrl(path, 120);
+  return data?.signedUrl ?? null;
+}
+
 /** Автопометка «просмотрено» при открытии дашборда (new→viewed). */
 export async function markApplicationsViewed(applicationIds: string[]) {
   if (!applicationIds.length) return;
