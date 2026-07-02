@@ -106,10 +106,10 @@ merged account-deletion work — pending a yes/no confirmation.
 
 | # | Question | Pages | Status |
 |---|----------|-------|--------|
-| A | Access log shows what/when | secure-document-sharing | repo-answerable ✅ |
-| B | Data storage region | expat, medical | repo-answerable ✅ |
-| C | Self-serve account deletion exists | data-deletion | repo-answerable ✅ (PR #24) |
-| D | AI is opt-in / off by default | ai-processing, landings | repo-answerable ✅ (fix framing) |
+| A | Access log shows what/when | secure-document-sharing | repo-answerable — **not yet applied** |
+| B | Data storage region | expat, medical | repo-answerable — **not yet applied** |
+| C | Self-serve account deletion exists | data-deletion | **✅ applied** (PR #24 → points to /my/security) |
+| D | AI is opt-in / off by default | ai-processing | **✅ applied** (off-by-default wording) |
 | Q1 | Reminder lead time / intervals | 6 pages | **needs team** |
 | Q2 | Reminder channels (push/SMS) | document-expiry-reminder | **needs team** |
 | Q3 | At-rest encryption | medical | **needs team** |

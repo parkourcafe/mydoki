@@ -3159,3 +3159,12 @@ export async function landingMetadata(slug: string): Promise<Metadata> {
     },
   };
 }
+
+/** Ссылки на лендинги для внутренней перелинковки (главная и т.п.). */
+export function landingLinks(locale: Locale) {
+  return LANDING_KEYS.map((key) => ({
+    key,
+    emoji: DATA[key].emoji,
+    label: DATA[key].locales[locale].navLabel,
+  }));
+}

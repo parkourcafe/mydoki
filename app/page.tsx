@@ -6,6 +6,17 @@ import LangSwitcher from "@/components/LangSwitcher";
 import { segmentLinks } from "@/lib/segments";
 import { comparisonLinks, comparisonsHeading } from "@/lib/comparisons";
 import { usecaseLinks } from "@/lib/usecases";
+import { landingLinks } from "@/lib/landings";
+import { checklistLinks } from "@/lib/checklists";
+import { trustLinks } from "@/lib/trust";
+
+// Заголовки блоков внутренней перелинковки на новые SEO-страницы.
+const MORE_HEADINGS: Record<Locale, { tools: string; checklists: string }> = {
+  ru: { tools: "Напоминания о сроках и сейфы", checklists: "Чеклисты документов" },
+  en: { tools: "Expiry reminders & vaults", checklists: "Document checklists" },
+  id: { tools: "Pengingat tenggat & brankas", checklists: "Ceklis dokumen" },
+  uz: { tools: "Muddat eslatmalari va seyflar", checklists: "Hujjat roʻyxatlari" },
+};
 
 type Cat = { icon: string; title: string; items: string[] };
 type Step = { n: string; title: string; text: string };
@@ -686,6 +697,34 @@ export default async function Home({
               ))}
             </div>
           </div>
+          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+            <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].tools}</div>
+            <div className="flex flex-wrap gap-2">
+              {landingLinks(locale).map((l) => (
+                <Link
+                  key={l.key}
+                  href={`/${l.key}`}
+                  className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+                >
+                  <span>{l.emoji}</span> {l.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+            <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].checklists}</div>
+            <div className="flex flex-wrap gap-2">
+              {checklistLinks(locale).map((l) => (
+                <Link
+                  key={l.key}
+                  href={`/checklists/${l.key}`}
+                  className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+                >
+                  <span>{l.emoji}</span> {l.label}
+                </Link>
+              ))}
+            </div>
+          </div>
           {locale === "ru" && (
             <div className="mt-5 border-t border-[#e8e0d5] pt-5">
               <div className="mb-3 text-sm font-medium text-[#8a7c6d]">По документам</div>
@@ -869,6 +908,9 @@ export default async function Home({
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
             <Link href="/pricing" className="hover:text-[#2c2522]">{t.footer.pricing}</Link>
             <Link href="/security" className="hover:text-[#2c2522]">{t.footer.security}</Link>
+            {trustLinks(locale).map((tl) => (
+              <Link key={tl.key} href={`/${tl.key}`} className="hover:text-[#2c2522]">{tl.label}</Link>
+            ))}
             <Link href="/privacy" className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
             <Link href="/login" className="hover:text-[#2c2522]">{t.footer.login}</Link>
           </div>
