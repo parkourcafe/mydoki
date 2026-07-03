@@ -4,9 +4,56 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { normalizeWhatsapp, type Source } from "@/lib/career";
 import { currentIpHash, verifyTurnstile } from "@/lib/antispam";
-import { sendNewApplicationEmail } from "@/lib/email";
+import { sendNewApplicationEmail, sendAdminReportAlert } from "@/lib/email";
 import { sendPushToUser } from "@/lib/push";
 import { getLocale } from "@/lib/i18n";
+
+// ---------------------------- Report ----------------------------------
+
+export type ReportInput = {
+  slug: string;
+  reason: "scam" | "data_collection" | "fake" | "other";
+  comment?: string;
+  contact?: string;
+  turnstileToken?: string | null;
+  vacancyTitle: string;
+  company: string;
+  vacancyId: string;
+};
+
+export type ReportResult =
+  | { ok: true; paused: boolean }
+  | { ok: false; error: "turnstile" | "rate_limited" | "generic" };
+
+/** Жалоба кандидата на вакансию (anon). Turnstile → RPC (лимит+порог). */
+export async function reportVacancy(input: ReportInput): Promise<ReportResult> {
+  const okToken = await verifyTurnstile(input.turnstileToken);
+  if (!okToken) return { ok: false, error: "turnstile" };
+
+  const supabase = await getSupabaseServer();
+  const ipHash = await currentIpHash();
+  const { data, error } = await supabase.rpc("report_vacancy", {
+    p_slug: input.slug,
+    p_reason: input.reason,
+    p_comment: input.comment ?? null,
+    p_contact: input.contact ?? null,
+    p_ip_hash: ipHash,
+  });
+  if (error) return { ok: false, error: "generic" };
+
+  const r = (data ?? {}) as { rate_limited?: boolean; paused?: boolean; ok?: boolean };
+  if (r.rate_limited) return { ok: false, error: "rate_limited" };
+
+  if (r.paused) {
+    await sendAdminReportAlert({
+      vacancyTitle: input.vacancyTitle,
+      company: input.company,
+      reasons: input.reason,
+      vacancyId: input.vacancyId,
+    });
+  }
+  return { ok: true, paused: r.paused === true };
+}
 
 // ---------------------------- Views -----------------------------------
 

@@ -2,14 +2,69 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { sendPushToUser } from "@/lib/push";
+import { getLocale } from "@/lib/i18n";
+import { sendVerificationCode } from "@/lib/email";
 import { normalizeWhatsapp } from "@/lib/career";
 import type {
   RequiredDocument,
   ScreeningQuestion,
   ApplicationStatus,
 } from "@/lib/career";
+
+// ---------------------- Employer verification -------------------------
+
+/** Сгенерировать 6-значный код, сохранить его хэш, отправить письмом. */
+export async function requestEmployerVerification(): Promise<{ ok: boolean }> {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false };
+
+  const { data: profile } = await supabase
+    .from("employer_profiles")
+    .select("contact_email")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  const email = (profile as { contact_email?: string | null } | null)?.contact_email || user.email;
+  if (!email) return { ok: false };
+
+  const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+  const hash = createHash("sha256").update(code).digest("hex");
+  const expires = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
+  const { error } = await supabase.rpc("set_employer_verification", {
+    p_code_hash: hash,
+    p_expires_at: expires,
+  });
+  if (error) return { ok: false };
+
+  const locale = await getLocale();
+  await sendVerificationCode("email", email, code, locale);
+  return { ok: true };
+}
+
+/** Подтвердить код. Возвращает ok или код ошибки (expired/too_many/wrong). */
+export async function confirmEmployerVerification(
+  code: string
+): Promise<{ ok: boolean; error?: "expired" | "too_many" | "wrong" }> {
+  const supabase = await getSupabaseServer();
+  const hash = createHash("sha256").update(code.trim()).digest("hex");
+  const { data, error } = await supabase.rpc("confirm_employer_verification", {
+    p_code_hash: hash,
+  });
+  if (error) {
+    const m = error.message || "";
+    return {
+      ok: false,
+      error: /CODE_EXPIRED/.test(m) ? "expired" : /TOO_MANY/.test(m) ? "too_many" : undefined,
+    };
+  }
+  return data === true ? { ok: true } : { ok: false, error: "wrong" };
+}
 
 /** Создать/обновить профиль работодателя для текущего пользователя. */
 export async function saveEmployerProfile(formData: FormData) {

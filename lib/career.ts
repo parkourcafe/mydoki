@@ -58,6 +58,7 @@ export type Vacancy = {
   required_documents: RequiredDocument[];
   screening_questions: ScreeningQuestion[];
   status: VacancyStatus;
+  views_count: number;
   closes_at: string | null;
   created_at: string;
 };
