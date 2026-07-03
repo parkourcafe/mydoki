@@ -18,7 +18,11 @@ export type RequiredDocument = {
 
 export type ScreeningQuestion = {
   question: string;
-  type: "text" | "yes_no";
+  type: "text" | "yes_no" | "choice";
+  /** Варианты для типа "choice". */
+  options?: string[];
+  /** По умолчанию (поле отсутствует) вопрос считается обязательным. */
+  required?: boolean;
 };
 
 export type Urgency = "normal" | "hiring_now";
