@@ -18,6 +18,7 @@ const M = {
     security: "Безопасность",
     offline: "Офлайн",
     hiring: "Нанимаю",
+    myApplications: "Мои отклики",
     sharePackage: "Поделиться",
     grpPersonal: "Личное",
     grpWork: "Работа",
@@ -38,6 +39,7 @@ const M = {
     security: "Security",
     offline: "Offline",
     hiring: "Hire",
+    myApplications: "My applications",
     sharePackage: "Share",
     grpPersonal: "Personal",
     grpWork: "Work",
@@ -58,6 +60,7 @@ const M = {
     security: "Xavfsizlik",
     offline: "Oflayn",
     hiring: "Yollash",
+    myApplications: "Mening arizalarim",
     sharePackage: "Ulashish",
     grpPersonal: "Shaxsiy",
     grpWork: "Ish",
@@ -78,6 +81,7 @@ const M = {
     security: "Keamanan",
     offline: "Offline",
     hiring: "Merekrut",
+    myApplications: "Lamaran saya",
     sharePackage: "Bagikan",
     grpPersonal: "Pribadi",
     grpWork: "Kerja",
@@ -133,7 +137,10 @@ export default async function MyLayout({
     },
     {
       title: t.grpWork,
-      items: [{ href: "/employer", emoji: "💼", label: t.hiring }],
+      items: [
+        { href: "/my/applications", emoji: "🔎", label: t.myApplications },
+        { href: "/employer", emoji: "💼", label: t.hiring },
+      ],
     },
   ];
 
