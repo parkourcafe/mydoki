@@ -14,8 +14,36 @@ const LOCALE_RE = /^\/(ru|en|id|uz)(\/.*)?$/;
  *  2) кладёт x-pathname/x-orig-path для метаданных (canonical + hreflang);
  *  3) обновляет сессию Supabase в кабинете и отдаёт markdown агентам.
  */
+// Пути карьерного модуля, которые обслуживает домен doki.id.
+const CAREER_PREFIXES = ["/apply", "/applications", "/employer", "/login", "/auth", "/hiring"];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // 0) Домен doki.id — второй домен на том же деплое, отдаёт только карьерные
+  //    маршруты. Корень → лендинг /hiring; всё остальное не-карьерное → 308 на
+  //    doki.help (канонический хост, D1/D2).
+  const host = request.headers.get("host") ?? "";
+  if (host.endsWith("doki.id")) {
+    if (pathname === "/") {
+      const url = request.nextUrl.clone();
+      url.pathname = "/hiring";
+      return NextResponse.rewrite(url);
+    }
+    // Учитываем возможный языковой префикс (/id/apply → /apply).
+    const lm = pathname.match(LOCALE_RE);
+    const bare = lm ? (lm[2] && lm[2].length > 0 ? lm[2] : "/") : pathname;
+    const isCareer = CAREER_PREFIXES.some(
+      (p) => bare.startsWith(p) || pathname.startsWith(p)
+    );
+    if (!isCareer) {
+      return NextResponse.redirect(
+        `https://doki.help${pathname}${request.nextUrl.search}`,
+        308
+      );
+    }
+    // Карьерный путь на doki.id — падаем в обычную обработку ниже.
+  }
 
   // 1) Языковой префикс — переписываем на без-префиксный путь.
   const m = pathname.match(LOCALE_RE);

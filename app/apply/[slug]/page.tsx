@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getLocale } from "@/lib/i18n";
-import type { Vacancy } from "@/lib/career";
+import { parseSource, type Vacancy } from "@/lib/career";
 import ApplyForm from "./ApplyForm";
 
 // Apply-страница раздаётся прямой ссылкой (WhatsApp/QR), не через поиск.
@@ -67,12 +67,16 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 export default async function ApplyPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ src?: string }>;
 }) {
   const locale = await getLocale();
   const t = M[locale];
   const { slug } = await params;
+  const { src } = await searchParams;
+  const source = parseSource(src);
 
   const supabase = await getSupabaseServer();
   const { data } = await supabase
@@ -153,6 +157,7 @@ export default async function ApplyPage({
           vacancyId={vacancy.id}
           slug={vacancy.slug}
           companyName={vacancy.company_name}
+          source={source}
           requiredDocuments={vacancy.required_documents ?? []}
           screeningQuestions={vacancy.screening_questions ?? []}
         />

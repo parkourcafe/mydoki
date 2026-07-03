@@ -24,6 +24,15 @@ export type ScreeningQuestion = {
 export type Urgency = "normal" | "hiring_now";
 export type VacancyStatus = "active" | "paused" | "closed";
 export type ApplicationStatus = "new" | "viewed" | "shortlisted" | "rejected";
+export type Source = "wa" | "ig" | "qr" | "direct" | "other";
+
+export const SOURCES: Source[] = ["wa", "ig", "qr", "direct", "other"];
+
+/** Нормализуем ?src= в допустимое значение (по умолчанию 'direct'). */
+export function parseSource(raw: string | null | undefined): Source {
+  const s = (raw ?? "").toLowerCase();
+  return (SOURCES as string[]).includes(s) ? (s as Source) : "direct";
+}
 
 export type EmployerProfile = {
   id: string;
