@@ -32,4 +32,11 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// T7: анализатор бандла. Включается только при ANALYZE=true (`npm run analyze`),
+// в обычной сборке — no-op, без веса в проде.
+const withBundleAnalyzer = (await import("@next/bundle-analyzer")).default({
+  enabled: process.env.ANALYZE === "true",
+  openAnalyzer: false,
+});
+
+export default withBundleAnalyzer(nextConfig);

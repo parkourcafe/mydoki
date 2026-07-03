@@ -1,0 +1,49 @@
+name: perf-budget
+
+# T7 — бюджет производительности apply-страницы. Детерминированный чек веса
+# First Load JS запускается на каждый PR (без сервера/БД). LHCI (perf/LCP/CLS)
+# — опциональная job, включается только если задан секрет/переменная LHCI_URL
+# (обычно — preview-URL Vercel с сид-вакансией). См. perf/README.md.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  bundle-budget:
+    name: First Load JS budget
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Build
+        run: npm run build
+        env:
+          # Дамми-значения: чек анализирует артефакт сборки, не ходит в БД.
+          NEXT_PUBLIC_SUPABASE_URL: https://uuopxzlcmzdtwebottar.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key-for-build
+          NEXT_PUBLIC_APP_URL: https://doki.help
+      - name: Check First Load JS budget
+        run: npm run perf:budget
+
+  lighthouse:
+    name: Lighthouse CI (preview)
+    runs-on: ubuntu-latest
+    # Запускается только когда указан URL превью — иначе тихо пропускается.
+    if: ${{ vars.LHCI_URL != '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run Lighthouse CI against preview apply page
+        run: |
+          npm i -g @lhci/cli@0.14.x
+          lhci autorun --collect.url="${{ vars.LHCI_URL }}"

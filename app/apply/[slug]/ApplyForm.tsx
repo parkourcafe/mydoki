@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
-import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { compressImage, formatBytes } from "@/lib/compressImage";
 import {
   ACCEPT_ATTR,
@@ -32,12 +31,25 @@ declare global {
   }
 }
 
-function Turnstile({ onToken }: { onToken: (t: string | null) => void }) {
+// T7: контейнер резервирует высоту виджета (~65px) СРАЗУ — виджет монтируется
+// лениво (после первого взаимодействия с формой), поэтому его появление не
+// сдвигает layout (CLS ≈ 0). Скрипт Cloudflare тоже грузится лениво: не
+// участвует в критическом пути и LCP apply-страницы.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+function Turnstile({
+  armed,
+  onToken,
+}: {
+  armed: boolean;
+  onToken: (t: string | null) => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const siteKey = TURNSTILE_SITE_KEY;
 
   useEffect(() => {
-    if (!siteKey || !ref.current) return;
+    // Грузим CF-скрипт и рендерим виджет только после «взвода» (interaction).
+    if (!armed || !siteKey || !ref.current) return;
     let widgetId: string | undefined;
     const el = ref.current;
 
@@ -78,10 +90,16 @@ function Turnstile({ onToken }: { onToken: (t: string | null) => void }) {
         }
       }
     };
-  }, [siteKey, onToken]);
+  }, [armed, siteKey, onToken]);
 
   if (!siteKey) return null;
-  return <div ref={ref} className="mt-1" />;
+  // Высота зарезервирована всегда (min-h), чтобы ленивое монтирование виджета
+  // не сдвигало кнопку submit вниз — защита от CLS.
+  return (
+    <div className="mt-1 min-h-[65px]">
+      <div ref={ref} />
+    </div>
+  );
 }
 
 const M = {
@@ -304,6 +322,10 @@ export default function ApplyForm({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [doneToken, setDoneToken] = useState<string | null>(null);
+  // T7: Turnstile «взводится» только после первого касания формы, чтобы
+  // тяжёлый скрипт Cloudflare не грузился на первом рендере (LCP/TBT).
+  const [armed, setArmed] = useState(false);
+  const arm = () => setArmed(true);
 
   // Один просмотр на сессию браузера (дедуп по sessionStorage, чтобы reload
   // не удваивал views_count).
@@ -357,6 +379,10 @@ export default function ApplyForm({
 
     setBusy(true);
     const applicationId = crypto.randomUUID();
+    // T7: @supabase/supabase-js (~50 КБ gzip) грузим ЛЕНИВО — только при
+    // реальной отправке. Форма рендерится и интерактивна без него, поэтому
+    // клиент не тянет вес в First Load apply-страницы (бюджет ≤150 КБ gzip).
+    const { getSupabaseBrowser } = await import("@/lib/supabase/client");
     const supabase = getSupabaseBrowser();
 
     try {
@@ -491,7 +517,12 @@ export default function ApplyForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card space-y-5">
+    <form
+      onSubmit={handleSubmit}
+      onFocusCapture={arm}
+      onPointerDown={arm}
+      className="card space-y-5"
+    >
       <h2 className="text-base font-semibold">{t.yourApplication}</h2>
 
       <div>
@@ -649,7 +680,7 @@ export default function ApplyForm({
         <span>{consentText}</span>
       </label>
 
-      <Turnstile onToken={setTurnstileToken} />
+      <Turnstile armed={armed} onToken={setTurnstileToken} />
 
       {error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">

@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "analyze": "ANALYZE=true next build",
+    "perf:budget": "node perf/check-bundle.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
@@ -23,6 +25,7 @@
     "web-push": "^3.6.7"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.1.6",
     "@playwright/test": "^1.49.1",
     "@types/node": "^22.10.0",
     "@types/qrcode": "^1.5.6",
