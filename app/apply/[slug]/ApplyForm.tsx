@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { compressImage, formatBytes } from "@/lib/compressImage";
 import {
   ACCEPT_ATTR,
   ACCEPTED_MIME,
@@ -100,6 +101,7 @@ const M = {
     replace: "Replace",
     pending: "Not uploaded",
     uploading: "Uploading…",
+    compressing: "Optimizing…",
     uploaded: "Uploaded",
     errored: "Upload failed — try again",
     questions: "Questions",
@@ -141,6 +143,7 @@ const M = {
     replace: "Ganti",
     pending: "Belum diunggah",
     uploading: "Mengunggah…",
+    compressing: "Mengoptimalkan…",
     uploaded: "Terunggah",
     errored: "Gagal unggah — coba lagi",
     questions: "Pertanyaan",
@@ -182,6 +185,7 @@ const M = {
     replace: "Заменить",
     pending: "Не загружен",
     uploading: "Загрузка…",
+    compressing: "Оптимизация…",
     uploaded: "Загружен",
     errored: "Ошибка загрузки — повторите",
     questions: "Вопросы",
@@ -223,6 +227,7 @@ const M = {
     replace: "Almashtirish",
     pending: "Yuklanmagan",
     uploading: "Yuklanmoqda…",
+    compressing: "Optimallashtirilmoqda…",
     uploaded: "Yuklandi",
     errored: "Yuklashda xato — qayta urining",
     questions: "Savollar",
@@ -250,10 +255,21 @@ const M = {
   },
 } as const;
 
-type UploadState = "pending" | "uploading" | "uploaded" | "error";
+type UploadState = "pending" | "compressing" | "uploading" | "uploaded" | "error";
 
 function safeName(name: string): string {
   return name.replace(/[^\w.\-]+/g, "_") || "file";
+}
+
+// Метрика: сжатие упало (грузим исходник). Best-effort, без падений.
+function fireCompressFail() {
+  try {
+    const id = process.env.NEXT_PUBLIC_YM_ID;
+    const ym = (window as unknown as { ym?: (...a: unknown[]) => void }).ym;
+    if (id && ym) ym(Number(id), "reachGoal", "compress_fail");
+  } catch {
+    /* noop */
+  }
 }
 
 export default function ApplyForm({
@@ -281,6 +297,7 @@ export default function ApplyForm({
   const [email, setEmail] = useState("");
   const [files, setFiles] = useState<Record<number, File>>({});
   const [docStatus, setDocStatus] = useState<Record<number, UploadState>>({});
+  const [sizeInfo, setSizeInfo] = useState<Record<number, string>>({});
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [consent, setConsent] = useState(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -307,12 +324,18 @@ export default function ApplyForm({
       setError(t.errFileType);
       return;
     }
-    if (file.size > MAX_FILE_BYTES) {
+    // Для изображений лимит проверяем ПОСЛЕ сжатия; PDF — сразу.
+    if (!file.type.startsWith("image/") && file.size > MAX_FILE_BYTES) {
       setError(t.errFileSize);
       return;
     }
     setError(null);
     setFiles((p) => ({ ...p, [i]: file }));
+    setSizeInfo((p) => {
+      const n = { ...p };
+      delete n[i];
+      return n;
+    });
     setDocStatus((p) => ({ ...p, [i]: "pending" }));
   }
 
@@ -358,9 +381,28 @@ export default function ApplyForm({
       }[] = [];
 
       for (let i = 0; i < requiredDocuments.length; i++) {
-        const file = files[i];
-        if (!file) continue;
+        const raw = files[i];
+        if (!raw) continue;
         const doc = requiredDocuments[i];
+
+        // Сжатие изображений / конверсия HEIC — до загрузки (lazy-import).
+        setDocStatus((p) => ({ ...p, [i]: "compressing" }));
+        const outcome = await compressImage(raw);
+        if (outcome.failed) fireCompressFail();
+        if (outcome.tooLarge) {
+          setDocStatus((p) => ({ ...p, [i]: "error" }));
+          setError(t.errFileSize);
+          setBusy(false);
+          return;
+        }
+        if (outcome.changed) {
+          setSizeInfo((p) => ({
+            ...p,
+            [i]: `${formatBytes(outcome.originalSize)} → ${formatBytes(outcome.finalSize)}`,
+          }));
+        }
+        const file = outcome.file;
+
         setDocStatus((p) => ({ ...p, [i]: "uploading" }));
         const path = `${vacancyId}/${applicationId}/${doc.type}_${Date.now()}-${safeName(
           file.name
@@ -380,8 +422,8 @@ export default function ApplyForm({
           type: doc.type,
           label: doc.label,
           path,
-          name: file.name,
-          size: file.size,
+          name: raw.name, // исходное имя пользователю
+          size: file.size, // сжатый размер
         });
       }
 
@@ -522,7 +564,7 @@ export default function ApplyForm({
                     </label>
                   </div>
                   {chosen && (
-                    <p className="mt-2 flex items-center gap-2 text-xs">
+                    <p className="mt-2 flex flex-wrap items-center gap-2 text-xs">
                       <span className="truncate text-slate-500">{chosen.name}</span>
                       <span
                         className={
@@ -530,7 +572,7 @@ export default function ApplyForm({
                             ? "text-green-600"
                             : st === "error"
                               ? "text-red-600"
-                              : st === "uploading"
+                              : st === "uploading" || st === "compressing"
                                 ? "text-brand-600"
                                 : "text-slate-400"
                         }
@@ -539,10 +581,15 @@ export default function ApplyForm({
                           ? `✓ ${t.uploaded}`
                           : st === "error"
                             ? t.errored
-                            : st === "uploading"
-                              ? t.uploading
-                              : t.pending}
+                            : st === "compressing"
+                              ? t.compressing
+                              : st === "uploading"
+                                ? t.uploading
+                                : t.pending}
                       </span>
+                      {sizeInfo[i] && (
+                        <span className="text-slate-400">· {sizeInfo[i]}</span>
+                      )}
                     </p>
                   )}
                 </li>
