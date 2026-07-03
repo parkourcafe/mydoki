@@ -20,6 +20,7 @@ const M = {
     offline: "Офлайн",
     hiring: "Найм",
     resume: "Моё резюме",
+    freelance: "Портфолио",
     mfaWarning: "🔒 Хотите усилить защиту?",
     enable2fa: "Включить 2FA",
     mfaRecommend: "— дополнительная защита для ваших документов.",
@@ -39,6 +40,7 @@ const M = {
     offline: "Offline",
     hiring: "Hiring",
     resume: "My resume",
+    freelance: "Portfolio",
     mfaWarning: "🔒 Want extra protection?",
     enable2fa: "Enable 2FA",
     mfaRecommend: "— an extra layer of security for your documents.",
@@ -58,6 +60,7 @@ const M = {
     offline: "Oflayn",
     hiring: "Yollash",
     resume: "Rezyumem",
+    freelance: "Portfolio",
     mfaWarning: "🔒 Himoyani kuchaytirasizmi?",
     enable2fa: "2FA ni yoqish",
     mfaRecommend: "— hujjatlaringiz uchun qoʻshimcha himoya.",
@@ -77,6 +80,7 @@ const M = {
     offline: "Offline",
     hiring: "Rekrutmen",
     resume: "Resume saya",
+    freelance: "Portofolio",
     mfaWarning: "🔒 Mau proteksi ekstra?",
     enable2fa: "Aktifkan 2FA",
     mfaRecommend: "— lapisan keamanan tambahan untuk dokumen Anda.",
@@ -125,6 +129,7 @@ export default async function MyLayout({
   const work = [
     { href: "/employer", emoji: "💼", label: t.hiring },
     { href: "/my/resume", emoji: "🙋", label: t.resume },
+    { href: "/my/freelance", emoji: "🎨", label: t.freelance },
   ];
 
   return (
