@@ -15,6 +15,7 @@ const M = {
     search: "Поиск",
     reminders: "Сроки",
     access: "Доступ",
+    accessLinks: "Доступ и ссылки",
     security: "Безопасность",
     offline: "Офлайн",
     hiring: "Найм",
@@ -32,6 +33,7 @@ const M = {
     search: "Search",
     reminders: "Deadlines",
     access: "Access",
+    accessLinks: "Access & links",
     security: "Security",
     offline: "Offline",
     hiring: "Hiring",
@@ -49,6 +51,7 @@ const M = {
     search: "Qidiruv",
     reminders: "Muddatlar",
     access: "Kirish huquqi",
+    accessLinks: "Kirish va havolalar",
     security: "Xavfsizlik",
     offline: "Oflayn",
     hiring: "Yollash",
@@ -66,6 +69,7 @@ const M = {
     search: "Cari",
     reminders: "Tenggat waktu",
     access: "Akses",
+    accessLinks: "Akses & tautan",
     security: "Keamanan",
     offline: "Offline",
     hiring: "Rekrutmen",
@@ -104,17 +108,17 @@ export default async function MyLayout({
     .eq("household_id", activeId);
   const showMfaNudge = !hasMfa && (docCount ?? 0) > 0;
 
+  // ЛИЧНОЕ — ровно 5 пунктов (T8). Поиск/Офлайн/Безопасность вынесены в шапку
+  // и подвал; все прежние URL сохранены и открываются напрямую.
   const nav = [
     { href: "/my", emoji: "👪", label: t.family },
     { href: "/my/documents", emoji: "📄", label: t.documents },
     { href: "/my/assets", emoji: "🚗", label: t.assets },
-    { href: "/my/search", emoji: "🔍", label: t.search },
     { href: "/my/reminders", emoji: "⏰", label: t.reminders },
-    { href: "/my/family", emoji: "🔑", label: t.access },
-    { href: "/my/security", emoji: "🛡️", label: t.security },
-    { href: "/saved", emoji: "📥", label: t.offline },
-    { href: "/employer", emoji: "💼", label: t.hiring },
+    { href: "/my/family", emoji: "🔑", label: t.accessLinks },
   ];
+  // РАБОТА — отдельная секция, не тронута.
+  const work = [{ href: "/employer", emoji: "💼", label: t.hiring }];
 
   return (
     <AppNav
@@ -126,6 +130,10 @@ export default async function MyLayout({
       spaces={spaces}
       activeId={activeId}
       nav={nav}
+      work={work}
+      search={{ href: "/my/search", label: t.search }}
+      saved={{ href: "/saved", label: t.offline }}
+      settings={{ href: "/my/security", label: t.security }}
       mfa={
         showMfaNudge
           ? {
