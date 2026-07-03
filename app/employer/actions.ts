@@ -79,6 +79,45 @@ export async function createVacancy(
   return res;
 }
 
+export type UpdateVacancyInput = CreateVacancyInput & { id: string };
+
+/**
+ * Обновить существующую вакансию. Slug не трогаем — ссылка остаётся рабочей.
+ * Правки применяются к вакансии (для будущих откликов); уже полученные
+ * отклики и их ответы не изменяются (ответы хранятся снимком в
+ * application_answers). Доступ ограничен владельцем на уровне RLS.
+ */
+export async function updateVacancy(
+  input: UpdateVacancyInput
+): Promise<{ id: string }> {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase
+    .from("vacancies")
+    .update({
+      title: input.title,
+      company_name: input.company_name,
+      location: input.location || null,
+      salary_range: input.salary_range || null,
+      schedule: input.schedule || null,
+      description: input.description || null,
+      urgency: input.urgency || "normal",
+      closes_at: input.closes_at || null,
+      required_documents: input.required_documents ?? [],
+      screening_questions: input.screening_questions ?? [],
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", input.id);
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${input.id}`);
+  revalidatePath("/employer");
+  return { id: input.id };
+}
+
 /** Работодатель меняет статус отклика (shortlist/reject/…). */
 export async function setApplicationStatus(
   applicationId: string,

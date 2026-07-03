@@ -9,7 +9,7 @@ import { signOut } from "@/app/my/actions";
 import type { Locale } from "@/lib/i18n";
 
 type NavItem = { href: string; emoji: string; label: string };
-type NavGroup = { title?: string; items: NavItem[] };
+type NavGroup = { title?: string; emoji?: string; items: NavItem[] };
 
 /**
  * Оболочка кабинета: слева — вертикальное меню разделов, справа — контент.
@@ -96,13 +96,24 @@ export default function AppNav({
           <SpaceSwitcher spaces={spaces} activeId={activeId} locale={locale} />
         </div>
 
-        <nav className="flex-1 space-y-3 overflow-y-auto px-3 py-2 text-sm">
+        <nav className="flex-1 overflow-y-auto px-3 py-2 text-sm">
           {nav.map((group, gi) => (
-            <div key={gi} className="space-y-1">
+            <div
+              key={gi}
+              className={
+                "space-y-0.5 " +
+                (gi > 0 ? "mt-3 border-t border-[#e8e0d5] pt-3" : "")
+              }
+            >
               {group.title && (
-                <p className="px-3 pb-0.5 pt-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
-                  {group.title}
-                </p>
+                <div className="flex items-center gap-2 px-3 pb-1 pt-0.5">
+                  {group.emoji && (
+                    <span className="text-base leading-none">{group.emoji}</span>
+                  )}
+                  <span className="text-[13px] font-bold tracking-wide text-[#2c2522]">
+                    {group.title}
+                  </span>
+                </div>
               )}
               {group.items.map((item) => {
                 const active =
