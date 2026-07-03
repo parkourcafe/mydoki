@@ -4,11 +4,15 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import CopyButton from "@/components/CopyButton";
+import { getSupabaseBrowser } from "@/lib/supabase/client";
 import {
   savePortfolio,
   setPortfolioPublic,
   type PortfolioItem,
 } from "./actions";
+
+const IMG_MIME = ["image/jpeg", "image/png", "image/webp"];
+const IMG_MAX = 5 * 1024 * 1024;
 
 export type PortfolioData = {
   display_name: string;
@@ -41,6 +45,12 @@ const M = {
     workDescPh: "Коротко: что это и ваша роль",
     workLink: "Ссылка",
     workLinkPh: "https://…",
+    addImage: "🖼 Добавить фото",
+    changeImage: "Заменить фото",
+    removeImage: "Убрать фото",
+    uploading: "Загрузка…",
+    imgType: "Только изображения (JPG, PNG, WebP).",
+    imgBig: "Файл больше 5 МБ.",
     addWork: "＋ Добавить работу",
     remove: "Удалить",
     save: "Сохранить",
@@ -75,6 +85,12 @@ const M = {
     workDescPh: "Briefly: what it is and your role",
     workLink: "Link",
     workLinkPh: "https://…",
+    addImage: "🖼 Add photo",
+    changeImage: "Replace photo",
+    removeImage: "Remove photo",
+    uploading: "Uploading…",
+    imgType: "Images only (JPG, PNG, WebP).",
+    imgBig: "File is larger than 5 MB.",
     addWork: "＋ Add work",
     remove: "Remove",
     save: "Save",
@@ -109,6 +125,12 @@ const M = {
     workDescPh: "Singkat: apa ini dan peran Anda",
     workLink: "Tautan",
     workLinkPh: "https://…",
+    addImage: "🖼 Tambah foto",
+    changeImage: "Ganti foto",
+    removeImage: "Hapus foto",
+    uploading: "Mengunggah…",
+    imgType: "Hanya gambar (JPG, PNG, WebP).",
+    imgBig: "File lebih dari 5 MB.",
     addWork: "＋ Tambah karya",
     remove: "Hapus",
     save: "Simpan",
@@ -143,6 +165,12 @@ const M = {
     workDescPh: "Qisqacha: bu nima va sizning rolingiz",
     workLink: "Havola",
     workLinkPh: "https://…",
+    addImage: "🖼 Foto qo‘shish",
+    changeImage: "Fotoni almashtirish",
+    removeImage: "Fotoni olib tashlash",
+    uploading: "Yuklanmoqda…",
+    imgType: "Faqat rasm (JPG, PNG, WebP).",
+    imgBig: "Fayl 5 MB dan katta.",
     addWork: "＋ Ish qo‘shish",
     remove: "O‘chirish",
     save: "Saqlash",
@@ -164,14 +192,37 @@ export default function PortfolioEditor({
   initial,
   publicUrl,
   defaultName,
+  userId,
 }: {
   locale: Locale;
   initial: PortfolioData;
   publicUrl: string | null;
   defaultName: string;
+  userId: string;
 }) {
   const t = M[locale];
   const router = useRouter();
+  const supabase = getSupabaseBrowser();
+  const [uploading, setUploading] = useState<Record<number, boolean>>({});
+
+  const imgUrl = (path: string) =>
+    supabase.storage.from("portfolio-images").getPublicUrl(path).data.publicUrl;
+
+  async function pickImage(i: number, file: File | null) {
+    if (!file) return;
+    if (!IMG_MIME.includes(file.type)) return setError(t.imgType);
+    if (file.size > IMG_MAX) return setError(t.imgBig);
+    setError(null);
+    setUploading((u) => ({ ...u, [i]: true }));
+    const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const path = `${userId}/${crypto.randomUUID()}.${ext}`;
+    const { error: upErr } = await supabase.storage
+      .from("portfolio-images")
+      .upload(path, file, { contentType: file.type, upsert: false });
+    setUploading((u) => ({ ...u, [i]: false }));
+    if (upErr) return setError(t.failed);
+    updateItem(i, { image_path: path });
+  }
 
   const [name, setName] = useState(initial.display_name || defaultName);
   const [tagline, setTagline] = useState(initial.tagline);
@@ -293,6 +344,49 @@ export default function PortfolioEditor({
                   onChange={(e) => updateItem(i, { description: e.target.value })}
                   placeholder={t.workDescPh}
                 />
+
+                {/* Фото работы */}
+                {it.image_path ? (
+                  <div className="flex items-center gap-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={imgUrl(it.image_path)}
+                      alt=""
+                      className="h-16 w-16 rounded-lg border border-slate-200 object-cover"
+                    />
+                    <div className="flex flex-col gap-1 text-sm">
+                      <label className="cursor-pointer text-brand-600 hover:underline">
+                        {t.changeImage}
+                        <input
+                          type="file"
+                          accept="image/jpeg,image/png,image/webp"
+                          className="hidden"
+                          onChange={(e) => pickImage(i, e.target.files?.[0] ?? null)}
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => updateItem(i, { image_path: null })}
+                        className="text-left text-red-500 hover:underline"
+                      >
+                        {t.removeImage}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-slate-600 hover:text-slate-800">
+                    <span className="rounded-lg border border-dashed border-slate-300 px-3 py-2">
+                      {uploading[i] ? t.uploading : t.addImage}
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="hidden"
+                      disabled={uploading[i]}
+                      onChange={(e) => pickImage(i, e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                )}
               </div>
               <div className="mt-2 text-right">
                 <button type="button" onClick={() => removeItem(i)} className="text-xs text-red-500 hover:underline">

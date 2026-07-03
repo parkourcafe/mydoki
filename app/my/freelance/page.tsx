@@ -17,7 +17,7 @@ export default async function FreelancePage() {
       .maybeSingle(),
     supabase
       .from("portfolio_items")
-      .select("title, description, link")
+      .select("title, description, link, image_path")
       .eq("user_id", user?.id ?? "")
       .order("sort", { ascending: true }),
   ]);
@@ -33,6 +33,7 @@ export default async function FreelancePage() {
       title: it.title ?? "",
       description: it.description ?? "",
       link: it.link ?? "",
+      image_path: it.image_path ?? null,
     })),
   };
 
@@ -44,6 +45,7 @@ export default async function FreelancePage() {
       initial={initial}
       publicUrl={publicUrl}
       defaultName={user?.email?.split("@")[0] ?? ""}
+      userId={user?.id ?? ""}
     />
   );
 }

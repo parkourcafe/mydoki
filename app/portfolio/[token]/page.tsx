@@ -5,7 +5,12 @@ import { normalizeWhatsapp } from "@/lib/career";
 // Портфолио по токен-ссылке не индексируем.
 export const metadata = { robots: { index: false, follow: false } };
 
-type Item = { title: string; description: string | null; link: string | null };
+type Item = {
+  title: string;
+  description: string | null;
+  link: string | null;
+  image_path: string | null;
+};
 type Portfolio = {
   display_name: string | null;
   tagline: string | null;
@@ -119,6 +124,18 @@ export default async function PublicPortfolioPage({
             </h2>
             {p.items.map((it, i) => (
               <article key={i} className="card">
+                {it.image_path && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={
+                      supabase.storage
+                        .from("portfolio-images")
+                        .getPublicUrl(it.image_path).data.publicUrl
+                    }
+                    alt=""
+                    className="mb-3 max-h-72 w-full rounded-lg object-cover"
+                  />
+                )}
                 <h3 className="font-medium">{it.title}</h3>
                 {it.description && (
                   <p className="mt-1 whitespace-pre-line text-sm text-slate-600">{it.description}</p>
