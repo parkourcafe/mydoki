@@ -8,16 +8,12 @@ import {
   type ApplicationStatus,
   type RequiredDocument,
 } from "@/lib/career";
-import {
-  setApplicationStatus,
-  signApplicationDoc,
-  revertRejection,
-} from "@/app/employer/actions";
+import { setApplicationStatus, revertRejection } from "@/app/employer/actions";
 
 // Окно отмены отклонения (совпадает с revert_last_rejection в БД).
 const UNDO_MS = 10 * 60 * 1000;
 
-export type BoardDoc = { type: string; label: string; file_name: string; path: string };
+export type BoardDoc = { id: string; type: string; label: string; file_name: string; path: string };
 export type BoardAnswer = { question: string; answer: string; type: string };
 export type BoardApp = {
   id: string;
@@ -84,14 +80,6 @@ function StatusBadge({ status, t }: { status: ApplicationStatus; t: (typeof M)[L
   };
   const s = map[status];
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${s.cls}`}>{s.label}</span>;
-}
-
-async function openDoc(path: string) {
-  // Открываем вкладку синхронно (иначе блокировщик), затем ставим URL.
-  const w = window.open("", "_blank");
-  const url = await signApplicationDoc(path);
-  if (url && w) w.location.href = url;
-  else if (w) w.close();
 }
 
 export default function ApplicationsBoard({
@@ -279,13 +267,14 @@ export default function ApplicationsBoard({
                           <span className="text-red-500">❌</span>
                         )}
                         {uploaded ? (
-                          <button
-                            type="button"
-                            onClick={() => openDoc(uploaded.path)}
+                          <a
+                            href={`/api/employer/doc/${uploaded.id}`}
+                            target="_blank"
+                            rel="noreferrer"
                             className="text-brand-600 hover:underline"
                           >
                             {d.label}
-                          </button>
+                          </a>
                         ) : (
                           <span className="text-slate-500">
                             {d.label}
