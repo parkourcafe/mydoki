@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
@@ -11,8 +11,77 @@ import {
   isValidWhatsapp,
   type RequiredDocument,
   type ScreeningQuestion,
+  type Source,
 } from "@/lib/career";
-import { submitApplication } from "../actions";
+import {
+  submitApplication,
+  precheckApplication,
+  incrementVacancyView,
+} from "../actions";
+
+// Минимальный виджет Cloudflare Turnstile (explicit render). Если site key не
+// задан — ничего не рисуем, токен остаётся null, сервер пропускает проверку.
+type TurnstileAPI = {
+  render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+  remove: (id: string) => void;
+};
+declare global {
+  interface Window {
+    turnstile?: TurnstileAPI;
+  }
+}
+
+function Turnstile({ onToken }: { onToken: (t: string | null) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+  useEffect(() => {
+    if (!siteKey || !ref.current) return;
+    let widgetId: string | undefined;
+    const el = ref.current;
+
+    function render() {
+      const ts = window.turnstile;
+      if (!ts || !el) return;
+      widgetId = ts.render(el, {
+        sitekey: siteKey,
+        callback: (token: string) => onToken(token),
+        "expired-callback": () => onToken(null),
+        "error-callback": () => onToken(null),
+      });
+    }
+
+    if (window.turnstile) {
+      render();
+    } else {
+      const id = "cf-turnstile-script";
+      let s = document.getElementById(id) as HTMLScriptElement | null;
+      if (!s) {
+        s = document.createElement("script");
+        s.id = id;
+        s.src =
+          "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        s.async = true;
+        document.head.appendChild(s);
+      }
+      s.addEventListener("load", render);
+    }
+
+    return () => {
+      const ts = window.turnstile;
+      if (ts && widgetId) {
+        try {
+          ts.remove(widgetId);
+        } catch {
+          /* noop */
+        }
+      }
+    };
+  }, [siteKey, onToken]);
+
+  if (!siteKey) return null;
+  return <div ref={ref} className="mt-1" />;
+}
 
 const M = {
   en: {
@@ -48,6 +117,8 @@ const M = {
     errFileType: "Only PDF, JPG or PNG files are allowed.",
     errFileSize: "File is too large (max 10MB).",
     errGeneric: "Something went wrong. Please try again.",
+    errRateLimited: "Too many applications from your network. Please try again later.",
+    errTurnstile: "Anti-bot check failed. Please try again.",
     doneTitle: "Application submitted!",
     doneText: "You'll receive updates via WhatsApp.",
     statusLink: "Track your application status",
@@ -87,6 +158,8 @@ const M = {
     errFileType: "Hanya berkas PDF, JPG, atau PNG.",
     errFileSize: "Berkas terlalu besar (maks 10MB).",
     errGeneric: "Terjadi kesalahan. Coba lagi.",
+    errRateLimited: "Terlalu banyak lamaran dari jaringan Anda. Coba lagi nanti.",
+    errTurnstile: "Pemeriksaan anti-bot gagal. Coba lagi.",
     doneTitle: "Lamaran terkirim!",
     doneText: "Anda akan menerima kabar via WhatsApp.",
     statusLink: "Lacak status lamaran Anda",
@@ -126,6 +199,8 @@ const M = {
     errFileType: "Только PDF, JPG или PNG.",
     errFileSize: "Файл слишком большой (макс. 10 МБ).",
     errGeneric: "Что-то пошло не так. Попробуйте ещё раз.",
+    errRateLimited: "Слишком много откликов с вашей сети. Попробуйте позже.",
+    errTurnstile: "Проверка на бота не пройдена. Попробуйте ещё раз.",
     doneTitle: "Отклик отправлен!",
     doneText: "Обновления придут в WhatsApp.",
     statusLink: "Отслеживать статус отклика",
@@ -165,6 +240,8 @@ const M = {
     errFileType: "Faqat PDF, JPG yoki PNG.",
     errFileSize: "Fayl juda katta (maks 10MB).",
     errGeneric: "Xatolik yuz berdi. Qayta urining.",
+    errRateLimited: "Tarmog‘ingizdan juda ko‘p ariza. Keyinroq urining.",
+    errTurnstile: "Antibot tekshiruvi o‘tmadi. Qayta urining.",
     doneTitle: "Ariza yuborildi!",
     doneText: "Yangiliklarni WhatsApp orqali olasiz.",
     statusLink: "Ariza holatini kuzatish",
@@ -184,6 +261,7 @@ export default function ApplyForm({
   vacancyId,
   slug,
   companyName,
+  source,
   requiredDocuments,
   screeningQuestions,
 }: {
@@ -191,6 +269,7 @@ export default function ApplyForm({
   vacancyId: string;
   slug: string;
   companyName: string;
+  source: Source;
   requiredDocuments: RequiredDocument[];
   screeningQuestions: ScreeningQuestion[];
 }) {
@@ -204,9 +283,23 @@ export default function ApplyForm({
   const [docStatus, setDocStatus] = useState<Record<number, UploadState>>({});
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [consent, setConsent] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [doneToken, setDoneToken] = useState<string | null>(null);
+
+  // Один просмотр на сессию браузера (дедуп по sessionStorage, чтобы reload
+  // не удваивал views_count).
+  useEffect(() => {
+    const key = `viewed:${slug}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      /* приватный режим — просто инкрементим */
+    }
+    void incrementVacancyView(slug);
+  }, [slug]);
 
   function pickFile(i: number, file: File | null) {
     if (!file) return;
@@ -244,6 +337,18 @@ export default function ApplyForm({
     const supabase = getSupabaseBrowser();
 
     try {
+      // Precheck ДО загрузки файлов: дубликат/лимит — не заливаем впустую.
+      const pre = await precheckApplication({ slug, whatsapp });
+      if (pre.rateLimited) {
+        setError(t.errRateLimited);
+        setBusy(false);
+        return;
+      }
+      if (pre.duplicate && pre.accessToken) {
+        setDoneToken(pre.accessToken);
+        return;
+      }
+
       const uploaded: {
         type: string;
         label: string;
@@ -286,18 +391,33 @@ export default function ApplyForm({
         answer: (answers[i] ?? "").trim(),
       }));
 
-      const { accessToken } = await submitApplication({
+      const result = await submitApplication({
         applicationId,
         slug,
         fullName: fullName.trim(),
         whatsapp,
         email: email.trim() || undefined,
         consentText,
+        source,
+        turnstileToken,
         answers: answerPayload,
         documents: uploaded,
+        docsComplete: uploaded.length,
+        docsTotal: requiredDocuments.length,
       });
 
-      setDoneToken(accessToken);
+      if (!result.ok) {
+        setError(
+          result.error === "turnstile"
+            ? t.errTurnstile
+            : result.error === "rate_limited"
+              ? t.errRateLimited
+              : t.errGeneric
+        );
+        setBusy(false);
+        return;
+      }
+      setDoneToken(result.accessToken);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
       setError(m || t.errGeneric);
@@ -481,6 +601,8 @@ export default function ApplyForm({
         />
         <span>{consentText}</span>
       </label>
+
+      <Turnstile onToken={setTurnstileToken} />
 
       {error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
