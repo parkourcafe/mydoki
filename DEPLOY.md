@@ -65,6 +65,35 @@ supabase db push          # применит все миграции из supaba
 - [ ] RLS-скрипты из `tests/rls/` зелёные (см. `tests/README.md`).
 - [ ] Supabase Advisors (Security) без новых ошибок.
 
+## 5. Career MVP (модуль вакансий)
+
+Отдельный модуль «apply-layer»: работодатель создаёт вакансию и получает
+ссылку/QR, кандидат откликается без регистрации, работодатель ведёт отклики.
+
+1. **Миграция.** `supabase/migrations/20260701000000_career_mvp.sql` создаёт
+   таблицы (`employer_profiles`, `vacancies`, `applications`,
+   `application_documents`, `application_answers`, `application_status_log`),
+   RLS-политики и RPC (`create_vacancy`, `submit_application`,
+   `update_application_status`, `mark_application_viewed`,
+   `get_application_status`). Применяется через `supabase db push` или SQL Editor.
+2. **Storage.** Та же миграция создаёт приватный bucket `applications`
+   (лимит 10MB, MIME: pdf/jpg/png). Отдельная ручная настройка не нужна.
+   Политики: аноним может загружать только в папку активной вакансии
+   (`{vacancy_id}/…`), читать/подписывать файлы может только владелец вакансии.
+3. **Service role не требуется** — публичные потоки (отклик, страница статуса)
+   идут через `SECURITY DEFINER` RPC, как `get_shared_document`.
+4. **Переменная окружения.** `NEXT_PUBLIC_APP_URL` (напр. `https://doki.help`)
+   используется для apply-ссылок и QR. Middleware обновляет сессию Supabase и
+   на маршрутах `/employer` (как и на `/my`).
+
+Проверки после деплоя:
+
+- [ ] Работодатель создаёт профиль и вакансию на `/employer/vacancies/new`.
+- [ ] Apply-ссылка `/apply/{slug}` открывается без входа; QR/копирование работают.
+- [ ] Отклик с загрузкой документа проходит; появляется страница статуса.
+- [ ] Дашборд `/employer/vacancies/{id}` показывает карточку, чек-лист, ответы.
+- [ ] Shortlist/Reject меняют статус; WhatsApp и signed-URL документа работают.
+
 ## Замечания по безопасности
 
 - `vault-files` — приватный bucket; файлы наружу только короткими signed URL.

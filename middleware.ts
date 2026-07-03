@@ -56,8 +56,8 @@ export async function middleware(request: NextRequest) {
   headers.set("x-pathname", pathname);
   headers.set("x-orig-path", pathname);
 
-  // 3) Сессию Supabase обновляем только в кабинете.
-  if (!pathname.startsWith("/my")) {
+  // 3) Сессию Supabase обновляем в кабинете и разделе работодателя.
+  if (!pathname.startsWith("/my") && !pathname.startsWith("/employer")) {
     return NextResponse.next({ request: { headers } });
   }
 
