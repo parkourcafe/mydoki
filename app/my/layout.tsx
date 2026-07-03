@@ -18,6 +18,7 @@ const M = {
     security: "Безопасность",
     offline: "Офлайн",
     hiring: "Найм",
+    sharePackage: "Пакет",
     mfaWarning: "🔒 Хотите усилить защиту?",
     enable2fa: "Включить 2FA",
     mfaRecommend: "— дополнительная защита для ваших документов.",
@@ -35,6 +36,7 @@ const M = {
     security: "Security",
     offline: "Offline",
     hiring: "Hiring",
+    sharePackage: "Share pack",
     mfaWarning: "🔒 Want extra protection?",
     enable2fa: "Enable 2FA",
     mfaRecommend: "— an extra layer of security for your documents.",
@@ -52,6 +54,7 @@ const M = {
     security: "Xavfsizlik",
     offline: "Oflayn",
     hiring: "Yollash",
+    sharePackage: "Paket",
     mfaWarning: "🔒 Himoyani kuchaytirasizmi?",
     enable2fa: "2FA ni yoqish",
     mfaRecommend: "— hujjatlaringiz uchun qoʻshimcha himoya.",
@@ -69,6 +72,7 @@ const M = {
     security: "Keamanan",
     offline: "Offline",
     hiring: "Rekrutmen",
+    sharePackage: "Paket",
     mfaWarning: "🔒 Mau proteksi ekstra?",
     enable2fa: "Aktifkan 2FA",
     mfaRecommend: "— lapisan keamanan tambahan untuk dokumen Anda.",
@@ -114,6 +118,7 @@ export default async function MyLayout({
     { href: "/my/security", emoji: "🛡️", label: t.security },
     { href: "/saved", emoji: "📥", label: t.offline },
     { href: "/employer", emoji: "💼", label: t.hiring },
+    { href: "/my/share", emoji: "📤", label: t.sharePackage },
   ];
 
   return (
