@@ -5,6 +5,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { normalizeWhatsapp, type Source } from "@/lib/career";
 import { currentIpHash, verifyTurnstile } from "@/lib/antispam";
 import { sendNewApplicationEmail, sendAdminReportAlert } from "@/lib/email";
+import { sendPushToUser } from "@/lib/push";
 import { getLocale } from "@/lib/i18n";
 
 // ---------------------------- Report ----------------------------------
@@ -177,6 +178,34 @@ export async function submitApplication(
       source: input.source,
       vacancyId: res.vacancy_id ?? "",
     });
+  }
+
+  // Пуш владельцу вакансии (T9). Владельца ищем через service role.
+  if (!res.duplicate && res.vacancy_id) {
+    const admin = getSupabaseAdmin();
+    if (admin) {
+      const { data: vac } = await admin
+        .from("vacancies")
+        .select("employer_id")
+        .eq("id", res.vacancy_id)
+        .maybeSingle();
+      const employerId = (vac as { employer_id?: string } | null)?.employer_id;
+      if (employerId) {
+        const { data: ep } = await admin
+          .from("employer_profiles")
+          .select("user_id")
+          .eq("id", employerId)
+          .maybeSingle();
+        const ownerId = (ep as { user_id?: string } | null)?.user_id;
+        if (ownerId) {
+          await sendPushToUser(ownerId, {
+            type: "new_application",
+            vars: { vacancy: res.vacancy_title ?? "", name: input.fullName },
+            url: `/employer/vacancies/${res.vacancy_id}`,
+          });
+        }
+      }
+    }
   }
 
   return { ok: true, duplicate: res.duplicate, accessToken: res.access_token };

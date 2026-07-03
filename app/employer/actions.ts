@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { sendPushToUser } from "@/lib/push";
 import { getLocale } from "@/lib/i18n";
 import { sendVerificationCode } from "@/lib/email";
 import { normalizeWhatsapp } from "@/lib/career";
@@ -146,6 +147,32 @@ export async function setApplicationStatus(
     p_new_status: status,
   });
   if (error) throw error;
+
+  // Пуш кандидату только на shortlist (D8: на reject не шлём).
+  if (status === "shortlisted") {
+    const { data: appRow } = await supabase
+      .from("applications")
+      .select("user_id, access_token, vacancy_id")
+      .eq("id", applicationId)
+      .maybeSingle();
+    const a = appRow as
+      | { user_id?: string | null; access_token?: string; vacancy_id?: string }
+      | null;
+    if (a?.user_id && a.vacancy_id) {
+      const { data: vac } = await supabase
+        .from("vacancies")
+        .select("title")
+        .eq("id", a.vacancy_id)
+        .maybeSingle();
+      const title = (vac as { title?: string } | null)?.title ?? "";
+      await sendPushToUser(a.user_id, {
+        type: "shortlisted",
+        vars: { vacancy: title },
+        url: a.access_token ? `/applications/status/${a.access_token}` : "/",
+      });
+    }
+  }
+
   revalidatePath(`/employer/vacancies/${vacancyId}`);
 }
 
