@@ -66,7 +66,7 @@ export default async function VacancyDashboard({
     const [{ data: docs }, { data: answers }] = await Promise.all([
       supabase
         .from("application_documents")
-        .select("application_id, document_type, document_label, file_name, file_path")
+        .select("id, application_id, document_type, document_label, file_name, file_path")
         .in("application_id", appIds),
       supabase
         .from("application_answers")
@@ -74,6 +74,7 @@ export default async function VacancyDashboard({
         .in("application_id", appIds),
     ]);
     for (const d of (docs ?? []) as {
+      id: string;
       application_id: string;
       document_type: string;
       document_label: string;
@@ -81,6 +82,7 @@ export default async function VacancyDashboard({
       file_path: string;
     }[]) {
       (docsByApp[d.application_id] ??= []).push({
+        id: d.id,
         type: d.document_type,
         label: d.document_label,
         file_name: d.file_name,
