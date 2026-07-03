@@ -10,7 +10,7 @@ import { revokeSharePackage } from "./actions";
 const M = {
   ru: {
     title: "Поделиться пакетом документов",
-    subtitle: "Одна ссылка на несколько документов — удобно отправить работодателю.",
+    subtitle: "Одна ссылка на несколько документов — отправьте работодателю, партнёру или кому угодно.",
     create: "Новая ссылка",
     existing: "Активные ссылки",
     none: "Пока нет активных ссылок.",
@@ -19,7 +19,7 @@ const M = {
   },
   en: {
     title: "Share a document package",
-    subtitle: "One link for several documents — easy to send to an employer.",
+    subtitle: "One link for several documents — send it to an employer, a partner, or anyone.",
     create: "New link",
     existing: "Active links",
     none: "No active links yet.",
@@ -28,7 +28,7 @@ const M = {
   },
   id: {
     title: "Bagikan paket dokumen",
-    subtitle: "Satu tautan untuk beberapa dokumen — mudah dikirim ke perusahaan.",
+    subtitle: "Satu tautan untuk beberapa dokumen — kirim ke perusahaan, mitra, atau siapa saja.",
     create: "Tautan baru",
     existing: "Tautan aktif",
     none: "Belum ada tautan aktif.",
@@ -37,7 +37,7 @@ const M = {
   },
   uz: {
     title: "Hujjatlar paketini ulashish",
-    subtitle: "Bir nechta hujjat uchun bitta havola — ish beruvchiga yuborish oson.",
+    subtitle: "Bir nechta hujjat uchun bitta havola — ish beruvchi, hamkor yoki istalgan kishiga yuboring.",
     create: "Yangi havola",
     existing: "Faol havolalar",
     none: "Hozircha faol havola yo‘q.",
