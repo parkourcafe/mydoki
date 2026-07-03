@@ -94,6 +94,36 @@ export async function setApplicationStatus(
   revalidatePath(`/employer/vacancies/${vacancyId}`);
 }
 
+/**
+ * Откат ПОСЛЕДНЕГО отклонения (окно 10 мин). Возвращает восстановленный
+ * статус либо код ошибки (expired/not_rejected/not_owner/generic).
+ */
+export async function revertRejection(
+  applicationId: string,
+  vacancyId: string
+): Promise<
+  | { ok: true; status: ApplicationStatus }
+  | { ok: false; error: "expired" | "not_rejected" | "not_owner" | "generic" }
+> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("revert_last_rejection", {
+    p_application_id: applicationId,
+  });
+  if (error) {
+    const msg = error.message || "";
+    const code = /UNDO_EXPIRED/.test(msg)
+      ? "expired"
+      : /NOT_REJECTED/.test(msg)
+        ? "not_rejected"
+        : /NOT_OWNER/.test(msg)
+          ? "not_owner"
+          : "generic";
+    return { ok: false, error: code };
+  }
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+  return { ok: true, status: (data as ApplicationStatus) ?? "new" };
+}
+
 /** Свежий signed URL (2 мин) на файл отклика. RLS пускает только владельца. */
 export async function signApplicationDoc(path: string): Promise<string | null> {
   const supabase = await getSupabaseServer();
