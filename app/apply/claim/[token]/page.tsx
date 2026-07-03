@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { claimApplication } from "../../actions";
+import PushOptIn from "@/components/PushOptIn";
 
 export const metadata = { robots: { index: false, follow: false } };
 
@@ -12,6 +13,7 @@ const M = {
     linkedOnly: "Your application is linked to your account. Documents will appear in your vault shortly.",
     failed: "We couldn't link this application. The link may be invalid.",
     openVault: "Open my vault",
+    notify: "🔔 Notify me about the reply",
   },
   id: {
     title: "Dokumen tersimpan",
@@ -19,6 +21,7 @@ const M = {
     linkedOnly: "Lamaran Anda tertaut ke akun. Dokumen akan muncul di brankas sebentar lagi.",
     failed: "Kami tidak dapat menautkan lamaran ini. Tautan mungkin tidak valid.",
     openVault: "Buka brankas saya",
+    notify: "🔔 Beri tahu saya soal balasan",
   },
   ru: {
     title: "Документы сохранены",
@@ -26,6 +29,7 @@ const M = {
     linkedOnly: "Отклик привязан к аккаунту. Документы появятся в хранилище чуть позже.",
     failed: "Не удалось привязать отклик. Возможно, ссылка недействительна.",
     openVault: "Открыть моё хранилище",
+    notify: "🔔 Уведомить об ответе",
   },
   uz: {
     title: "Hujjatlar saqlandi",
@@ -33,6 +37,7 @@ const M = {
     linkedOnly: "Ariza akkauntingizga bog‘landi. Hujjatlar tez orada xotirada paydo bo‘ladi.",
     failed: "Arizani bog‘lab bo‘lmadi. Havola yaroqsiz bo‘lishi mumkin.",
     openVault: "Xotiramni ochish",
+    notify: "🔔 Javob haqida xabar berish",
   },
 } as const;
 
@@ -63,6 +68,11 @@ export default async function ClaimPage({
           <a href="/my" className="btn-primary mt-4 w-full">
             {t.openVault}
           </a>
+          {res.ok && (
+            <div className="mt-3">
+              <PushOptIn locale={locale} label={t.notify} />
+            </div>
+          )}
         </div>
       </div>
     </main>

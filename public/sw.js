@@ -81,3 +81,39 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(networkFirstNav(req));
   }
 });
+
+// ---- Web Push (T9) ----
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = {};
+  }
+  const title = data.title || "Doki";
+  const options = {
+    body: data.body || "",
+    icon: data.icon || "/icon-192",
+    badge: data.badge || "/icon-192",
+    data: { url: data.url || "/" },
+  };
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/";
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((list) => {
+        for (const c of list) {
+          if ("focus" in c) {
+            c.navigate(url);
+            return c.focus();
+          }
+        }
+        return self.clients.openWindow(url);
+      })
+  );
+});
