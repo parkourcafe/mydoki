@@ -9,6 +9,7 @@ import { signOut } from "@/app/my/actions";
 import type { Locale } from "@/lib/i18n";
 
 type NavItem = { href: string; emoji: string; label: string };
+type NavGroup = { title?: string; items: NavItem[] };
 
 /**
  * Оболочка кабинета: слева — вертикальное меню разделов, справа — контент.
@@ -34,7 +35,7 @@ export default function AppNav({
   userEmail: string;
   spaces: { id: string; name: string }[];
   activeId: string;
-  nav: NavItem[];
+  nav: NavGroup[];
   mfa: { warning: string; enable2fa: string; recommend: string } | null;
   children: React.ReactNode;
 }) {
@@ -95,29 +96,38 @@ export default function AppNav({
           <SpaceSwitcher spaces={spaces} activeId={activeId} locale={locale} />
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2 text-sm">
-          {nav.map((item) => {
-            const active =
-              item.href === "/my"
-                ? pathname === "/my"
-                : pathname.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={
-                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors " +
-                  (active
-                    ? "bg-[#f0e6d9] font-medium text-[#2c2522]"
-                    : "text-[#5c5248] hover:bg-[#f0e6d9]")
-                }
-              >
-                <span className="text-base">{item.emoji}</span>
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+        <nav className="flex-1 space-y-3 overflow-y-auto px-3 py-2 text-sm">
+          {nav.map((group, gi) => (
+            <div key={gi} className="space-y-1">
+              {group.title && (
+                <p className="px-3 pb-0.5 pt-1 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                  {group.title}
+                </p>
+              )}
+              {group.items.map((item) => {
+                const active =
+                  item.href === "/my"
+                    ? pathname === "/my"
+                    : pathname.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className={
+                      "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors " +
+                      (active
+                        ? "bg-[#f0e6d9] font-medium text-[#2c2522]"
+                        : "text-[#5c5248] hover:bg-[#f0e6d9]")
+                    }
+                  >
+                    <span className="text-base">{item.emoji}</span>
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         <div className="border-t border-[#e8e0d5] px-3 py-3">
