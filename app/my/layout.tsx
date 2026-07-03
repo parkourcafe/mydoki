@@ -19,6 +19,7 @@ const M = {
     security: "Безопасность",
     offline: "Офлайн",
     hiring: "Найм",
+    resume: "Моё резюме",
     mfaWarning: "🔒 Хотите усилить защиту?",
     enable2fa: "Включить 2FA",
     mfaRecommend: "— дополнительная защита для ваших документов.",
@@ -37,6 +38,7 @@ const M = {
     security: "Security",
     offline: "Offline",
     hiring: "Hiring",
+    resume: "My resume",
     mfaWarning: "🔒 Want extra protection?",
     enable2fa: "Enable 2FA",
     mfaRecommend: "— an extra layer of security for your documents.",
@@ -55,6 +57,7 @@ const M = {
     security: "Xavfsizlik",
     offline: "Oflayn",
     hiring: "Yollash",
+    resume: "Rezyumem",
     mfaWarning: "🔒 Himoyani kuchaytirasizmi?",
     enable2fa: "2FA ni yoqish",
     mfaRecommend: "— hujjatlaringiz uchun qoʻshimcha himoya.",
@@ -73,6 +76,7 @@ const M = {
     security: "Keamanan",
     offline: "Offline",
     hiring: "Rekrutmen",
+    resume: "Resume saya",
     mfaWarning: "🔒 Mau proteksi ekstra?",
     enable2fa: "Aktifkan 2FA",
     mfaRecommend: "— lapisan keamanan tambahan untuk dokumen Anda.",
@@ -117,8 +121,11 @@ export default async function MyLayout({
     { href: "/my/reminders", emoji: "⏰", label: t.reminders },
     { href: "/my/family", emoji: "🔑", label: t.accessLinks },
   ];
-  // РАБОТА — отдельная секция, не тронута.
-  const work = [{ href: "/employer", emoji: "💼", label: t.hiring }];
+  // РАБОТА — отдельная секция. Найм (работодатель) + Моё резюме (кандидат).
+  const work = [
+    { href: "/employer", emoji: "💼", label: t.hiring },
+    { href: "/my/resume", emoji: "🙋", label: t.resume },
+  ];
 
   return (
     <AppNav
