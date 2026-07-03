@@ -34,6 +34,7 @@ const M = {
     uploaded: "Uploaded",
     errored: "Upload failed — try again",
     questions: "Questions",
+    choosePlaceholder: "Choose…",
     yes: "Yes",
     no: "No",
     consentTpl: (c: string) =>
@@ -73,6 +74,7 @@ const M = {
     uploaded: "Terunggah",
     errored: "Gagal unggah — coba lagi",
     questions: "Pertanyaan",
+    choosePlaceholder: "Pilih…",
     yes: "Ya",
     no: "Tidak",
     consentTpl: (c: string) =>
@@ -112,6 +114,7 @@ const M = {
     uploaded: "Загружен",
     errored: "Ошибка загрузки — повторите",
     questions: "Вопросы",
+    choosePlaceholder: "Выберите…",
     yes: "Да",
     no: "Нет",
     consentTpl: (c: string) =>
@@ -151,6 +154,7 @@ const M = {
     uploaded: "Yuklandi",
     errored: "Yuklashda xato — qayta urining",
     questions: "Savollar",
+    choosePlaceholder: "Tanlang…",
     yes: "Ha",
     no: "Yo‘q",
     consentTpl: (c: string) =>
@@ -235,7 +239,8 @@ export default function ApplyForm({
       }
     }
     for (let i = 0; i < screeningQuestions.length; i++) {
-      if (!(answers[i] ?? "").trim()) return setError(t.errAns);
+      const required = screeningQuestions[i].required !== false;
+      if (required && !(answers[i] ?? "").trim()) return setError(t.errAns);
     }
     if (!consent) return setError(t.errConsent);
 
@@ -435,10 +440,13 @@ export default function ApplyForm({
       {screeningQuestions.length > 0 && (
         <div className="space-y-3">
           <p className="label">{t.questions}</p>
-          {screeningQuestions.map((q, i) => (
+          {screeningQuestions.map((q, i) => {
+            const required = q.required !== false;
+            return (
             <div key={i}>
               <label className="mb-1 block text-sm text-slate-700">
-                {q.question} *
+                {q.question}
+                {required ? " *" : ` (${t.optional})`}
               </label>
               {q.type === "yes_no" ? (
                 <div className="flex gap-2">
@@ -458,6 +466,21 @@ export default function ApplyForm({
                     </button>
                   ))}
                 </div>
+              ) : q.type === "choice" && (q.options ?? []).length > 0 ? (
+                <select
+                  className="input"
+                  value={answers[i] ?? ""}
+                  onChange={(e) =>
+                    setAnswers((p) => ({ ...p, [i]: e.target.value }))
+                  }
+                >
+                  <option value="">{t.choosePlaceholder}</option>
+                  {(q.options ?? []).map((opt, oi) => (
+                    <option key={oi} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
               ) : (
                 <input
                   className="input"
@@ -468,7 +491,8 @@ export default function ApplyForm({
                 />
               )}
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

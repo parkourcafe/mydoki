@@ -9,10 +9,10 @@ import ShareBox from "./ShareBox";
 import ApplicationsBoard, { type BoardApp } from "./ApplicationsBoard";
 
 const M = {
-  en: { back: "← All vacancies", created: "Vacancy created — share the link below to start receiving applications." },
-  id: { back: "← Semua lowongan", created: "Lowongan dibuat — bagikan tautan di bawah untuk mulai menerima lamaran." },
-  ru: { back: "← Все вакансии", created: "Вакансия создана — поделитесь ссылкой ниже, чтобы начать принимать отклики." },
-  uz: { back: "← Barcha vakansiyalar", created: "Vakansiya yaratildi — arizalarni qabul qilish uchun havolani ulashing." },
+  en: { back: "← All vacancies", edit: "✏️ Edit", created: "Vacancy created — share the link below to start receiving applications.", updated: "Changes saved. They apply to new applications; existing ones keep their original answers." },
+  id: { back: "← Semua lowongan", edit: "✏️ Edit", created: "Lowongan dibuat — bagikan tautan di bawah untuk mulai menerima lamaran.", updated: "Perubahan tersimpan. Berlaku untuk lamaran baru; lamaran lama tetap dengan jawaban aslinya." },
+  ru: { back: "← Все вакансии", edit: "✏️ Изменить", created: "Вакансия создана — поделитесь ссылкой ниже, чтобы начать принимать отклики.", updated: "Изменения сохранены. Они действуют для новых откликов; уже полученные сохраняют исходные ответы." },
+  uz: { back: "← Barcha vakansiyalar", edit: "✏️ Tahrirlash", created: "Vakansiya yaratildi — arizalarni qabul qilish uchun havolani ulashing.", updated: "O‘zgarishlar saqlandi. Ular yangi arizalar uchun amal qiladi; eskilari asl javoblarini saqlaydi." },
 } as const;
 
 export default async function VacancyDashboard({
@@ -20,12 +20,12 @@ export default async function VacancyDashboard({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ created?: string }>;
+  searchParams: Promise<{ created?: string; updated?: string }>;
 }) {
   const locale = await getLocale();
   const t = M[locale];
   const { id } = await params;
-  const { created } = await searchParams;
+  const { created, updated } = await searchParams;
   const user = await getUser();
   const supabase = await getSupabaseServer();
 
@@ -111,9 +111,17 @@ export default async function VacancyDashboard({
 
   return (
     <div>
-      <Link href="/employer" className="text-sm text-slate-500 hover:text-slate-800">
-        {t.back}
-      </Link>
+      <div className="flex items-center justify-between gap-3">
+        <Link href="/employer" className="text-sm text-slate-500 hover:text-slate-800">
+          {t.back}
+        </Link>
+        <Link
+          href={`/employer/vacancies/${vacancy.id}/edit`}
+          className="text-sm font-medium text-brand-600 hover:underline"
+        >
+          {t.edit}
+        </Link>
+      </div>
 
       <div className="mb-4 mt-2">
         <h1 className="text-2xl font-semibold">{vacancy.title}</h1>
@@ -126,6 +134,11 @@ export default async function VacancyDashboard({
       {created && (
         <p className="mb-3 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
           {t.created}
+        </p>
+      )}
+      {updated && (
+        <p className="mb-3 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+          {t.updated}
         </p>
       )}
 
