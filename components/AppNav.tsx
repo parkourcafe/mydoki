@@ -40,7 +40,17 @@ export default function AppNav({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  // Ручные переопределения свёрнутости групп (по индексу). Если для группы
+  // ничего не задано — по умолчанию открыта только та, где текущая страница;
+  // остальные свёрнуты. Заголовок группы — кнопка, разворачивающая список.
+  const [collapsed, setCollapsed] = useState<Record<number, boolean>>({});
   const pathname = usePathname();
+
+  const activeGroupIndex = nav.findIndex((g) =>
+    g.items.some((it) =>
+      it.href === "/my" ? pathname === "/my" : pathname.startsWith(it.href),
+    ),
+  );
 
   // Закрываем выезжающее меню при смене маршрута.
   useEffect(() => {
@@ -97,25 +107,44 @@ export default function AppNav({
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-2 text-sm">
-          {nav.map((group, gi) => (
+          {nav.map((group, gi) => {
+            const isCollapsed = collapsed[gi] ?? gi !== activeGroupIndex;
+            return (
             <div
               key={gi}
               className={
                 "space-y-0.5 " +
-                (gi > 0 ? "mt-3 border-t border-[#e8e0d5] pt-3" : "")
+                (gi > 0 ? "mt-2 border-t border-[#e8e0d5] pt-2" : "")
               }
             >
               {group.title && (
-                <div className="flex items-center gap-2 px-3 pb-1 pt-0.5">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCollapsed((c) => ({ ...c, [gi]: !isCollapsed }))
+                  }
+                  aria-expanded={!isCollapsed}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-[#f0e6d9]"
+                >
                   {group.emoji && (
                     <span className="text-base leading-none">{group.emoji}</span>
                   )}
                   <span className="text-[13px] font-bold tracking-wide text-[#2c2522]">
                     {group.title}
                   </span>
-                </div>
+                  <span
+                    className={
+                      "ml-auto text-xs text-slate-400 transition-transform duration-200 " +
+                      (isCollapsed ? "" : "rotate-90")
+                    }
+                    aria-hidden="true"
+                  >
+                    ▸
+                  </span>
+                </button>
               )}
-              {group.items.map((item) => {
+              {!isCollapsed &&
+                group.items.map((item) => {
                 const active =
                   item.href === "/my"
                     ? pathname === "/my"
@@ -138,7 +167,8 @@ export default function AppNav({
                 );
               })}
             </div>
-          ))}
+            );
+          })}
         </nav>
 
         <div className="border-t border-[#e8e0d5] px-3 py-3">
