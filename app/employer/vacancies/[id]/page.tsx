@@ -5,7 +5,7 @@ import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { appBaseUrl, type Vacancy } from "@/lib/career";
 import { markApplicationsViewed } from "@/app/employer/actions";
-import ShareBox from "./ShareBox";
+import DistributionCoach from "./DistributionCoach";
 import ApplicationsBoard, { type BoardApp } from "./ApplicationsBoard";
 
 const M = {
@@ -129,22 +129,38 @@ export default async function VacancyDashboard({
         </p>
       )}
 
-      <div className="mb-5">
-        <ShareBox
+      {applications.length === 0 && vacancy.status === "active" ? (
+        <DistributionCoach
           locale={locale}
           applyUrl={applyUrl}
           title={vacancy.title}
           company={vacancy.company_name}
+          location={vacancy.location}
           slug={vacancy.slug}
+          viewsCount={vacancy.views_count}
         />
-      </div>
-
-      <ApplicationsBoard
-        locale={locale}
-        vacancyId={vacancy.id}
-        requiredDocs={vacancy.required_documents ?? []}
-        initialApplications={applications}
-      />
+      ) : (
+        <>
+          <div className="mb-4 flex justify-end">
+            <DistributionCoach
+              compact
+              locale={locale}
+              applyUrl={applyUrl}
+              title={vacancy.title}
+              company={vacancy.company_name}
+              location={vacancy.location}
+              slug={vacancy.slug}
+              viewsCount={vacancy.views_count}
+            />
+          </div>
+          <ApplicationsBoard
+            locale={locale}
+            vacancyId={vacancy.id}
+            requiredDocs={vacancy.required_documents ?? []}
+            initialApplications={applications}
+          />
+        </>
+      )}
     </div>
   );
 }
