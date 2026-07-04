@@ -49,6 +49,8 @@ export type CreateVacancyInput = {
   closes_at?: string | null;
   required_documents: RequiredDocument[];
   screening_questions: ScreeningQuestion[];
+  video_screening?: "off" | "optional" | "required";
+  video_question?: string | null;
 };
 
 /** Создать вакансию через RPC (генерит уникальный slug). Возвращает id/slug. */
@@ -75,6 +77,20 @@ export async function createVacancy(
   });
   if (error) throw error;
   const res = data as { id: string; slug: string };
+
+  // Видео-скрининг не входит в RPC create_vacancy — если задан, дописываем
+  // прямым RLS-обновлением (владелец), сразу после создания.
+  const mode = input.video_screening ?? "off";
+  if (mode !== "off") {
+    await supabase
+      .from("vacancies")
+      .update({
+        video_screening: mode,
+        video_question: input.video_question?.trim() || null,
+      })
+      .eq("id", res.id);
+  }
+
   revalidatePath("/employer");
   return res;
 }
@@ -109,6 +125,8 @@ export async function updateVacancy(
       closes_at: input.closes_at || null,
       required_documents: input.required_documents ?? [],
       screening_questions: input.screening_questions ?? [],
+      video_screening: input.video_screening ?? "off",
+      video_question: input.video_question?.trim() || null,
       updated_at: new Date().toISOString(),
     })
     .eq("id", input.id);
@@ -139,6 +157,15 @@ export async function signApplicationDoc(path: string): Promise<string | null> {
   const { data } = await supabase.storage
     .from("applications")
     .createSignedUrl(path, 120);
+  return data?.signedUrl ?? null;
+}
+
+/** Signed URL (5 мин) на видео-ответ кандидата из приватного bucket. */
+export async function signApplicationVideo(path: string): Promise<string | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase.storage
+    .from("video-screenings")
+    .createSignedUrl(path, 300);
   return data?.signedUrl ?? null;
 }
 

@@ -52,6 +52,8 @@ export default async function EditVacancyPage({
         closes_at: vacancy.closes_at,
         required_documents: vacancy.required_documents ?? [],
         screening_questions: vacancy.screening_questions ?? [],
+        video_screening: vacancy.video_screening ?? "off",
+        video_question: vacancy.video_question ?? null,
       }}
     />
   );

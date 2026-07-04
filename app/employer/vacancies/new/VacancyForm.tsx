@@ -40,6 +40,14 @@ const M = {
     remove: "Remove",
     questions: "Screening questions",
     questionsHint: "Questions candidates answer when applying.",
+    videoTitle: "Video answer",
+    videoHint: "A short video self-intro (up to 60 sec) instead of long text.",
+    videoOff: "Off",
+    videoOptional: "Optional",
+    videoRequired: "Required",
+    videoQ: "Video question",
+    videoQPh: "e.g. Tell us about yourself in 30 seconds",
+    videoWarn: "⚠️ May reduce the number of applications.",
     addQuestion: "+ Add question",
     question: "Question",
     qText: "Text answer",
@@ -84,6 +92,14 @@ const M = {
     remove: "Hapus",
     questions: "Pertanyaan seleksi",
     questionsHint: "Pertanyaan yang dijawab kandidat saat melamar.",
+    videoTitle: "Jawaban video",
+    videoHint: "Perkenalan video singkat (maks 60 dtk) daripada teks panjang.",
+    videoOff: "Nonaktif",
+    videoOptional: "Opsional",
+    videoRequired: "Wajib",
+    videoQ: "Pertanyaan video",
+    videoQPh: "mis. Ceritakan tentang diri Anda dalam 30 detik",
+    videoWarn: "⚠️ Bisa mengurangi jumlah lamaran.",
     addQuestion: "+ Tambah pertanyaan",
     question: "Pertanyaan",
     qText: "Jawaban teks",
@@ -128,6 +144,14 @@ const M = {
     remove: "Удалить",
     questions: "Вопросы скрининга",
     questionsHint: "Вопросы, на которые отвечает кандидат.",
+    videoTitle: "Видео-ответ",
+    videoHint: "Короткое видео-представление (до 60 сек) вместо длинного текста.",
+    videoOff: "Выкл",
+    videoOptional: "По желанию",
+    videoRequired: "Обязательно",
+    videoQ: "Вопрос для видео",
+    videoQPh: "напр. Расскажите о себе за 30 секунд",
+    videoWarn: "⚠️ Может снизить число откликов.",
     addQuestion: "+ Добавить вопрос",
     question: "Вопрос",
     qText: "Текстовый ответ",
@@ -172,6 +196,14 @@ const M = {
     remove: "O‘chirish",
     questions: "Saralash savollari",
     questionsHint: "Nomzod ariza berishda javob beradigan savollar.",
+    videoTitle: "Video javob",
+    videoHint: "Uzun matn o‘rniga qisqa video-tanishtiruv (60 sek gacha).",
+    videoOff: "O‘chiq",
+    videoOptional: "Ixtiyoriy",
+    videoRequired: "Majburiy",
+    videoQ: "Video uchun savol",
+    videoQPh: "mas. 30 soniyada o‘zingiz haqingizda gapiring",
+    videoWarn: "⚠️ Arizalar sonini kamaytirishi mumkin.",
     addQuestion: "+ Savol qo‘shish",
     question: "Savol",
     qText: "Matnli javob",
@@ -203,6 +235,8 @@ export type VacancyInitial = {
   closes_at: string | null;
   required_documents: RequiredDocument[];
   screening_questions: ScreeningQuestion[];
+  video_screening?: "off" | "optional" | "required";
+  video_question?: string | null;
 };
 
 export default function VacancyForm({
@@ -241,6 +275,12 @@ export default function VacancyForm({
   );
   const [questions, setQuestions] = useState<ScreeningQuestion[]>(
     initial?.screening_questions ?? []
+  );
+  const [videoScreening, setVideoScreening] = useState<
+    "off" | "optional" | "required"
+  >(initial?.video_screening ?? "off");
+  const [videoQuestion, setVideoQuestion] = useState(
+    initial?.video_question ?? ""
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -308,6 +348,9 @@ export default function VacancyForm({
         closes_at: closesAt || null,
         required_documents: cleanDocs,
         screening_questions: cleanQuestions,
+        video_screening: videoScreening,
+        video_question:
+          videoScreening !== "off" ? videoQuestion.trim() || null : null,
       };
 
       if (isEdit && vacancyId) {
@@ -500,6 +543,40 @@ export default function VacancyForm({
         <button type="button" onClick={addQuestion} className="btn-ghost">
           {t.addQuestion}
         </button>
+      </div>
+
+      {/* Video screening */}
+      <div className="card space-y-3">
+        <div>
+          <p className="label">🎥 {t.videoTitle}</p>
+          <p className="text-xs text-slate-500">{t.videoHint}</p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-[auto_1fr] sm:items-start">
+          <select
+            className="input sm:w-40"
+            value={videoScreening}
+            onChange={(e) =>
+              setVideoScreening(e.target.value as "off" | "optional" | "required")
+            }
+          >
+            <option value="off">{t.videoOff}</option>
+            <option value="optional">{t.videoOptional}</option>
+            <option value="required">{t.videoRequired}</option>
+          </select>
+          {videoScreening !== "off" && (
+            <div>
+              <input
+                className="input"
+                value={videoQuestion}
+                onChange={(e) => setVideoQuestion(e.target.value)}
+                placeholder={t.videoQPh}
+              />
+              {videoScreening === "required" && (
+                <p className="mt-1 text-xs text-amber-600">{t.videoWarn}</p>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
