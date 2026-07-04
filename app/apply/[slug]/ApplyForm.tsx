@@ -12,8 +12,10 @@ import {
   isValidWhatsapp,
   type RequiredDocument,
   type ScreeningQuestion,
+  type VideoScreening,
 } from "@/lib/career";
 import { submitApplication } from "../actions";
+import VideoRecorder from "./VideoRecorder";
 
 const M = {
   en: {
@@ -46,6 +48,9 @@ const M = {
     errWa: "Please enter a valid WhatsApp number.",
     errDoc: (l: string) => `Please upload: ${l}.`,
     errAns: "Please answer all questions.",
+    videoLabel: "Video answer",
+    videoOptionalNote: "Optional",
+    errVideoReq: "Please record or upload your video answer.",
     errConsent: "Please agree to the consent to continue.",
     errFileType: "Only PDF, JPG or PNG files are allowed.",
     errFileSize: "File is too large (max 10MB).",
@@ -89,6 +94,9 @@ const M = {
     errWa: "Masukkan nomor WhatsApp yang valid.",
     errDoc: (l: string) => `Silakan unggah: ${l}.`,
     errAns: "Silakan jawab semua pertanyaan.",
+    videoLabel: "Jawaban video",
+    videoOptionalNote: "Opsional",
+    errVideoReq: "Rekam atau unggah jawaban video Anda.",
     errConsent: "Setujui persetujuan untuk melanjutkan.",
     errFileType: "Hanya berkas PDF, JPG, atau PNG.",
     errFileSize: "Berkas terlalu besar (maks 10MB).",
@@ -132,6 +140,9 @@ const M = {
     errWa: "Введите корректный номер WhatsApp.",
     errDoc: (l: string) => `Загрузите: ${l}.`,
     errAns: "Ответьте на все вопросы.",
+    videoLabel: "Видео-ответ",
+    videoOptionalNote: "по желанию",
+    errVideoReq: "Запишите или загрузите видео-ответ.",
     errConsent: "Подтвердите согласие, чтобы продолжить.",
     errFileType: "Только PDF, JPG или PNG.",
     errFileSize: "Файл слишком большой (макс. 10 МБ).",
@@ -175,6 +186,9 @@ const M = {
     errWa: "To‘g‘ri WhatsApp raqamini kiriting.",
     errDoc: (l: string) => `Yuklang: ${l}.`,
     errAns: "Barcha savollarga javob bering.",
+    videoLabel: "Video javob",
+    videoOptionalNote: "ixtiyoriy",
+    errVideoReq: "Video javobingizni yozing yoki yuklang.",
     errConsent: "Davom etish uchun rozilikni tasdiqlang.",
     errFileType: "Faqat PDF, JPG yoki PNG.",
     errFileSize: "Fayl juda katta (maks 10MB).",
@@ -203,6 +217,8 @@ export default function ApplyForm({
   companyName,
   requiredDocuments,
   screeningQuestions,
+  videoScreening,
+  videoQuestion,
 }: {
   locale: Locale;
   vacancyId: string;
@@ -210,6 +226,8 @@ export default function ApplyForm({
   companyName: string;
   requiredDocuments: RequiredDocument[];
   screeningQuestions: ScreeningQuestion[];
+  videoScreening: VideoScreening;
+  videoQuestion: string | null;
 }) {
   const t = M[locale];
   const consentText = t.consentTpl(companyName);
@@ -224,6 +242,15 @@ export default function ApplyForm({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [doneToken, setDoneToken] = useState<string | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+
+  function onVideo(file: File | null) {
+    setVideoFile(file);
+    if (file) {
+      markStarted();
+      track("video_recorded", { vacancy_id: vacancyId });
+    }
+  }
 
   // Воронка (§2.1): просмотр вакансии → начало → отправка. Только ID.
   const startedRef = useRef(false);
@@ -271,6 +298,9 @@ export default function ApplyForm({
       const required = screeningQuestions[i].required !== false;
       if (required && !(answers[i] ?? "").trim()) return setError(t.errAns);
     }
+    if (videoScreening === "required" && !videoFile) {
+      return setError(t.errVideoReq);
+    }
     if (!consent) return setError(t.errConsent);
 
     setBusy(true);
@@ -311,6 +341,27 @@ export default function ApplyForm({
           path,
           name: file.name,
           size: file.size,
+        });
+      }
+
+      // Видео-ответ грузим в отдельный приватный bucket и регистрируем как
+      // документ типа video_intro (переиспользуем чеклист + signed-URL).
+      if (videoFile) {
+        const ext = videoFile.name.split(".").pop() || "webm";
+        const vpath = `${vacancyId}/${applicationId}/intro.${ext}`;
+        const { error: vErr } = await supabase.storage
+          .from("video-screenings")
+          .upload(vpath, videoFile, {
+            contentType: videoFile.type || "video/webm",
+            upsert: true,
+          });
+        if (vErr) throw new Error(vErr.message);
+        uploaded.push({
+          type: "video_intro",
+          label: "Video",
+          path: vpath,
+          name: videoFile.name,
+          size: videoFile.size,
         });
       }
 
@@ -529,6 +580,23 @@ export default function ApplyForm({
             </div>
             );
           })}
+        </div>
+      )}
+
+      {videoScreening !== "off" && (
+        <div className="space-y-2">
+          <p className="label">
+            🎥 {t.videoLabel}
+            {videoScreening === "required" ? (
+              " *"
+            ) : (
+              <span className="font-normal text-slate-400"> ({t.videoOptionalNote})</span>
+            )}
+          </p>
+          {videoQuestion && (
+            <p className="text-sm text-slate-700">{videoQuestion}</p>
+          )}
+          <VideoRecorder locale={locale} onVideo={onVideo} />
         </div>
       )}
 

@@ -155,6 +155,8 @@ export default async function ApplyPage({
           companyName={vacancy.company_name}
           requiredDocuments={vacancy.required_documents ?? []}
           screeningQuestions={vacancy.screening_questions ?? []}
+          videoScreening={vacancy.video_screening ?? "off"}
+          videoQuestion={vacancy.video_question ?? null}
         />
       </div>
 

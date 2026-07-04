@@ -8,7 +8,11 @@ import {
   type ApplicationStatus,
   type RequiredDocument,
 } from "@/lib/career";
-import { setApplicationStatus, signApplicationDoc } from "@/app/employer/actions";
+import {
+  setApplicationStatus,
+  signApplicationDoc,
+  signApplicationVideo,
+} from "@/app/employer/actions";
 import { track } from "@/lib/analytics";
 
 export type BoardDoc = { type: string; label: string; file_name: string; path: string };
@@ -75,6 +79,35 @@ function StatusBadge({ status, t }: { status: ApplicationStatus; t: (typeof M)[L
   };
   const s = map[status];
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${s.cls}`}>{s.label}</span>;
+}
+
+function VideoIntro({ path, label }: { path: string; label: string }) {
+  const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  async function load() {
+    setLoading(true);
+    const u = await signApplicationVideo(path);
+    setLoading(false);
+    setUrl(u);
+  }
+  return (
+    <div className="mt-3 border-t border-slate-100 pt-3">
+      <p className="mb-1 text-xs text-slate-400">🎥 {label}</p>
+      {url ? (
+        // eslint-disable-next-line jsx-a11y/media-has-caption
+        <video src={url} controls playsInline className="w-full rounded-lg bg-black" />
+      ) : (
+        <button
+          type="button"
+          onClick={load}
+          disabled={loading}
+          className="btn border border-brand-200 bg-brand-50 text-brand-700 disabled:opacity-50"
+        >
+          {loading ? "…" : "▶ Video"}
+        </button>
+      )}
+    </div>
+  );
 }
 
 async function openDoc(path: string) {
@@ -250,6 +283,12 @@ export default function ApplicationsBoard({
                   ))}
                 </dl>
               )}
+
+              {/* Видео-ответ */}
+              {(() => {
+                const v = a.documents.find((d) => d.type === "video_intro");
+                return v ? <VideoIntro path={v.path} label={v.label} /> : null;
+              })()}
 
               {/* Actions */}
               <div className="mt-4 flex flex-wrap gap-2">

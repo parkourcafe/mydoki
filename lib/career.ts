@@ -26,6 +26,7 @@ export type ScreeningQuestion = {
 };
 
 export type Urgency = "normal" | "hiring_now";
+export type VideoScreening = "off" | "optional" | "required";
 export type VacancyStatus = "active" | "paused" | "closed";
 export type ApplicationStatus =
   | "new"
@@ -57,6 +58,8 @@ export type Vacancy = {
   urgency: Urgency;
   required_documents: RequiredDocument[];
   screening_questions: ScreeningQuestion[];
+  video_screening: VideoScreening;
+  video_question: string | null;
   status: VacancyStatus;
   closes_at: string | null;
   created_at: string;
