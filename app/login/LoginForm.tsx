@@ -34,6 +34,10 @@ const M = {
     haveAccount: "Уже есть аккаунт? ",
     signUp: "Зарегистрироваться",
     or: "или",
+    resendVerification: "Отправить письмо повторно",
+    resending: "Отправляю…",
+    verificationResent:
+      "Отправили новую ссылку для подтверждения. Проверьте почту (и папку «Спам»).",
   },
   en: {
     googleSignIn: "Sign in with Google",
@@ -62,6 +66,10 @@ const M = {
     haveAccount: "Already have an account? ",
     signUp: "Sign up",
     or: "or",
+    resendVerification: "Resend verification email",
+    resending: "Sending…",
+    verificationResent:
+      "We've sent a new verification link. Check your inbox (and the “Spam” folder).",
   },
   id: {
     googleSignIn: "Masuk dengan Google",
@@ -90,6 +98,10 @@ const M = {
     haveAccount: "Sudah punya akun? ",
     signUp: "Daftar",
     or: "atau",
+    resendVerification: "Kirim ulang email verifikasi",
+    resending: "Mengirim…",
+    verificationResent:
+      "Kami telah mengirim tautan verifikasi baru. Periksa kotak masuk Anda (dan folder “Spam”).",
   },
   uz: {
     googleSignIn: "Google orqali kirish",
@@ -118,6 +130,10 @@ const M = {
     haveAccount: "Hisobingiz bormi? ",
     signUp: "Roʻyxatdan oʻtish",
     or: "yoki",
+    resendVerification: "Tasdiqlash xatini qayta yuborish",
+    resending: "Yuborilmoqda…",
+    verificationResent:
+      "Yangi tasdiqlash havolasini yubordik. Pochtangizni (va “Spam” jildini) tekshiring.",
   },
 } as const;
 
@@ -247,6 +263,19 @@ export default function LoginForm({
   const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
   const action = mode === "signup" ? signup : login;
   const [state, formAction, pending] = useActionState(action, initial);
+  // Email контролируем, чтобы повторно отправить письмо подтверждения на тот же
+  // адрес без повторного ввода (после ошибки «email не подтверждён»).
+  const [email, setEmail] = useState("");
+  const [resend, setResend] = useState<"idle" | "sending" | "sent">("idle");
+
+  async function resendVerification() {
+    if (!email.trim()) return;
+    setResend("sending");
+    const supabase = getSupabaseBrowser();
+    // Игнорируем ошибку намеренно: не раскрываем, существует ли аккаунт.
+    await supabase.auth.resend({ type: "signup", email: email.trim() });
+    setResend("sent");
+  }
 
   if (mode === "reset")
     return <ResetRequest onBack={() => setMode("login")} locale={locale} />;
@@ -272,6 +301,8 @@ export default function LoginForm({
             type="email"
             autoComplete="email"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="input"
             placeholder="you@example.com"
           />
@@ -336,6 +367,22 @@ export default function LoginForm({
             {state.message}
           </p>
         )}
+
+        {state.needsVerification &&
+          (resend === "sent" ? (
+            <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+              {t.verificationResent}
+            </p>
+          ) : (
+            <button
+              type="button"
+              onClick={resendVerification}
+              disabled={resend === "sending" || !email.trim()}
+              className="w-full rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700 hover:bg-brand-100 disabled:opacity-50"
+            >
+              {resend === "sending" ? t.resending : t.resendVerification}
+            </button>
+          ))}
 
         <button type="submit" disabled={pending} className="btn-primary w-full">
           {pending

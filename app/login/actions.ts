@@ -6,7 +6,13 @@ import { recordLogin } from "@/lib/loginEvents";
 import { getLocale } from "@/lib/i18n";
 import { safeNextPath } from "@/lib/nextPath";
 
-export type AuthState = { error?: string; message?: string };
+export type AuthState = {
+  error?: string;
+  message?: string;
+  /** true, когда вход/регистрация упёрлись в неподтверждённый email —
+   * форме показать кнопку «Отправить письмо повторно». */
+  needsVerification?: boolean;
+};
 
 const M = {
   ru: {
@@ -96,7 +102,17 @@ export async function login(
 
   const supabase = await getSupabaseServer();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: mapAuthError(error.message, t, t.loginFailed) };
+  if (error) {
+    // Явно распознаём «email не подтверждён» — форма покажет кнопку повторной
+    // отправки письма (частый затык на первом входе).
+    const needsVerification = error.message
+      .toLowerCase()
+      .includes("email not confirmed");
+    return {
+      error: mapAuthError(error.message, t, t.loginFailed),
+      needsVerification,
+    };
+  }
   await recordLogin(supabase);
   redirect(safeNextPath(formData.get("next")));
 }
@@ -118,6 +134,7 @@ export async function signup(
   if (!data.session) {
     return {
       message: t.confirmEmail,
+      needsVerification: true,
     };
   }
   await recordLogin(supabase);
