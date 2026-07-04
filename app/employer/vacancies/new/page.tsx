@@ -4,6 +4,7 @@ import { getLocale } from "@/lib/i18n";
 import SubmitButton from "@/components/SubmitButton";
 import { saveEmployerProfile } from "@/app/employer/actions";
 import VacancyForm from "./VacancyForm";
+import EmployerVerification from "@/app/employer/EmployerVerification";
 
 const M = {
   en: {
@@ -88,6 +89,12 @@ export default async function NewVacancyPage() {
         </form>
       </div>
     );
+  }
+
+  // Работодатель должен подтвердить email кодом, прежде чем публиковать
+  // вакансии (общая функция create_vacancy требует verified_at).
+  if (!profile.verified_at) {
+    return <EmployerVerification locale={locale} />;
   }
 
   return <VacancyForm locale={locale} defaultCompany={profile.company_name} />;

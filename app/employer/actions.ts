@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { normalizeWhatsapp } from "@/lib/career";
 import type {
@@ -9,6 +10,104 @@ import type {
   ScreeningQuestion,
   ApplicationStatus,
 } from "@/lib/career";
+
+// ── Верификация работодателя (код на email) ──────────────────────────
+// Функции set/confirm_employer_verification хранят и сверяют ХЕШ кода —
+// хешируем на сервере, сам код шлём на email. Соль — из env.
+const VERIFY_SALT = process.env.VERIFY_CODE_SALT || "doki-empl-verify-v1";
+function hashCode(code: string): string {
+  return createHash("sha256").update(VERIFY_SALT + code).digest("hex");
+}
+
+async function sendCodeEmail(to: string, code: string): Promise<boolean> {
+  const key = process.env.RESEND_API_KEY;
+  if (!key || !to) return false;
+  const from =
+    process.env.ALERT_EMAIL_FROM || "Семейный сейф <onboarding@resend.dev>";
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${key}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from,
+        to,
+        subject: `Doki — код подтверждения: ${code}`,
+        html: `<p>Код подтверждения работодателя:</p>
+<p style="font-size:26px;font-weight:700;letter-spacing:4px">${code}</p>
+<p>Код действует 15 минут. Если вы его не запрашивали — просто проигнорируйте письмо.</p>`,
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/** Сгенерировать код, сохранить его хеш и отправить работодателю на email. */
+export async function requestEmployerVerification(): Promise<
+  { ok: true; sentTo: string } | { error: string }
+> {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "auth" };
+
+  const { data: prof } = await supabase
+    .from("employer_profiles")
+    .select("contact_email, verified_at")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!prof) return { error: "no_profile" };
+  if (prof.verified_at) return { ok: true, sentTo: "" };
+
+  const to = (prof.contact_email || user.email || "").trim();
+  if (!to) return { error: "no_email" };
+  if (!process.env.RESEND_API_KEY) return { error: "email_off" };
+
+  const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+  const expires = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+  const { error } = await supabase.rpc("set_employer_verification", {
+    p_code_hash: hashCode(code),
+    p_expires_at: expires,
+  });
+  if (error) return { error: error.message };
+
+  const sent = await sendCodeEmail(to, code);
+  if (!sent) return { error: "send_failed" };
+  return { ok: true, sentTo: to };
+}
+
+/** Проверить введённый код. Возвращает ok=true при успешной верификации. */
+export async function confirmEmployerVerification(
+  code: string
+): Promise<{ ok: boolean } | { error: string }> {
+  const clean = (code || "").replace(/\D/g, "").slice(0, 6);
+  if (clean.length !== 6) return { ok: false };
+
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "auth" };
+
+  const { data, error } = await supabase.rpc("confirm_employer_verification", {
+    p_code_hash: hashCode(clean),
+  });
+  if (error) {
+    if (error.message.includes("TOO_MANY_ATTEMPTS")) return { error: "too_many" };
+    if (error.message.includes("CODE_EXPIRED")) return { error: "expired" };
+    return { error: error.message };
+  }
+  if (data === true) {
+    revalidatePath("/employer/vacancies/new");
+    revalidatePath("/employer");
+  }
+  return { ok: data === true };
+}
 
 /** Создать/обновить профиль работодателя для текущего пользователя. */
 export async function saveEmployerProfile(formData: FormData) {
