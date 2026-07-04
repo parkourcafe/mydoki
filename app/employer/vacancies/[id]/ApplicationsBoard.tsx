@@ -27,39 +27,39 @@ type Filter = "all" | "new" | "complete" | "missing";
 
 const M = {
   en: {
-    total: "Total", new: "New", shortlisted: "Shortlisted", rejected: "Rejected",
+    total: "Total", new: "New", shortlisted: "Shortlisted", rejected: "Rejected", hired: "Hired",
     fAll: "All", fNew: "New", fComplete: "All docs complete", fMissing: "Missing docs",
     empty: "No applications match this filter yet.",
-    shortlist: "Shortlist", reject: "Reject", whatsapp: "WhatsApp",
+    shortlist: "Shortlist", reject: "Reject", whatsapp: "WhatsApp", markHired: "Mark as hired",
     requestDoc: "Request doc", soon: "Coming soon",
-    stNew: "New", stViewed: "Viewed", stShortlisted: "Shortlisted", stRejected: "Rejected",
+    stNew: "New", stViewed: "Viewed", stShortlisted: "Shortlisted", stRejected: "Rejected", stHired: "Hired",
     answersNone: "No answers", docsNone: "No documents required",
   },
   id: {
-    total: "Total", new: "Baru", shortlisted: "Terpilih", rejected: "Ditolak",
+    total: "Total", new: "Baru", shortlisted: "Terpilih", rejected: "Ditolak", hired: "Diterima",
     fAll: "Semua", fNew: "Baru", fComplete: "Dokumen lengkap", fMissing: "Dokumen kurang",
     empty: "Belum ada lamaran yang cocok dengan filter ini.",
-    shortlist: "Pilih", reject: "Tolak", whatsapp: "WhatsApp",
+    shortlist: "Pilih", reject: "Tolak", whatsapp: "WhatsApp", markHired: "Tandai diterima",
     requestDoc: "Minta dokumen", soon: "Segera hadir",
-    stNew: "Baru", stViewed: "Dilihat", stShortlisted: "Terpilih", stRejected: "Ditolak",
+    stNew: "Baru", stViewed: "Dilihat", stShortlisted: "Terpilih", stRejected: "Ditolak", stHired: "Diterima",
     answersNone: "Tidak ada jawaban", docsNone: "Tidak ada dokumen wajib",
   },
   ru: {
-    total: "Всего", new: "Новые", shortlisted: "Отобраны", rejected: "Отклонены",
+    total: "Всего", new: "Новые", shortlisted: "Отобраны", rejected: "Отклонены", hired: "Приняты",
     fAll: "Все", fNew: "Новые", fComplete: "Все документы", fMissing: "Не хватает",
     empty: "Пока нет откликов под этот фильтр.",
-    shortlist: "В шортлист", reject: "Отклонить", whatsapp: "WhatsApp",
+    shortlist: "В шортлист", reject: "Отклонить", whatsapp: "WhatsApp", markHired: "Принят на работу",
     requestDoc: "Запросить док.", soon: "Скоро",
-    stNew: "Новый", stViewed: "Просмотрен", stShortlisted: "Отобран", stRejected: "Отклонён",
+    stNew: "Новый", stViewed: "Просмотрен", stShortlisted: "Отобран", stRejected: "Отклонён", stHired: "Принят",
     answersNone: "Нет ответов", docsNone: "Документы не требуются",
   },
   uz: {
-    total: "Jami", new: "Yangi", shortlisted: "Tanlangan", rejected: "Rad etilgan",
+    total: "Jami", new: "Yangi", shortlisted: "Tanlangan", rejected: "Rad etilgan", hired: "Qabul qilingan",
     fAll: "Barchasi", fNew: "Yangi", fComplete: "Hujjatlar to‘liq", fMissing: "Hujjat yetishmaydi",
     empty: "Bu filtrga mos ariza yo‘q.",
-    shortlist: "Tanlash", reject: "Rad etish", whatsapp: "WhatsApp",
+    shortlist: "Tanlash", reject: "Rad etish", whatsapp: "WhatsApp", markHired: "Ishga qabul qilindi",
     requestDoc: "Hujjat so‘rash", soon: "Tez orada",
-    stNew: "Yangi", stViewed: "Ko‘rilgan", stShortlisted: "Tanlangan", stRejected: "Rad etilgan",
+    stNew: "Yangi", stViewed: "Ko‘rilgan", stShortlisted: "Tanlangan", stRejected: "Rad etilgan", stHired: "Qabul qilingan",
     answersNone: "Javoblar yo‘q", docsNone: "Hujjat talab qilinmaydi",
   },
 } as const;
@@ -70,6 +70,7 @@ function StatusBadge({ status, t }: { status: ApplicationStatus; t: (typeof M)[L
     viewed: { label: t.stViewed, cls: "bg-slate-100 text-slate-600" },
     shortlisted: { label: t.stShortlisted, cls: "bg-green-100 text-green-700" },
     rejected: { label: t.stRejected, cls: "bg-red-100 text-red-700" },
+    hired: { label: t.stHired, cls: "bg-emerald-600 text-white" },
   };
   const s = map[status];
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${s.cls}`}>{s.label}</span>;
@@ -106,13 +107,14 @@ export default function ApplicationsBoard({
   const isComplete = (app: BoardApp) => requiredOnly.every((d) => hasType(app, d.type));
 
   const stats = useMemo(() => {
-    let nw = 0, sl = 0, rj = 0;
+    let nw = 0, sl = 0, rj = 0, hd = 0;
     for (const a of apps) {
       if (a.status === "shortlisted") sl++;
       else if (a.status === "rejected") rj++;
+      else if (a.status === "hired") hd++;
       else nw++; // new + viewed = ещё не решено
     }
-    return { total: apps.length, nw, sl, rj };
+    return { total: apps.length, nw, sl, rj, hd };
   }, [apps]);
 
   const filtered = useMemo(() => {
@@ -152,11 +154,12 @@ export default function ApplicationsBoard({
   return (
     <div>
       {/* Stats */}
-      <div className="mb-4 grid grid-cols-4 gap-2">
+      <div className="mb-4 grid grid-cols-3 gap-2 sm:grid-cols-5">
         {[
           { label: t.total, value: stats.total },
           { label: t.new, value: stats.nw },
           { label: t.shortlisted, value: stats.sl },
+          { label: t.hired, value: stats.hd },
           { label: t.rejected, value: stats.rj },
         ].map((s) => (
           <div key={s.label} className="rounded-lg border border-[#e8e0d5] bg-[#fdfaf5] p-3 text-center">
@@ -258,6 +261,16 @@ export default function ApplicationsBoard({
                     ⭐ {t.shortlist}
                   </button>
                 )}
+                {a.status === "shortlisted" && (
+                  <button
+                    type="button"
+                    disabled={pending[a.id]}
+                    onClick={() => changeStatus(a.id, "hired")}
+                    className="btn border border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
+                  >
+                    ✅ {t.markHired}
+                  </button>
+                )}
                 <a
                   href={waLink(a.whatsapp)}
                   target="_blank"
@@ -274,7 +287,7 @@ export default function ApplicationsBoard({
                 >
                   📄 {t.requestDoc}
                 </button>
-                {a.status !== "rejected" && (
+                {a.status !== "rejected" && a.status !== "hired" && (
                   <button
                     type="button"
                     disabled={pending[a.id]}

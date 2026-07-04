@@ -4,7 +4,7 @@ import { getLocale, type Locale } from "@/lib/i18n";
 
 type MyApp = {
   id: string;
-  status: "new" | "viewed" | "shortlisted" | "rejected";
+  status: "new" | "viewed" | "shortlisted" | "rejected" | "hired";
   created_at: string;
   access_token: string;
   vacancy_title: string;
@@ -19,7 +19,7 @@ const M = {
     empty: "Вы ещё никуда не откликались. Отклики появятся здесь после отправки.",
     open: "Открыть статус →",
     on: "от",
-    st: { new: "Отправлено", viewed: "Просмотрено", shortlisted: "В шортлисте", rejected: "Не выбран" },
+    st: { new: "Отправлено", viewed: "Просмотрено", shortlisted: "В шортлисте", rejected: "Не выбран", hired: "Приняты 🎉" },
   },
   en: {
     title: "My applications",
@@ -27,7 +27,7 @@ const M = {
     empty: "You haven't applied anywhere yet. Your applications will show up here.",
     open: "Open status →",
     on: "on",
-    st: { new: "Submitted", viewed: "Viewed", shortlisted: "Shortlisted", rejected: "Not selected" },
+    st: { new: "Submitted", viewed: "Viewed", shortlisted: "Shortlisted", rejected: "Not selected", hired: "Hired 🎉" },
   },
   id: {
     title: "Lamaran saya",
@@ -35,7 +35,7 @@ const M = {
     empty: "Anda belum melamar ke mana pun. Lamaran akan muncul di sini.",
     open: "Buka status →",
     on: "pada",
-    st: { new: "Terkirim", viewed: "Dilihat", shortlisted: "Terpilih", rejected: "Tidak dipilih" },
+    st: { new: "Terkirim", viewed: "Dilihat", shortlisted: "Terpilih", rejected: "Tidak dipilih", hired: "Diterima 🎉" },
   },
   uz: {
     title: "Mening arizalarim",
@@ -43,7 +43,7 @@ const M = {
     empty: "Hali hech qayerga ariza bermagansiz. Arizalar shu yerda ko‘rinadi.",
     open: "Holatni ochish →",
     on: "sana",
-    st: { new: "Yuborildi", viewed: "Ko‘rildi", shortlisted: "Tanlangan", rejected: "Tanlanmadi" },
+    st: { new: "Yuborildi", viewed: "Ko‘rildi", shortlisted: "Tanlangan", rejected: "Tanlanmadi", hired: "Qabul qilindi 🎉" },
   },
 } as const;
 
@@ -52,6 +52,7 @@ const badgeCls: Record<MyApp["status"], string> = {
   viewed: "bg-slate-100 text-slate-600",
   shortlisted: "bg-green-100 text-green-700",
   rejected: "bg-red-100 text-red-700",
+  hired: "bg-emerald-600 text-white",
 };
 
 export default async function MyApplicationsPage() {
