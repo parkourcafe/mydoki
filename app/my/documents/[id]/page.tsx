@@ -8,6 +8,7 @@ import {
   listFiles,
   listSharesByDocument,
   signFiles,
+  isEmailVerified,
 } from "@/lib/queries";
 import { categoryLabel } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
@@ -48,6 +49,7 @@ const M = {
     watermark: "Водяной знак",
     downloadLabel: "Скачивание",
     createLink: "Создать ссылку",
+    verifyToShare: "Подтвердите email, чтобы делиться документами (баннер вверху).",
     deleteDoc: "Удалить документ",
     dateLocale: "ru-RU",
   },
@@ -78,6 +80,7 @@ const M = {
     watermark: "Watermark",
     downloadLabel: "Download",
     createLink: "Create link",
+    verifyToShare: "Verify your email to share documents (see the banner at the top).",
     deleteDoc: "Delete document",
     dateLocale: "en-US",
   },
@@ -108,6 +111,7 @@ const M = {
     watermark: "Suv belgisi",
     downloadLabel: "Yuklab olish",
     createLink: "Havola yaratish",
+    verifyToShare: "Hujjatlarni ulashish uchun emailni tasdiqlang (yuqoridagi banner).",
     deleteDoc: "Hujjatni oʻchirish",
     dateLocale: "uz-UZ",
   },
@@ -138,6 +142,7 @@ const M = {
     watermark: "Tanda air",
     downloadLabel: "Unduhan",
     createLink: "Buat tautan",
+    verifyToShare: "Verifikasi email untuk berbagi dokumen (lihat banner di atas).",
     deleteDoc: "Hapus dokumen",
     dateLocale: "id-ID",
   },
@@ -160,6 +165,8 @@ export default async function DocumentPage({
   const { id } = await params;
   const doc = await getDocument(id);
   if (!doc) notFound();
+
+  const emailVerified = await isEmailVerified();
 
   const [files, shares] = await Promise.all([
     listFiles(id),
@@ -347,6 +354,11 @@ export default async function DocumentPage({
           </ul>
         )}
 
+        {!emailVerified ? (
+          <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            ✉️ {t.verifyToShare}
+          </p>
+        ) : (
         <form action={createShare} className="grid gap-3 sm:grid-cols-4">
           <input type="hidden" name="document_id" value={doc.id} />
           <div>
@@ -381,6 +393,7 @@ export default async function DocumentPage({
             <button className="btn-primary">{t.createLink}</button>
           </div>
         </form>
+        )}
       </section>
 
       <section>
