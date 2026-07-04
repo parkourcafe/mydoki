@@ -9,6 +9,7 @@ import {
   type RequiredDocument,
 } from "@/lib/career";
 import { setApplicationStatus, signApplicationDoc } from "@/app/employer/actions";
+import { track } from "@/lib/analytics";
 
 export type BoardDoc = { type: string; label: string; file_name: string; path: string };
 export type BoardAnswer = { question: string; answer: string; type: string };
@@ -137,6 +138,7 @@ export default function ApplicationsBoard({
     setPending((p) => ({ ...p, [id]: true }));
     try {
       await setApplicationStatus(id, vacancyId, status);
+      track("application_status_changed", { to: status, vacancy_id: vacancyId });
     } catch {
       setApps(prev); // откат при ошибке
     } finally {
@@ -275,6 +277,7 @@ export default function ApplicationsBoard({
                   href={waLink(a.whatsapp)}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => track("whatsapp_clicked", { vacancy_id: vacancyId })}
                   className="btn border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
                 >
                   💬 {t.whatsapp}
