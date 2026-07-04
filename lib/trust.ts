@@ -48,7 +48,7 @@ const DATA: Record<TrustKey, TrustPage> = {
         sections: [
           {
             h2: "What AI does",
-            body: "When you upload a document, AI recognition can suggest its category, type, number and important dates so you don't fill them in by hand. You can review and edit every field.",
+            body: "AI recognition is optional and off by default — it runs only if you turn it on. When it's on, uploading a document lets it suggest the category, type, number and important dates so you don't fill them in by hand. You can review and edit every field.",
           },
           {
             h2: "What is processed",
@@ -75,7 +75,7 @@ const DATA: Record<TrustKey, TrustPage> = {
         sections: [
           {
             h2: "Что делает ИИ",
-            body: "При загрузке документа распознавание может подсказать его категорию, тип, номер и важные даты — чтобы вы не вписывали их вручную. Каждое поле можно проверить и поправить.",
+            body: "Распознавание необязательно и по умолчанию выключено — работает, только если вы его включили. Когда включено, при загрузке документа оно подсказывает категорию, тип, номер и важные даты, чтобы вы не вписывали их вручную. Каждое поле можно проверить и поправить.",
           },
           {
             h2: "Что обрабатывается",
@@ -102,7 +102,7 @@ const DATA: Record<TrustKey, TrustPage> = {
         sections: [
           {
             h2: "Apa yang dilakukan AI",
-            body: "Saat Anda mengunggah dokumen, pengenalan AI bisa menyarankan kategori, jenis, nomor, dan tanggal penting agar Anda tidak mengisinya manual. Anda dapat meninjau dan menyunting tiap kolom.",
+            body: "Pengenalan AI bersifat opsional dan nonaktif secara bawaan — hanya berjalan jika Anda mengaktifkannya. Saat aktif, mengunggah dokumen membuatnya menyarankan kategori, jenis, nomor, dan tanggal penting agar Anda tidak mengisinya manual. Anda dapat meninjau dan menyunting tiap kolom.",
           },
           {
             h2: "Apa yang diproses",
@@ -129,7 +129,7 @@ const DATA: Record<TrustKey, TrustPage> = {
         sections: [
           {
             h2: "AI nima qiladi",
-            body: "Hujjat yuklaganingizda AI tanish uning toifasi, turi, raqami va muhim sanalarini taklif qilishi mumkin — qoʻlda kiritmasligingiz uchun. Har bir maydonni koʻrib chiqip, tahrirlashingiz mumkin.",
+            body: "AI tanish ixtiyoriy va sukut boʻyicha oʻchiq — faqat siz yoqsangiz ishlaydi. Yoqilganda, hujjat yuklashda u toifa, tur, raqam va muhim sanalarni taklif qiladi, qoʻlda kiritmasligingiz uchun. Har bir maydonni koʻrib chiqib, tahrirlashingiz mumkin.",
           },
           {
             h2: "Nima ishlanadi",
@@ -170,7 +170,7 @@ const DATA: Record<TrustKey, TrustPage> = {
           },
           {
             h2: "Delete your account",
-            body: "To delete your account and associated data, contact support@doki.help. (TODO: confirm whether self-service account deletion exists in-app and link it here once available.)",
+            body: "You can delete your account and associated data yourself, from your dashboard under Settings → Security. Deletion is permanent. If anything is unclear, contact support@doki.help.",
           },
           {
             h2: "What happens to shared links",
@@ -197,7 +197,7 @@ const DATA: Record<TrustKey, TrustPage> = {
           },
           {
             h2: "Удалить аккаунт",
-            body: "Чтобы удалить аккаунт и связанные данные, напишите на support@doki.help. (TODO: уточнить, есть ли самостоятельное удаление аккаунта в приложении, и дать на него ссылку.)",
+            body: "Удалить аккаунт и связанные данные можно самостоятельно — в кабинете, в разделе «Безопасность». Удаление необратимо. Если что-то непонятно, напишите на support@doki.help.",
           },
           {
             h2: "Что будет с общими ссылками",
@@ -224,7 +224,7 @@ const DATA: Record<TrustKey, TrustPage> = {
           },
           {
             h2: "Hapus akun Anda",
-            body: "Untuk menghapus akun dan data terkait, hubungi support@doki.help. (TODO: konfirmasi apakah penghapusan akun mandiri tersedia di aplikasi dan tautkan di sini.)",
+            body: "Anda bisa menghapus akun dan data terkait sendiri, dari dasbor di bagian Keamanan. Penghapusan bersifat permanen. Jika ada yang kurang jelas, hubungi support@doki.help.",
           },
           {
             h2: "Apa yang terjadi pada tautan berbagi",
@@ -251,7 +251,7 @@ const DATA: Record<TrustKey, TrustPage> = {
           },
           {
             h2: "Akkauntingizni oʻchirish",
-            body: "Akkaunt va bogʻliq maʼlumotlarni oʻchirish uchun support@doki.help’ga yozing. (TODO: ilovada mustaqil akkaunt oʻchirish bor-yoʻqligini tasdiqlash va havola qoʻyish.)",
+            body: "Akkaunt va bogʻliq maʼlumotlarni kabinetdagi «Xavfsizlik» boʻlimida oʻzingiz oʻchira olasiz. Oʻchirish qaytarilmas. Nimadir tushunarsiz boʻlsa, support@doki.help’ga yozing.",
           },
           {
             h2: "Ulashilgan havolalarga nima boʻladi",
@@ -282,4 +282,12 @@ export async function trustMetadata(slug: string): Promise<Metadata> {
       url: `${APP_URL}/${locale}/${slug}`,
     },
   };
+}
+
+/** Ссылки на trust-страницы для футера. */
+export function trustLinks(locale: Locale) {
+  return TRUST_KEYS.map((key) => ({
+    key,
+    label: DATA[key].locales[locale].navLabel,
+  }));
 }

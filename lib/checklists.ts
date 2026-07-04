@@ -695,3 +695,12 @@ export async function checklistMetadata(slug: string): Promise<Metadata> {
     },
   };
 }
+
+/** Ссылки на чеклисты для внутренней перелинковки. */
+export function checklistLinks(locale: Locale) {
+  return CHECKLIST_KEYS.map((key) => ({
+    key,
+    emoji: DATA[key].emoji,
+    label: DATA[key].locales[locale].navLabel,
+  }));
+}
