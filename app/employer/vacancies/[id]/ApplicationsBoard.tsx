@@ -204,7 +204,7 @@ export default function ApplicationsBoard({
   return (
     <div>
       {/* Stats */}
-      <div className="mb-4 grid grid-cols-4 gap-2">
+      <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {[
           { label: t.total, value: stats.total },
           { label: t.new, value: stats.nw },
