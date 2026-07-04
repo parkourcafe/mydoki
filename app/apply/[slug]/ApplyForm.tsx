@@ -16,6 +16,7 @@ import {
 } from "@/lib/career";
 import { submitApplication } from "../actions";
 import VideoRecorder from "./VideoRecorder";
+import TurnstileWidget from "@/components/TurnstileWidget";
 
 const M = {
   en: {
@@ -58,6 +59,7 @@ const M = {
     analyticsNote: "We use privacy-friendly analytics (no personal data) to improve this service.",
     errPhoneLimit: "You've reached today's application limit for this number. Please try again tomorrow.",
     errRateLimit: "Too many attempts. Please wait a little and try again.",
+    errTurnstile: "Verification failed. Please complete the check and try again.",
     doneTitle: "Application submitted!",
     doneText: "You'll receive updates via WhatsApp.",
     statusLink: "Track your application status",
@@ -104,6 +106,7 @@ const M = {
     analyticsNote: "Kami memakai analitik yang menjaga privasi (tanpa data pribadi) untuk meningkatkan layanan ini.",
     errPhoneLimit: "Anda sudah mencapai batas lamaran hari ini untuk nomor ini. Coba lagi besok.",
     errRateLimit: "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
+    errTurnstile: "Verifikasi gagal. Selesaikan pemeriksaan lalu coba lagi.",
     doneTitle: "Lamaran terkirim!",
     doneText: "Anda akan menerima kabar via WhatsApp.",
     statusLink: "Lacak status lamaran Anda",
@@ -150,6 +153,7 @@ const M = {
     analyticsNote: "Мы используем обезличенную аналитику (без персональных данных), чтобы улучшать сервис.",
     errPhoneLimit: "Вы исчерпали дневной лимит откликов для этого номера. Попробуйте завтра.",
     errRateLimit: "Слишком много попыток. Подождите немного и попробуйте снова.",
+    errTurnstile: "Проверка не пройдена. Пройдите её и попробуйте снова.",
     doneTitle: "Отклик отправлен!",
     doneText: "Обновления придут в WhatsApp.",
     statusLink: "Отслеживать статус отклика",
@@ -196,6 +200,7 @@ const M = {
     analyticsNote: "Xizmatni yaxshilash uchun shaxsiy maʼlumotsiz, anonim tahlildan foydalanamiz.",
     errPhoneLimit: "Bu raqam uchun bugungi ariza limitiga yetdingiz. Ertaga urinib ko‘ring.",
     errRateLimit: "Urinishlar juda ko‘p. Biroz kuting va qayta urining.",
+    errTurnstile: "Tekshiruv o‘tmadi. Uni bajaring va qayta urining.",
     doneTitle: "Ariza yuborildi!",
     doneText: "Yangiliklarni WhatsApp orqali olasiz.",
     statusLink: "Ariza holatini kuzatish",
@@ -243,6 +248,7 @@ export default function ApplyForm({
   const [busy, setBusy] = useState(false);
   const [doneToken, setDoneToken] = useState<string | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   function onVideo(file: File | null) {
     setVideoFile(file);
@@ -254,9 +260,11 @@ export default function ApplyForm({
 
   // Воронка (§2.1): просмотр вакансии → начало → отправка. Только ID.
   const startedRef = useRef(false);
+  const srcRef = useRef("direct");
   useEffect(() => {
     const src =
       new URLSearchParams(window.location.search).get("src") || "direct";
+    srcRef.current = src;
     track("vacancy_viewed", { vacancy_id: vacancyId, src });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -378,6 +386,8 @@ export default function ApplyForm({
         whatsapp,
         email: email.trim() || undefined,
         consentText,
+        source: srcRef.current,
+        turnstileToken,
         answers: answerPayload,
         documents: uploaded,
       });
@@ -389,6 +399,7 @@ export default function ApplyForm({
       // Понятные сообщения вместо кодов из БД.
       if (m.includes("rate_limit_phone")) setError(t.errPhoneLimit);
       else if (m.includes("rate_limited")) setError(t.errRateLimit);
+      else if (m.includes("turnstile_failed")) setError(t.errTurnstile);
       else setError(m || t.errGeneric);
       setBusy(false);
     }
@@ -615,6 +626,8 @@ export default function ApplyForm({
           {error}
         </p>
       )}
+
+      <TurnstileWidget onToken={setTurnstileToken} />
 
       <button type="submit" disabled={busy} className="btn-primary w-full">
         {busy ? t.submitting : t.submit}
