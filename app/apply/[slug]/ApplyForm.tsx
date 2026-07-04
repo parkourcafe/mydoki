@@ -49,6 +49,8 @@ const M = {
     errFileType: "Only PDF, JPG or PNG files are allowed.",
     errFileSize: "File is too large (max 10MB).",
     errGeneric: "Something went wrong. Please try again.",
+    errPhoneLimit: "You've reached today's application limit for this number. Please try again tomorrow.",
+    errRateLimit: "Too many attempts. Please wait a little and try again.",
     doneTitle: "Application submitted!",
     doneText: "You'll receive updates via WhatsApp.",
     statusLink: "Track your application status",
@@ -89,6 +91,8 @@ const M = {
     errFileType: "Hanya berkas PDF, JPG, atau PNG.",
     errFileSize: "Berkas terlalu besar (maks 10MB).",
     errGeneric: "Terjadi kesalahan. Coba lagi.",
+    errPhoneLimit: "Anda sudah mencapai batas lamaran hari ini untuk nomor ini. Coba lagi besok.",
+    errRateLimit: "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
     doneTitle: "Lamaran terkirim!",
     doneText: "Anda akan menerima kabar via WhatsApp.",
     statusLink: "Lacak status lamaran Anda",
@@ -129,6 +133,8 @@ const M = {
     errFileType: "Только PDF, JPG или PNG.",
     errFileSize: "Файл слишком большой (макс. 10 МБ).",
     errGeneric: "Что-то пошло не так. Попробуйте ещё раз.",
+    errPhoneLimit: "Вы исчерпали дневной лимит откликов для этого номера. Попробуйте завтра.",
+    errRateLimit: "Слишком много попыток. Подождите немного и попробуйте снова.",
     doneTitle: "Отклик отправлен!",
     doneText: "Обновления придут в WhatsApp.",
     statusLink: "Отслеживать статус отклика",
@@ -169,6 +175,8 @@ const M = {
     errFileType: "Faqat PDF, JPG yoki PNG.",
     errFileSize: "Fayl juda katta (maks 10MB).",
     errGeneric: "Xatolik yuz berdi. Qayta urining.",
+    errPhoneLimit: "Bu raqam uchun bugungi ariza limitiga yetdingiz. Ertaga urinib ko‘ring.",
+    errRateLimit: "Urinishlar juda ko‘p. Biroz kuting va qayta urining.",
     doneTitle: "Ariza yuborildi!",
     doneText: "Yangiliklarni WhatsApp orqali olasiz.",
     statusLink: "Ariza holatini kuzatish",
@@ -305,7 +313,10 @@ export default function ApplyForm({
       setDoneToken(accessToken);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
-      setError(m || t.errGeneric);
+      // Понятные сообщения вместо кодов из БД.
+      if (m.includes("rate_limit_phone")) setError(t.errPhoneLimit);
+      else if (m.includes("rate_limited")) setError(t.errRateLimit);
+      else setError(m || t.errGeneric);
       setBusy(false);
     }
   }
