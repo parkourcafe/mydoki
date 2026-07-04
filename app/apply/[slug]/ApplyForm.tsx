@@ -254,9 +254,11 @@ export default function ApplyForm({
 
   // Воронка (§2.1): просмотр вакансии → начало → отправка. Только ID.
   const startedRef = useRef(false);
+  const srcRef = useRef("direct");
   useEffect(() => {
     const src =
       new URLSearchParams(window.location.search).get("src") || "direct";
+    srcRef.current = src;
     track("vacancy_viewed", { vacancy_id: vacancyId, src });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -378,6 +380,7 @@ export default function ApplyForm({
         whatsapp,
         email: email.trim() || undefined,
         consentText,
+        source: srcRef.current,
         answers: answerPayload,
         documents: uploaded,
       });
