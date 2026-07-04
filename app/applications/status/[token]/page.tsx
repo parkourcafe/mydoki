@@ -22,7 +22,7 @@ const M = {
     notFoundText: "This status link is invalid or the application was deleted.",
     yourApplication: "Your application",
     submittedOn: "Submitted on",
-    statusLabels: { new: "Submitted", viewed: "Viewed", shortlisted: "Shortlisted", rejected: "Not selected" },
+    statusLabels: { new: "Submitted", viewed: "Viewed", shortlisted: "Shortlisted", rejected: "Not selected", hired: "Hired 🎉" },
     timeline: "Timeline",
     contact: "Employer contact",
     contactHint: "You've been shortlisted — reach out to the employer:",
@@ -33,7 +33,7 @@ const M = {
     notFoundText: "Tautan status ini tidak valid atau lamaran telah dihapus.",
     yourApplication: "Lamaran Anda",
     submittedOn: "Dikirim pada",
-    statusLabels: { new: "Terkirim", viewed: "Dilihat", shortlisted: "Terpilih", rejected: "Tidak dipilih" },
+    statusLabels: { new: "Terkirim", viewed: "Dilihat", shortlisted: "Terpilih", rejected: "Tidak dipilih", hired: "Diterima 🎉" },
     timeline: "Linimasa",
     contact: "Kontak perusahaan",
     contactHint: "Anda terpilih — hubungi perusahaan:",
@@ -44,7 +44,7 @@ const M = {
     notFoundText: "Ссылка недействительна или отклик был удалён.",
     yourApplication: "Ваш отклик",
     submittedOn: "Отправлено",
-    statusLabels: { new: "Отправлено", viewed: "Просмотрено", shortlisted: "В шортлисте", rejected: "Не выбран" },
+    statusLabels: { new: "Отправлено", viewed: "Просмотрено", shortlisted: "В шортлисте", rejected: "Не выбран", hired: "Приняты 🎉" },
     timeline: "История",
     contact: "Контакт работодателя",
     contactHint: "Вас отобрали — свяжитесь с работодателем:",
@@ -55,7 +55,7 @@ const M = {
     notFoundText: "Havola yaroqsiz yoki ariza o‘chirilgan.",
     yourApplication: "Arizangiz",
     submittedOn: "Yuborilgan sana",
-    statusLabels: { new: "Yuborildi", viewed: "Ko‘rildi", shortlisted: "Tanlangan", rejected: "Tanlanmadi" },
+    statusLabels: { new: "Yuborildi", viewed: "Ko‘rildi", shortlisted: "Tanlangan", rejected: "Tanlanmadi", hired: "Qabul qilindi 🎉" },
     timeline: "Vaqt chizig‘i",
     contact: "Ish beruvchi aloqasi",
     contactHint: "Siz tanlandingiz — ish beruvchiga murojaat qiling:",
@@ -119,6 +119,7 @@ export default async function StatusPage({
     viewed: "bg-slate-100 text-slate-600",
     shortlisted: "bg-green-100 text-green-700",
     rejected: "bg-red-100 text-red-700",
+    hired: "bg-emerald-600 text-white",
   };
 
   return (

@@ -27,7 +27,12 @@ export type ScreeningQuestion = {
 
 export type Urgency = "normal" | "hiring_now";
 export type VacancyStatus = "active" | "paused" | "closed";
-export type ApplicationStatus = "new" | "viewed" | "shortlisted" | "rejected";
+export type ApplicationStatus =
+  | "new"
+  | "viewed"
+  | "shortlisted"
+  | "rejected"
+  | "hired";
 
 export type EmployerProfile = {
   id: string;
