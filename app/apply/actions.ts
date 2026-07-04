@@ -38,6 +38,76 @@ async function ipHashOf(ip: string | null): Promise<string | null> {
   return createHash("sha256").update(salt + ip).digest("hex").slice(0, 32);
 }
 
+function safeName(name: string): string {
+  return (name || "file").replace(/[^\w.\-]+/g, "_");
+}
+
+export type AttachedDoc = {
+  type: string;
+  label: string;
+  path: string;
+  name: string;
+  size: number;
+};
+
+/**
+ * Doc-reuse: копирует выбранные документы из сейфа кандидата в bucket
+ * applications, чтобы работодатель читал их как обычные документы отклика.
+ * Доступ к vault-files — по сессии кандидата (RLS: он член семьи). Возвращает
+ * записи для payload документов. Только для залогиненного кандидата.
+ */
+export async function attachVaultDocs(input: {
+  applicationId: string;
+  vacancyId: string;
+  documentIds: string[];
+}): Promise<AttachedDoc[]> {
+  if (!input.documentIds?.length) return [];
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const out: AttachedDoc[] = [];
+  for (const docId of input.documentIds.slice(0, 20)) {
+    const { data: doc } = await supabase
+      .from("documents")
+      .select("id, title, category")
+      .eq("id", docId)
+      .maybeSingle();
+    if (!doc) continue; // RLS отсеет чужие
+    const { data: files } = await supabase
+      .from("document_files")
+      .select("storage_path, file_name, mime_type")
+      .eq("document_id", docId);
+    for (const f of files ?? []) {
+      const dl = await supabase.storage
+        .from("vault-files")
+        .download(f.storage_path as string);
+      if (dl.error || !dl.data) continue;
+      const blob = dl.data as Blob;
+      const path = `${input.vacancyId}/${input.applicationId}/vault_${docId}_${safeName(
+        f.file_name as string,
+      )}`;
+      const up = await supabase.storage
+        .from("applications")
+        .upload(path, blob, {
+          contentType: (f.mime_type as string) || "application/octet-stream",
+          upsert: true,
+        });
+      if (up.error) continue;
+      out.push({
+        type: (doc.category as string) || "other",
+        label: (doc.title as string) || "Document",
+        path,
+        name: (f.file_name as string) || "file",
+        size: blob.size,
+      });
+    }
+  }
+  return out;
+}
+
 /**
  * Проверка Turnstile. Включается только если задан TURNSTILE_SECRET_KEY —
  * до этого пропускаем (сайт не ломается). Блокируем ТОЛЬКО когда Cloudflare
