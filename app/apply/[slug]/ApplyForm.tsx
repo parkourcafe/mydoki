@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { track } from "@/lib/analytics";
 import {
   ACCEPT_ATTR,
   ACCEPTED_MIME,
@@ -49,6 +50,7 @@ const M = {
     errFileType: "Only PDF, JPG or PNG files are allowed.",
     errFileSize: "File is too large (max 10MB).",
     errGeneric: "Something went wrong. Please try again.",
+    analyticsNote: "We use privacy-friendly analytics (no personal data) to improve this service.",
     errPhoneLimit: "You've reached today's application limit for this number. Please try again tomorrow.",
     errRateLimit: "Too many attempts. Please wait a little and try again.",
     doneTitle: "Application submitted!",
@@ -91,6 +93,7 @@ const M = {
     errFileType: "Hanya berkas PDF, JPG, atau PNG.",
     errFileSize: "Berkas terlalu besar (maks 10MB).",
     errGeneric: "Terjadi kesalahan. Coba lagi.",
+    analyticsNote: "Kami memakai analitik yang menjaga privasi (tanpa data pribadi) untuk meningkatkan layanan ini.",
     errPhoneLimit: "Anda sudah mencapai batas lamaran hari ini untuk nomor ini. Coba lagi besok.",
     errRateLimit: "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
     doneTitle: "Lamaran terkirim!",
@@ -133,6 +136,7 @@ const M = {
     errFileType: "Только PDF, JPG или PNG.",
     errFileSize: "Файл слишком большой (макс. 10 МБ).",
     errGeneric: "Что-то пошло не так. Попробуйте ещё раз.",
+    analyticsNote: "Мы используем обезличенную аналитику (без персональных данных), чтобы улучшать сервис.",
     errPhoneLimit: "Вы исчерпали дневной лимит откликов для этого номера. Попробуйте завтра.",
     errRateLimit: "Слишком много попыток. Подождите немного и попробуйте снова.",
     doneTitle: "Отклик отправлен!",
@@ -175,6 +179,7 @@ const M = {
     errFileType: "Faqat PDF, JPG yoki PNG.",
     errFileSize: "Fayl juda katta (maks 10MB).",
     errGeneric: "Xatolik yuz berdi. Qayta urining.",
+    analyticsNote: "Xizmatni yaxshilash uchun shaxsiy maʼlumotsiz, anonim tahlildan foydalanamiz.",
     errPhoneLimit: "Bu raqam uchun bugungi ariza limitiga yetdingiz. Ertaga urinib ko‘ring.",
     errRateLimit: "Urinishlar juda ko‘p. Biroz kuting va qayta urining.",
     doneTitle: "Ariza yuborildi!",
@@ -220,6 +225,20 @@ export default function ApplyForm({
   const [busy, setBusy] = useState(false);
   const [doneToken, setDoneToken] = useState<string | null>(null);
 
+  // Воронка (§2.1): просмотр вакансии → начало → отправка. Только ID.
+  const startedRef = useRef(false);
+  useEffect(() => {
+    const src =
+      new URLSearchParams(window.location.search).get("src") || "direct";
+    track("vacancy_viewed", { vacancy_id: vacancyId, src });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  function markStarted() {
+    if (startedRef.current) return;
+    startedRef.current = true;
+    track("application_started", { vacancy_id: vacancyId });
+  }
+
   function pickFile(i: number, file: File | null) {
     if (!file) return;
     if (!ACCEPTED_MIME.includes(file.type)) {
@@ -231,8 +250,10 @@ export default function ApplyForm({
       return;
     }
     setError(null);
+    markStarted();
     setFiles((p) => ({ ...p, [i]: file }));
     setDocStatus((p) => ({ ...p, [i]: "pending" }));
+    track("document_uploaded", { vacancy_id: vacancyId, doc_type: requiredDocuments[i]?.type ?? "other" });
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -310,6 +331,7 @@ export default function ApplyForm({
         documents: uploaded,
       });
 
+      track("application_submitted", { vacancy_id: vacancyId });
       setDoneToken(accessToken);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
@@ -353,7 +375,10 @@ export default function ApplyForm({
         <input
           className="input"
           value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
+          onChange={(e) => {
+            markStarted();
+            setFullName(e.target.value);
+          }}
           placeholder={t.fullNamePh}
           autoComplete="name"
         />
@@ -526,6 +551,7 @@ export default function ApplyForm({
       <button type="submit" disabled={busy} className="btn-primary w-full">
         {busy ? t.submitting : t.submit}
       </button>
+      <p className="mt-3 text-center text-xs text-slate-400">{t.analyticsNote}</p>
     </form>
   );
 }

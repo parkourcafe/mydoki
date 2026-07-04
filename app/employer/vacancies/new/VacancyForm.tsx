@@ -11,6 +11,7 @@ import {
   type ScreeningQuestion,
 } from "@/lib/career";
 import { createVacancy, updateVacancy } from "@/app/employer/actions";
+import { track } from "@/lib/analytics";
 
 const M = {
   en: {
@@ -314,6 +315,7 @@ export default function VacancyForm({
         router.push(`/employer/vacancies/${vacancyId}?updated=1`);
       } else {
         const { id } = await createVacancy(payload);
+        track("vacancy_created", { vacancy_id: id });
         router.push(`/employer/vacancies/${id}?created=1`);
       }
     } catch {

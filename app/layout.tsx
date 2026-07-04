@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import SwRegister from "@/components/SwRegister";
 import YandexMetrika from "@/components/YandexMetrika";
+import PostHogProvider from "@/components/PostHogProvider";
 import { getLocale } from "@/lib/i18n";
 import { altLangs } from "@/lib/seo";
 import "./globals.css";
@@ -140,6 +141,7 @@ export default async function RootLayout({
         <SwRegister />
         <Analytics />
         <YandexMetrika />
+        <PostHogProvider />
       </body>
     </html>
   );
