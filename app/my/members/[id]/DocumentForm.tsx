@@ -47,6 +47,7 @@ const M = {
     enterTitle: "Введите название документа.",
     fileErr: (name: string, m: string) => `Файл «${name}»: ${m}`,
     saveFail: "Не удалось сохранить.",
+    notVerified: "Подтвердите email, чтобы загружать документы (баннер выше).",
     kb: "КБ",
     mb: "МБ",
   },
@@ -89,6 +90,7 @@ const M = {
     enterTitle: "Enter the document title.",
     fileErr: (name: string, m: string) => `File “${name}”: ${m}`,
     saveFail: "Could not save.",
+    notVerified: "Verify your email to upload documents (see the banner above).",
     kb: "KB",
     mb: "MB",
   },
@@ -131,6 +133,7 @@ const M = {
     enterTitle: "Hujjat nomini kiriting.",
     fileErr: (name: string, m: string) => `“${name}” fayli: ${m}`,
     saveFail: "Saqlab boʻlmadi.",
+    notVerified: "Hujjat yuklash uchun emailni tasdiqlang (yuqoridagi banner).",
     kb: "KB",
     mb: "MB",
   },
@@ -173,6 +176,7 @@ const M = {
     enterTitle: "Masukkan judul dokumen.",
     fileErr: (name: string, m: string) => `Berkas “${name}”: ${m}`,
     saveFail: "Tidak dapat menyimpan.",
+    notVerified: "Verifikasi email untuk mengunggah dokumen (lihat banner di atas).",
     kb: "KB",
     mb: "MB",
   },
@@ -390,7 +394,13 @@ export default function DocumentForm({
       router.push(`/my/documents/${id}`);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
-      setSaveErr(m === "QUOTA_EXCEEDED" ? t.quotaExceeded : m || t.saveFail);
+      setSaveErr(
+        m === "QUOTA_EXCEEDED"
+          ? t.quotaExceeded
+          : m === "EMAIL_NOT_VERIFIED"
+            ? t.notVerified
+            : m || t.saveFail
+      );
       setSaving(false);
     }
   }

@@ -22,6 +22,26 @@ export async function getUser() {
 }
 
 /**
+ * Подтверждён ли email текущего пользователя. При «мягком» входе (Confirm email
+ * выключен в Supabase) сессия есть и у неподтверждённых — этот флаг решает,
+ * показывать ли баннер и пускать ли к загрузке/шерингу. OAuth-пользователи
+ * (Google) всегда подтверждены. Аноним → false.
+ */
+export async function isEmailVerified(): Promise<boolean> {
+  const user = await getUser();
+  return Boolean(user?.email_confirmed_at);
+}
+
+/**
+ * Гейт для чувствительных действий (загрузка, шеринг документов). Бросает
+ * EMAIL_NOT_VERIFIED, если email не подтверждён — вызывающий экшен показывает
+ * понятное сообщение и предлагает переслать письмо.
+ */
+export async function assertEmailVerified(): Promise<void> {
+  if (!(await isEmailVerified())) throw new Error("EMAIL_NOT_VERIFIED");
+}
+
+/**
  * Возвращает household текущего пользователя; если его нет — создаёт через
  * RPC create_household (атомарно делает пользователя owner).
  */

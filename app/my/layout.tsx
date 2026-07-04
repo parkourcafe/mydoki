@@ -3,6 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import AppNav from "@/components/AppNav";
+import VerifyEmailBanner from "@/components/VerifyEmailBanner";
 
 const M = {
   ru: {
@@ -156,6 +157,9 @@ export default async function MyLayout({
           : null
       }
     >
+      {!user.email_confirmed_at && (
+        <VerifyEmailBanner locale={locale} email={user.email ?? ""} />
+      )}
       {children}
     </AppNav>
   );
