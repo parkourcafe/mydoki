@@ -1,11 +1,76 @@
 import { ImageResponse } from "next/og";
+import { getLocale, type Locale } from "@/lib/i18n";
 
 export const alt = "doki.help — a safe place for your family's documents";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Latin-only text so the default renderer needs no extra font bundle.
-export default function Image() {
+// ASCII-safe per locale (uz avoids the "ʻ"/"ʼ" modifier letters — not
+// guaranteed present in the default renderer font).
+const COPY: Record<Locale, { tagline: string; tags: string }> = {
+  ru: {
+    tagline: "Надёжное место для документов вашей семьи",
+    tags: "Документы  ·  Медицина  ·  Образование  ·  Имущество",
+  },
+  en: {
+    tagline: "A safe place for your family's documents",
+    tags: "IDs  ·  Medical  ·  Education  ·  Property",
+  },
+  id: {
+    tagline: "Tempat aman untuk dokumen keluarga Anda",
+    tags: "Identitas  ·  Medis  ·  Pendidikan  ·  Properti",
+  },
+  uz: {
+    tagline: "Oilangiz hujjatlari uchun ishonchli joy",
+    tags: "Hujjatlar  ·  Tibbiyot  ·  Ta'lim  ·  Mulk",
+  },
+};
+
+/**
+ * next/og's default renderer only ships Latin glyphs, so Cyrillic (ru) needs
+ * an explicit font fetch. If that fetch fails for any reason (network hiccup,
+ * Google Fonts unreachable), we fall back to the English copy below rather
+ * than let the whole OG image request error out.
+ */
+async function loadCyrillicFont(text: string): Promise<ArrayBuffer | null> {
+  try {
+    const css = await (
+      await fetch(
+        `https://fonts.googleapis.com/css2?family=Inter:wght@800&text=${encodeURIComponent(text)}`,
+        {
+          headers: {
+            // Old-browser UA — Google Fonts serves a .ttf (not .woff2) to it,
+            // which the OG image renderer can load directly.
+            "User-Agent":
+              "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/534.57.2 (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2",
+          },
+        }
+      )
+    ).text();
+    const match = css.match(/src: url\(([^)]+)\) format\('(?:opentype|truetype)'\)/);
+    if (!match) return null;
+    const res = await fetch(match[1]);
+    if (!res.ok) return null;
+    return await res.arrayBuffer();
+  } catch {
+    return null;
+  }
+}
+
+export default async function Image() {
+  const locale = await getLocale();
+  let copy = COPY[locale];
+  let fonts: { name: string; data: ArrayBuffer; style: "normal" }[] | undefined;
+
+  if (locale === "ru") {
+    const fontData = await loadCyrillicFont(`doki.help ${copy.tagline} ${copy.tags}`);
+    if (fontData) {
+      fonts = [{ name: "Inter", data: fontData, style: "normal" }];
+    } else {
+      copy = COPY.en; // graceful fallback — image must never fail to render
+    }
+  }
+
   return new ImageResponse(
     (
       <div
@@ -17,7 +82,7 @@ export default function Image() {
           alignItems: "center",
           justifyContent: "center",
           background: "linear-gradient(135deg, #f9f5f0 0%, #f1e7dc 100%)",
-          fontFamily: "sans-serif",
+          fontFamily: fonts ? "Inter" : "sans-serif",
         }}
       >
         <div
@@ -39,7 +104,7 @@ export default function Image() {
             color: "#5c5248",
           }}
         >
-          A safe place for your family&apos;s documents
+          {copy.tagline}
         </div>
         <div
           style={{
@@ -50,10 +115,10 @@ export default function Image() {
             letterSpacing: 1,
           }}
         >
-          IDs  ·  Medical  ·  Education  ·  Property
+          {copy.tags}
         </div>
       </div>
     ),
-    { ...size }
+    { ...size, fonts }
   );
 }
