@@ -3011,6 +3011,1434 @@ const DATA: Record<string, Guide> = {
       ],
     },
   },
+  "a-simple-system-for-organizing-family-documents": {
+    slug: "a-simple-system-for-organizing-family-documents",
+    emoji: "🧩",
+    locales: {
+      en: {
+        navLabel: "Build a system",
+        title: "A Simple System for Organizing Family Documents",
+        metaDescription:
+          "One system that ties it together: gather documents, sort by person, add expiry dates, set reminders and share safely — five steps you set up once.",
+        h1: "A simple system for organizing family documents",
+        intro:
+          "Tidying up once feels great for a week. A system is what keeps working after that — five simple steps that gather your family's documents, sort them, track their dates, remind you on time and let you share safely, without redoing the work every few months.",
+        ctaPrimary: "Build your system in doki.help",
+        sections: [
+          {
+            h2: "Why a one-time clean-up doesn't last",
+            body: "A weekend spent gathering scans into folders feels like progress, but a folder has no memory. It doesn't know a passport is nine months from expiring, it doesn't tell you whose documents are whose, and it can't send a reminder or a safe link. Six months later the same pile is back, just with new files in it. What actually holds is a system: one place, one structure, and a few settings that keep working quietly in the background, so you don't have to schedule another clean-up.",
+          },
+          {
+            h2: "Step 1: Gather everything in one place",
+            body: "Start with the documents you reach for most, and add the rest as you go — there's no need to finish in one sitting.",
+            bullets: [
+              "IDs and migration: passports, ID cards, visas, residence permits",
+              "Medical: insurance, vaccination records, key reports",
+              "Home and car: contracts, registration, ownership papers",
+              "Education: diplomas, certificates, enrollment documents",
+            ],
+          },
+          {
+            h2: "Step 2: Sort by family member",
+            body: "Give each person — partner, children, parents — their own profile, and keep their documents together under it. This is what turns \"a pile of files\" into \"a system\": instead of searching a shared folder, you open a person, then a document. In doki.help every document belongs to a family member from the moment you add it.",
+          },
+          {
+            h2: "Step 3: Mark the expiry dates",
+            body: "As you add each document, set its \"valid until\" date so the deadline lives with the document instead of in your head. This one step is what turns storage into tracking — without it, a vault is just a bigger version of the same pile. Renewal rules differ by country and document, so always check the official requirements for anything time-sensitive.",
+          },
+          {
+            h2: "Step 4: Set up the reminders",
+            body: "Once a date is attached, doki.help sends an email reminder before the document expires — 30, 15, 7 and 1 day before the \"valid until\" date you set, for every member of the family. Set this up once per document and you no longer need to remember it yourself; the system carries the deadline for you.",
+          },
+          {
+            h2: "Step 5: Set up safe access — roles and sharing",
+            body: "A system also needs rules for who can see and change what. Roles let you decide who is owner, editor or viewer for the family vault, and two-factor login is available for extra protection at sign-in. When one document needs to leave the family — for a relative, a school or an agent — share it with a link that expires and can be revoked at any time, with a view limit and a log of every open. The recipient needs no account, and the rest of your vault stays untouched.",
+          },
+          {
+            h2: "Keeping the system going as new documents appear",
+            body: "A system stays a system only if new documents follow the same steps: add it, put it under the right person, set its date, and the reminders take care of the rest. doki.help is installable as an app (PWA), so documents you've opened and saved in advance stay available even offline — useful when a form or a border check catches you without signal. Keep your originals as well; a system like this is a huge convenience, but it's in beta and doesn't replace them.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "What's the difference between organizing once and having a system?",
+            a: "A one-time clean-up sorts what already exists; a system keeps working after that — new documents get sorted by person, dated and reminded about automatically, instead of piling up again until the next clean-up.",
+          },
+          {
+            q: "Do I need to set all five steps up at once?",
+            a: "No. Start by gathering documents and sorting them by person, then add expiry dates and reminders as you go. Each step still helps on its own, and together they hold the longest.",
+          },
+          {
+            q: "How does the reminder step actually work?",
+            a: "Once you set a document's \"valid until\" date, doki.help emails a reminder 30, 15, 7 and 1 day before that date — for every family member's documents.",
+          },
+          {
+            q: "Who can see our family's documents once the system is set up?",
+            a: "Only your family. Access is isolated at the database level (row-level security), roles control who is owner, editor or viewer, and two-factor login is available. doki.help is in beta and doesn't replace your originals.",
+          },
+          {
+            q: "Can I share one document from the system without opening the rest?",
+            a: "Yes. Share a single document with a link that expires and can be revoked at any time, with a view limit and a log of every open — the recipient needs no account, and the rest of the vault stays private.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Собрать систему",
+        title: "Простая система порядка в документах семьи",
+        metaDescription:
+          "Система, которая всё связывает: собрать документы, разделить по членам семьи, добавить сроки, настроить напоминания и безопасный доступ — пять шагов один раз.",
+        h1: "Простая система порядка в документах семьи",
+        intro:
+          "Разовая уборка радует неделю. Систему — то, что продолжает работать дальше: пять простых шагов, которые собирают документы семьи, раскладывают их по местам, следят за сроками, напоминают вовремя и позволяют безопасно делиться, без повторной уборки через полгода.",
+        ctaPrimary: "Постройте свою систему в doki.help",
+        sections: [
+          {
+            h2: "Почему разовая уборка не решает проблему навсегда",
+            body: "Выходные, потраченные на то, чтобы собрать сканы в папки, ощущаются как прогресс, но у папки нет памяти. Она не знает, что до окончания паспорта девять месяцев, не подскажет, чьи это документы, и не пришлёт напоминание или безопасную ссылку. Через полгода та же куча вернётся, просто с новыми файлами. Держится по-настоящему система: одно место, структура и несколько настроек, которые тихо работают сами, без новой уборки по расписанию.",
+          },
+          {
+            h2: "Шаг 1: собрать всё в одном месте",
+            body: "Начните с документов, к которым обращаетесь чаще всего, остальные добавляйте постепенно — заканчивать всё за один раз не нужно.",
+            bullets: [
+              "Удостоверения и миграция: паспорта, ID, визы, ВНЖ",
+              "Медицина: страховки, прививки, ключевые заключения",
+              "Дом и авто: договоры, регистрация, документы о собственности",
+              "Образование: дипломы, сертификаты, документы о зачислении",
+            ],
+          },
+          {
+            h2: "Шаг 2: разложить по членам семьи",
+            body: "Заведите профиль на каждого — супруга, детей, родителей — и держите их документы вместе под ним. Именно это превращает «кучу файлов» в «систему»: вместо поиска по общей папке вы открываете человека, а потом документ. В doki.help каждый документ принадлежит члену семьи с момента добавления.",
+          },
+          {
+            h2: "Шаг 3: отметить сроки действия",
+            body: "Добавляя документ, указывайте дату «действует до», чтобы срок жил вместе с документом, а не в голове. Именно этот шаг превращает хранилище в отслеживание — без него сейф остаётся просто большой версией той же кучи. Правила продления зависят от страны и типа документа, поэтому по всему срочному проверяйте официальные требования.",
+          },
+          {
+            h2: "Шаг 4: настроить напоминания",
+            body: "Когда дата привязана к документу, doki.help присылает email-напоминание за 30, 15, 7 и 1 день до указанной даты «действует до» — для каждого члена семьи. Настройте это один раз на документ, и дальше держать срок в голове уже не нужно — систему делает это за вас.",
+          },
+          {
+            h2: "Шаг 5: настроить безопасный доступ — роли и отправка",
+            body: "У системы должны быть правила, кто что видит и меняет. Роли позволяют решить, кто owner, editor или viewer в семейном сейфе, а двухфакторный вход добавляет защиту при входе. Когда документ нужен за пределами семьи — родственнику, школе, агенту — делитесь ссылкой, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом каждого открытия. Получателю не нужен аккаунт, а остальной сейф остаётся нетронутым.",
+          },
+          {
+            h2: "Как поддерживать систему по мере появления новых документов",
+            body: "Система остаётся системой, только если новые документы проходят те же шаги: добавить, положить к нужному человеку, указать дату — дальше напоминания сделают своё. doki.help устанавливается как приложение (PWA), поэтому документы, открытые и сохранённые заранее, остаются доступны даже офлайн — пригодится, если форма или проверка на границе застанут без связи. Оригиналы всё равно держите при себе: такая система — большое удобство, но сервис в стадии beta и не заменяет оригиналы.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "В чём разница между разовой организацией и системой?",
+            a: "Разовая уборка раскладывает то, что уже есть; система продолжает работать дальше — новые документы автоматически попадают к нужному человеку, получают дату и напоминание, вместо того чтобы снова копиться до следующей уборки.",
+          },
+          {
+            q: "Нужно ли настраивать все пять шагов сразу?",
+            a: "Нет. Начните со сбора документов и распределения по членам семьи, а сроки и напоминания добавляйте по ходу дела. Каждый шаг полезен и сам по себе, а вместе они держатся дольше всего.",
+          },
+          {
+            q: "Как именно работает шаг с напоминаниями?",
+            a: "Как только вы укажете дату «действует до» для документа, doki.help пришлёт email-напоминание за 30, 15, 7 и 1 день до этой даты — по документам каждого члена семьи.",
+          },
+          {
+            q: "Кто видит документы семьи после настройки системы?",
+            a: "Только ваша семья. Доступ изолирован на уровне базы данных (RLS), роли определяют, кто owner, editor или viewer, доступен двухфакторный вход. doki.help в стадии beta и не заменяет оригиналы.",
+          },
+          {
+            q: "Можно ли поделиться одним документом из системы, не открывая доступ ко всему?",
+            a: "Да. Поделитесь одним документом по ссылке, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом каждого открытия — получателю не нужен аккаунт, а остальной сейф остаётся приватным.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Bangun sistem",
+        title: "Sistem Sederhana Menata Dokumen Keluarga",
+        metaDescription:
+          "Sistem yang menyatukan semuanya: kumpulkan dokumen, pilah per anggota, tambah masa berlaku, pasang pengingat, dan atur akses aman — lima langkah sekali.",
+        h1: "Sistem sederhana untuk menata dokumen keluarga",
+        intro:
+          "Beres-beres sekali terasa melegakan selama seminggu. Sistem adalah yang tetap bekerja setelahnya — lima langkah sederhana yang mengumpulkan dokumen keluarga, memilahnya, melacak tanggalnya, mengingatkan tepat waktu, dan memungkinkan berbagi aman, tanpa mengulang beres-beres tiap beberapa bulan.",
+        ctaPrimary: "Bangun sistem Anda di doki.help",
+        sections: [
+          {
+            h2: "Mengapa beres-beres sekali tidak bertahan selamanya",
+            body: "Akhir pekan yang dihabiskan mengumpulkan hasil pindai ke folder terasa seperti kemajuan, tapi folder tidak punya ingatan. Ia tidak tahu paspor akan kedaluwarsa sembilan bulan lagi, tidak memberi tahu dokumen siapa milik siapa, dan tidak bisa mengirim pengingat atau tautan aman. Enam bulan kemudian, tumpukan yang sama muncul lagi, hanya dengan berkas baru. Yang benar-benar bertahan adalah sistem: satu tempat, satu struktur, dan beberapa pengaturan yang terus bekerja diam-diam, jadi Anda tidak perlu menjadwalkan beres-beres lagi.",
+          },
+          {
+            h2: "Langkah 1: kumpulkan semuanya di satu tempat",
+            body: "Mulai dari dokumen yang paling sering dibutuhkan, tambahkan sisanya seiring waktu — tidak perlu selesai sekaligus.",
+            bullets: [
+              "Identitas dan migrasi: paspor, KTP, visa, izin tinggal",
+              "Medis: asuransi, catatan vaksinasi, hasil penting",
+              "Rumah dan mobil: kontrak, registrasi, surat kepemilikan",
+              "Pendidikan: ijazah, sertifikat, dokumen pendaftaran",
+            ],
+          },
+          {
+            h2: "Langkah 2: pilah per anggota keluarga",
+            body: "Beri tiap orang — pasangan, anak, orang tua — profilnya sendiri, dan simpan dokumennya bersama di bawahnya. Inilah yang mengubah \"tumpukan berkas\" menjadi \"sistem\": alih-alih mencari di folder bersama, Anda membuka satu orang, lalu dokumennya. Di doki.help, tiap dokumen dimiliki oleh anggota keluarga sejak ditambahkan.",
+          },
+          {
+            h2: "Langkah 3: tandai masa berlaku",
+            body: "Saat menambahkan tiap dokumen, isi tanggal \"berlaku sampai\" agar tenggatnya menempel pada dokumen, bukan di kepala. Langkah inilah yang mengubah penyimpanan menjadi pelacakan — tanpanya, brankas hanya jadi versi lebih besar dari tumpukan yang sama. Aturan perpanjangan berbeda tiap negara dan jenis dokumen, jadi selalu periksa persyaratan resmi untuk hal yang terikat waktu.",
+          },
+          {
+            h2: "Langkah 4: pasang pengingat",
+            body: "Setelah tanggal terpasang, doki.help mengirim pengingat email 30, 15, 7, dan 1 hari sebelum tanggal \"berlaku sampai\" yang Anda tetapkan — untuk tiap anggota keluarga. Pasang ini sekali per dokumen, dan Anda tidak perlu mengingatnya sendiri lagi — sistem yang membawa tenggat itu untuk Anda.",
+          },
+          {
+            h2: "Langkah 5: atur akses aman — peran dan berbagi",
+            body: "Sistem juga butuh aturan siapa bisa melihat dan mengubah apa. Peran menentukan siapa owner, editor, atau viewer di brankas keluarga, dan login dua faktor tersedia untuk perlindungan tambahan saat masuk. Saat satu dokumen perlu keluar dari keluarga — untuk kerabat, sekolah, atau agen — bagikan lewat tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan. Penerima tidak perlu akun, dan sisa brankas tetap tak tersentuh.",
+          },
+          {
+            h2: "Cara menjaga sistem saat dokumen baru muncul",
+            body: "Sistem tetap jadi sistem hanya jika dokumen baru mengikuti langkah yang sama: tambahkan, taruh di bawah orang yang tepat, isi tanggalnya — sisanya dikerjakan pengingat. doki.help bisa dipasang sebagai aplikasi (PWA), sehingga dokumen yang sudah dibuka dan disimpan lebih dulu tetap bisa diakses bahkan offline — berguna saat formulir atau pemeriksaan di perbatasan membuat Anda tanpa sinyal. Tetap simpan dokumen asli Anda juga; sistem seperti ini sangat membantu, tapi masih beta dan tidak menggantikan dokumen asli.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Apa bedanya menata sekali dengan punya sistem?",
+            a: "Beres-beres sekali memilah yang sudah ada; sistem tetap bekerja setelahnya — dokumen baru otomatis terpilah ke orangnya, diberi tanggal, dan diingatkan, alih-alih menumpuk lagi sampai beres-beres berikutnya.",
+          },
+          {
+            q: "Apakah harus mengatur kelima langkah sekaligus?",
+            a: "Tidak. Mulai dari mengumpulkan dokumen dan memilah per anggota, lalu tambahkan masa berlaku dan pengingat sambil jalan. Tiap langkah tetap berguna sendiri, dan bersama-sama paling bertahan lama.",
+          },
+          {
+            q: "Bagaimana cara kerja langkah pengingat?",
+            a: "Begitu Anda mengisi tanggal \"berlaku sampai\" pada dokumen, doki.help mengirim pengingat email 30, 15, 7, dan 1 hari sebelum tanggal itu — untuk dokumen tiap anggota keluarga.",
+          },
+          {
+            q: "Siapa yang bisa melihat dokumen keluarga setelah sistem diatur?",
+            a: "Hanya keluarga Anda. Akses diisolasi di tingkat basis data (row-level security), peran menentukan siapa owner, editor, atau viewer, dan login dua faktor tersedia. doki.help masih beta dan tidak menggantikan dokumen asli.",
+          },
+          {
+            q: "Bisakah berbagi satu dokumen dari sistem tanpa membuka akses ke semuanya?",
+            a: "Bisa. Bagikan satu dokumen lewat tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan — penerima tidak perlu akun, dan sisa brankas tetap privat.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Tizim quring",
+        title: "Oila hujjatlarini tartiblashning oddiy tizimi",
+        metaDescription:
+          "Hammasini bogʻlaydigan tizim: hujjatlarni yigʻing, aʼzolar boʻyicha ajrating, muddat qoʻshing, eslatma sozlang va xavfsiz ulashing — besh qadam, bir marta.",
+        h1: "Oila hujjatlarini tartiblashning oddiy tizimi",
+        intro:
+          "Bir martalik tozalash bir hafta yengillik beradi. Tizim esa shundan keyin ham ishlashda davom etadi — oila hujjatlarini yigʻadigan, saralaydigan, muddatlarini kuzatadigan, oʻz vaqtida eslatadigan va xavfsiz ulashishga imkon beradigan besh oddiy qadam, har necha oyda qayta tozalamasdan.",
+        ctaPrimary: "doki.help da oʻz tizimingizni quring",
+        sections: [
+          {
+            h2: "Nega bir martalik tozalash muammoni butunlay hal qilmaydi",
+            body: "Skanlarni papkalarga yigʻishga sarflangan dam olish kunlari yutuq boʻlib tuyuladi, lekin papkaning xotirasi yoʻq. U pasport toʻqqiz oydan keyin tugashini bilmaydi, qaysi hujjat kimniki ekanini aytmaydi va eslatma yoki xavfsiz havola yubora olmaydi. Olti oydan keyin oʻsha uyum yana qaytadi, faqat yangi fayllar bilan. Chindan saqlanadigan narsa — tizim: bitta joy, tuzilma va jim ishlashda davom etadigan bir nechta sozlama, shunda yana tozalashni rejalashtirishga hojat qolmaydi.",
+          },
+          {
+            h2: "1-qadam: hammasini bitta joyga yigʻing",
+            body: "Eng koʻp murojaat qiladigan hujjatlardan boshlang, qolganini vaqt oʻtgani sari qoʻshib boring — hammasini bir oʻtirishda tugatish shart emas.",
+            bullets: [
+              "Guvohnoma va migratsiya: pasportlar, ID, vizalar, yashash ruxsati",
+              "Tibbiyot: sugʻurta, emlash yozuvlari, muhim xulosalar",
+              "Uy va avto: shartnomalar, roʻyxat, mulk hujjatlari",
+              "Taʼlim: diplomlar, sertifikatlar, oʻqishga qabul hujjatlari",
+            ],
+          },
+          {
+            h2: "2-qadam: oila aʼzolari boʻyicha ajrating",
+            body: "Har bir kishiga — turmush oʻrtogʻingiz, bolalar, ota-onangiz — oʻz profilini bering va ularning hujjatlarini shu profil ostida birga saqlang. Aynan shu \"fayllar uyumi\"ni \"tizim\"ga aylantiradi: umumiy papkada qidirish oʻrniga siz avval kishini, keyin hujjatni ochasiz. doki.help da har bir hujjat qoʻshilgan zahoti biror oila aʼzosiga tegishli boʻladi.",
+          },
+          {
+            h2: "3-qadam: amal qilish muddatini belgilang",
+            body: "Har bir hujjatni qoʻshayotib \"amal qiladi\" sanasini kiriting, shunda muddat xotirada emas, hujjat bilan birga yashaydi. Aynan shu qadam saqlashni kuzatuvga aylantiradi — busiz seyf faqat oʻsha uyumning kattaroq nusxasi boʻlib qoladi. Yangilash qoidalari davlat va hujjat turiga qarab farq qiladi, shuning uchun muddatga bogʻliq har narsa boʻyicha rasmiy talablarni tekshiring.",
+          },
+          {
+            h2: "4-qadam: eslatmalarni sozlang",
+            body: "Sana biriktirilgach, doki.help siz belgilagan \"amal qiladi\" sanasidan 30, 15, 7 va 1 kun oldin email eslatma yuboradi — har bir oila aʼzosi uchun. Buni har bir hujjat uchun bir marta sozlasangiz, muddatni oʻzingiz eslab yurish shart boʻlmaydi — buni siz uchun tizim qiladi.",
+          },
+          {
+            h2: "5-qadam: xavfsiz kirishni sozlang — rollar va ulashish",
+            body: "Tizimda kim nimani koʻrishi va oʻzgartirishi mumkinligining qoidalari ham boʻlishi kerak. Rollar oilaviy seyfda kim owner, editor yoki viewer ekanini belgilaydi, kirishda qoʻshimcha himoya uchun ikki bosqichli kirish mavjud. Hujjat oiladan tashqariga kerak boʻlganda — qarindoshga, maktabga, agentga — muddati tugaydigan va istalgan vaqt bekor qilinadigan havola orqali ulashing, koʻrish chegarasi va har ochilish qaydi bilan. Qabul qiluvchiga akkaunt kerak emas, seyfning qolgani esa tegilmagan holda qoladi.",
+          },
+          {
+            h2: "Yangi hujjatlar paydo boʻlgani sari tizimni qanday saqlab qolish",
+            body: "Tizim faqat yangi hujjatlar ham shu qadamlardan oʻtsa tizim boʻlib qoladi: qoʻshing, toʻgʻri kishi ostiga qoʻying, sanasini kiriting — qolganini eslatmalar qiladi. doki.help ilova sifatida oʻrnatiladi (PWA), shuning uchun oldindan ochilgan va saqlangan hujjatlar hatto oflaynda ham ochiladi — forma toʻldirish yoki chegarada aloqasiz qolganda foydali. Asl hujjatlaringizni ham oʻzingiz bilan saqlang: bunday tizim katta qulaylik, lekin u beta bosqichida va asl hujjatlar oʻrnini bosmaydi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Bir martalik tartiblash bilan tizim orasida qanday farq bor?",
+            a: "Bir martalik tozalash mavjud narsani saralaydi; tizim esa shundan keyin ham ishlashda davom etadi — yangi hujjatlar avtomatik ravishda kerakli kishiga, sanaga va eslatmaga ega boʻladi, keyingi tozalashgacha qayta uyilib qolmaydi.",
+          },
+          {
+            q: "Barcha besh qadamni birdaniga sozlash kerakmi?",
+            a: "Yoʻq. Hujjatlarni yigʻish va aʼzolar boʻyicha ajratishdan boshlang, muddat va eslatmalarni esa yoʻl-yoʻlakay qoʻshing. Har bir qadam yakka holda ham foydali, birgalikda esa eng uzoq saqlanadi.",
+          },
+          {
+            q: "Eslatma qadami aynan qanday ishlaydi?",
+            a: "Hujjatga \"amal qiladi\" sanasini kiritishingiz bilan doki.help shu sanadan 30, 15, 7 va 1 kun oldin email eslatma yuboradi — har bir oila aʼzosining hujjatlari uchun.",
+          },
+          {
+            q: "Tizim sozlangandan keyin oila hujjatlarini kim koʻradi?",
+            a: "Faqat oilangiz. Kirish maʼlumotlar bazasi darajasida izolyatsiya qilingan (RLS), rollar kim owner, editor yoki viewer ekanini belgilaydi, ikki bosqichli kirish mavjud. doki.help beta bosqichida va asl hujjatlar oʻrnini bosmaydi.",
+          },
+          {
+            q: "Tizimdan bitta hujjatni hammasiga ruxsat bermay ulashsa boʻladimi?",
+            a: "Ha. Bitta hujjatni muddati tugaydigan va istalgan vaqt bekor qilinadigan havola orqali ulashing, koʻrish chegarasi va har ochilish qaydi bilan — qabul qiluvchiga akkaunt kerak emas, seyfning qolgani maxfiy qoladi.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/family-document-organizer", label: "Family document organizer" },
+        { href: "/family-document-vault", label: "Family document vault" },
+      ],
+      ru: [
+        { href: "/family-document-organizer", label: "Организатор документов семьи" },
+        { href: "/family-document-vault", label: "Семейный сейф документов" },
+      ],
+      id: [
+        { href: "/family-document-organizer", label: "Penata dokumen keluarga" },
+        { href: "/family-document-vault", label: "Brankas dokumen keluarga" },
+      ],
+      uz: [
+        { href: "/family-document-organizer", label: "Oila hujjatlari tartibchisi" },
+        { href: "/family-document-vault", label: "Oilaviy hujjatlar seyfi" },
+      ],
+    },
+  },
+  "documents-children-need-to-travel-abroad": {
+    slug: "documents-children-need-to-travel-abroad",
+    emoji: "🧒",
+    locales: {
+      en: {
+        navLabel: "Children's travel documents",
+        title: "Documents a Child Needs to Travel Abroad",
+        metaDescription:
+          "A guide to documents a child needs abroad: passport, birth certificate, consent letters, medical papers, and keeping each child's documents separate.",
+        h1: "What documents children need to travel abroad",
+        intro:
+          "A child's travel documents aren't quite the same list as an adult's — their own passport, sometimes a consent letter, sometimes a vaccination record. Here's how to gather what's needed and keep each child's documents separate if you have more than one.",
+        ctaPrimary: "Organize your child's travel documents",
+        sections: [
+          {
+            h2: "Why children's documents are their own topic",
+            body: "A child doesn't need the same paperwork as an adult: many trips call for a consent letter, and the rules differ by the child's age and by who they're travelling with — both parents, one parent, or neither. It's calmer to sort this out ahead of time than at check-in.",
+          },
+          {
+            h2: "The basic document list for a child",
+            body: "Start with what's needed for almost any trip, then check the rest for your route.",
+            bullets: [
+              "Child's own passport (not added to a parent's)",
+              "Birth certificate — often requested alongside the passport",
+              "Visa or entry permit, if required for the route",
+            ],
+          },
+          {
+            h2: "When a consent letter is needed",
+            body: "If a child is travelling with one parent, a grandparent, another relative, or unaccompanied, some routes require a consent letter from the other parent or both parents. The rules depend on the country of departure and destination, so check the official requirements in advance. doki.help doesn't issue consent letters or give legal or immigration advice — it stores documents and sends reminders about deadlines.",
+          },
+          {
+            h2: "Medical documents for a child",
+            body: "Travel insurance is worth having, and a vaccination certificate can be requested by some countries, schools or camps abroad, depending on the destination and purpose of the trip. Requirements vary, so check them officially.",
+          },
+          {
+            h2: "Keeping documents straight with more than one child",
+            body: "Give each child their own profile and keep their documents there, so one child's passport doesn't end up mixed in with another's insurance policy. In doki.help you can organize documents by each family member separately.",
+          },
+          {
+            h2: "How doki.help helps",
+            body: "doki.help keeps each child's documents in private storage, transferred over HTTPS, with access isolated to your family at the database level (row-level security). Owner, editor and viewer roles let you decide who sees what, and two-factor login is available. Add the \"valid until\" date on a passport or visa and get an email reminder 30, 15, 7 and 1 day before. Share a single document with a link that expires and can be revoked, with a view limit and a log of every open — the recipient needs no account. It's in beta, doesn't replace your originals, and doesn't issue consent letters — check the official requirements of the departure and destination countries.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "What documents does a child need to travel abroad?",
+            a: "Usually their own passport, a birth certificate, and a visa if the route requires one. Some trips also need a consent letter — the rules depend on the country, so check officially.",
+          },
+          {
+            q: "Does a child need a consent letter to travel with one parent?",
+            a: "Sometimes, depending on the country of departure and destination. doki.help doesn't issue these letters or give legal advice, so check the official requirements in advance.",
+          },
+          {
+            q: "How do I keep documents straight with several children?",
+            a: "Give each child their own profile so their documents don't get mixed up with a sibling's or a parent's.",
+          },
+          {
+            q: "Will I be reminded before my child's passport expires?",
+            a: "Yes, by email, before the \"valid until\" date you set. The reminder comes 30, 15, 7 and 1 day before that date.",
+          },
+          {
+            q: "Can I securely share a child's document with a school or relative?",
+            a: "Yes. Share it with a link that expires and can be revoked at any time, with a view limit and a log of every open — the recipient needs no account.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Документы детей для поездки",
+        title: "Документы для поездки ребёнка за границу",
+        metaDescription:
+          "Список документов ребёнку для поездки за границу: паспорт, свидетельство о рождении, согласие на выезд, страховка и как не перепутать документы детей.",
+        h1: "Какие документы нужны детям для поездки за границу",
+        intro:
+          "Для поездки ребёнка за границу нужен отдельный список — свой паспорт, иногда согласие на выезд, а иногда справка о прививках. Вот как ничего не забыть и держать документы каждого ребёнка отдельно, если детей несколько.",
+        ctaPrimary: "Соберите документы ребёнка для поездки",
+        sections: [
+          {
+            h2: "Почему документы детей — отдельная тема",
+            body: "У ребёнка не тот список документов, что у взрослого: часто нужно согласие на выезд, а правила отличаются по возрасту ребёнка и по тому, с кем он едет — с обоими родителями, с одним или без них. Разобраться в этом заранее спокойнее, чем на стойке регистрации.",
+          },
+          {
+            h2: "Базовый список документов ребёнка",
+            body: "Начните с того, что нужно почти всегда, а остальное уточните для своего маршрута.",
+            bullets: [
+              "Загранпаспорт ребёнка (свой, не вписан в паспорт родителя)",
+              "Свидетельство о рождении — часто просят вместе с паспортом",
+              "Виза или разрешение на въезд, если требуется для маршрута",
+            ],
+          },
+          {
+            h2: "Когда нужно согласие на выезд",
+            body: "Если ребёнок едет с одним родителем, с бабушкой, родственником или другим взрослым, а иногда и без сопровождения — на некоторых маршрутах требуется согласие на выезд от второго родителя или обоих родителей. Правила зависят от страны выезда и въезда, поэтому сверяйтесь с официальными требованиями заранее. doki.help не оформляет согласия на выезд и не даёт юридических или миграционных консультаций — только хранит документы и присылает напоминания о сроках.",
+          },
+          {
+            h2: "Медицинские документы ребёнка",
+            body: "Пригодятся страховка на поездку и, при необходимости, прививочный сертификат — некоторые страны, школы или лагеря за границей могут его запрашивать. Требования отличаются по стране и цели поездки, поэтому проверяйте их официально.",
+          },
+          {
+            h2: "Как не перепутать документы, если детей несколько",
+            body: "Заведите отдельный профиль на каждого ребёнка и держите его документы там — так паспорт одного не окажется рядом с полисом другого. В doki.help документы можно организовать по каждому члену семьи отдельно.",
+          },
+          {
+            h2: "Как помогает doki.help",
+            body: "doki.help хранит документы каждого ребёнка в приватном хранилище, передаёт их по HTTPS, а доступ изолирован вашей семьёй на уровне базы (RLS). Роли owner, editor и viewer позволяют решить, кто что видит, доступен двухфакторный вход. К дате «действует до» на паспорте или визе можно получить email-напоминание за 30, 15, 7 и 1 день. Нужный документ можно передать по ссылке, которая истекает и отзывается, с лимитом просмотров и журналом открытий — получателю не нужен аккаунт. Сервис в стадии beta, не заменяет оригиналы и не оформляет согласия на выезд — за официальными требованиями обращайтесь к властям стран выезда и въезда.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Какие документы нужны ребёнку для поездки за границу?",
+            a: "Обычно свой загранпаспорт, свидетельство о рождении и виза, если она нужна для маршрута. На некоторых поездках дополнительно требуется согласие на выезд — правила зависят от страны, проверяйте официально.",
+          },
+          {
+            q: "Нужно ли согласие на выезд, если ребёнок едет с одним из родителей?",
+            a: "Иногда да — это зависит от страны выезда и въезда. doki.help не оформляет такие согласия и не даёт юридических консультаций, поэтому уточняйте требования у официальных источников заранее.",
+          },
+          {
+            q: "Как хранить документы, если в семье несколько детей?",
+            a: "Заведите отдельный профиль на каждого ребёнка, чтобы его документы не путались с документами братьев, сестёр или родителей.",
+          },
+          {
+            q: "Придёт ли напоминание до окончания срока паспорта ребёнка?",
+            a: "Да, на email, до указанной вами даты «действует до». Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
+          },
+          {
+            q: "Можно ли безопасно передать документ ребёнка школе или родственнику?",
+            a: "Да. Поделитесь документом по ссылке, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом открытий — получателю не нужен аккаунт.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Dokumen perjalanan anak",
+        title: "Dokumen yang Dibutuhkan Anak untuk ke Luar Negeri",
+        metaDescription:
+          "Panduan dokumen anak ke luar negeri: paspor, akta kelahiran, surat izin, dokumen medis, dan cara memisahkan dokumen tiap anak.",
+        h1: "Dokumen apa yang dibutuhkan anak untuk bepergian ke luar negeri",
+        intro:
+          "Dokumen perjalanan anak tidak sama persis dengan daftar orang dewasa — paspor sendiri, kadang surat izin, kadang catatan vaksinasi. Berikut cara mengumpulkan yang dibutuhkan dan menjaga dokumen tiap anak tetap terpisah bila Anda punya lebih dari satu.",
+        ctaPrimary: "Susun dokumen perjalanan anak Anda",
+        sections: [
+          {
+            h2: "Mengapa dokumen anak jadi topik tersendiri",
+            body: "Anak tidak butuh berkas yang sama dengan orang dewasa: banyak perjalanan meminta surat izin, dan aturannya berbeda tergantung usia anak serta siapa yang menemaninya — kedua orang tua, satu orang tua, atau tanpa keduanya. Lebih tenang menyiapkannya lebih awal daripada saat check-in.",
+          },
+          {
+            h2: "Daftar dokumen dasar untuk anak",
+            body: "Mulai dari yang dibutuhkan hampir setiap perjalanan, lalu periksa sisanya untuk rute Anda.",
+            bullets: [
+              "Paspor anak sendiri (bukan tercantum di paspor orang tua)",
+              "Akta kelahiran — sering diminta bersama paspor",
+              "Visa atau izin masuk, bila diperlukan untuk rute tersebut",
+            ],
+          },
+          {
+            h2: "Kapan surat izin (consent letter) diperlukan",
+            body: "Jika anak bepergian dengan satu orang tua, kakek/nenek, kerabat lain, atau tanpa pendamping, beberapa rute mensyaratkan surat izin dari orang tua yang tidak ikut atau dari kedua orang tua. Aturannya tergantung negara keberangkatan dan tujuan, jadi periksa persyaratan resmi lebih awal. doki.help tidak menerbitkan surat izin atau memberi nasihat hukum maupun imigrasi — doki.help hanya menyimpan dokumen dan mengirim pengingat tenggat.",
+          },
+          {
+            h2: "Dokumen medis untuk anak",
+            body: "Asuransi perjalanan berguna dimiliki, dan sertifikat vaksinasi bisa diminta oleh sebagian negara, sekolah, atau kamp di luar negeri, tergantung tujuan dan maksud perjalanan. Persyaratannya berbeda-beda, jadi periksa secara resmi.",
+          },
+          {
+            h2: "Menjaga dokumen tetap rapi bila anak lebih dari satu",
+            body: "Beri tiap anak profilnya sendiri dan simpan dokumennya di sana, agar paspor satu anak tidak tercampur dengan polis asuransi anak lain. Di doki.help, dokumen bisa ditata per anggota keluarga secara terpisah.",
+          },
+          {
+            h2: "Bagaimana doki.help membantu",
+            body: "doki.help menyimpan dokumen tiap anak di penyimpanan privat, ditransfer lewat HTTPS, dengan akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security). Peran owner, editor, dan viewer menentukan siapa melihat apa, dan login dua faktor tersedia. Tambahkan tanggal \"berlaku sampai\" pada paspor atau visa dan dapatkan pengingat email 30, 15, 7, dan 1 hari sebelumnya. Bagikan satu dokumen lewat tautan yang kedaluwarsa dan bisa dicabut, dengan batas tampilan dan catatan tiap pembukaan — penerima tidak perlu akun. Masih beta, tidak menggantikan dokumen asli, dan tidak menerbitkan surat izin — periksa persyaratan resmi negara keberangkatan dan tujuan.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Dokumen apa yang dibutuhkan anak untuk ke luar negeri?",
+            a: "Biasanya paspor sendiri, akta kelahiran, dan visa jika rute memerlukannya. Beberapa perjalanan juga butuh surat izin — aturannya tergantung negara, jadi periksa secara resmi.",
+          },
+          {
+            q: "Apakah anak butuh surat izin untuk bepergian dengan satu orang tua?",
+            a: "Kadang ya, tergantung negara keberangkatan dan tujuan. doki.help tidak menerbitkan surat izin ini atau memberi nasihat hukum, jadi periksa persyaratan resmi lebih awal.",
+          },
+          {
+            q: "Bagaimana menjaga dokumen tetap rapi bila punya beberapa anak?",
+            a: "Beri tiap anak profilnya sendiri agar dokumennya tidak tercampur dengan saudara atau orang tuanya.",
+          },
+          {
+            q: "Akankah saya diingatkan sebelum paspor anak kedaluwarsa?",
+            a: "Ya, lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
+          },
+          {
+            q: "Bisakah saya membagikan dokumen anak dengan aman ke sekolah atau kerabat?",
+            a: "Bisa. Bagikan lewat tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan — penerima tidak perlu akun.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Bola sayohat hujjatlari",
+        title: "Chet elga sayohat uchun bolaga qanday hujjatlar kerak",
+        metaDescription:
+          "Bola chet elga sayohati uchun hujjatlar: pasport, tugʻilganlik guvohnomasi, rozilik xati, tibbiy hujjatlar va har bir bolaning hujjatini alohida saqlash.",
+        h1: "Chet elga sayohat uchun bolalarga qanday hujjatlar kerak",
+        intro:
+          "Bolaning sayohat hujjatlari kattalarnikidan biroz farq qiladi — oʻz pasporti, baʼzida rozilik xati, baʼzida emlash sertifikati. Mana kerak boʻlgan narsalarni qanday yigʻish va bir nechta bola boʻlsa, har birining hujjatlarini alohida saqlash yoʻli.",
+        ctaPrimary: "Bolangiz uchun sayohat hujjatlarini yigʻing",
+        sections: [
+          {
+            h2: "Nega bolalar hujjatlari alohida mavzu",
+            body: "Bolaga kattalarnikidek hujjatlar kerak emas: koʻp sayohatlarda rozilik xati talab qilinadi, qoidalar esa bolaning yoshiga va u kim bilan sayohat qilishiga qarab farq qiladi — ikkala ota-ona, bitta ota-ona yoki ularsiz. Buni parvozga roʻyxatdan oʻtish paytida emas, oldindan hal qilish tinchroq.",
+          },
+          {
+            h2: "Bola uchun asosiy hujjatlar roʻyxati",
+            body: "Deyarli har qanday sayohatga kerak boʻladigan narsalardan boshlang, qolganini marshrutingiz uchun tekshiring.",
+            bullets: [
+              "Bolaning oʻz pasporti (ota-ona pasportiga kiritilmagan)",
+              "Tugʻilganlik guvohnomasi — koʻpincha pasport bilan birga soʻraladi",
+              "Marshrut uchun kerak boʻlsa, viza yoki kirish ruxsati",
+            ],
+          },
+          {
+            h2: "Rozilik xati qachon kerak boʻladi",
+            body: "Agar bola bitta ota-ona, buvi-bobosi, boshqa qarindosh bilan yoki hamrohsiz sayohat qilsa, baʼzi marshrutlarda ikkinchi ota-onadan yoki ikkala ota-onadan rozilik xati talab qilinadi. Qoidalar joʻnash va borar davlatga bogʻliq, shuning uchun rasmiy talablarni oldindan tekshiring. doki.help rozilik xatlarini rasmiylashtirmaydi va huquqiy yoki migratsiya boʻyicha maslahat bermaydi — u faqat hujjatlarni saqlaydi va muddatlar haqida eslatadi.",
+          },
+          {
+            h2: "Bola uchun tibbiy hujjatlar",
+            body: "Sayohat sugʻurtasi foydali boʻladi, baʼzi davlatlar, maktablar yoki xorijdagi lagerlar esa borar joy va sayohat maqsadiga qarab emlash sertifikatini soʻrashi mumkin. Talablar har xil, shuning uchun ularni rasmiy ravishda tekshiring.",
+          },
+          {
+            h2: "Bir nechta bola boʻlsa, hujjatlarni aralashtirmaslik",
+            body: "Har bir bolaga alohida profil oching va uning hujjatlarini shu yerda saqlang, shunda bitta bolaning pasporti boshqasining sugʻurta polisi bilan aralashib qolmaydi. doki.help da hujjatlarni har bir oila aʼzosi boʻyicha alohida tartiblash mumkin.",
+          },
+          {
+            h2: "doki.help qanday yordam beradi",
+            body: "doki.help har bir bolaning hujjatlarini xususiy xotirada saqlaydi, ular HTTPS orqali uzatiladi, kirish esa oilangiz uchun maʼlumotlar bazasi darajasida (RLS) izolyatsiya qilingan. Owner, editor va viewer rollari kim nimani koʻrishini belgilaydi, ikki bosqichli kirish ham mavjud. Pasport yoki vizaga \"amal qiladi\" sanasini qoʻshing va muddatdan 30, 15, 7 va 1 kun oldin email eslatma oling. Bitta hujjatni muddati tugaydigan va istalgan payt bekor qilinadigan havola orqali ulashing, koʻrish chegarasi va har bir ochilish jurnali bilan — qabul qiluvchiga akkaunt kerak emas. U beta bosqichida, asl hujjatlar oʻrnini bosmaydi va rozilik xatlarini rasmiylashtirmaydi — rasmiy talablar uchun joʻnash va borar davlat organlariga murojaat qiling.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Chet elga sayohat uchun bolaga qanday hujjatlar kerak?",
+            a: "Odatda oʻz pasporti, tugʻilganlik guvohnomasi va marshrut talab qilsa viza. Baʼzi sayohatlarda rozilik xati ham kerak boʻladi — qoidalar davlatga bogʻliq, rasmiy ravishda tekshiring.",
+          },
+          {
+            q: "Bola bitta ota-ona bilan sayohat qilsa, rozilik xati kerakmi?",
+            a: "Baʼzida ha, bu joʻnash va borar davlatga bogʻliq. doki.help bunday xatlarni rasmiylashtirmaydi va huquqiy maslahat bermaydi, shuning uchun rasmiy talablarni oldindan tekshiring.",
+          },
+          {
+            q: "Bir nechta bola boʻlsa, hujjatlarni qanday aralashtirmaslik mumkin?",
+            a: "Har bir bolaga alohida profil oching, shunda uning hujjatlari aka-uka, opa-singil yoki ota-onasinikiga aralashib ketmaydi.",
+          },
+          {
+            q: "Bolamning pasporti muddati tugashidan oldin eslatma keladimi?",
+            a: "Ha, email orqali, siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
+          },
+          {
+            q: "Bola hujjatini maktab yoki qarindoshga xavfsiz ulashsa boʻladimi?",
+            a: "Ha. Muddati tugaydigan va istalgan payt bekor qilinadigan havola orqali ulashing, koʻrish chegarasi va har bir ochilish jurnali bilan — qabul qiluvchiga akkaunt kerak emas.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/checklists/child-documents-checklist", label: "Child documents checklist" },
+        { href: "/travel-documents", label: "Travel documents" },
+      ],
+      ru: [
+        { href: "/checklists/child-documents-checklist", label: "Чек-лист документов ребёнка" },
+        { href: "/travel-documents", label: "Документы для поездки" },
+      ],
+      id: [
+        { href: "/checklists/child-documents-checklist", label: "Ceklis dokumen anak" },
+        { href: "/travel-documents", label: "Dokumen perjalanan" },
+      ],
+      uz: [
+        { href: "/checklists/child-documents-checklist", label: "Bola hujjatlari roʻyxati" },
+        { href: "/travel-documents", label: "Sayohat hujjatlari" },
+      ],
+    },
+  },
+  "how-freelancers-organize-their-documents": {
+    slug: "how-freelancers-organize-their-documents",
+    emoji: "💼",
+    locales: {
+      en: {
+        navLabel: "Freelancer documents",
+        title: "How Freelancers Organize Their Documents",
+        metaDescription:
+          "A calm system for freelancers: separate work and personal documents, track permits, get renewal reminders, and share files safely with clients.",
+        h1: "How freelancers can bring order to their documents",
+        intro:
+          "A calm, practical way for freelancers to keep contracts, receipts and official papers in order — separated from personal documents, with renewal reminders and a safe way to share a single file with a client or accountant.",
+        ctaPrimary: "Bring order to your work documents",
+        sections: [
+          {
+            h2: "Why freelancers' documents scatter more than most",
+            body: "When you're self-employed, personal and work paperwork pile up in the same inbox, the same phone gallery, the same messy folder — a client contract next to a passport scan, a status certificate next to an insurance PDF. There's no employer's HR department keeping a copy, so every document is your own responsibility, and it's easy for something important to get buried under everyday files.",
+          },
+          {
+            h2: "Which documents are worth collecting",
+            body: "Start with the papers you're likely to need on short notice, and add the rest as you go.",
+            bullets: [
+              "Contracts and agreements with clients",
+              "Receipts, invoices and signed acts of completed work",
+              "Certificates of your self-employed or registered status",
+              "Insurance policies",
+              "ID documents and other proof of identity",
+            ],
+          },
+          {
+            h2: "Separating personal and work documents in one vault",
+            body: "You don't need two different accounts to keep things apart. Use separate profiles or categories inside your vault — one for work documents, one for personal ones — so a client contract never sits next to a family member's passport, and you can find either one without scrolling past the other.",
+          },
+          {
+            h2: "Not missing a renewal deadline",
+            body: "Insurance, permits, licences and self-employed registration often have a renewal date attached, and the rules for renewing them differ by country and by document — always check the official requirements where you're registered. Once you set the \"valid until\" date on a document, doki.help sends an email reminder 30, 15, 7 and 1 day before it, so a renewal reaches you early instead of on the deadline itself.",
+          },
+          {
+            h2: "Sending a document to a client or accountant without opening everything",
+            body: "A client or accountant usually needs one document, not access to your whole vault. Share it with a link that expires and can be revoked at any time, with a view limit and a log of every time it was opened. The recipient doesn't need an account, and the rest of your documents stay private.",
+          },
+          {
+            h2: "How doki.help helps",
+            body: "doki.help keeps your documents in private storage, transferred over HTTPS, with access isolated to you at the database level (row-level security). Roles let you decide who is owner, editor or viewer if you share your vault with someone, two-factor login is available, and it works offline as an installable app for documents you've already saved. Optional AI field recognition is off by default and, if you turn it on, is processed by a third-party AI provider. doki.help is a document vault, not accounting or invoicing software, and it's in beta — it doesn't replace your original documents.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "How should a freelancer separate work documents from personal ones?",
+            a: "Use a separate profile or category for work documents inside your vault, so client contracts and business papers don't mix with personal ones like passports or insurance.",
+          },
+          {
+            q: "What documents should a freelancer keep in one place?",
+            a: "Client contracts, receipts and acts of completed work, certificates of your self-employed or registered status, insurance policies, and your ID documents are the ones worth gathering first.",
+          },
+          {
+            q: "How do I avoid missing a licence or registration renewal?",
+            a: "Set the \"valid until\" date on the document, and doki.help sends an email reminder 30, 15, 7 and 1 day before it. Renewal rules vary by country, so check the official requirements where you're registered.",
+          },
+          {
+            q: "How can I send one document to a client without giving access to everything?",
+            a: "Share it with a link that expires and can be revoked at any time, with a view limit and a log of every open. The recipient needs no account, and the rest of your vault stays private.",
+          },
+          {
+            q: "Does doki.help handle invoicing or accounting for freelancers?",
+            a: "No. doki.help is a document vault for storing and organizing your papers safely — it doesn't replace accounting or invoicing software, or your original documents.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Документы самозанятого",
+        title: "Документы самозанятого: как хранить и не терять",
+        metaDescription:
+          "Простая система для самозанятых: хранить документы отдельно от личных, не пропускать сроки продления и безопасно делиться файлами с клиентом.",
+        h1: "Как самозанятому навести порядок в документах",
+        intro:
+          "Спокойный и практичный способ самозанятому навести порядок в документах: держать договоры, чеки и официальные справки отдельно от личных, не пропускать сроки продления и безопасно отправлять один файл клиенту или бухгалтеру.",
+        ctaPrimary: "Наведите порядок в рабочих документах",
+        sections: [
+          {
+            h2: "Почему у самозанятых документы разбросаны сильнее",
+            body: "Когда работаешь на себя, личные и рабочие бумаги оседают в одной и той же почте, галерее телефона, одной и той же захламлённой папке — договор с клиентом рядом со сканом паспорта, справка о статусе рядом с PDF страховки. Нет отдела кадров, который хранит копию за вас, поэтому каждый документ — целиком ваша ответственность, и важное легко теряется среди повседневных файлов.",
+          },
+          {
+            h2: "Какие документы стоит собрать",
+            body: "Начните с бумаг, которые могут понадобиться быстро, остальные добавляйте постепенно.",
+            bullets: [
+              "Договоры и соглашения с клиентами",
+              "Чеки, счета и подписанные акты выполненных работ",
+              "Справки о статусе самозанятого или регистрации",
+              "Страховые полисы",
+              "Удостоверяющие документы",
+            ],
+          },
+          {
+            h2: "Как разделить личное и рабочее в одном сейфе",
+            body: "Не обязательно заводить два разных аккаунта, чтобы не путать документы. Используйте отдельные профили или категории внутри сейфа — один для рабочих документов, другой для личных, — чтобы договор с клиентом никогда не лежал рядом с паспортом члена семьи, и любой из них было легко найти, не пролистывая другой.",
+          },
+          {
+            h2: "Как не пропустить сроки продления",
+            body: "У страховки, разрешений, лицензий и регистрации самозанятого часто есть дата, до которой они действуют, а правила продления различаются в зависимости от страны и типа документа — всегда проверяйте официальные требования там, где вы зарегистрированы. Как только вы укажете дату «действует до» на документе, doki.help пришлёт email-напоминание за 30, 15, 7 и 1 день до неё, чтобы срок находил вас заранее, а не в последний момент.",
+          },
+          {
+            h2: "Как безопасно отправить документ клиенту или бухгалтеру",
+            body: "Клиенту или бухгалтеру обычно нужен один документ, а не доступ ко всему сейфу. Поделитесь им по ссылке, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом каждого открытия. Получателю не нужен аккаунт, а остальные документы остаются приватными.",
+          },
+          {
+            h2: "Как помогает doki.help",
+            body: "doki.help хранит документы в приватном хранилище, передаёт их по HTTPS, а доступ изолирован на уровне базы данных (RLS). Роли позволяют решить, кто owner, editor или viewer, если вы делитесь сейфом с кем-то, доступен двухфакторный вход, а сервис работает офлайн как устанавливаемое приложение для уже сохранённых документов. Опциональное AI-распознавание полей по умолчанию выключено, а если вы его включите, обработка идёт через стороннего AI-провайдера. doki.help — сейф для документов, а не программа для бухгалтерии или выставления счетов, и он в стадии beta — не заменяет оригиналы.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Как самозанятому отделить рабочие документы от личных?",
+            a: "Используйте отдельный профиль или категорию для рабочих документов внутри сейфа, чтобы договоры с клиентами и деловые бумаги не смешивались с личными — паспортом или страховкой.",
+          },
+          {
+            q: "Какие документы стоит держать самозанятому в одном месте?",
+            a: "В первую очередь — договоры с клиентами, чеки и акты выполненных работ, справки о статусе самозанятого или регистрации, страховые полисы и удостоверяющие документы.",
+          },
+          {
+            q: "Как не пропустить продление лицензии или регистрации?",
+            a: "Укажите дату «действует до» на документе — doki.help пришлёт email-напоминание за 30, 15, 7 и 1 день до неё. Правила продления различаются по странам, поэтому проверяйте официальные требования там, где вы зарегистрированы.",
+          },
+          {
+            q: "Как отправить клиенту один документ, не открывая доступ ко всему?",
+            a: "Поделитесь им по ссылке, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом открытий. Получателю не нужен аккаунт, а остальной сейф остаётся приватным.",
+          },
+          {
+            q: "Ведёт ли doki.help бухгалтерию или выставляет счета за самозанятого?",
+            a: "Нет. doki.help — это сейф для безопасного хранения и организации документов, он не заменяет программы для бухгалтерии, выставления счетов или оригиналы документов.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Dokumen freelancer",
+        title: "Cara Freelancer Menata Dokumen Mereka",
+        metaDescription:
+          "Sistem tenang untuk freelancer: pisahkan dokumen kerja dan pribadi, dapatkan pengingat perpanjangan, dan bagikan berkas dengan aman ke klien.",
+        h1: "Cara freelancer menata dokumen mereka",
+        intro:
+          "Cara tenang dan praktis bagi freelancer untuk menata kontrak, kuitansi, dan surat resmi — dipisahkan dari dokumen pribadi, dengan pengingat masa berlaku dan cara aman membagikan satu berkas ke klien atau akuntan.",
+        ctaPrimary: "Tata dokumen kerja Anda",
+        sections: [
+          {
+            h2: "Mengapa dokumen freelancer lebih mudah berantakan",
+            body: "Saat bekerja sendiri, berkas pribadi dan kerja menumpuk di email yang sama, galeri ponsel yang sama, folder yang sama berantakannya — kontrak klien berdampingan dengan pindaian paspor, surat status di sebelah PDF asuransi. Tidak ada bagian HR yang menyimpan salinannya untuk Anda, jadi setiap dokumen sepenuhnya tanggung jawab Anda, dan yang penting mudah terkubur di antara berkas sehari-hari.",
+          },
+          {
+            h2: "Dokumen apa saja yang perlu dikumpulkan",
+            body: "Mulai dari berkas yang mungkin Anda perlukan mendadak, lalu tambahkan sisanya seiring waktu.",
+            bullets: [
+              "Kontrak dan perjanjian dengan klien",
+              "Kuitansi, faktur, dan berita acara pekerjaan yang ditandatangani",
+              "Surat keterangan status usaha mandiri atau registrasi",
+              "Polis asuransi",
+              "Dokumen identitas",
+            ],
+          },
+          {
+            h2: "Memisahkan dokumen pribadi dan kerja dalam satu brankas",
+            body: "Anda tidak perlu dua akun berbeda agar tidak tercampur. Gunakan profil atau kategori terpisah di dalam brankas — satu untuk dokumen kerja, satu untuk pribadi — sehingga kontrak klien tidak pernah berdampingan dengan paspor anggota keluarga, dan keduanya mudah ditemukan tanpa menggulir yang lain.",
+          },
+          {
+            h2: "Tidak melewatkan tenggat perpanjangan",
+            body: "Asuransi, izin, lisensi, dan registrasi usaha mandiri sering punya tanggal perpanjangan, dan aturannya berbeda tiap negara dan jenis dokumen — selalu periksa persyaratan resmi di tempat Anda terdaftar. Setelah Anda mengisi tanggal \"berlaku sampai\" pada dokumen, doki.help mengirim pengingat email 30, 15, 7, dan 1 hari sebelumnya, agar perpanjangan menghampiri Anda lebih awal, bukan tepat di tenggat.",
+          },
+          {
+            h2: "Mengirim dokumen ke klien atau akuntan tanpa membuka semuanya",
+            body: "Klien atau akuntan biasanya hanya perlu satu dokumen, bukan akses ke seluruh brankas. Bagikan lewat tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan setiap kali dibuka. Penerima tidak perlu akun, dan dokumen lainnya tetap privat.",
+          },
+          {
+            h2: "Bagaimana doki.help membantu",
+            body: "doki.help menyimpan dokumen Anda di penyimpanan privat, ditransfer lewat HTTPS, dengan akses diisolasi untuk Anda di tingkat basis data (row-level security). Peran menentukan siapa owner, editor, atau viewer jika Anda berbagi brankas dengan orang lain, login dua faktor tersedia, dan brankas bisa dipakai offline sebagai aplikasi yang bisa dipasang untuk dokumen yang sudah disimpan. Pengenalan bidang AI opsional mati secara default, dan jika Anda mengaktifkannya, pemrosesan dilakukan oleh penyedia AI pihak ketiga. doki.help adalah brankas dokumen, bukan perangkat lunak akuntansi atau faktur, dan masih beta — tidak menggantikan dokumen asli Anda.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Bagaimana freelancer memisahkan dokumen kerja dari pribadi?",
+            a: "Gunakan profil atau kategori terpisah untuk dokumen kerja di dalam brankas, agar kontrak klien dan berkas usaha tidak tercampur dengan yang pribadi seperti paspor atau asuransi.",
+          },
+          {
+            q: "Dokumen apa yang sebaiknya disimpan freelancer di satu tempat?",
+            a: "Yang pertama: kontrak klien, kuitansi dan berita acara pekerjaan, surat keterangan status usaha mandiri atau registrasi, polis asuransi, dan dokumen identitas.",
+          },
+          {
+            q: "Bagaimana agar tidak melewatkan perpanjangan lisensi atau registrasi?",
+            a: "Isi tanggal \"berlaku sampai\" pada dokumen — doki.help mengirim pengingat email 30, 15, 7, dan 1 hari sebelumnya. Aturan perpanjangan berbeda tiap negara, jadi periksa persyaratan resmi di tempat Anda terdaftar.",
+          },
+          {
+            q: "Bagaimana mengirim satu dokumen ke klien tanpa membuka akses ke semuanya?",
+            a: "Bagikan lewat tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan setiap pembukaan. Penerima tidak perlu akun, dan sisa brankas tetap privat.",
+          },
+          {
+            q: "Apakah doki.help mengurus akuntansi atau faktur untuk freelancer?",
+            a: "Tidak. doki.help adalah brankas untuk menyimpan dan menata dokumen dengan aman — bukan pengganti perangkat lunak akuntansi, faktur, atau dokumen asli Anda.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Frilanser hujjatlari",
+        title: "Frilanser oʻz hujjatlarini qanday tartiblaydi",
+        metaDescription:
+          "Frilanserlar uchun sokin tizim: ish va shaxsiy hujjatlarni ajrating, yangilash eslatmalarini oling va fayllarni mijozga xavfsiz ulashing.",
+        h1: "Frilanser oʻz hujjatlarini qanday tartibga soladi",
+        intro:
+          "Frilanserlar uchun shartnomalar, cheklar va rasmiy hujjatlarni tartibga solishning sokin va amaliy yoʻli — ularni shaxsiy hujjatlardan ajratib, muddat eslatmalari bilan va mijoz yoki buxgalterga bitta faylni xavfsiz yuborish imkoni bilan.",
+        ctaPrimary: "Ish hujjatlaringizni tartibga soling",
+        sections: [
+          {
+            h2: "Nega frilanserlarda hujjatlar koʻproq tarqoq boʻladi",
+            body: "Oʻzingiz uchun ishlaganda, shaxsiy va ish hujjatlari bitta pochta qutisida, bitta telefon galereyasida, bitta tartibsiz papkada toʻplanadi — mijoz bilan shartnoma pasport skaneri yonida, status haqidagi guvohnoma sugʻurta PDFi yonida yotadi. Buning nusxasini saqlaydigan kadrlar boʻlimi yoʻq, shuning uchun har bir hujjat toʻliq sizning zimmangizda, va muhimi kundalik fayllar orasida yoʻqolib qolishi oson.",
+          },
+          {
+            h2: "Qanday hujjatlarni yigʻish kerak",
+            body: "Tez kerak boʻlishi mumkin boʻlgan hujjatlardan boshlang, qolganini vaqt oʻtgani sari qoʻshib boring.",
+            bullets: [
+              "Mijozlar bilan shartnoma va kelishuvlar",
+              "Cheklar, hisob-fakturalar va imzolangan ish topshirish dalolatnomalari",
+              "Frilanser yoki roʻyxatdan oʻtganlik statusi haqida guvohnoma",
+              "Sugʻurta polislari",
+              "Shaxsni tasdiqlovchi hujjatlar",
+            ],
+          },
+          {
+            h2: "Bitta seyfda shaxsiy va ish hujjatlarini ajratish",
+            body: "Ularni aralashtirmaslik uchun ikkita alohida akkaunt kerak emas. Seyf ichida alohida profil yoki kategoriyalardan foydalaning — biri ish hujjatlari uchun, biri shaxsiy uchun — shunda mijoz bilan shartnoma hech qachon oila aʼzosining pasporti yonida yotmaydi va ikkalasini ham boshqasini varaqlamay topish mumkin.",
+          },
+          {
+            h2: "Yangilash muddatini oʻtkazib yubormaslik",
+            body: "Sugʻurta, ruxsatnoma, litsenziya va frilanser sifatida roʻyxatdan oʻtishning koʻpincha yangilash sanasi bor, va bu qoidalar davlat hamda hujjat turiga qarab farq qiladi — roʻyxatdan oʻtgan joyingizdagi rasmiy talablarni doim tekshiring. Hujjatga \"amal qiladi\" sanasini kiritganingizdan soʻng, doki.help shu sanadan 30, 15, 7 va 1 kun oldin email eslatma yuboradi, shunda yangilash sizni oldindan topadi, muddat kunida emas.",
+          },
+          {
+            h2: "Mijoz yoki buxgalterga hammasini ochmay hujjat yuborish",
+            body: "Mijoz yoki buxgalterga odatda bitta hujjat kerak boʻladi, butun seyfga kirish emas. Uni muddati tugaydigan va istalgan vaqt bekor qilinadigan havola orqali ulashing, koʻrish chegarasi va har ochilish qaydi bilan. Qabul qiluvchiga akkaunt kerak emas, qolgan hujjatlaringiz esa maxfiy qoladi.",
+          },
+          {
+            h2: "doki.help qanday yordam beradi",
+            body: "doki.help hujjatlaringizni maxfiy omborda saqlaydi, HTTPS orqali uzatadi, kirish esa maʼlumotlar bazasi darajasida faqat sizga izolyatsiya qilingan (RLS). Agar seyfingizni kimdir bilan ulashsangiz, rollar kim owner, editor yoki viewer ekanini belgilaydi, ikki bosqichli kirish mavjud, va u avvaldan saqlangan hujjatlar uchun oʻrnatiladigan ilova sifatida oflaynda ishlaydi. Ixtiyoriy AI maydon tanish sukut boʻyicha oʻchiq, uni yoqsangiz, qayta ishlash uchinchi tomon AI provayderi orqali amalga oshiriladi. doki.help — hujjatlar seyfi, buxgalteriya yoki hisob-faktura dasturi emas, va u beta bosqichida — asl hujjatlaringiz oʻrnini bosmaydi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Frilanser ish va shaxsiy hujjatlarni qanday ajratadi?",
+            a: "Seyf ichida ish hujjatlari uchun alohida profil yoki kategoriyadan foydalaning, shunda mijozlar bilan shartnomalar va ish qogʻozlari pasport yoki sugʻurta kabi shaxsiy hujjatlar bilan aralashmaydi.",
+          },
+          {
+            q: "Frilanser qanday hujjatlarni bitta joyda saqlashi kerak?",
+            a: "Birinchi navbatda — mijozlar bilan shartnomalar, cheklar va ish topshirish dalolatnomalari, frilanser yoki roʻyxatdan oʻtganlik statusi guvohnomasi, sugʻurta polislari va shaxsni tasdiqlovchi hujjatlar.",
+          },
+          {
+            q: "Litsenziya yoki roʻyxatdan oʻtishni yangilashni qanday oʻtkazib yubormaslik mumkin?",
+            a: "Hujjatga \"amal qiladi\" sanasini kiriting — doki.help shu sanadan 30, 15, 7 va 1 kun oldin email eslatma yuboradi. Yangilash qoidalari davlatlar boʻyicha farq qiladi, shuning uchun roʻyxatdan oʻtgan joyingizdagi rasmiy talablarni tekshiring.",
+          },
+          {
+            q: "Mijozga hammasiga kirishni ochmay bitta hujjat qanday yuboriladi?",
+            a: "Uni muddati tugaydigan va istalgan vaqt bekor qilinadigan havola orqali ulashing, koʻrish chegarasi va har ochilish qaydi bilan. Qabul qiluvchiga akkaunt kerak emas, seyfning qolgani maxfiy qoladi.",
+          },
+          {
+            q: "doki.help frilanser uchun buxgalteriya yoki hisob-faktura yuritadimi?",
+            a: "Yoʻq. doki.help — hujjatlarni xavfsiz saqlash va tartiblash uchun seyf, u buxgalteriya, hisob-faktura dasturlari yoki asl hujjatlar oʻrnini bosmaydi.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/family-document-vault", label: "Family document vault" },
+        { href: "/secure-document-sharing", label: "Secure document sharing" },
+      ],
+      ru: [
+        { href: "/family-document-vault", label: "Семейный сейф документов" },
+        { href: "/secure-document-sharing", label: "Безопасный обмен документами" },
+      ],
+      id: [
+        { href: "/family-document-vault", label: "Brankas dokumen keluarga" },
+        { href: "/secure-document-sharing", label: "Berbagi dokumen aman" },
+      ],
+      uz: [
+        { href: "/family-document-vault", label: "Oilaviy hujjatlar seyfi" },
+        { href: "/secure-document-sharing", label: "Hujjatlarni xavfsiz ulashish" },
+      ],
+    },
+  },
+  "what-to-check-before-a-family-vacation": {
+    slug: "what-to-check-before-a-family-vacation",
+    emoji: "🧳",
+    locales: {
+      en: {
+        navLabel: "Before a vacation",
+        title: "What to Check in Your Documents Before a Family Vacation",
+        metaDescription:
+          "A calm pre-trip check for passports, visas, insurance and children's documents — done a week before your family vacation, not at the airport.",
+        h1: "What to check in your documents before a family vacation",
+        intro:
+          "A short, calm check for passports, visas, insurance and children's documents — the things worth confirming a week before your trip, not while you're already at the airport.",
+        ctaPrimary: "Check your documents before the trip",
+        sections: [
+          {
+            h2: "Why check a week before, not at the airport",
+            body: "Missing details rarely show up when it's convenient — a passport that expires mid-trip, an insurance policy that doesn't cover the dates you're travelling, a visa page you assumed was already stamped. A short check a week ahead gives you time to fix a problem; the same gap discovered at check-in usually doesn't. The goal isn't a perfect binder of paperwork, just enough certainty that nothing in your family's documents will surprise you at the gate.",
+          },
+          {
+            h2: "Passports and their validity",
+            body: "A quick pass over every passport in the family catches most of what goes wrong.",
+            bullets: [
+              "Every traveller, including children, has their own passport that's actually valid for the trip dates",
+              "Many countries expect a passport to stay valid for months after your return date — check the official requirements of your destination country",
+              "The name on each passport matches the name on tickets and bookings",
+              "Enough blank pages left for stamps or a visa, if the destination requires one",
+            ],
+          },
+          {
+            h2: "Visas and entry permits",
+            body: "Whether you need a visa, an e-visa or nothing at all depends on your passport, your destination and how you're travelling — rules vary by nationality and change over time, so check the official requirements of your destination country rather than relying on a friend's last trip. If anyone in the family travels on a residence permit or a different passport than the rest of you, confirm their entry rules separately, and leave enough time for processing before you book anything non-refundable.",
+          },
+          {
+            h2: "Insurance: coverage dates and what's included",
+            body: "An insurance policy is only useful if it actually covers the days you're away — check that the start and end dates match your travel dates, not the day you bought it. Confirm what's included: medical care, trip cancellation, lost luggage, and whether children and any pre-existing conditions are covered. If you're adding a policy just for this trip, note its \"valid until\" date in doki.help alongside the rest of your travel documents so it doesn't get forgotten next time.",
+          },
+          {
+            h2: "Children's documents: consents and certificates",
+            body: "Travelling with children often means extra paperwork beyond a passport — a birth certificate, and in many countries a notarised consent letter if a child is travelling with one parent or with someone else entirely. Requirements differ by country and by who's travelling with the child, so check the official requirements of your destination well before you leave, since some consent letters need to be arranged in advance.",
+          },
+          {
+            h2: "One place for the whole family's pre-trip checklist",
+            body: "Instead of checking each document in a different drawer, app or email thread, keep every family member's passport, visa, insurance and consent letters together, sorted by person, with the \"valid until\" date attached to each one. Open and save the ones you'll need before you leave, while you still have wifi, so they're available offline if there's no signal at the airport. Our travel documents checklist walks through this same list step by step.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "How far before a trip should we check our documents?",
+            a: "About a week — enough time to fix a problem like a soon-to-expire passport or a missing visa, but close enough to today's dates that nothing's changed since. Doing it at the airport leaves no time to fix anything.",
+          },
+          {
+            q: "How do I know if a passport is valid for our destination?",
+            a: "Passport rules — including how many months of validity are required beyond your return date — vary by country and change over time, so check the official requirements of your destination country directly rather than assuming.",
+          },
+          {
+            q: "How will I be reminded before a passport, visa or insurance policy expires?",
+            a: "By email, before the \"valid until\" date you set on each document. The reminder comes 30, 15, 7 and 1 day before that date.",
+          },
+          {
+            q: "Can I share a document with someone helping us plan the trip, like an agent?",
+            a: "Yes. Share a link that expires and can be revoked at any time, with a view limit and a log of every open — the recipient doesn't need an account.",
+          },
+          {
+            q: "Will our documents be available if there's no signal at the airport?",
+            a: "Yes, if you open and save them in advance. doki.help works as an installable app (PWA) that keeps previously saved documents available offline. It's in beta and doesn't replace the originals you carry.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Перед отпуском",
+        title: "Что проверить в документах перед отпуском",
+        metaDescription:
+          "Спокойная проверка перед поездкой: паспорта, визы, сроки страховки и документы детей — всё в одном месте за неделю до отпуска, а не в аэропорту.",
+        h1: "Что проверить в документах перед отпуском",
+        intro:
+          "Короткая спокойная проверка паспортов, виз, страховки и документов детей — то, что стоит подтвердить за неделю до поездки, а не уже в аэропорту.",
+        ctaPrimary: "Проверьте документы перед поездкой",
+        sections: [
+          {
+            h2: "Почему это стоит проверить за неделю, а не в аэропорту",
+            body: "Пропущенные детали редко всплывают вовремя: паспорт, который истекает в середине поездки, страховка, не покрывающая даты поездки, виза, которую вы считали уже проставленной. Проверка за неделю оставляет время всё исправить — та же находка на стойке регистрации обычно уже нет. Цель не идеальная папка с бумагами, а уверенность, что документы семьи не преподнесут сюрприз на выходе на посадку.",
+          },
+          {
+            h2: "Паспорта и сроки действия",
+            body: "Быстрый обзор всех паспортов семьи ловит большинство проблем заранее.",
+            bullets: [
+              "У каждого путешественника, включая детей, свой паспорт, действительный на даты поездки",
+              "Многие страны требуют, чтобы паспорт был действителен ещё несколько месяцев после даты возвращения — проверьте официальные требования страны назначения",
+              "Имя в паспорте совпадает с именем в билетах и бронированиях",
+              "Достаточно свободных страниц для штампов или визы, если она нужна по прибытии",
+            ],
+          },
+          {
+            h2: "Визы и разрешения на въезд",
+            body: "Нужна ли виза, электронная виза или ничего вообще — зависит от паспорта, страны назначения и способа поездки; правила отличаются по гражданству и меняются со временем, поэтому проверяйте официальные требования страны назначения, а не полагайтесь на прошлую поездку знакомых. Если кто-то из семьи путешествует по ВНЖ или другому паспорту, чем остальные, уточните его правила въезда отдельно и оставьте время на оформление, прежде чем бронировать что-то невозвратное.",
+          },
+          {
+            h2: "Страховка: сроки покрытия и что входит",
+            body: "Страховка полезна, только если она действительно покрывает дни поездки — проверьте, что даты начала и окончания совпадают с датами путешествия, а не с датой покупки полиса. Уточните, что входит: медицинская помощь, отмена поездки, потеря багажа, покрыты ли дети и уже имеющиеся заболевания. Если полис оформлен только для этой поездки, добавьте дату «действует до» в doki.help рядом с остальными документами для путешествия, чтобы не забыть о ней в следующий раз.",
+          },
+          {
+            h2: "Документы детей: согласия и свидетельства",
+            body: "Поездка с детьми часто требует бумаг сверх паспорта — свидетельства о рождении, а во многих странах ещё и нотариального согласия, если ребёнок едет с одним из родителей или с кем-то посторонним. Требования отличаются по стране и по тому, кто сопровождает ребёнка, поэтому проверьте официальные требования страны назначения заранее — некоторые согласия нужно оформлять заблаговременно.",
+          },
+          {
+            h2: "Быстрый предотпускной чек-лист всей семьи в одном месте",
+            body: "Вместо того чтобы искать каждый документ в своём ящике, приложении или переписке, храните паспорт, визу, страховку и согласия каждого члена семьи вместе, по человеку, с датой «действует до» у каждого документа. Откройте и сохраните то, что понадобится, ещё дома при wifi, чтобы документы были доступны офлайн, если в аэропорту нет связи. Наш чек-лист документов для поездки проходит по этому же списку шаг за шагом.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "За сколько дней до поездки проверять документы?",
+            a: "Примерно за неделю — этого хватит, чтобы исправить проблему вроде паспорта на грани истечения или недостающей визы, и при этом даты ещё точно актуальны. Проверка уже в аэропорту не оставляет времени что-либо исправить.",
+          },
+          {
+            q: "Как понять, действителен ли паспорт для въезда в конкретную страну?",
+            a: "Правила по паспортам — включая то, сколько месяцев действия нужно после даты возвращения — отличаются по странам и меняются со временем, поэтому проверяйте официальные требования страны назначения напрямую, а не по памяти.",
+          },
+          {
+            q: "Как придёт напоминание до окончания срока паспорта, визы или страховки?",
+            a: "На email, до указанной вами даты «действует до» на каждом документе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
+          },
+          {
+            q: "Можно ли поделиться документом с тем, кто помогает организовать поездку, например с агентом?",
+            a: "Да. Поделитесь ссылкой, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом открытий — получателю не нужен аккаунт.",
+          },
+          {
+            q: "Будут ли документы доступны, если в аэропорту нет связи?",
+            a: "Да, если открыть и сохранить их заранее. doki.help работает как устанавливаемое приложение (PWA) и сохраняет доступ офлайн к ранее сохранённым документам. Сервис в стадии beta и не заменяет оригиналы, которые вы берёте с собой.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Sebelum liburan",
+        title: "Yang Perlu Dicek di Dokumen Sebelum Liburan Keluarga",
+        metaDescription:
+          "Pengecekan tenang untuk paspor, visa, asuransi, dan dokumen anak — dilakukan seminggu sebelum liburan keluarga, bukan di bandara.",
+        h1: "Yang perlu dicek di dokumen sebelum liburan keluarga",
+        intro:
+          "Pengecekan singkat dan tenang untuk paspor, visa, asuransi, dan dokumen anak — hal yang layak dipastikan seminggu sebelum berangkat, bukan saat sudah di bandara.",
+        ctaPrimary: "Cek dokumen sebelum berangkat",
+        sections: [
+          {
+            h2: "Mengapa dicek seminggu sebelumnya, bukan di bandara",
+            body: "Detail yang terlewat jarang muncul di saat yang tepat — paspor yang kedaluwarsa di tengah perjalanan, polis asuransi yang tidak mencakup tanggal Anda pergi, halaman visa yang dikira sudah dicap. Pengecekan seminggu sebelumnya memberi waktu untuk memperbaiki masalah; hal yang sama ditemukan saat check-in biasanya sudah terlambat. Tujuannya bukan berkas yang sempurna, hanya cukup yakin bahwa dokumen keluarga tidak akan mengejutkan Anda di gerbang keberangkatan.",
+          },
+          {
+            h2: "Paspor dan masa berlakunya",
+            body: "Pengecekan cepat pada setiap paspor keluarga menangkap sebagian besar masalah lebih awal.",
+            bullets: [
+              "Setiap orang yang bepergian, termasuk anak, punya paspor sendiri yang benar-benar berlaku untuk tanggal perjalanan",
+              "Banyak negara mensyaratkan paspor tetap berlaku beberapa bulan setelah tanggal kepulangan — periksa persyaratan resmi negara tujuan",
+              "Nama di paspor cocok dengan nama di tiket dan pemesanan",
+              "Halaman kosong cukup untuk cap atau visa, jika negara tujuan mensyaratkannya",
+            ],
+          },
+          {
+            h2: "Visa dan izin masuk",
+            body: "Apakah Anda perlu visa, e-visa, atau tidak sama sekali tergantung pada paspor, negara tujuan, dan cara Anda bepergian — aturan berbeda menurut kewarganegaraan dan berubah dari waktu ke waktu, jadi periksa persyaratan resmi negara tujuan alih-alih mengandalkan pengalaman perjalanan orang lain. Jika ada anggota keluarga yang bepergian dengan izin tinggal atau paspor berbeda dari yang lain, periksa aturan masuknya secara terpisah, dan sisakan cukup waktu untuk proses sebelum memesan sesuatu yang tidak bisa dikembalikan.",
+          },
+          {
+            h2: "Asuransi: tanggal cakupan dan yang termasuk",
+            body: "Polis asuransi berguna hanya jika benar-benar mencakup hari-hari Anda pergi — periksa apakah tanggal mulai dan berakhirnya cocok dengan tanggal perjalanan, bukan tanggal Anda membelinya. Pastikan apa yang termasuk: perawatan medis, pembatalan perjalanan, bagasi hilang, dan apakah anak-anak serta kondisi yang sudah ada sebelumnya ikut tercakup. Jika Anda membeli polis khusus untuk perjalanan ini, catat tanggal \"berlaku sampai\"-nya di doki.help bersama dokumen perjalanan lainnya agar tidak terlupa lain kali.",
+          },
+          {
+            h2: "Dokumen anak: surat izin dan akta",
+            body: "Bepergian dengan anak sering butuh berkas lebih dari sekadar paspor — akta kelahiran, dan di banyak negara surat izin bermeterai jika anak bepergian dengan salah satu orang tua atau dengan orang lain. Persyaratannya berbeda menurut negara dan siapa yang menemani anak, jadi periksa persyaratan resmi negara tujuan jauh-jauh hari, karena beberapa surat izin perlu diurus lebih dulu.",
+          },
+          {
+            h2: "Ceklis pra-liburan seluruh keluarga di satu tempat",
+            body: "Daripada mengecek tiap dokumen di laci, aplikasi, atau percakapan yang berbeda-beda, simpan paspor, visa, asuransi, dan surat izin tiap anggota keluarga bersama, dipilah per orang, dengan tanggal \"berlaku sampai\" di masing-masing. Buka dan simpan yang akan Anda perlukan sebelum berangkat, selagi masih ada wifi, agar tersedia offline jika tidak ada sinyal di bandara. Ceklis dokumen perjalanan kami membahas daftar yang sama ini langkah demi langkah.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Berapa hari sebelum perjalanan sebaiknya mengecek dokumen?",
+            a: "Sekitar seminggu — cukup waktu untuk memperbaiki masalah seperti paspor yang hampir kedaluwarsa atau visa yang belum ada, tapi cukup dekat agar tanggalnya masih relevan. Mengeceknya di bandara tidak menyisakan waktu untuk memperbaiki apa pun.",
+          },
+          {
+            q: "Bagaimana cara tahu paspor masih berlaku untuk negara tujuan?",
+            a: "Aturan paspor — termasuk berapa bulan masa berlaku yang dibutuhkan setelah tanggal kepulangan — berbeda tiap negara dan berubah dari waktu ke waktu, jadi periksa langsung persyaratan resmi negara tujuan, jangan menebak.",
+          },
+          {
+            q: "Bagaimana pengingat sebelum paspor, visa, atau asuransi kedaluwarsa datang?",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
+          },
+          {
+            q: "Bisakah berbagi dokumen dengan orang yang membantu merencanakan perjalanan, seperti agen?",
+            a: "Bisa. Bagikan tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan — penerima tidak perlu akun.",
+          },
+          {
+            q: "Apakah dokumen tetap tersedia jika tidak ada sinyal di bandara?",
+            a: "Ya, jika dibuka dan disimpan lebih dulu. doki.help berjalan sebagai aplikasi yang bisa dipasang (PWA) dan menjaga dokumen yang sudah disimpan tetap tersedia offline. Masih beta dan tidak menggantikan dokumen asli yang Anda bawa.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Sayohat oldidan",
+        title: "Oilaviy sayohat oldidan hujjatlarda nimani tekshirish kerak",
+        metaDescription:
+          "Sayohat oldidan oilaviy tekshiruv: pasport muddati, vizalar, sugʻurta qamrovi va bolalar hujjatlari — bitta joyda, aeroportda emas, bir hafta oldin.",
+        h1: "Oilaviy sayohat oldidan hujjatlarda nimani tekshirish kerak",
+        intro:
+          "Sayohatdan oldin pasport, viza, sugʻurta va bolalar hujjatlari boʻyicha qisqa va sokin tekshiruv — chiqishdan bir hafta oldin qilingani maʼqul, aeroportda emas.",
+        ctaPrimary: "Sayohat oldidan hujjatlarni tekshiring",
+        sections: [
+          {
+            h2: "Nega buni aeroportda emas, bir hafta oldin tekshirish kerak",
+            body: "Eʼtibordan chetda qolgan detallar qulay paytda koʻrinmaydi — sayohat oʻrtasida muddati tugaydigan pasport, sayohat sanalarini qamrab olmaydigan sugʻurta polisi, allaqachon shtamplangan deb oʻylangan viza sahifasi. Bir hafta oldingi tekshiruv muammoni tuzatishga vaqt beradi; xuddi shu narsa registratsiyada topilsa, koʻpincha allaqachon kech boʻladi. Maqsad mukammal papka emas, balki oila hujjatlarining chiqish darvozasida sizni ajablantirmasligiga ishonch.",
+          },
+          {
+            h2: "Pasportlar va amal qilish muddati",
+            body: "Oiladagi har bir pasportga tezkor nazar solish muammolarning koʻpini oldindan tutadi.",
+            bullets: [
+              "Bolalar ham qoʻshib, har bir yoʻlovchining sayohat sanalariga amal qiladigan oʻz pasporti bor",
+              "Koʻp davlatlar pasport qaytish sanasidan keyin ham bir necha oy amal qilishini talab qiladi — borish mamlakatining rasmiy talablarini tekshiring",
+              "Pasportdagi ism chipta va bron qilingan joylardagi ism bilan mos keladi",
+              "Agar kelganda viza kerak boʻlsa, shtamp uchun boʻsh sahifalar yetarli",
+            ],
+          },
+          {
+            h2: "Vizalar va kirish ruxsatlari",
+            body: "Viza, elektron viza yoki hech narsa kerakmi — bu pasportingiz, borish mamlakatingiz va sayohat qilish usulingizga bogʻliq; qoidalar fuqarolikka qarab farq qiladi va vaqt oʻtishi bilan oʻzgaradi, shuning uchun tanishning oʻtgan sayohatiga emas, borish mamlakatining rasmiy talablariga tayaning. Agar oiladan biri yashash ruxsatnomasi yoki boshqalardan farqli pasport bilan sayohat qilsa, uning kirish qoidalarini alohida tekshiring va qaytarib boʻlmaydigan narsa buyurtma qilishdan oldin roʻyxatdan oʻtish uchun yetarli vaqt qoldiring.",
+          },
+          {
+            h2: "Sugʻurta: qamrov sanalari va nimalar kiradi",
+            body: "Sugʻurta polisi faqat sayohat kunlaringizni haqiqatan qamrab olsa foydali — boshlanish va tugash sanalari sotib olgan kuningizga emas, sayohat sanalariga mos kelishini tekshiring. Nimalar kirishini aniqlang: tibbiy yordam, sayohatni bekor qilish, yoʻqolgan yuk, bolalar va mavjud kasalliklar qamrab olinganmi. Agar polis faqat shu sayohat uchun rasmiylashtirilsa, uning \"amal qiladi\" sanasini doki.help da boshqa sayohat hujjatlari qatorida belgilang, toki keyingi safar unutilmasin.",
+          },
+          {
+            h2: "Bolalar hujjatlari: roziliklar va guvohnomalar",
+            body: "Bolalar bilan sayohat koʻpincha pasportdan tashqari qogʻozlarni talab qiladi — tugʻilganlik haqidagi guvohnoma va koʻp davlatlarda bola ota-onalardan biri bilan yoki boshqa kishi bilan sayohat qilsa, notarial roziligi. Talablar davlat va bolani kim kuzatishiga qarab farq qiladi, shuning uchun borish mamlakatining rasmiy talablarini oldindan tekshiring — baʼzi roziliklarni oldindan rasmiylashtirish kerak boʻladi.",
+          },
+          {
+            h2: "Butun oilaning sayohat oldidan tezkor roʻyxati bitta joyda",
+            body: "Har bir hujjatni turli tortma, ilova yoki yozishmadan qidirish oʻrniga, oila aʼzolarining pasporti, vizasi, sugʻurtasi va roziliklarini birga, har biri uchun \"amal qiladi\" sanasi bilan saqlang. Kerak boʻladiganini chiqishdan oldin, wifi borida oching va saqlang, toki aeroportda aloqa boʻlmasa ham oflayn ochilsin. Bizning sayohat hujjatlari roʻyxatimiz ayni shu ketma-ketlikni qadam-baqadam koʻrsatadi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Sayohatdan necha kun oldin hujjatlarni tekshirish kerak?",
+            a: "Taxminan bir hafta — bu muddati tugayotgan pasport yoki yetishmayotgan viza kabi muammoni tuzatishga yetarli, shu bilan birga sanalar hali dolzarb boʻladi. Buni aeroportda tekshirish esa hech narsani tuzatishga vaqt qoldirmaydi.",
+          },
+          {
+            q: "Pasport borish mamlakati uchun amal qilishini qanday bilsa boʻladi?",
+            a: "Pasport qoidalari — jumladan qaytishdan keyin necha oy amal qilishi kerakligi — davlatlarga qarab farq qiladi va vaqt oʻtishi bilan oʻzgaradi, shuning uchun taxmin qilmasdan borish mamlakatining rasmiy talablarini toʻgʻridan-toʻgʻri tekshiring.",
+          },
+          {
+            q: "Pasport, viza yoki sugʻurta muddati tugashidan oldin eslatma qanday keladi?",
+            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
+          },
+          {
+            q: "Sayohatni rejalashtirishga yordam beradigan kishi, masalan agent bilan hujjat ulashsa boʻladimi?",
+            a: "Ha. Muddati tugaydigan va istalgan vaqt bekor qilinadigan havolani ulashing, koʻrish chegarasi va har ochilish qaydi bilan — qabul qiluvchiga akkaunt kerak emas.",
+          },
+          {
+            q: "Aeroportda aloqa boʻlmasa, hujjatlar mavjud boʻladimi?",
+            a: "Ha, agar oldindan ochib saqlansa. doki.help oʻrnatiladigan ilova (PWA) sifatida ishlaydi va oldindan saqlangan hujjatlarni oflayn holatda ham saqlaydi. U beta bosqichida va oʻzingiz olib yurgan asl hujjatlar oʻrnini bosmaydi.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/checklists/travel-documents-checklist", label: "Travel documents checklist" },
+        { href: "/travel-documents", label: "Travel documents" },
+      ],
+      ru: [
+        { href: "/checklists/travel-documents-checklist", label: "Чек-лист документов для поездки" },
+        { href: "/travel-documents", label: "Документы для поездки" },
+      ],
+      id: [
+        { href: "/checklists/travel-documents-checklist", label: "Ceklis dokumen perjalanan" },
+        { href: "/travel-documents", label: "Dokumen perjalanan" },
+      ],
+      uz: [
+        { href: "/checklists/travel-documents-checklist", label: "Sayohat hujjatlari roʻyxati" },
+        { href: "/travel-documents", label: "Sayohat hujjatlari" },
+      ],
+    },
+  },
+  "essential-family-documents-checklist": {
+    slug: "essential-family-documents-checklist",
+    emoji: "✅",
+    locales: {
+      en: {
+        navLabel: "Documents checklist",
+        title: "Essential Family Documents Checklist",
+        metaDescription:
+          "A calm checklist of the documents every family should have on hand: IDs, medical, travel, and financial, sorted by person with dates and reminders.",
+        h1: "The essential documents checklist every family needs",
+        intro:
+          "Everything your family might need in one list — identity, medical, travel and financial documents — sorted by person, with expiry dates and reminders, so the right document is never missing when it counts.",
+        ctaPrimary: "Build your checklist in doki.help",
+        sections: [
+          {
+            h2: "Why one checklist matters",
+            body: "The trouble with family documents usually isn't losing them — it's not realizing you need one until you're standing at a school office, an embassy window or a hospital desk. A single checklist means you already know which documents your family relies on and where each one lives, so the moment stays calm instead of turning into a search.",
+          },
+          {
+            h2: "Identity documents",
+            body: "These are the documents you're asked for most often, for every member of the family.",
+            bullets: ["Passports", "Birth certificates", "Residence permits"],
+          },
+          {
+            h2: "Medical and insurance documents",
+            body: "Health paperwork is easy to lose track of, because it's rarely needed until suddenly it is.",
+            bullets: ["Insurance policies", "Vaccination records", "Prescriptions"],
+          },
+          {
+            h2: "Documents for travel",
+            body: "Before a trip, these are worth checking together rather than one by one. Requirements differ by destination and airline, so check the official requirements for where you're going.",
+            bullets: ["Visas", "Travel insurance", "Bookings and reservations"],
+          },
+          {
+            h2: "Financial and everyday documents",
+            body: "Documents that keep daily life running are easy to underestimate, until one of them is missing.",
+            bullets: ["Banking documents", "Contracts", "Driving licence"],
+          },
+          {
+            h2: "Turning the checklist into a system",
+            body: "A checklist works best once it stops being a piece of paper. Give each family member their own profile, add every document with its \"valid until\" date, and let reminders do the remembering — doki.help can send an email reminder 30, 15, 7 and 1 day before that date, for every member of the family. Documents stay in private storage over HTTPS, with access isolated to your family at the database level (row-level security), roles for who is owner, editor or viewer, and two-factor login available. When one document needs to go to someone else, share a link that expires and can be revoked at any time, with a view limit and a log of every open — no account needed on their side. Documents you've opened or saved in advance stay available offline through the installable app. Optional AI field recognition can help fill in details when you add a document; it's processed by a third-party provider and off by default until you turn it on. doki.help is in beta and doesn't replace your original documents.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "What documents should be on a family checklist first?",
+            a: "Start with what's asked for most often: passports, birth certificates and, if relevant, residence permits, plus each person's insurance policy. Add travel and financial documents as you go — the list doesn't need to be complete on day one.",
+          },
+          {
+            q: "How do I organize the checklist by family member?",
+            a: "Give each person — partner, children, parents — their own profile and keep their documents together under it. That way a child's birth certificate never gets mixed up with an adult's passport, and you always know where to look.",
+          },
+          {
+            q: "How will I know before a document expires?",
+            a: "Set the \"valid until\" date when you add the document, and doki.help sends an email reminder 30, 15, 7 and 1 day before that date, for every member of the family.",
+          },
+          {
+            q: "Can I share one document from the checklist without giving access to everything?",
+            a: "Yes. Share it with a link that expires and can be revoked at any time, with a view limit and a log of every open — the rest of your checklist and vault stay private. The recipient doesn't need an account.",
+          },
+          {
+            q: "Is it safe to keep this checklist here, and can I open it offline?",
+            a: "Documents are kept in private storage over HTTPS, with access isolated to your family at the database level (row-level security), and two-factor login is available. Documents you've opened or saved in advance stay available offline through the installable app. doki.help is in beta and doesn't replace your originals.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Чек-лист документов",
+        title: "Чек-лист документов для всей семьи",
+        metaDescription:
+          "Спокойный чек-лист документов семьи: удостоверения, медицина, поездки, финансы — по членам семьи, со сроками и напоминаниями.",
+        h1: "Чек-лист документов, которые нужны каждой семье",
+        intro:
+          "Всё, что может понадобиться семье, в одном списке — удостоверения, медицина, поездки и финансы — по членам семьи, со сроками и напоминаниями, чтобы нужный документ не потерялся в важный момент.",
+        ctaPrimary: "Соберите чек-лист в doki.help",
+        sections: [
+          {
+            h2: "Зачем нужен единый чек-лист",
+            body: "Проблема с документами семьи обычно не в том, что их теряют, а в том, что о нужном документе вспоминают только в школе, у окна консульства или на приёме у врача. Единый чек-лист означает, что вы заранее знаете, какие документы нужны семье и где каждый из них лежит, поэтому момент остаётся спокойным, а не превращается в поиски.",
+          },
+          {
+            h2: "Удостоверяющие документы",
+            body: "Это документы, которые спрашивают чаще всего — на каждого члена семьи.",
+            bullets: ["Паспорта", "Свидетельства о рождении", "ВНЖ"],
+          },
+          {
+            h2: "Медицинские и страховые документы",
+            body: "Медицинские бумаги легко упустить из виду — они редко нужны, пока не понадобятся внезапно.",
+            bullets: ["Страховые полисы", "Прививочные карты", "Рецепты"],
+          },
+          {
+            h2: "Документы для поездок",
+            body: "Перед поездкой их стоит проверить все вместе, а не по одному. Требования различаются по стране и авиакомпании, поэтому проверяйте официальные требования того места, куда летите.",
+            bullets: ["Визы", "Страховка путешественника", "Брони и бронирования"],
+          },
+          {
+            h2: "Финансовые и бытовые документы",
+            body: "Документы, на которых держится повседневная жизнь, легко недооценить, пока один из них не понадобится.",
+            bullets: ["Банковские документы", "Договоры", "Водительские права"],
+          },
+          {
+            h2: "Как превратить список в систему",
+            body: "Чек-лист работает лучше всего, когда перестаёт быть просто листком бумаги. Заведите профиль на каждого члена семьи, добавляйте документы с датой «действует до» и позвольте напоминаниям помнить за вас — doki.help может присылать email-напоминание за 30, 15, 7 и 1 день до этой даты, для каждого члена семьи. Документы хранятся в приватном хранилище по HTTPS, доступ изолирован вашей семьёй на уровне базы данных (RLS), роли определяют, кто owner, editor или viewer, доступен двухфакторный вход. Когда документ нужно передать кому-то ещё, поделитесь ссылкой, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом открытий — аккаунт получателю не нужен. Документы, которые вы открыли или сохранили заранее, остаются доступны офлайн в устанавливаемом приложении. Опциональное AI-распознавание полей может помочь заполнить данные при добавлении документа, его обрабатывает сторонний провайдер, по умолчанию оно выключено, пока вы сами его не включите. doki.help в стадии beta и не заменяет оригиналы документов.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "С каких документов начать чек-лист семьи?",
+            a: "Начните с того, что спрашивают чаще всего: паспорта, свидетельства о рождении и, если нужно, ВНЖ, а также страховой полис на каждого. Документы для поездок и финансовые добавляйте по ходу — список не обязан быть полным с первого дня.",
+          },
+          {
+            q: "Как организовать чек-лист по членам семьи?",
+            a: "Заведите профиль на каждого — супруга, детей, родителей — и держите их документы вместе под ним. Так свидетельство о рождении ребёнка никогда не перепутается с паспортом взрослого, и вы всегда знаете, где искать.",
+          },
+          {
+            q: "Как я узнаю, что срок документа подходит к концу?",
+            a: "Укажите дату «действует до» при добавлении документа, и doki.help пришлёт email-напоминание за 30, 15, 7 и 1 день до этой даты, для каждого члена семьи.",
+          },
+          {
+            q: "Можно поделиться одним документом из чек-листа, не открывая доступ ко всему?",
+            a: "Да. Поделитесь им по ссылке, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом открытий — остальной чек-лист и сейф остаются приватными. Получателю не нужен аккаунт.",
+          },
+          {
+            q: "Безопасно ли хранить чек-лист здесь и можно ли открыть его офлайн?",
+            a: "Документы хранятся в приватном хранилище по HTTPS, доступ изолирован вашей семьёй на уровне базы данных (RLS), доступен двухфакторный вход. Документы, которые вы открыли или сохранили заранее, остаются доступны офлайн в устанавливаемом приложении. doki.help в стадии beta и не заменяет оригиналы.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Ceklis dokumen",
+        title: "Ceklis Dokumen Penting Keluarga",
+        metaDescription:
+          "Ceklis tenang dokumen yang perlu dimiliki tiap keluarga: identitas, medis, perjalanan, keuangan, dipilah per anggota dengan masa berlaku dan pengingat.",
+        h1: "Ceklis dokumen penting yang dibutuhkan setiap keluarga",
+        intro:
+          "Semua yang mungkin dibutuhkan keluarga dalam satu daftar — identitas, medis, perjalanan, dan keuangan — dipilah per anggota, dengan masa berlaku dan pengingat, agar dokumen yang tepat tidak pernah hilang saat dibutuhkan.",
+        ctaPrimary: "Susun ceklis Anda di doki.help",
+        sections: [
+          {
+            h2: "Mengapa satu ceklis itu penting",
+            body: "Masalah dengan dokumen keluarga biasanya bukan karena hilang, melainkan baru sadar butuh dokumen tertentu saat sudah berdiri di kantor sekolah, loket kedutaan, atau meja rumah sakit. Satu ceklis berarti Anda sudah tahu dokumen apa yang diandalkan keluarga dan di mana masing-masing tersimpan, sehingga momen itu tetap tenang, bukan berubah jadi pencarian.",
+          },
+          {
+            h2: "Dokumen identitas",
+            body: "Ini dokumen yang paling sering diminta, untuk tiap anggota keluarga.",
+            bullets: ["Paspor", "Akta kelahiran", "Izin tinggal"],
+          },
+          {
+            h2: "Dokumen medis dan asuransi",
+            body: "Berkas medis mudah terlupakan karena jarang dibutuhkan sampai tiba-tiba diperlukan.",
+            bullets: ["Polis asuransi", "Catatan vaksinasi", "Resep obat"],
+          },
+          {
+            h2: "Dokumen untuk perjalanan",
+            body: "Sebelum bepergian, dokumen ini sebaiknya diperiksa bersama, bukan satu per satu. Persyaratan berbeda tiap tujuan dan maskapai, jadi periksa persyaratan resmi tempat yang dituju.",
+            bullets: ["Visa", "Asuransi perjalanan", "Tiket dan reservasi"],
+          },
+          {
+            h2: "Dokumen keuangan dan sehari-hari",
+            body: "Dokumen yang menjaga kelancaran hidup sehari-hari mudah dianggap remeh, sampai salah satunya hilang.",
+            bullets: ["Dokumen perbankan", "Kontrak", "SIM"],
+          },
+          {
+            h2: "Mengubah ceklis menjadi sistem",
+            body: "Ceklis bekerja paling baik saat berhenti menjadi sekadar kertas. Beri tiap anggota keluarga profilnya sendiri, tambahkan tiap dokumen dengan tanggal \"berlaku sampai\", dan biarkan pengingat yang mengingatkan — doki.help bisa mengirim pengingat email 30, 15, 7, dan 1 hari sebelum tanggal itu, untuk tiap anggota keluarga. Dokumen disimpan di penyimpanan privat lewat HTTPS, dengan akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security), peran menentukan siapa owner, editor, atau viewer, dan login dua faktor tersedia. Saat satu dokumen perlu dikirim ke orang lain, bagikan tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan — penerima tidak perlu akun. Dokumen yang sudah dibuka atau disimpan sebelumnya tetap bisa diakses offline lewat aplikasi yang bisa dipasang. Pengenalan bidang AI opsional bisa membantu mengisi data saat menambah dokumen; ini diproses oleh penyedia pihak ketiga dan mati secara default sampai Anda mengaktifkannya. doki.help masih beta dan tidak menggantikan dokumen asli Anda.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Dokumen apa yang harus ada di ceklis keluarga lebih dulu?",
+            a: "Mulai dari yang paling sering diminta: paspor, akta kelahiran, dan jika relevan izin tinggal, ditambah polis asuransi tiap orang. Tambahkan dokumen perjalanan dan keuangan seiring waktu — daftar tidak harus lengkap di hari pertama.",
+          },
+          {
+            q: "Bagaimana mengatur ceklis per anggota keluarga?",
+            a: "Beri tiap orang — pasangan, anak, orang tua — profilnya sendiri dan simpan dokumennya bersama di bawahnya. Dengan begitu akta kelahiran anak tidak akan tercampur dengan paspor orang dewasa, dan Anda selalu tahu di mana mencari.",
+          },
+          {
+            q: "Bagaimana saya tahu sebelum dokumen kedaluwarsa?",
+            a: "Isi tanggal \"berlaku sampai\" saat menambahkan dokumen, dan doki.help mengirim pengingat email 30, 15, 7, dan 1 hari sebelum tanggal itu, untuk tiap anggota keluarga.",
+          },
+          {
+            q: "Bisakah berbagi satu dokumen dari ceklis tanpa membuka akses ke semuanya?",
+            a: "Bisa. Bagikan lewat tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan — sisa ceklis dan brankas tetap privat. Penerima tidak perlu akun.",
+          },
+          {
+            q: "Amankah menyimpan ceklis ini di sini, dan bisakah dibuka offline?",
+            a: "Dokumen disimpan di penyimpanan privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security), dan login dua faktor tersedia. Dokumen yang sudah dibuka atau disimpan sebelumnya tetap bisa diakses offline lewat aplikasi yang bisa dipasang. doki.help masih beta dan tidak menggantikan dokumen asli.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Hujjatlar roʻyxati",
+        title: "Oila uchun muhim hujjatlar roʻyxati",
+        metaDescription:
+          "Har bir oilaga kerak boʻlgan hujjatlar roʻyxati: guvohnomalar, tibbiyot, sayohat, moliya, aʼzolar boʻyicha, muddat va eslatmalar bilan.",
+        h1: "Har bir oilaga kerak boʻlgan hujjatlar roʻyxati",
+        intro:
+          "Oilangizga kerak boʻlishi mumkin boʻlgan hamma narsa bitta roʻyxatda — guvohnoma, tibbiyot, sayohat va moliya hujjatlari — aʼzolar boʻyicha, muddat va eslatmalar bilan, kerakli hujjat muhim daqiqada yoʻqolib qolmasin.",
+        ctaPrimary: "Roʻyxatingizni doki.help da tuzing",
+        sections: [
+          {
+            h2: "Nega bitta roʻyxat muhim",
+            body: "Oila hujjatlari bilan bogʻliq muammo odatda ularning yoʻqolishida emas, balki kerakli hujjat maktab ofisida, konsullik oynasi oldida yoki shifoxonada birdan kerak boʻlib qolganda esga tushishida. Bitta roʻyxat — bu oilangiz qaysi hujjatlarga tayanishini va ularning har biri qayerda saqlanishini oldindan bilish demakdir, shunda bu daqiqa sokin qoladi, qidiruvga aylanmaydi.",
+          },
+          {
+            h2: "Guvohlantiruvchi hujjatlar",
+            body: "Bular har bir oila aʼzosidan eng koʻp soʻraladigan hujjatlar.",
+            bullets: ["Pasportlar", "Tugʻilganlik guvohnomalari", "Yashash ruxsatnomalari"],
+          },
+          {
+            h2: "Tibbiyot va sugʻurta hujjatlari",
+            body: "Tibbiy qogʻozlarni nazoratdan chiqarib yuborish oson — ular kerak boʻlmaguncha kamdan-kam eslanadi.",
+            bullets: ["Sugʻurta polislari", "Emlash yozuvlari", "Retseptlar"],
+          },
+          {
+            h2: "Sayohat uchun hujjatlar",
+            body: "Sayohat oldidan ularni birma-bir emas, birga tekshirish kerak. Talablar borar joy va aviakompaniyaga qarab farq qiladi, shuning uchun borayotgan joyingizning rasmiy talablarini tekshiring.",
+            bullets: ["Vizalar", "Sayohat sugʻurtasi", "Bron va rezervatsiyalar"],
+          },
+          {
+            h2: "Moliyaviy va kundalik hujjatlar",
+            body: "Kundalik hayotni ushlab turadigan hujjatlarni bittasi yetishmay qolgunga qadar past baholash oson.",
+            bullets: ["Bank hujjatlari", "Shartnomalar", "Haydovchilik guvohnomasi"],
+          },
+          {
+            h2: "Roʻyxatni tizimga aylantirish",
+            body: "Roʻyxat shunchaki qogʻoz boʻlishdan toʻxtaganda eng yaxshi ishlaydi. Har bir oila aʼzosiga oʻz profilini bering, har bir hujjatni \"amal qiladi\" sanasi bilan qoʻshing va eslatmalarga esda tutishni topshiring — doki.help shu sanadan 30, 15, 7 va 1 kun oldin email eslatma yuborishi mumkin, har bir oila aʼzosi uchun. Hujjatlar maxfiy omborda HTTPS orqali saqlanadi, kirish oilangiz darajasida maʼlumotlar bazasida izolyatsiya qilingan (RLS), rollar kim owner, editor yoki viewer ekanini belgilaydi, ikki bosqichli kirish mavjud. Hujjatni boshqa birovga yuborish kerak boʻlganda, muddati tugaydigan va istalgan vaqt bekor qilinadigan havola ulashing, koʻrish chegarasi va har ochilish qaydi bilan — qabul qiluvchiga akkaunt kerak emas. Oldindan ochilgan yoki saqlangan hujjatlar oʻrnatiladigan ilovada oflayn ham ochiq turadi. Ixtiyoriy AI maydon tanish hujjat qoʻshayotganda maʼlumot toʻldirishga yordam berishi mumkin, uni uchinchi tomon provayder qayta ishlaydi, sukut boʻyicha oʻchiq, toki oʻzingiz yoqmaguningizcha. doki.help beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Oila roʻyxatiga birinchi qaysi hujjatlarni qoʻshish kerak?",
+            a: "Eng koʻp soʻraladiganlaridan boshlang: pasportlar, tugʻilganlik guvohnomalari va kerak boʻlsa yashash ruxsatnomasi, shuningdek har kimning sugʻurta polisi. Sayohat va moliyaviy hujjatlarni yoʻl-yoʻlakay qoʻshing — roʻyxat birinchi kunidanoq toʻliq boʻlishi shart emas.",
+          },
+          {
+            q: "Roʻyxatni oila aʼzolari boʻyicha qanday tashkil qilish kerak?",
+            a: "Har biriga — turmush oʻrtogʻingiz, bolalar, ota-onangiz — oʻz profilini bering va ularning hujjatlarini shu ostida birga saqlang. Shunda bolaning tugʻilganlik guvohnomasi kattaning pasporti bilan hech qachon aralashmaydi, va qayerdan qidirishni doim bilasiz.",
+          },
+          {
+            q: "Hujjat muddati tugashidan oldin qanday bilib olaman?",
+            a: "Hujjat qoʻshayotganda \"amal qiladi\" sanasini kiriting, doki.help esa shu sanadan 30, 15, 7 va 1 kun oldin email eslatma yuboradi, har bir oila aʼzosi uchun.",
+          },
+          {
+            q: "Roʻyxatdagi bitta hujjatni hammasiga ruxsat bermay ulashsa boʻladimi?",
+            a: "Ha. Uni muddati tugaydigan va istalgan vaqt bekor qilinadigan havola orqali ulashing, koʻrish chegarasi va har ochilish qaydi bilan — roʻyxat va seyfning qolgani maxfiy qoladi. Qabul qiluvchiga akkaunt kerak emas.",
+          },
+          {
+            q: "Roʻyxatni bu yerda saqlash xavfsizmi va uni oflayn ochsa boʻladimi?",
+            a: "Hujjatlar maxfiy omborda HTTPS orqali saqlanadi, kirish oilangiz darajasida maʼlumotlar bazasida izolyatsiya qilingan (RLS), ikki bosqichli kirish mavjud. Oldindan ochilgan yoki saqlangan hujjatlar oʻrnatiladigan ilovada oflayn ham ochiq turadi. doki.help beta bosqichida va asl hujjatlar oʻrnini bosmaydi.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/checklists/travel-documents-checklist", label: "Travel documents checklist" },
+        { href: "/checklists/child-documents-checklist", label: "Child documents checklist" },
+      ],
+      ru: [
+        { href: "/checklists/travel-documents-checklist", label: "Чек-лист документов для поездки" },
+        { href: "/checklists/child-documents-checklist", label: "Чек-лист документов ребёнка" },
+      ],
+      id: [
+        { href: "/checklists/travel-documents-checklist", label: "Ceklis dokumen perjalanan" },
+        { href: "/checklists/child-documents-checklist", label: "Ceklis dokumen anak" },
+      ],
+      uz: [
+        { href: "/checklists/travel-documents-checklist", label: "Sayohat hujjatlari roʻyxati" },
+        { href: "/checklists/child-documents-checklist", label: "Bola hujjatlari roʻyxati" },
+      ],
+    },
+  },
 };
 
 export const GUIDE_KEYS = Object.keys(DATA);
