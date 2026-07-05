@@ -91,7 +91,7 @@ type Dict = {
     cats: Cat[];
   };
   pain: { heading: string; items: { t: string; d: string }[] };
-  how: { heading: string; sub: string; steps: Step[] };
+  how: { heading: string; sub: string; steps: Step[]; aiNote: string };
   security: { heading: string; sub: string; promise: string; items: Sec[] };
   cta: { heading: string; sub: string; button: string };
   faq: { heading: string; items: Faq[] };
@@ -185,6 +185,7 @@ const M: Record<Locale, Dict> = {
         { n: "3", title: "Соберите пакет", text: "Только нужные документы: для отклика, работодателя, школы, врача или поездки." },
         { n: "4", title: "Отправьте безопасную ссылку", text: "Ссылка действует ограниченное время. Доступ можно отозвать в любой момент." },
       ],
+      aiNote: "🤖 AI сам найдёт срок действия на фото документа — виза, ОСАГО, паспорт. Нажали «Распознать» — дата вписалась, напоминание придёт заранее. Включается по желанию, ничего не уходит без вашего разрешения.",
     },
     security: {
       heading: "Вы отправляете не весь сейф — только выбранные документы",
@@ -209,7 +210,7 @@ const M: Record<Locale, Dict> = {
       items: [
         { q: "Это бесплатно?", a: "Да. Сейчас бесплатно: 2 ГБ места, напоминания о сроках, общий доступ для семьи и работа офлайн. Позже появится платный тариф с бóльшим объёмом — то, что доступно сейчас, останется." },
         { q: "Кто видит мои документы?", a: "Только вы и те члены семьи, кому вы открыли доступ. Доступ изолирован на уровне базы данных (RLS), файлы — в приватном хранилище." },
-        { q: "Как работают напоминания?", a: "Вы указываете срок действия документа (например, загранпаспорта или ОСАГО), а сервис заранее присылает напоминание на email." },
+        { q: "Как работают напоминания?", a: "Впишите срок действия документа сами — или нажмите «Распознать», и AI сам найдёт дату на фото (загранпаспорт, ОСАГО, виза). Дальше сервис заранее пришлёт напоминание на email." },
         { q: "Можно ли поделиться документом?", a: "Да — по временной ссылке, которую можно отозвать в любой момент." },
         { q: "Где хранятся данные?", a: "В защищённом облачном хранилище, передача — по HTTPS. Мы не продаём и не передаём ваши данные третьим лицам." },
         { q: "Можно ли выгрузить мои документы?", a: "Да. В личном кабинете есть экспорт — заберёте свои файлы и данные в любой момент, без привязки к сервису." },
@@ -327,6 +328,7 @@ const M: Record<Locale, Dict> = {
         { n: "3", title: "Build a package", text: "Only the documents needed: for an application, employer, school, doctor or trip." },
         { n: "4", title: "Send a secure link", text: "The link is time-limited. Access can be revoked at any moment." },
       ],
+      aiNote: "🤖 AI can spot the expiry date on a document photo — a visa, insurance, a passport. Tap “Recognize”, the date fills in, and the reminder arrives in advance. Opt-in — nothing is sent anywhere without your say.",
     },
     security: {
       heading: "You send only selected documents — never the whole vault",
@@ -351,7 +353,7 @@ const M: Record<Locale, Dict> = {
       items: [
         { q: "Is it free?", a: "Yes. Right now you get 2 GB of storage, deadline reminders, family sharing and offline access — for free. A paid plan with more storage will come later; what's available now stays." },
         { q: "Who can see my documents?", a: "Only you and the family members you grant access to. Access is isolated at the database level (RLS), and files are kept in private storage." },
-        { q: "How do reminders work?", a: "You set a document's expiry date (e.g. a passport or insurance), and the service emails you a reminder in advance." },
+        { q: "How do reminders work?", a: "Enter a document's expiry date yourself — or tap “Recognize” and AI finds the date on the photo (passport, insurance, visa). Either way, the service emails you a reminder in advance." },
         { q: "Can I share a document?", a: "Yes — via a time-limited link you can revoke at any moment." },
         { q: "Where is my data stored?", a: "In secure cloud storage, with transfer over HTTPS. We never sell or share your data with third parties." },
         { q: "Can I export my documents?", a: "Yes. The cabinet has an export — take your files and data out at any time, with no lock-in." },
@@ -469,6 +471,7 @@ const M: Record<Locale, Dict> = {
         { n: "3", title: "Susun paket", text: "Hanya dokumen yang dibutuhkan: untuk lamaran, perusahaan, sekolah, dokter, atau perjalanan." },
         { n: "4", title: "Kirim tautan aman", text: "Tautan berbatas waktu. Akses bisa dicabut kapan saja." },
       ],
+      aiNote: "🤖 AI bisa menemukan tanggal kedaluwarsa dari foto dokumen — visa, asuransi, paspor. Tekan \"Kenali\", tanggal terisi otomatis, pengingat datang lebih awal. Opsional — tidak ada yang dikirim tanpa izin Anda.",
     },
     security: {
       heading: "Yang terkirim hanya dokumen pilihan — bukan seluruh brankas",
@@ -493,7 +496,7 @@ const M: Record<Locale, Dict> = {
       items: [
         { q: "Apakah gratis?", a: "Ya. Saat ini gratis: penyimpanan 2 GB, pengingat tenggat, berbagi untuk keluarga, dan akses offline. Paket berbayar dengan ruang lebih besar akan hadir nanti — yang tersedia sekarang tetap ada." },
         { q: "Siapa yang bisa melihat dokumen saya?", a: "Hanya Anda dan anggota keluarga yang Anda beri akses. Akses diisolasi pada tingkat basis data (RLS), dan berkas disimpan di penyimpanan privat." },
-        { q: "Bagaimana pengingat bekerja?", a: "Anda menetapkan tanggal berlaku dokumen (misalnya paspor atau asuransi), dan layanan mengirim pengingat ke email lebih awal." },
+        { q: "Bagaimana pengingat bekerja?", a: "Masukkan tanggal berlaku dokumen sendiri — atau tekan \"Kenali\", AI akan menemukan tanggalnya dari foto (paspor, asuransi, visa). Layanan lalu mengirim pengingat ke email lebih awal." },
         { q: "Bisakah saya membagikan dokumen?", a: "Ya — lewat tautan berbatas waktu yang bisa Anda cabut kapan saja." },
         { q: "Di mana data saya disimpan?", a: "Di penyimpanan awan yang aman, dengan transfer lewat HTTPS. Kami tidak pernah menjual atau membagikan data Anda ke pihak ketiga." },
         { q: "Bisakah saya mengekspor dokumen saya?", a: "Ya. Di kabinet ada ekspor — ambil berkas dan data Anda kapan saja, tanpa terkunci ke layanan." },
@@ -611,6 +614,7 @@ const M: Record<Locale, Dict> = {
         { n: "3", title: "Paket yigʻing", text: "Faqat kerakli hujjatlar: ariza, ish beruvchi, maktab, shifokor yoki sayohat uchun." },
         { n: "4", title: "Xavfsiz havola yuboring", text: "Havola cheklangan muddat ishlaydi. Kirishni istalgan payt bekor qilish mumkin." },
       ],
+      aiNote: "🤖 AI hujjat suratidagi amal qilish muddatini topa oladi — viza, sugʻurta, pasport. \"Aniqlash\" tugmasini bosing — sana avtomatik kiritiladi, eslatma oldindan keladi. Ixtiyoriy — sizning ruxsatingizsiz hech narsa yuborilmaydi.",
     },
     security: {
       heading: "Butun seyf emas — faqat tanlangan hujjatlar yuboriladi",
@@ -635,7 +639,7 @@ const M: Record<Locale, Dict> = {
       items: [
         { q: "Bu bepulmi?", a: "Ha. Hozir bepul: 2 GB joy, muddat eslatmalari, oila uchun ulashish va oflayn ishlash. Keyinroq koʻproq joy bilan pullik tarif paydo boʻladi — hozir mavjud imkoniyatlar saqlanadi." },
         { q: "Hujjatlarimni kim koʻradi?", a: "Faqat siz va siz ruxsat bergan oila aʼzolari. Kirish maʼlumotlar bazasi darajasida ajratilgan (RLS), fayllar shaxsiy xotirada saqlanadi." },
-        { q: "Eslatmalar qanday ishlaydi?", a: "Siz hujjatning amal qilish muddatini (masalan, pasport yoki sugʻurta) belgilaysiz, xizmat esa oldindan emailga eslatma yuboradi." },
+        { q: "Eslatmalar qanday ishlaydi?", a: "Hujjat muddatini oʻzingiz kiriting — yoki \"Aniqlash\" tugmasini bosing, AI suratdan sanani topadi (pasport, sugʻurta, viza). Xizmat oldindan emailga eslatma yuboradi." },
         { q: "Hujjatni ulasha olamanmi?", a: "Ha — istalgan vaqtda bekor qila oladigan muddatli havola orqali." },
         { q: "Maʼlumotlarim qayerda saqlanadi?", a: "HTTPS orqali uzatiladigan xavfsiz bulutli xotirada. Maʼlumotlaringizni hech qachon uchinchi shaxslarga sotmaymiz yoki bermaymiz." },
         { q: "Hujjatlarimni eksport qila olamanmi?", a: "Ha. Shaxsiy kabinetda eksport bor — fayllaringiz va maʼlumotlaringizni istalgan vaqtda olib chiqasiz, xizmatga bogʻlanmagan holda." },
@@ -1048,18 +1052,23 @@ export default async function Home({
           <p className="text-xl text-[#5c5248]">{t.how.sub}</p>
         </div>
         <div className="mx-auto grid max-w-5xl items-center gap-x-12 gap-y-10 lg:grid-cols-[1fr_auto]">
-          <div className="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            {t.how.steps.map((s) => (
-              <div key={s.n} className="flex gap-5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#e8e0d5] bg-white text-2xl font-semibold text-[#b85c38]">
-                  {s.n}
+          <div>
+            <div className="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+              {t.how.steps.map((s) => (
+                <div key={s.n} className="flex gap-5">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#e8e0d5] bg-white text-2xl font-semibold text-[#b85c38]">
+                    {s.n}
+                  </div>
+                  <div>
+                    <div className="mb-1.5 text-xl font-semibold">{s.title}</div>
+                    <p className="text-[#5c5248]">{s.text}</p>
+                  </div>
                 </div>
-                <div>
-                  <div className="mb-1.5 text-xl font-semibold">{s.title}</div>
-                  <p className="text-[#5c5248]">{s.text}</p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="mt-8 rounded-2xl border border-[#e8e0d5] bg-white p-5 text-[15px] leading-relaxed text-[#5c5248]">
+              {t.how.aiNote}
+            </div>
           </div>
           {/* Как приложение выглядит на телефоне — живой кадр продукта */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
