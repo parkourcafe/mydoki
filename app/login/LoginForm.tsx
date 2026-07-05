@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
-import { login, signup, type AuthState } from "./actions";
+import { login, signup, resendConfirmation, type AuthState } from "./actions";
 import type { Locale } from "@/lib/i18n";
 
 const initial: AuthState = {};
@@ -34,6 +34,7 @@ const M = {
     haveAccount: "Уже есть аккаунт? ",
     signUp: "Зарегистрироваться",
     or: "или",
+    resendConfirm: "Отправить письмо ещё раз",
   },
   en: {
     googleSignIn: "Sign in with Google",
@@ -62,6 +63,7 @@ const M = {
     haveAccount: "Already have an account? ",
     signUp: "Sign up",
     or: "or",
+    resendConfirm: "Resend confirmation email",
   },
   id: {
     googleSignIn: "Masuk dengan Google",
@@ -90,6 +92,7 @@ const M = {
     haveAccount: "Sudah punya akun? ",
     signUp: "Daftar",
     or: "atau",
+    resendConfirm: "Kirim ulang email konfirmasi",
   },
   uz: {
     googleSignIn: "Google orqali kirish",
@@ -118,6 +121,7 @@ const M = {
     haveAccount: "Hisobingiz bormi? ",
     signUp: "Roʻyxatdan oʻtish",
     or: "yoki",
+    resendConfirm: "Tasdiqlash xatini qayta yuborish",
   },
 } as const;
 
@@ -247,6 +251,13 @@ export default function LoginForm({
   const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
   const action = mode === "signup" ? signup : login;
   const [state, formAction, pending] = useActionState(action, initial);
+  const [resend, setResend] = useState<{ busy?: boolean; msg?: string; err?: string }>({});
+
+  async function doResend() {
+    setResend({ busy: true });
+    const r = await resendConfirmation(state.email ?? "");
+    setResend({ msg: r.message, err: r.error });
+  }
 
   if (mode === "reset")
     return <ResetRequest onBack={() => setMode("login")} locale={locale} />;
@@ -335,6 +346,29 @@ export default function LoginForm({
           <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
             {state.message}
           </p>
+        )}
+
+        {state.needsConfirm && (
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={doResend}
+              disabled={resend.busy}
+              className="w-full rounded-lg border border-brand-300 px-3 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50 disabled:opacity-50"
+            >
+              {resend.busy ? t.sending : t.resendConfirm}
+            </button>
+            {resend.msg && (
+              <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+                {resend.msg}
+              </p>
+            )}
+            {resend.err && (
+              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                {resend.err}
+              </p>
+            )}
+          </div>
         )}
 
         <button type="submit" disabled={pending} className="btn-primary w-full">
