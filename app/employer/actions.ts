@@ -19,9 +19,12 @@ function hashCode(code: string): string {
   return createHash("sha256").update(VERIFY_SALT + code).digest("hex");
 }
 
-async function sendCodeEmail(to: string, code: string): Promise<boolean> {
+async function sendCodeEmail(
+  to: string,
+  code: string,
+): Promise<{ ok: boolean; detail?: string }> {
   const key = process.env.RESEND_API_KEY;
-  if (!key || !to) return false;
+  if (!key || !to) return { ok: false, detail: "no RESEND_API_KEY" };
   const from =
     process.env.ALERT_EMAIL_FROM || "Семейный сейф <onboarding@resend.dev>";
   try {
@@ -40,15 +43,19 @@ async function sendCodeEmail(to: string, code: string): Promise<boolean> {
 <p>Код действует 15 минут. Если вы его не запрашивали — просто проигнорируйте письмо.</p>`,
       }),
     });
-    return res.ok;
-  } catch {
-    return false;
+    if (res.ok) return { ok: true };
+    // Пробрасываем ответ Resend (напр. «домен не подтверждён» / «можно слать
+    // только на свой email») — это помогает точно понять, что чинить.
+    const body = await res.text().catch(() => "");
+    return { ok: false, detail: `${res.status} ${body}`.trim().slice(0, 300) };
+  } catch (e) {
+    return { ok: false, detail: e instanceof Error ? e.message : "network error" };
   }
 }
 
 /** Сгенерировать код, сохранить его хеш и отправить работодателю на email. */
 export async function requestEmployerVerification(): Promise<
-  { ok: true; sentTo: string } | { error: string }
+  { ok: true; sentTo: string } | { error: string; detail?: string }
 > {
   const supabase = await getSupabaseServer();
   const {
@@ -77,7 +84,7 @@ export async function requestEmployerVerification(): Promise<
   if (error) return { error: error.message };
 
   const sent = await sendCodeEmail(to, code);
-  if (!sent) return { error: "send_failed" };
+  if (!sent.ok) return { error: "send_failed", detail: sent.detail };
   return { ok: true, sentTo: to };
 }
 
