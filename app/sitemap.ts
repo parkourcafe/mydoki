@@ -5,6 +5,7 @@ import { USECASE_KEYS } from "@/lib/usecases";
 import { LANDING_KEYS } from "@/lib/landings";
 import { TRUST_KEYS } from "@/lib/trust";
 import { CHECKLIST_KEYS } from "@/lib/checklists";
+import { GUIDE_KEYS } from "@/lib/guides";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
 const LOCALES = ["ru", "en", "id", "uz"] as const;
@@ -23,6 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...LANDING_KEYS.map((k) => `/${k}`),
     ...TRUST_KEYS.map((k) => `/${k}`),
     ...CHECKLIST_KEYS.map((k) => `/checklists/${k}`),
+    ...GUIDE_KEYS.map((k) => `/blog/${k}`),
   ];
   return pages.map((path) => {
     // hreflang: каждая языковая версия по своему URL (/ru/…, /en/… и т.д.).

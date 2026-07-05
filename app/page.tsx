@@ -8,14 +8,15 @@ import { comparisonLinks, comparisonsHeading } from "@/lib/comparisons";
 import { usecaseLinks } from "@/lib/usecases";
 import { landingLinks } from "@/lib/landings";
 import { checklistLinks } from "@/lib/checklists";
+import { guideLinks } from "@/lib/guides";
 import { trustLinks } from "@/lib/trust";
 
 // Заголовки блоков внутренней перелинковки на новые SEO-страницы.
-const MORE_HEADINGS: Record<Locale, { tools: string; checklists: string }> = {
-  ru: { tools: "Напоминания о сроках и сейфы", checklists: "Чеклисты документов" },
-  en: { tools: "Expiry reminders & vaults", checklists: "Document checklists" },
-  id: { tools: "Pengingat tenggat & brankas", checklists: "Ceklis dokumen" },
-  uz: { tools: "Muddat eslatmalari va seyflar", checklists: "Hujjat roʻyxatlari" },
+const MORE_HEADINGS: Record<Locale, { tools: string; checklists: string; guides: string }> = {
+  ru: { tools: "Напоминания о сроках и сейфы", checklists: "Чеклисты документов", guides: "Гайды" },
+  en: { tools: "Expiry reminders & vaults", checklists: "Document checklists", guides: "Guides" },
+  id: { tools: "Pengingat tenggat & brankas", checklists: "Ceklis dokumen", guides: "Panduan" },
+  uz: { tools: "Muddat eslatmalari va seyflar", checklists: "Hujjat roʻyxatlari", guides: "Qoʻllanmalar" },
 };
 
 type Cat = { icon: string; title: string; items: string[] };
@@ -725,6 +726,22 @@ export default async function Home({
               ))}
             </div>
           </div>
+          {guideLinks(locale).length > 0 && (
+            <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+              <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].guides}</div>
+              <div className="flex flex-wrap gap-2">
+                {guideLinks(locale).map((l) => (
+                  <Link
+                    key={l.key}
+                    href={`/blog/${l.key}`}
+                    className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+                  >
+                    <span>{l.emoji}</span> {l.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
           {locale === "ru" && (
             <div className="mt-5 border-t border-[#e8e0d5] pt-5">
               <div className="mb-3 text-sm font-medium text-[#8a7c6d]">По документам</div>
