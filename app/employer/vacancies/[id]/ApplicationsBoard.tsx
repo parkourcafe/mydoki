@@ -150,7 +150,8 @@ export default function ApplicationsBoard({
   const [filter, setFilter] = useState<Filter>("all");
   const [pending, setPending] = useState<Record<string, boolean>>({});
 
-  const requiredOnly = requiredDocs.filter((d) => d.required);
+  // Отсутствие поля required у старых записей трактуем как обязательный.
+  const requiredOnly = requiredDocs.filter((d) => d.required !== false);
 
   const hasType = (app: BoardApp, type: string) =>
     app.documents.some((d) => d.type === type);
@@ -279,7 +280,7 @@ export default function ApplicationsBoard({
                         ) : (
                           <span className="text-slate-500">
                             {d.label}
-                            {!d.required && " ·"}
+                            {d.required === false && " ·"}
                           </span>
                         )}
                       </li>

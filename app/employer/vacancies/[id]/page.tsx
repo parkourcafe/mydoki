@@ -7,6 +7,7 @@ import { appBaseUrl, type Vacancy } from "@/lib/career";
 import { markApplicationsViewed } from "@/app/employer/actions";
 import ShareBox from "./ShareBox";
 import ApplicationsBoard, { type BoardApp } from "./ApplicationsBoard";
+import VacancyDescription from "@/components/VacancyDescription";
 
 const M = {
   en: { back: "← All vacancies", edit: "✏️ Edit", created: "Vacancy created — share the link below to start receiving applications.", updated: "Changes saved. They apply to new applications; existing ones keep their original answers." },
@@ -151,6 +152,12 @@ export default async function VacancyDashboard({
           slug={vacancy.slug}
         />
       </div>
+
+      {vacancy.description && (
+        <div className="card mb-5">
+          <VacancyDescription description={vacancy.description} />
+        </div>
+      )}
 
       <ApplicationsBoard
         locale={locale}

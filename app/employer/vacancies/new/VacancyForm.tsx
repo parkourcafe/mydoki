@@ -12,6 +12,8 @@ import {
 } from "@/lib/career";
 import { createVacancy, updateVacancy } from "@/app/employer/actions";
 import { track } from "@/lib/analytics";
+import RolePicker from "./RolePicker";
+import type { RoleTemplate } from "@/lib/roleTemplates";
 
 const M = {
   en: {
@@ -326,12 +328,14 @@ export default function VacancyForm({
   mode = "create",
   vacancyId,
   initial,
+  fromWizard = false,
 }: {
   locale: Locale;
   defaultCompany: string;
   mode?: "create" | "edit";
   vacancyId?: string;
   initial?: VacancyInitial;
+  fromWizard?: boolean;
 }) {
   const t = M[locale];
   const router = useRouter();
@@ -369,6 +373,25 @@ export default function VacancyForm({
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(!isEdit && !fromWizard);
+
+  // Выбор роли из библиотеки → заполняем название, 4 блока и документы.
+  function applyRole(r: RoleTemplate) {
+    setTitle(r.title);
+    setDescWho(r.blocks.who);
+    setDescPurpose(r.blocks.purpose);
+    setDescExpect(r.blocks.expect);
+    setDescSkills(r.blocks.skills);
+    setDocs(
+      r.docs.map((d) => ({
+        type: d.type,
+        label: d.label ?? docTypeLabel(locale, d.type),
+        required: d.required,
+      }))
+    );
+    setPickerOpen(false);
+    track("role_template_picked", { role: r.key });
+  }
 
   function addDoc() {
     setDocs((p) => [...p, { type: "other", label: docTypeLabel(locale, "other"), required: false }]);
@@ -459,6 +482,15 @@ export default function VacancyForm({
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-5">
       <h1 className="text-2xl font-semibold">{isEdit ? t.editTitle : t.title}</h1>
+
+      {!isEdit && (
+        <RolePicker
+          locale={locale}
+          open={pickerOpen}
+          onToggle={() => setPickerOpen((o) => !o)}
+          onPick={applyRole}
+        />
+      )}
 
       <div className="card grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">

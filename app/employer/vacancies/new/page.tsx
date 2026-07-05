@@ -3,9 +3,10 @@ import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import SubmitButton from "@/components/SubmitButton";
 import { saveEmployerProfile } from "@/app/employer/actions";
-import VacancyForm from "./VacancyForm";
+import NewVacancyFlow from "./NewVacancyFlow";
 import EmployerVerification from "@/app/employer/EmployerVerification";
 import VacancyLimitReached from "./VacancyLimitReached";
+import { aiTextConfigured } from "@/lib/vacancyAI";
 
 const M = {
   en: {
@@ -110,5 +111,11 @@ export default async function NewVacancyPage() {
     return <VacancyLimitReached locale={locale} limit={limit} />;
   }
 
-  return <VacancyForm locale={locale} defaultCompany={profile.company_name} />;
+  return (
+    <NewVacancyFlow
+      locale={locale}
+      defaultCompany={profile.company_name}
+      aiEnabled={aiTextConfigured()}
+    />
+  );
 }
