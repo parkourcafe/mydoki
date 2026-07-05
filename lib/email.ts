@@ -10,7 +10,7 @@ async function resendSend(to: string, subject: string, html: string): Promise<vo
   const from =
     process.env.NOTIFY_FROM_EMAIL ||
     process.env.ALERT_EMAIL_FROM ||
-    "Doki <onboarding@resend.dev>";
+    "Doki <noreply@doki.help>";
   if (!key) {
     console.warn(`[email] RESEND_API_KEY not set — skip "${subject}" to ${to} (dev).`);
     return;
@@ -96,7 +96,7 @@ export async function sendNewApplicationEmail(params: {
   const from =
     process.env.NOTIFY_FROM_EMAIL ||
     process.env.ALERT_EMAIL_FROM ||
-    "Doki <onboarding@resend.dev>";
+    "Doki <noreply@doki.help>";
   const dashboardUrl = `${appBaseUrl()}/employer/vacancies/${params.vacancyId}`;
 
   // ID для индонезийского локейла, иначе EN.
