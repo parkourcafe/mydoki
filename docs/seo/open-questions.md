@@ -65,17 +65,17 @@ merged account-deletion work — pending a yes/no confirmation.
   `/checklists/child-documents-checklist` — ~24 occurrences (×4 langs).
 - **Placeholder:** "a reminder arrives by email before it expires. (TODO: confirm
   exact lead time / whether intervals are configurable…)"
-- **Answer:** _______ (e.g. "30 / 7 / 1 days before"? configurable? )
+- **Answer:** ✅ **30 / 15 / 7 / 1 day before** the "valid until" date. Applied to all pages + guides. (Configurability not confirmed → not claimed.)
 
 ### Q2. Reminder channels beyond email (push / SMS)  (audit Q1)
 - **Pages:** `/document-expiry-reminder` (×4)
 - **Placeholder:** "By email… (TODO: confirm any additional channels such as push…)"
-- **Answer:** _______ (email only? push? SMS?)
+- **Answer:** ⚠️ push/SMS "maybe" — not firmly confirmed. Copy states **email only**; will add push/SMS once confirmed.
 
 ### Q3. At-rest encryption  (audit Q2)
 - **Pages:** `/medical-document-organizer` (×4)
 - **Placeholder:** "(TODO: confirm at-rest encryption and data region…)"
-- **Answer:** _______ (is storage encrypted at rest? what to claim, if anything)
+- **Answer:** ❓ Unknown, team to investigate. Speculative at-rest claim removed; copy keeps only confirmed (private bucket, HTTPS, RLS, 2FA).
 
 ### Q5. AI provider — name, what's retained, for how long  (audit Q6)
 - **Pages:** `/ai-processing` (×4)
@@ -83,13 +83,13 @@ merged account-deletion work — pending a yes/no confirmation.
   provider, what is retained and for how long…)"
 - **Repo hint:** `.env.example` has `ANTHROPIC_API_KEY` (+ `GLM_*`) — likely Anthropic
   and/or GLM, but **do not state publicly without confirmation**.
-- **Answer:** _______ (provider name to disclose? retention policy?)
+- **Answer:** Provider is **GLM (Zhipu), not Anthropic**. Retention unknown, team to investigate. Copy stays generic ("third-party AI provider") — no name disclosed publicly. Note: `.env.example` still lists `ANTHROPIC_API_KEY` — a code question for the team, not user-facing.
 
 ### Q8. Offline access — what's cached and any limits  (audit, offline mechanics)
 - **Pages:** `/travel-documents` (×4)
 - **Placeholder:** "open them offline. (TODO: confirm exactly what is cached and any
   limits…)"
-- **Answer:** _______ (which docs cache, size/count limits?)
+- **Answer:** ❓ Unknown, team to investigate. Copy keeps general "documents saved in advance are available offline (PWA)"; specific cache scope/limits claim removed.
 
 ---
 
@@ -110,10 +110,10 @@ merged account-deletion work — pending a yes/no confirmation.
 | B | Data storage region | expat, medical | repo-answerable — **not yet applied** |
 | C | Self-serve account deletion exists | data-deletion | **✅ applied** (PR #24 → points to /my/security) |
 | D | AI is opt-in / off by default | ai-processing | **✅ applied** (off-by-default wording) |
-| Q1 | Reminder lead time / intervals | 6 pages | **needs team** |
-| Q2 | Reminder channels (push/SMS) | document-expiry-reminder | **needs team** |
-| Q3 | At-rest encryption | medical | **needs team** |
-| Q5 | AI provider name + retention | ai-processing | **needs team** |
-| Q8 | Offline cache scope/limits | travel-documents | **needs team** |
+| Q1 | Reminder lead time / intervals | 6 pages + guides | **✅ answered & applied** — 30 / 15 / 7 / 1 day before |
+| Q2 | Reminder channels (push/SMS) | document-expiry-reminder | **partial** — push/SMS only "maybe"; copy states **email only** until confirmed |
+| Q3 | At-rest encryption | medical | **still open** — unknown; speculative claim removed, only confirmed facts kept |
+| Q5 | AI provider name + retention | ai-processing | **partial** — provider is **GLM (not Anthropic)**; retention unknown; copy stays generic ("third-party AI provider"), no name disclosed |
+| Q8 | Offline cache scope/limits | travel-documents | **still open** — unknown; kept general "saved-in-advance works offline (PWA)", limits claim removed |
 | — | Google Drive import accurate? | vs/google-drive | confirm |
 | — | Free-tier 2 GB current? | many | confirm |

@@ -100,7 +100,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "How will I be reminded before a document expires?",
-            a: "By email, before the \"valid until\" date you set on each document. (TODO: confirm exact lead time / configurable intervals with the team.)",
+            a: "By email, before the \"valid until\" date you set on each document. The reminder comes 30, 15, 7 and 1 day before that date.",
           },
           {
             q: "Is it safe to keep our documents here?",
@@ -169,7 +169,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Как придёт напоминание до окончания срока?",
-            a: "На email, до указанной вами даты «действует до» на каждом документе. (TODO: уточнить у команды точный срок/настраиваемые интервалы.)",
+            a: "На email, до указанной вами даты «действует до» на каждом документе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
           },
           {
             q: "Безопасно ли хранить наши документы здесь?",
@@ -238,7 +238,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Bagaimana pengingat sebelum dokumen kedaluwarsa datang?",
-            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. (TODO: konfirmasi tenggat/interval ke tim.)",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Apakah aman menyimpan dokumen kami di sini?",
@@ -307,7 +307,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Hujjat muddati tugashidan oldin eslatma qanday keladi?",
-            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. (TODO: aniq muddat/sozlanadigan oraliqlarni jamoa bilan tasdiqlash.)",
+            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Hujjatlarimizni bu yerda saqlash xavfsizmi?",
@@ -382,7 +382,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             h2: "How doki.help helps with reminders",
-            body: "As you add each document, set its \"valid until\" date, and doki.help can send an email reminder before it expires — for every member of the family. (TODO: confirm exact lead time / configurable intervals with the team.) Documents stay in private storage over HTTPS, with access isolated to your family at the database level (row-level security), roles for who is owner, editor or viewer, and two-factor login available. Optional AI field recognition is off by default. doki.help is in beta and doesn't replace your original documents.",
+            body: "As you add each document, set its \"valid until\" date, and doki.help can send an email reminder before it expires — for every member of the family. The reminder comes 30, 15, 7 and 1 day before that date. Documents stay in private storage over HTTPS, with access isolated to your family at the database level (row-level security), roles for who is owner, editor or viewer, and two-factor login available. Optional AI field recognition is off by default. doki.help is in beta and doesn't replace your original documents.",
           },
         ],
         faqHeading: "FAQ",
@@ -397,7 +397,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "How will I be reminded before a document expires?",
-            a: "By email, before the \"valid until\" date you set on each document. (TODO: confirm exact lead time / configurable intervals with the team.)",
+            a: "By email, before the \"valid until\" date you set on each document. The reminder comes 30, 15, 7 and 1 day before that date.",
           },
           {
             q: "Can I track expiry dates for everyone in the family?",
@@ -448,7 +448,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             h2: "Как doki.help помогает с напоминаниями",
-            body: "Добавляя документ, укажите дату «действует до» — и doki.help может прислать email-напоминание до окончания срока, для каждого члена семьи. (TODO: уточнить у команды точный срок/настраиваемые интервалы.) Документы хранятся в приватном хранилище по HTTPS, доступ изолирован вашей семьёй на уровне базы (RLS), роли определяют, кто owner, editor или viewer, доступен двухфакторный вход. Опциональное AI-распознавание полей по умолчанию выключено. doki.help в стадии beta и не заменяет оригиналы документов.",
+            body: "Добавляя документ, укажите дату «действует до» — и doki.help может прислать email-напоминание до окончания срока, для каждого члена семьи. Напоминание приходит за 30, 15, 7 и 1 день до этой даты. Документы хранятся в приватном хранилище по HTTPS, доступ изолирован вашей семьёй на уровне базы (RLS), роли определяют, кто owner, editor или viewer, доступен двухфакторный вход. Опциональное AI-распознавание полей по умолчанию выключено. doki.help в стадии beta и не заменяет оригиналы документов.",
           },
         ],
         faqHeading: "Частые вопросы",
@@ -463,7 +463,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Как придёт напоминание до окончания срока?",
-            a: "На email, до указанной вами даты «действует до» на каждом документе. (TODO: уточнить у команды точный срок/настраиваемые интервалы.)",
+            a: "На email, до указанной вами даты «действует до» на каждом документе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
           },
           {
             q: "Можно отслеживать сроки для всех членов семьи?",
@@ -514,7 +514,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             h2: "Bagaimana doki.help membantu dengan pengingat",
-            body: "Saat menambahkan tiap dokumen, isi tanggal \"berlaku sampai\", dan doki.help bisa mengirim pengingat email sebelum kedaluwarsa — untuk tiap anggota keluarga. (TODO: konfirmasi tenggat/interval ke tim.) Dokumen tersimpan di penyimpanan privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security), peran menentukan siapa owner, editor, atau viewer, dan login dua faktor tersedia. Pengenalan bidang AI opsional mati secara default. doki.help masih beta dan tidak menggantikan dokumen asli Anda.",
+            body: "Saat menambahkan tiap dokumen, isi tanggal \"berlaku sampai\", dan doki.help bisa mengirim pengingat email sebelum kedaluwarsa — untuk tiap anggota keluarga. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu. Dokumen tersimpan di penyimpanan privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security), peran menentukan siapa owner, editor, atau viewer, dan login dua faktor tersedia. Pengenalan bidang AI opsional mati secara default. doki.help masih beta dan tidak menggantikan dokumen asli Anda.",
           },
         ],
         faqHeading: "Pertanyaan umum",
@@ -529,7 +529,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Bagaimana pengingat sebelum dokumen kedaluwarsa datang?",
-            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. (TODO: konfirmasi tenggat/interval ke tim.)",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah memantau masa berlaku untuk semua anggota keluarga?",
@@ -580,7 +580,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             h2: "doki.help eslatmalarda qanday yordam beradi",
-            body: "Har bir hujjatni qoʻshayotib \"amal qiladi\" sanasini kiriting — va doki.help muddat tugashidan oldin email eslatma yuborishi mumkin, har bir oila aʼzosi uchun. (TODO: aniq muddat/sozlanadigan oraliqlarni jamoa bilan tasdiqlash.) Hujjatlar maxfiy omborda HTTPS orqali saqlanadi, kirish maʼlumotlar bazasi darajasida oilangiz bilan izolyatsiya qilingan (RLS), rollar kim owner, editor yoki viewer ekanini belgilaydi, ikki bosqichli kirish mavjud. Ixtiyoriy AI maydon tanish sukut boʻyicha oʻchiq. doki.help beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi.",
+            body: "Har bir hujjatni qoʻshayotib \"amal qiladi\" sanasini kiriting — va doki.help muddat tugashidan oldin email eslatma yuborishi mumkin, har bir oila aʼzosi uchun. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi. Hujjatlar maxfiy omborda HTTPS orqali saqlanadi, kirish maʼlumotlar bazasi darajasida oilangiz bilan izolyatsiya qilingan (RLS), rollar kim owner, editor yoki viewer ekanini belgilaydi, ikki bosqichli kirish mavjud. Ixtiyoriy AI maydon tanish sukut boʻyicha oʻchiq. doki.help beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi.",
           },
         ],
         faqHeading: "Tez-tez beriladigan savollar",
@@ -595,7 +595,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Muddat tugashidan oldin eslatma qanday keladi?",
-            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. (TODO: aniq muddat/sozlanadigan oraliqlarni jamoa bilan tasdiqlash.)",
+            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Muddatlarni oilaning barcha aʼzolari uchun kuzatsa boʻladimi?",
@@ -698,7 +698,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Will I be reminded before a passport expires?",
-            a: "By email, before the \"valid until\" date you set on each document. (TODO: confirm exact lead time / configurable intervals with the team.)",
+            a: "By email, before the \"valid until\" date you set on each document. The reminder comes 30, 15, 7 and 1 day before that date.",
           },
         ],
       },
@@ -769,7 +769,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Придёт ли напоминание до окончания срока паспорта?",
-            a: "На email, до указанной вами даты «действует до» на каждом документе. (TODO: уточнить у команды точный срок/настраиваемые интервалы.)",
+            a: "На email, до указанной вами даты «действует до» на каждом документе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
           },
         ],
       },
@@ -840,7 +840,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Akankah saya diingatkan sebelum paspor kedaluwarsa?",
-            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. (TODO: konfirmasi tenggat/interval ke tim.)",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
           },
         ],
       },
@@ -911,7 +911,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Pasport muddati tugashidan oldin eslatma keladimi?",
-            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. (TODO: aniq muddat/sozlanadigan oraliqlarni jamoa bilan tasdiqlash.)",
+            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
           },
         ],
       },
@@ -1299,7 +1299,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "How will a reminder reach me before the deadline?",
-            a: "By email, before the \"valid until\" date you set on the document. (TODO: confirm exact lead time / configurable intervals with the team.)",
+            a: "By email, before the \"valid until\" date you set on the document. The reminder comes 30, 15, 7 and 1 day before that date.",
           },
           {
             q: "Can I share a document safely for renewal?",
@@ -1367,7 +1367,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Как напоминание придёт до окончания срока?",
-            a: "На email, до указанной вами даты «действует до» на документе. (TODO: уточнить у команды точный срок/настраиваемые интервалы.)",
+            a: "На email, до указанной вами даты «действует до» на документе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
           },
           {
             q: "Можно безопасно передать документ для продления?",
@@ -1435,7 +1435,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Bagaimana pengingat sampai sebelum tenggat?",
-            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada dokumen. (TODO: konfirmasi tenggat/interval ke tim.)",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada dokumen. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah berbagi dokumen dengan aman untuk perpanjangan?",
@@ -1503,7 +1503,7 @@ const DATA: Record<string, Guide> = {
           },
           {
             q: "Muddatdan oldin eslatma qanday keladi?",
-            a: "Email orqali, hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. (TODO: aniq muddat/sozlanadigan oraliqlarni jamoa bilan tasdiqlash.)",
+            a: "Email orqali, hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Yangilash uchun hujjatni xavfsiz ulashsa boʻladimi?",

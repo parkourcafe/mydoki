@@ -129,7 +129,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How will I be reminded?",
-            a: "By email, before the expiry date you set. (TODO: confirm exact lead time / configurable intervals with the team.)",
+            a: "By email, before the expiry date you set. The reminder comes 30, 15, 7 and 1 day before that date.",
           },
           {
             q: "Can I access my passport scan offline?",
@@ -202,7 +202,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Как придёт напоминание?",
-            a: "На email, до указанной вами даты окончания. (TODO: уточнить у команды точный срок/настраиваемые интервалы.)",
+            a: "На email, до указанной вами даты окончания. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
           },
           {
             q: "Будет ли доступ к скану офлайн?",
@@ -275,7 +275,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Bagaimana pengingatnya datang?",
-            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. (TODO: konfirmasi tenggat/interval ke tim.)",
+            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah akses pindaian paspor offline?",
@@ -348,7 +348,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Eslatma qanday keladi?",
-            a: "Email orqali, siz belgilagan tugash sanasidan oldin. (TODO: aniq muddat/sozlanadigan oraliqlarni jamoa bilan tasdiqlash.)",
+            a: "Email orqali, siz belgilagan tugash sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Pasport skaniga oflayn kirsa boʻladimi?",
@@ -764,7 +764,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "How early will I be reminded?",
-            a: "A reminder arrives by email before the “valid until” date you set. (TODO: confirm exact lead time and whether intervals are configurable with the team.)",
+            a: "A reminder arrives by email before the “valid until” date you set. The reminder comes 30, 15, 7 and 1 day before that date.",
           },
           {
             q: "How do I set an expiry date?",
@@ -772,7 +772,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Where do reminders arrive?",
-            a: "By email, to the address on your account. (TODO: confirm any additional channels such as push with the team.)",
+            a: "By email, to the address on your account.",
           },
           {
             q: "Can I track deadlines for my kids too?",
@@ -836,7 +836,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "За сколько придёт напоминание?",
-            a: "Напоминание приходит на email до указанной вами даты «действует до». (TODO: уточнить у команды точный срок и настраиваемость интервалов.)",
+            a: "Напоминание приходит на email до указанной вами даты «действует до». Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
           },
           {
             q: "Как указать дату окончания?",
@@ -844,7 +844,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Куда приходят напоминания?",
-            a: "На email, привязанный к вашему аккаунту. (TODO: уточнить у команды дополнительные каналы, например push.)",
+            a: "На email, привязанный к вашему аккаунту.",
           },
           {
             q: "Можно отслеживать сроки детей?",
@@ -908,7 +908,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Seberapa awal saya akan diingatkan?",
-            a: "Pengingat tiba lewat email sebelum tanggal “berlaku sampai” yang Anda tetapkan. (TODO: konfirmasi tenggat pasti dan apakah interval bisa diatur ke tim.)",
+            a: "Pengingat tiba lewat email sebelum tanggal “berlaku sampai” yang Anda tetapkan. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bagaimana cara menetapkan tanggal kedaluwarsa?",
@@ -916,7 +916,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Ke mana pengingat dikirim?",
-            a: "Ke email pada akun Anda. (TODO: konfirmasi kanal tambahan seperti push ke tim.)",
+            a: "Ke email pada akun Anda.",
           },
           {
             q: "Bisakah memantau tenggat anak juga?",
@@ -980,7 +980,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Eslatma qancha oldin keladi?",
-            a: "Eslatma siz belgilagan “amal qiladi” sanasidan oldin email orqali keladi. (TODO: aniq muddat va oraliqlar sozlanishini jamoa bilan tasdiqlash.)",
+            a: "Eslatma siz belgilagan “amal qiladi” sanasidan oldin email orqali keladi. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Tugash sanasini qanday belgilayman?",
@@ -988,7 +988,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Eslatmalar qayerga keladi?",
-            a: "Akkauntingizdagi emailga. (TODO: push kabi qoʻshimcha kanallarni jamoa bilan tasdiqlash.)",
+            a: "Akkauntingizdagi emailga.",
           },
           {
             q: "Bolalarim muddatlarini ham kuzatsa boʻladimi?",
@@ -1373,7 +1373,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How early are reminders sent?",
-            a: "By email, before the expiry date you set. (TODO: confirm exact lead time / configurable intervals with the team.)",
+            a: "By email, before the expiry date you set. The reminder comes 30, 15, 7 and 1 day before that date.",
           },
           {
             q: "Can I share my visa securely with a lawyer?",
@@ -1446,7 +1446,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "За сколько приходят напоминания?",
-            a: "На email, до указанной вами даты окончания. (TODO: уточнить у команды точный срок/настраиваемые интервалы.)",
+            a: "На email, до указанной вами даты окончания. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
           },
           {
             q: "Можно ли безопасно поделиться визой с юристом?",
@@ -1519,7 +1519,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Seberapa awal pengingat dikirim?",
-            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. (TODO: konfirmasi tenggat/interval ke tim.)",
+            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah berbagi visa dengan pengacara secara aman?",
@@ -1592,7 +1592,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Eslatmalar qancha oldin keladi?",
-            a: "Email orqali, siz belgilagan tugash sanasidan oldin. (TODO: aniq muddat/sozlanadigan oraliqlarni jamoa bilan tasdiqlash.)",
+            a: "Email orqali, siz belgilagan tugash sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Vizani yurist bilan xavfsiz ulashsa boʻladimi?",
@@ -2303,7 +2303,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How is sensitive medical data protected?",
-            a: "Files are kept in a private bucket over HTTPS, access is isolated to your family at the database level, and two-factor login is available. Servers may be located outside Russia — see our Privacy Policy. (TODO: confirm at-rest encryption with the team.)",
+            a: "Files are kept in a private bucket over HTTPS, access is isolated to your family at the database level, and two-factor login is available. Servers may be located outside Russia — see our Privacy Policy.",
           },
         ],
       },
@@ -2374,7 +2374,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Как защищены чувствительные медицинские данные?",
-            a: "Файлы хранятся в приватном bucket по HTTPS, доступ изолирован вашей семьёй на уровне базы, доступен двухфакторный вход. Серверы могут находиться вне РФ — подробности в Политике конфиденциальности. (TODO: уточнить у команды шифрование at-rest.)",
+            a: "Файлы хранятся в приватном bucket по HTTPS, доступ изолирован вашей семьёй на уровне базы, доступен двухфакторный вход. Серверы могут находиться вне РФ — подробности в Политике конфиденциальности.",
           },
         ],
       },
@@ -2445,7 +2445,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Bagaimana data medis sensitif dilindungi?",
-            a: "Berkas disimpan di bucket privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data, dan login dua faktor tersedia. Server bisa berada di luar Rusia — lihat Kebijakan Privasi kami. (TODO: konfirmasi enkripsi at-rest ke tim.)",
+            a: "Berkas disimpan di bucket privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data, dan login dua faktor tersedia. Server bisa berada di luar Rusia — lihat Kebijakan Privasi kami.",
           },
         ],
       },
@@ -2516,7 +2516,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Nozik tibbiy maʼlumot qanday himoyalanadi?",
-            a: "Fayllar maxfiy bucketda HTTPS orqali saqlanadi, kirish oilangiz darajasida izolyatsiya qilingan, ikki bosqichli kirish mavjud. Serverlar Rossiyadan tashqarida boʻlishi mumkin — Maxfiylik siyosatimizga qarang. (TODO: at-rest shifrlashni jamoa bilan tasdiqlash.)",
+            a: "Fayllar maxfiy bucketda HTTPS orqali saqlanadi, kirish oilangiz darajasida izolyatsiya qilingan, ikki bosqichli kirish mavjud. Serverlar Rossiyadan tashqarida boʻlishi mumkin — Maxfiylik siyosatimizga qarang.",
           },
         ],
       },
@@ -2594,7 +2594,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Can I access documents without internet?",
-            a: "Yes. Save the documents you need to your phone in advance (PWA) and open them offline — at the airport or in roaming. (TODO: confirm exactly what is cached and any limits with the team.)",
+            a: "Yes. Save the documents you need to your phone in advance (PWA) and open them offline — at the airport or in roaming.",
           },
           {
             q: "Can I keep documents for the whole family?",
@@ -2602,7 +2602,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Will I be reminded before a passport or visa expires?",
-            a: "Yes. Add a \"valid until\" date and a reminder arrives by email before it expires. (TODO: confirm exact lead time with the team.)",
+            a: "Yes. Add a \"valid until\" date and a reminder arrives by email before it expires. The reminder comes 30, 15, 7 and 1 day before that date.",
           },
           {
             q: "Can I store child travel consent forms?",
@@ -2664,7 +2664,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Можно открывать документы без интернета?",
-            a: "Да. Сохраните нужные документы на телефон заранее (PWA) и открывайте офлайн — в аэропорту или в роуминге. (TODO: уточнить у команды, что именно кэшируется и какие лимиты.)",
+            a: "Да. Сохраните нужные документы на телефон заранее (PWA) и открывайте офлайн — в аэропорту или в роуминге.",
           },
           {
             q: "Можно хранить документы всей семьи?",
@@ -2672,7 +2672,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Напомнит ли о сроке паспорта или визы?",
-            a: "Да. Укажите дату «действует до» — и напоминание придёт на email заранее. (TODO: уточнить у команды точный срок.)",
+            a: "Да. Укажите дату «действует до» — и напоминание придёт на email заранее. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
           },
           {
             q: "Можно хранить согласия на выезд ребёнка?",
@@ -2734,7 +2734,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Bisakah mengakses dokumen tanpa internet?",
-            a: "Bisa. Simpan dokumen yang Anda butuhkan ke ponsel lebih dulu (PWA) dan buka offline — di bandara atau saat roaming. (TODO: konfirmasi apa yang di-cache dan batasnya ke tim.)",
+            a: "Bisa. Simpan dokumen yang Anda butuhkan ke ponsel lebih dulu (PWA) dan buka offline — di bandara atau saat roaming.",
           },
           {
             q: "Bisakah menyimpan dokumen seluruh keluarga?",
@@ -2742,7 +2742,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Apakah saya diingatkan sebelum paspor atau visa kedaluwarsa?",
-            a: "Ya. Tambahkan tanggal \"berlaku sampai\" dan pengingat tiba lewat email sebelum kedaluwarsa. (TODO: konfirmasi tenggat persis ke tim.)",
+            a: "Ya. Tambahkan tanggal \"berlaku sampai\" dan pengingat tiba lewat email sebelum kedaluwarsa. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah menyimpan surat izin perjalanan anak?",
@@ -2804,7 +2804,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Hujjatlarga internetsiz kirsa boʻladimi?",
-            a: "Ha. Kerakli hujjatlarni telefoningizga oldindan saqlang (PWA) va oflayn oching — aeroportda yoki roumingda. (TODO: nima keshlanishi va cheklovlarni jamoa bilan tasdiqlash.)",
+            a: "Ha. Kerakli hujjatlarni telefoningizga oldindan saqlang (PWA) va oflayn oching — aeroportda yoki roumingda.",
           },
           {
             q: "Butun oila hujjatlarini saqlasa boʻladimi?",
@@ -2812,7 +2812,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Pasport yoki viza muddati tugashidan oldin eslatadimi?",
-            a: "Ha. \"Amal qiladi\" sanasini qoʻshing — eslatma muddat tugashidan oldin email orqali keladi. (TODO: aniq muddatni jamoa bilan tasdiqlash.)",
+            a: "Ha. \"Amal qiladi\" sanasini qoʻshing — eslatma muddat tugashidan oldin email orqali keladi. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Bola sayohati uchun rozilik hujjatlarini saqlasa boʻladimi?",
