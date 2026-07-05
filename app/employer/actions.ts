@@ -26,7 +26,7 @@ async function sendCodeEmail(
   const key = process.env.RESEND_API_KEY;
   if (!key || !to) return { ok: false, detail: "no RESEND_API_KEY" };
   const from =
-    process.env.ALERT_EMAIL_FROM || "Семейный сейф <onboarding@resend.dev>";
+    process.env.ALERT_EMAIL_FROM || "Doki <noreply@doki.help>";
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
