@@ -1,8 +1,27 @@
 import type { Locale } from "./i18n";
 
-export type SegmentKey = "medical" | "travel" | "families" | "expats";
+export type SegmentKey =
+  | "medical"
+  | "travel"
+  | "families"
+  | "expats"
+  | "job-seekers"
+  | "employers"
+  | "freelancers"
+  | "visa"
+  | "residence";
 
-export const SEGMENT_KEYS: SegmentKey[] = ["medical", "travel", "families", "expats"];
+export const SEGMENT_KEYS: SegmentKey[] = [
+  "job-seekers",
+  "employers",
+  "freelancers",
+  "families",
+  "travel",
+  "visa",
+  "residence",
+  "expats",
+  "medical",
+];
 
 export type SegmentContent = {
   navLabel: string;
@@ -449,6 +468,411 @@ const DATA: Record<SegmentKey, Segment> = {
           "Roʻyxat va bildirishnomalar",
           "Tarjima va apostil",
         ],
+      },
+    },
+  },
+  "job-seekers": {
+    emoji: "🙋",
+    locales: {
+      ru: {
+        navLabel: "Ищу работу",
+        title: "Откликайтесь на вакансии готовым пакетом документов",
+        subtitle:
+          "Резюме, ID, сертификаты и портфолио — в одном месте. Один клик — и работодатель получает всё, что просил.",
+        pains: [
+          "CV в одном чате, сертификат в почте, ID в галерее",
+          "Каждый отклик — заново собирать одни и те же документы",
+          "Работодатель просит справку или видео в последний момент",
+          "После отклика непонятно, что происходит со статусом",
+        ],
+        solutions: [
+          "Резюме и документы хранятся готовым пакетом",
+          "Отклик одним кликом — со всеми документами, которые просит вакансия",
+          "Видео-ответ и ответы на вопросы прямо в отклике",
+          "Статус отклика — по ссылке, без звонков и ожидания",
+        ],
+        docs: ["Резюме (CV)", "ID / паспорт", "Дипломы и сертификаты", "Портфолио", "Медсправка", "Рекомендации"],
+      },
+      en: {
+        navLabel: "Job seekers",
+        title: "Apply to jobs with a ready document package",
+        subtitle:
+          "Resume, ID, certificates and portfolio in one place. One click — and the employer gets everything they asked for.",
+        pains: [
+          "CV in one chat, certificate in email, ID in the gallery",
+          "Every application means collecting the same documents again",
+          "The employer asks for a certificate or video at the last minute",
+          "After applying, the status is a mystery",
+        ],
+        solutions: [
+          "Your resume and documents live as a ready package",
+          "Apply in one click — with every document the vacancy asks for",
+          "Video answer and screening answers right in the application",
+          "Application status by link — no calls, no waiting",
+        ],
+        docs: ["Resume (CV)", "ID / passport", "Diplomas & certificates", "Portfolio", "Health certificate", "References"],
+      },
+      id: {
+        navLabel: "Pencari kerja",
+        title: "Lamar kerja dengan paket dokumen siap kirim",
+        subtitle:
+          "Resume, KTP, sertifikat, dan portofolio di satu tempat. Satu klik — perusahaan menerima semua yang diminta.",
+        pains: [
+          "CV di satu chat, sertifikat di email, KTP di galeri",
+          "Setiap lamaran harus mengumpulkan dokumen yang sama lagi",
+          "Perusahaan minta surat atau video di menit terakhir",
+          "Setelah melamar, status tidak jelas",
+        ],
+        solutions: [
+          "Resume dan dokumen tersimpan sebagai paket siap pakai",
+          "Lamar sekali klik — dengan semua dokumen yang diminta lowongan",
+          "Jawaban video dan pertanyaan seleksi langsung di lamaran",
+          "Status lamaran lewat tautan — tanpa telepon dan menunggu",
+        ],
+        docs: ["Resume (CV)", "KTP / paspor", "Ijazah & sertifikat", "Portofolio", "Surat sehat", "Rekomendasi"],
+      },
+      uz: {
+        navLabel: "Ish izlovchilar",
+        title: "Tayyor hujjatlar paketi bilan ishga ariza bering",
+        subtitle:
+          "Rezyume, ID, sertifikatlar va portfolio — bitta joyda. Bir bosish — ish beruvchi soʻragan hamma narsani oladi.",
+        pains: [
+          "CV bir chatda, sertifikat pochtada, ID galereyada",
+          "Har bir ariza uchun oʻsha hujjatlarni qaytadan yigʻish",
+          "Ish beruvchi oxirgi daqiqada maʼlumotnoma yoki video soʻraydi",
+          "Arizadan keyin status nima boʻlgani nomaʼlum",
+        ],
+        solutions: [
+          "Rezyume va hujjatlar tayyor paket sifatida saqlanadi",
+          "Bir bosishda ariza — vakansiya soʻragan barcha hujjatlar bilan",
+          "Video-javob va savollar javobi arizaning oʻzida",
+          "Ariza statusi — havola orqali, qoʻngʻiroqsiz",
+        ],
+        docs: ["Rezyume (CV)", "ID / pasport", "Diplom va sertifikatlar", "Portfolio", "Tibbiy maʼlumotnoma", "Tavsiyalar"],
+      },
+    },
+  },
+  employers: {
+    emoji: "💼",
+    locales: {
+      ru: {
+        navLabel: "Работодателям",
+        title: "Получайте отклики сразу с нужными документами",
+        subtitle:
+          "Создайте вакансию, укажите документы и вопросы — кандидаты приходят в одно место уже с CV, ID и сертификатами.",
+        pains: [
+          "Кандидаты присылают документы кусками в WhatsApp",
+          "Резюме есть, а нужных справок и ID — нет",
+          "Сложно сравнивать кандидатов между собой",
+          "Непонятно, кого именно нанимать под задачу",
+        ],
+        solutions: [
+          "Вакансия со списком обязательных документов — кандидат не отправит пустой отклик",
+          "Все отклики в одном дашборде: статусы, шортлист, отказы",
+          "Вопросы и видео-ответ до собеседования — экономия времени",
+          "Помощник подскажет роль, задачи, документы и вопросы",
+        ],
+        docs: ["CV кандидата", "KTP / ID", "Сертификаты", "Медсправка", "Видео-ответ", "Ответы на вопросы"],
+      },
+      en: {
+        navLabel: "Employers",
+        title: "Get applications with the documents already attached",
+        subtitle:
+          "Create a vacancy, set the documents and questions — candidates arrive in one place with CV, ID and certificates.",
+        pains: [
+          "Candidates send documents in pieces over WhatsApp",
+          "There's a resume, but no required certificates or ID",
+          "Hard to compare candidates side by side",
+          "Unclear who exactly to hire for the task",
+        ],
+        solutions: [
+          "A vacancy with a required-documents list — no empty applications",
+          "All applications in one dashboard: statuses, shortlist, rejections",
+          "Questions and a video answer before the interview — saves hours",
+          "The assistant suggests the role, tasks, documents and questions",
+        ],
+        docs: ["Candidate CV", "KTP / ID", "Certificates", "Health certificate", "Video answer", "Screening answers"],
+      },
+      id: {
+        navLabel: "Perusahaan",
+        title: "Terima lamaran lengkap dengan dokumennya",
+        subtitle:
+          "Buat lowongan, tentukan dokumen dan pertanyaan — kandidat masuk ke satu tempat dengan CV, KTP, dan sertifikat.",
+        pains: [
+          "Kandidat mengirim dokumen sepotong-sepotong lewat WhatsApp",
+          "Ada resume, tapi surat dan KTP yang dibutuhkan tidak ada",
+          "Sulit membandingkan kandidat",
+          "Tidak jelas siapa yang harus direkrut untuk tugas itu",
+        ],
+        solutions: [
+          "Lowongan dengan daftar dokumen wajib — tak ada lamaran kosong",
+          "Semua lamaran di satu dasbor: status, shortlist, penolakan",
+          "Pertanyaan dan jawaban video sebelum wawancara — hemat waktu",
+          "Asisten menyarankan peran, tugas, dokumen, dan pertanyaan",
+        ],
+        docs: ["CV kandidat", "KTP / ID", "Sertifikat", "Surat sehat", "Jawaban video", "Jawaban seleksi"],
+      },
+      uz: {
+        navLabel: "Ish beruvchilarga",
+        title: "Arizalarni kerakli hujjatlari bilan birga oling",
+        subtitle:
+          "Vakansiya yarating, hujjat va savollarni belgilang — nomzodlar CV, ID va sertifikatlari bilan bitta joyga keladi.",
+        pains: [
+          "Nomzodlar hujjatlarni WhatsAppda boʻlak-boʻlak yuboradi",
+          "Rezyume bor, kerakli maʼlumotnoma va ID yoʻq",
+          "Nomzodlarni solishtirish qiyin",
+          "Vazifaga aynan kimni yollash kerakligi noaniq",
+        ],
+        solutions: [
+          "Majburiy hujjatlar roʻyxati bilan vakansiya — boʻsh ariza kelmaydi",
+          "Barcha arizalar bitta dashboardda: statuslar, shortlist, rad etish",
+          "Suhbatdan oldin savollar va video-javob — vaqt tejaladi",
+          "Yordamchi rol, vazifa, hujjat va savollarni taklif qiladi",
+        ],
+        docs: ["Nomzod CV", "KTP / ID", "Sertifikatlar", "Tibbiy maʼlumotnoma", "Video-javob", "Savollar javobi"],
+      },
+    },
+  },
+  freelancers: {
+    emoji: "🎨",
+    locales: {
+      ru: {
+        navLabel: "Фрилансерам",
+        title: "Портфолио и документы — одной ссылкой клиенту",
+        subtitle:
+          "Соберите работы и подтверждения в аккуратную публичную страницу. Клиент открывает без входа, доступ можно отозвать.",
+        pains: [
+          "Работы разбросаны по ссылкам, дискам и чатам",
+          "Клиент просит подтверждения и документы — собираешь заново",
+          "Личные документы страшно отправлять в переписке",
+          "Для каждого клиента — новая подборка вручную",
+        ],
+        solutions: [
+          "Публичное портфолио одной ссылкой — без регистрации для клиента",
+          "Пакет документов по защищённой ссылке с ограниченным сроком",
+          "Доступ можно отозвать в любой момент",
+          "Резюме и портфолио подключаются к откликам на вакансии",
+        ],
+        docs: ["Портфолио работ", "Резюме (CV)", "Сертификаты", "ID / паспорт", "Договоры", "Рекомендации"],
+      },
+      en: {
+        navLabel: "Freelancers",
+        title: "Your portfolio and documents — one link for the client",
+        subtitle:
+          "Gather your work and credentials into one tidy public page. The client opens it with no sign-in; access can be revoked.",
+        pains: [
+          "Work scattered across links, drives and chats",
+          "A client asks for credentials — you assemble them again",
+          "Sending personal documents in a chat feels unsafe",
+          "Every client means a new manual compilation",
+        ],
+        solutions: [
+          "A public portfolio in one link — no registration for the client",
+          "A document package via a secure, time-limited link",
+          "Access can be revoked at any moment",
+          "Resume and portfolio plug into your job applications",
+        ],
+        docs: ["Work portfolio", "Resume (CV)", "Certificates", "ID / passport", "Contracts", "References"],
+      },
+      id: {
+        navLabel: "Freelancer",
+        title: "Portofolio dan dokumen — satu tautan untuk klien",
+        subtitle:
+          "Kumpulkan karya dan bukti ke satu halaman publik yang rapi. Klien membuka tanpa login; akses bisa dicabut.",
+        pains: [
+          "Karya tersebar di tautan, drive, dan chat",
+          "Klien minta bukti dan dokumen — dikumpulkan ulang lagi",
+          "Mengirim dokumen pribadi lewat chat terasa tidak aman",
+          "Setiap klien berarti kompilasi manual baru",
+        ],
+        solutions: [
+          "Portofolio publik satu tautan — tanpa registrasi untuk klien",
+          "Paket dokumen lewat tautan aman berbatas waktu",
+          "Akses bisa dicabut kapan saja",
+          "Resume dan portofolio terhubung ke lamaran kerja",
+        ],
+        docs: ["Portofolio karya", "Resume (CV)", "Sertifikat", "KTP / paspor", "Kontrak", "Rekomendasi"],
+      },
+      uz: {
+        navLabel: "Frilanserlarga",
+        title: "Portfolio va hujjatlar — mijozga bitta havola",
+        subtitle:
+          "Ishlar va tasdiqlarni bitta ozoda sahifaga yigʻing. Mijoz kirishsiz ochadi; kirishni bekor qilish mumkin.",
+        pains: [
+          "Ishlar havolalar, disklar va chatlarda sochilib yotibdi",
+          "Mijoz tasdiq va hujjat soʻraydi — yana qaytadan yigʻasiz",
+          "Shaxsiy hujjatlarni chatda yuborish xavfli tuyuladi",
+          "Har bir mijoz uchun yangi qoʻlda toʻplam",
+        ],
+        solutions: [
+          "Bitta havolada ochiq portfolio — mijozga roʻyxatdan oʻtish shart emas",
+          "Muddatli xavfsiz havola orqali hujjatlar paketi",
+          "Kirishni istalgan payt bekor qilish mumkin",
+          "Rezyume va portfolio ish arizalariga ulanadi",
+        ],
+        docs: ["Ishlar portfoliosi", "Rezyume (CV)", "Sertifikatlar", "ID / pasport", "Shartnomalar", "Tavsiyalar"],
+      },
+    },
+  },
+  visa: {
+    emoji: "🛂",
+    locales: {
+      ru: {
+        navLabel: "Визы",
+        title: "Визы и их сроки — под контролем",
+        subtitle:
+          "Все визы семьи в одном месте, AI распознаёт срок с фото, а напоминание приходит заранее — не в последний день.",
+        pains: [
+          "Срок визы подкрадывается незаметно — и начинается паника",
+          "Документы для продления разбросаны по чатам и папкам",
+          "В аэропорту просят то, чего нет под рукой",
+          "У каждого члена семьи — свои даты, всё в голове не удержать",
+        ],
+        solutions: [
+          "Напоминания заранее — по каждой визе каждого члена семьи",
+          "AI сам распознаёт срок действия с фото документа",
+          "Пакет для продления собран заранее и готов к отправке",
+          "Офлайн-доступ к сканам в поездке и на границе",
+        ],
+        docs: ["Виза", "Загранпаспорт", "Страховка", "Билеты и брони", "Фото для визы", "Справки и выписки"],
+      },
+      en: {
+        navLabel: "Visas",
+        title: "Visas and their deadlines — under control",
+        subtitle:
+          "All the family's visas in one place, AI reads the expiry date from a photo, and the reminder comes early — not on the last day.",
+        pains: [
+          "The visa deadline sneaks up — and panic begins",
+          "Renewal documents are scattered across chats and folders",
+          "The airport asks for something you don't have at hand",
+          "Each family member has different dates — impossible to keep in mind",
+        ],
+        solutions: [
+          "Early reminders — for every visa of every family member",
+          "AI reads the expiry date straight from a document photo",
+          "The renewal package is assembled in advance, ready to send",
+          "Offline access to scans while traveling and at the border",
+        ],
+        docs: ["Visa", "Passport", "Insurance", "Tickets & bookings", "Visa photos", "Certificates & statements"],
+      },
+      id: {
+        navLabel: "Visa",
+        title: "Visa dan tenggatnya — terkendali",
+        subtitle:
+          "Semua visa keluarga di satu tempat, AI membaca tanggal kedaluwarsa dari foto, pengingat datang lebih awal — bukan di hari terakhir.",
+        pains: [
+          "Tenggat visa datang diam-diam — lalu panik",
+          "Dokumen perpanjangan tersebar di chat dan folder",
+          "Bandara minta sesuatu yang tidak ada di tangan",
+          "Tiap anggota keluarga punya tanggal berbeda — mustahil diingat semua",
+        ],
+        solutions: [
+          "Pengingat lebih awal — untuk setiap visa setiap anggota keluarga",
+          "AI membaca tanggal kedaluwarsa langsung dari foto dokumen",
+          "Paket perpanjangan disiapkan lebih dulu, siap dikirim",
+          "Akses offline ke pindaian saat bepergian dan di perbatasan",
+        ],
+        docs: ["Visa", "Paspor", "Asuransi", "Tiket & pemesanan", "Foto visa", "Surat & keterangan"],
+      },
+      uz: {
+        navLabel: "Vizalar",
+        title: "Vizalar va muddatlari — nazoratda",
+        subtitle:
+          "Oilaning barcha vizalari bitta joyda, AI suratdan muddatni oʻqiydi, eslatma esa oldindan keladi — oxirgi kunda emas.",
+        pains: [
+          "Viza muddati sezdirmay keladi — keyin vahima boshlanadi",
+          "Uzaytirish hujjatlari chat va papkalarda sochilgan",
+          "Aeroportda qoʻl ostida yoʻq narsani soʻrashadi",
+          "Har bir oila aʼzosining oʻz sanalari bor — hammasini eslab boʻlmaydi",
+        ],
+        solutions: [
+          "Oldindan eslatmalar — har bir oila aʼzosining har bir vizasi uchun",
+          "AI hujjat suratidan amal qilish muddatini oʻzi oʻqiydi",
+          "Uzaytirish paketi oldindan yigʻilgan va yuborishga tayyor",
+          "Sayohatda va chegarada skanlarga oflayn kirish",
+        ],
+        docs: ["Viza", "Xorijiy pasport", "Sugʻurta", "Chiptalar va bronlar", "Viza uchun surat", "Maʼlumotnomalar"],
+      },
+    },
+  },
+  residence: {
+    emoji: "🏝️",
+    locales: {
+      ru: {
+        navLabel: "Вид на жительство",
+        title: "ВНЖ и KITAS: документы и продления без паники",
+        subtitle:
+          "Все документы на проживание — по каждому члену семьи, с напоминаниями о продлении и пакетом для иммиграционной службы.",
+        pains: [
+          "Продление ВНЖ — это куча справок, и все в разных местах",
+          "Сроки у всей семьи разные, легко пропустить чей-то",
+          "Документы на разных языках, часть — только в бумаге",
+          "Потерять оригинал — страшно, а копии не найти",
+        ],
+        solutions: [
+          "Всё по каждому члену семьи: ВНЖ, паспорта, письма, страховки",
+          "Напоминания о продлении приходят заранее",
+          "Сканы всегда с собой — офлайн, в любой стране",
+          "Пакет для иммиграционной службы — одним кликом",
+        ],
+        docs: ["ВНЖ / KITAS", "Паспорт", "Спонсорские письма", "Налоговые номера", "Страховка", "Договор аренды"],
+      },
+      en: {
+        navLabel: "Residence permit",
+        title: "Residence permits & KITAS: renewals without panic",
+        subtitle:
+          "All residency documents — per family member, with renewal reminders and a ready package for the immigration office.",
+        pains: [
+          "A residence renewal means a pile of certificates in different places",
+          "The whole family has different dates — easy to miss someone's",
+          "Documents in different languages, some only on paper",
+          "Losing an original is scary, and copies are nowhere to be found",
+        ],
+        solutions: [
+          "Everything per family member: permits, passports, letters, insurance",
+          "Renewal reminders arrive in advance",
+          "Scans always with you — offline, in any country",
+          "The immigration-office package — in one click",
+        ],
+        docs: ["Residence permit / KITAS", "Passport", "Sponsor letters", "Tax numbers", "Insurance", "Rental contract"],
+      },
+      id: {
+        navLabel: "Izin tinggal",
+        title: "KITAS & izin tinggal: perpanjangan tanpa panik",
+        subtitle:
+          "Semua dokumen tinggal — per anggota keluarga, dengan pengingat perpanjangan dan paket siap untuk kantor imigrasi.",
+        pains: [
+          "Perpanjangan izin tinggal berarti tumpukan surat di tempat berbeda",
+          "Tanggal tiap anggota keluarga berbeda — mudah terlewat",
+          "Dokumen dalam berbagai bahasa, sebagian hanya di kertas",
+          "Kehilangan dokumen asli itu menakutkan, salinannya tak ketemu",
+        ],
+        solutions: [
+          "Semua per anggota keluarga: izin, paspor, surat, asuransi",
+          "Pengingat perpanjangan datang lebih awal",
+          "Pindaian selalu bersama Anda — offline, di negara mana pun",
+          "Paket untuk kantor imigrasi — sekali klik",
+        ],
+        docs: ["KITAS / izin tinggal", "Paspor", "Surat sponsor", "NPWP / nomor pajak", "Asuransi", "Kontrak sewa"],
+      },
+      uz: {
+        navLabel: "Yashash ruxsatnomasi",
+        title: "Yashash ruxsatnomasi: hujjatlar va uzaytirish vahimasiz",
+        subtitle:
+          "Barcha yashash hujjatlari — har bir oila aʼzosi boʻyicha, uzaytirish eslatmalari va immigratsiya uchun tayyor paket bilan.",
+        pains: [
+          "Ruxsatnomani uzaytirish — turli joylardagi bir uyum maʼlumotnoma",
+          "Oilada sanalar har xil — birovnikini oʻtkazib yuborish oson",
+          "Hujjatlar turli tillarda, baʼzilari faqat qogʻozda",
+          "Asl nusxani yoʻqotish qoʻrqinchli, nusxalari esa topilmaydi",
+        ],
+        solutions: [
+          "Har bir oila aʼzosi boʻyicha hammasi: ruxsatnoma, pasport, xatlar, sugʻurta",
+          "Uzaytirish eslatmalari oldindan keladi",
+          "Skanlar doim siz bilan — oflayn, istalgan davlatda",
+          "Immigratsiya xizmati uchun paket — bir bosishda",
+        ],
+        docs: ["Yashash ruxsatnomasi", "Pasport", "Homiy xatlari", "Soliq raqamlari", "Sugʻurta", "Ijara shartnomasi"],
       },
     },
   },
