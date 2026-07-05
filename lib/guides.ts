@@ -1531,6 +1531,1486 @@ const DATA: Record<string, Guide> = {
       ],
     },
   },
+  "organize-documents-by-family-member": {
+    slug: "organize-documents-by-family-member",
+    emoji: "👨‍👩‍👧‍👦",
+    locales: {
+      en: {
+        navLabel: "Sort by family member",
+        title: "Organize Family Documents by Family Member",
+        metaDescription:
+          "A calm way to sort your family's documents by member: a profile for each person, simple categories, two-tap access, expiry dates and reminders.",
+        h1: "How to organize documents by family member",
+        intro:
+          "A calm, practical way to organize your family's documents by member — a profile for each person, a few simple categories, and expiry dates with reminders, so finding anyone's document takes two taps instead of a search.",
+        ctaPrimary: "Organize your documents by family member",
+        sections: [
+          {
+            h2: "Why one shared pile of documents doesn't work",
+            body: "When every document lands in the same folder — everyone's passports, insurance and certificates mixed together — finding one thing means scrolling past everyone else's. The pile grows, names blur, and when a specific person's document is suddenly needed, you're searching the whole family's paperwork at once. Sorting by person turns that search into a single, obvious place to look.",
+          },
+          {
+            h2: "The principle: a profile for each family member",
+            body: "Instead of one big pile, give each person their own space — partner, children, parents — and keep their documents together under their name. A child's passport lives with a child's papers, a parent's visa with the parent's. You stop asking \"where did we put it?\" because the answer is always the same: under the person it belongs to.",
+          },
+          {
+            h2: "Which categories to set up for each person",
+            body: "Within each person's profile, a few simple categories keep things easy to scan. You don't need all of them for everyone — use the ones that fit.",
+            bullets: [
+              "Identity: passports, ID cards, birth certificates",
+              "Medical: insurance, vaccination records, key reports",
+              "Travel: visas, permits, tickets and bookings",
+              "Financial: bank papers, tax and contract documents",
+              "Children and school: enrollment, certificates, permission forms",
+            ],
+          },
+          {
+            h2: "What it looks like in practice",
+            body: "Once documents sit under the right person, getting to one is quick: open the family member, open the document — two taps instead of scrolling a shared pile. When someone asks for your daughter's insurance or your father's ID, you go straight to their profile instead of digging through everything.",
+          },
+          {
+            h2: "Add expiry dates and reminders for each person",
+            body: "As you file each document, set its \"valid until\" date so the deadline lives with the document. doki.help can then send an email reminder before it expires, for every member of the family — the reminder comes 30, 15, 7 and 1 day before that date. Because dates are attached per person, a child's passport and a parent's visa are each tracked on their own, so no one's deadline slips. Renewal rules differ by country, so check the official requirements for anything time-sensitive.",
+          },
+          {
+            h2: "How doki.help helps",
+            body: "doki.help keeps each family member's documents in private storage, transferred over HTTPS, with access isolated to your family at the database level (row-level security) — only your family sees them. Roles let you decide who is owner, editor or viewer, so the whole family can share one organized vault while you control who can change what. Two-factor login is available, and optional AI field recognition is off by default. It's in beta and doesn't replace your original documents.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "How should I organize documents by family member?",
+            a: "Give each person their own profile — partner, children, parents — and keep their documents together under their name. Within each profile, a few simple categories like identity, medical and travel make anything easy to find.",
+          },
+          {
+            q: "What categories should I set up for each person?",
+            a: "Identity, medical, travel, financial, and children or school documents cover most families. You don't need every category for everyone — use the ones that fit each person.",
+          },
+          {
+            q: "How quickly can I find one person's document?",
+            a: "Open the family member, then open the document — two taps, instead of scrolling a shared pile. Sorting by person means you always know where to look.",
+          },
+          {
+            q: "How will I be reminded before a document expires?",
+            a: "By email, before the \"valid until\" date you set on each document. The reminder comes 30, 15, 7 and 1 day before that date, for every member of the family.",
+          },
+          {
+            q: "Can the whole family use the same vault?",
+            a: "Yes. Roles let you decide who is owner, editor or viewer, so everyone can reach the documents while you control who can change what. Access is isolated to your family at the database level (row-level security).",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "По членам семьи",
+        title: "Как разложить документы по членам семьи",
+        metaDescription:
+          "Спокойный способ разложить документы семьи по членам: профиль на каждого, простые категории, быстрый доступ в два касания, сроки и напоминания.",
+        h1: "Как разложить документы по членам семьи",
+        intro:
+          "Спокойный и практичный способ разложить документы семьи по членам — профиль на каждого, несколько простых категорий, а также сроки с напоминаниями, чтобы документ любого находился в два касания, а не поиском.",
+        ctaPrimary: "Разложите документы по членам семьи",
+        sections: [
+          {
+            h2: "Почему общая куча документов не работает",
+            body: "Когда все документы лежат в одной папке — паспорта, страховки и справки всех вперемешку — чтобы найти одно, приходится прокручивать чужое. Куча растёт, имена сливаются, и когда вдруг нужен документ конкретного человека, вы ищете сразу по бумагам всей семьи. Разбор по членам семьи превращает этот поиск в одно очевидное место, куда смотреть.",
+          },
+          {
+            h2: "Принцип: профиль на каждого члена семьи",
+            body: "Вместо одной большой кучи дайте каждому своё место — супругу, детям, родителям — и держите их документы вместе под их именем. Паспорт ребёнка лежит с бумагами ребёнка, виза родителя — с родительскими. Вопрос «куда мы это положили?» отпадает, потому что ответ всегда один: под тем человеком, кому документ принадлежит.",
+          },
+          {
+            h2: "Какие категории завести на каждого",
+            body: "Внутри профиля каждого человека несколько простых категорий помогают быстро ориентироваться. Все сразу не нужны — используйте те, что подходят.",
+            bullets: [
+              "Удостоверяющие: паспорта, ID, свидетельства о рождении",
+              "Медицинские: страховки, прививки, ключевые заключения",
+              "Для поездок: визы, разрешения, билеты и брони",
+              "Финансовые: банковские бумаги, налоги, договоры",
+              "Детские и школьные: зачисление, справки, согласия",
+            ],
+          },
+          {
+            h2: "Как это выглядит на практике",
+            body: "Когда документы лежат под нужным человеком, добраться до одного — быстро: откройте члена семьи, откройте документ — два касания вместо прокрутки общей кучи. Когда просят страховку дочери или ID отца, вы идёте прямо в их профиль, а не роетесь во всём подряд.",
+          },
+          {
+            h2: "Как подключить сроки и напоминания к документам каждого",
+            body: "Добавляя документ, укажите дату «действует до», чтобы срок жил вместе с документом. Тогда doki.help пришлёт email-напоминание до окончания срока — для каждого члена семьи. Напоминание приходит за 30, 15, 7 и 1 день до этой даты. Так как даты привязаны к каждому человеку, паспорт ребёнка и виза родителя отслеживаются каждый сам по себе, и ничей срок не теряется. Правила продления зависят от страны, поэтому по всему срочному проверяйте официальные требования.",
+          },
+          {
+            h2: "Как помогает doki.help",
+            body: "doki.help хранит документы каждого члена семьи в приватном хранилище, передаёт их по HTTPS, а доступ изолирован вашей семьёй на уровне базы (RLS) — документы видит только ваша семья. Роли позволяют решить, кто owner, editor или viewer, так что вся семья пользуется одним упорядоченным сейфом, а вы решаете, кто что может менять. Доступен двухфакторный вход, а опциональное AI-распознавание полей по умолчанию выключено. Сервис в стадии beta и не заменяет оригиналы документов.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Как разложить документы по членам семьи?",
+            a: "Дайте каждому свой профиль — супругу, детям, родителям — и держите их документы вместе под их именем. Внутри профиля несколько простых категорий (удостоверяющие, медицинские, для поездок) помогают всё легко найти.",
+          },
+          {
+            q: "Какие категории завести на каждого человека?",
+            a: "Удостоверяющие, медицинские, для поездок, финансовые и детские или школьные документы покрывают большинство семей. Все сразу не нужны — используйте те, что подходят каждому.",
+          },
+          {
+            q: "Как быстро найти документ одного человека?",
+            a: "Откройте члена семьи, затем откройте документ — два касания вместо прокрутки общей кучи. Разбор по людям означает, что вы всегда знаете, где смотреть.",
+          },
+          {
+            q: "Как придёт напоминание до окончания срока?",
+            a: "На email, до указанной вами даты «действует до» на каждом документе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты, для каждого члена семьи.",
+          },
+          {
+            q: "Может ли вся семья пользоваться одним сейфом?",
+            a: "Да. Роли позволяют решить, кто owner, editor или viewer, так что доступ есть у всех, а вы решаете, кто что может менять. Доступ изолирован вашей семьёй на уровне базы (RLS).",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Per anggota keluarga",
+        title: "Menata Dokumen Keluarga per Anggota",
+        metaDescription:
+          "Cara tenang menata dokumen keluarga per anggota: profil untuk tiap orang, kategori sederhana, akses dua ketukan, masa berlaku, dan pengingat.",
+        h1: "Cara menata dokumen per anggota keluarga",
+        intro:
+          "Cara tenang dan praktis menata dokumen keluarga per anggota — profil untuk tiap orang, beberapa kategori sederhana, serta masa berlaku dengan pengingat, agar menemukan dokumen siapa pun cukup dua ketukan, bukan pencarian.",
+        ctaPrimary: "Tata dokumen per anggota keluarga",
+        sections: [
+          {
+            h2: "Mengapa satu tumpukan dokumen bersama tidak berhasil",
+            body: "Saat semua dokumen masuk ke satu folder — paspor, asuransi, dan sertifikat semua orang bercampur — menemukan satu berkas berarti menggulir melewati milik orang lain. Tumpukan membesar, nama-nama mengabur, dan saat dokumen orang tertentu tiba-tiba diperlukan, Anda mencari di seluruh berkas keluarga sekaligus. Memilah per orang mengubah pencarian itu jadi satu tempat yang jelas untuk dilihat.",
+          },
+          {
+            h2: "Prinsipnya: satu profil untuk tiap anggota keluarga",
+            body: "Alih-alih satu tumpukan besar, beri tiap orang ruangnya sendiri — pasangan, anak, orang tua — dan simpan dokumennya bersama di bawah namanya. Paspor anak ada bersama berkas anak, visa orang tua bersama milik orang tua. Pertanyaan \"di mana kita menaruhnya?\" hilang, karena jawabannya selalu sama: di bawah orang pemiliknya.",
+          },
+          {
+            h2: "Kategori apa yang perlu dibuat untuk tiap orang",
+            body: "Di dalam profil tiap orang, beberapa kategori sederhana membuatnya mudah dipindai. Anda tidak perlu semuanya untuk semua orang — pakai yang sesuai.",
+            bullets: [
+              "Identitas: paspor, KTP, akta kelahiran",
+              "Medis: asuransi, catatan vaksinasi, hasil penting",
+              "Perjalanan: visa, izin, tiket dan pemesanan",
+              "Keuangan: berkas bank, pajak, dan kontrak",
+              "Anak dan sekolah: pendaftaran, sertifikat, surat izin",
+            ],
+          },
+          {
+            h2: "Seperti apa dalam praktik",
+            body: "Setelah dokumen berada di bawah orang yang tepat, membukanya jadi cepat: buka anggota keluarga, buka dokumen — dua ketukan, bukan menggulir tumpukan bersama. Saat seseorang meminta asuransi putri Anda atau KTP ayah Anda, Anda langsung ke profil mereka, bukan mengaduk semuanya.",
+          },
+          {
+            h2: "Menghubungkan masa berlaku dan pengingat ke dokumen tiap orang",
+            body: "Saat menyimpan tiap dokumen, isi tanggal \"berlaku sampai\" agar tenggat menempel pada dokumen. Lalu doki.help bisa mengirim pengingat email sebelum kedaluwarsa — untuk tiap anggota keluarga. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu. Karena tanggal terpasang per orang, paspor anak dan visa orang tua terpantau masing-masing, jadi tidak ada tenggat yang lolos. Aturan perpanjangan berbeda tiap negara, jadi periksa persyaratan resmi untuk hal yang terikat waktu.",
+          },
+          {
+            h2: "Bagaimana doki.help membantu",
+            body: "doki.help menyimpan dokumen tiap anggota keluarga di penyimpanan privat, ditransfer lewat HTTPS, dengan akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security) — hanya keluarga Anda yang melihatnya. Peran menentukan siapa owner, editor, atau viewer, sehingga seluruh keluarga memakai satu brankas yang tertata sementara Anda mengatur siapa yang boleh mengubah apa. Login dua faktor tersedia, dan pengenalan bidang AI opsional mati secara default. Masih beta dan tidak menggantikan dokumen asli Anda.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Bagaimana cara menata dokumen per anggota keluarga?",
+            a: "Beri tiap orang profilnya sendiri — pasangan, anak, orang tua — dan simpan dokumennya bersama di bawah namanya. Di dalam profil, beberapa kategori sederhana seperti identitas, medis, dan perjalanan membuat semuanya mudah ditemukan.",
+          },
+          {
+            q: "Kategori apa yang perlu dibuat untuk tiap orang?",
+            a: "Identitas, medis, perjalanan, keuangan, serta dokumen anak atau sekolah mencakup sebagian besar keluarga. Anda tidak perlu tiap kategori untuk semua orang — pakai yang sesuai untuk masing-masing.",
+          },
+          {
+            q: "Seberapa cepat menemukan dokumen satu orang?",
+            a: "Buka anggota keluarga, lalu buka dokumen — dua ketukan, bukan menggulir tumpukan bersama. Memilah per orang berarti Anda selalu tahu di mana mencari.",
+          },
+          {
+            q: "Bagaimana pengingat sebelum dokumen kedaluwarsa datang?",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu, untuk tiap anggota keluarga.",
+          },
+          {
+            q: "Bisakah seluruh keluarga memakai brankas yang sama?",
+            a: "Bisa. Peran menentukan siapa owner, editor, atau viewer, jadi semua orang bisa mengakses dokumen sementara Anda mengatur siapa yang boleh mengubah apa. Akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security).",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Aʼzolar boʻyicha",
+        title: "Hujjatlarni oila aʼzolari boʻyicha saralash",
+        metaDescription:
+          "Oila hujjatlarini aʼzolar boʻyicha saralashning sokin yoʻli: har kishiga profil, oddiy toifalar, ikki teginishda kirish, muddat va eslatmalar.",
+        h1: "Hujjatlarni oila aʼzolari boʻyicha qanday saralash",
+        intro:
+          "Oila hujjatlarini aʼzolar boʻyicha saralashning sokin va amaliy yoʻli — har kishiga profil, bir necha oddiy toifa, muddatlar va eslatmalar bilan, shunda istalgan kishining hujjati qidiruvsiz, ikki teginishda topiladi.",
+        ctaPrimary: "Hujjatlarni oila aʼzolari boʻyicha saralang",
+        sections: [
+          {
+            h2: "Nega umumiy hujjatlar uyumi ishlamaydi",
+            body: "Barcha hujjatlar bitta papkaga tushganda — hammaning pasportlari, sugʻurtalari va guvohnomalari aralash — bittasini topish uchun oʻzganikini varaqlashga toʻgʻri keladi. Uyum oʻsadi, ismlar chalkashadi, va muayyan kishining hujjati kerak boʻlib qolsa, siz butun oilaning qogʻozlarini birdan qidirasiz. Aʼzolar boʻyicha ajratish bu qidiruvni qaraydigan bitta aniq joyga aylantiradi.",
+          },
+          {
+            h2: "Tamoyil: har bir oila aʼzosiga profil",
+            body: "Bitta katta uyum oʻrniga har kishiga oʻz joyini bering — turmush oʻrtogʻingiz, bolalar, ota-onangiz — va ularning hujjatlarini oʻz nomi ostida birga saqlang. Bolaning pasporti bolaning qogʻozlari bilan, ota-onaning vizasi ota-onaniki bilan yotadi. \"Buni qayerga qoʻygandik?\" degan savol yoʻqoladi, chunki javob doim bitta: hujjat kimniki boʻlsa, oʻsha kishi ostida.",
+          },
+          {
+            h2: "Har kishiga qanday toifalar ochish kerak",
+            body: "Har kishining profili ichida bir necha oddiy toifa koʻz yugurtirishni osonlashtiradi. Hammasi har kimga kerak emas — mosini ishlating.",
+            bullets: [
+              "Guvohnoma: pasportlar, ID, tugʻilganlik guvohnomalari",
+              "Tibbiy: sugʻurta, emlash yozuvlari, muhim xulosalar",
+              "Safar uchun: vizalar, ruxsatnomalar, chiptalar va bronlar",
+              "Moliyaviy: bank qogʻozlari, soliq, shartnomalar",
+              "Bolalar va maktab: qabul, sertifikatlar, rozilik xatlari",
+            ],
+          },
+          {
+            h2: "Bu amalda qanday koʻrinadi",
+            body: "Hujjatlar kerakli kishi ostida yotganda, bittasiga yetish tez: oila aʼzosini oching, hujjatni oching — umumiy uyumni varaqlash oʻrniga ikki teginish. Kimdir qizingizning sugʻurtasini yoki otangizning IDsini soʻrasa, hammasini titkilamay, toʻgʻri ularning profiliga borasiz.",
+          },
+          {
+            h2: "Har kimning hujjatiga muddat va eslatma ulash",
+            body: "Har bir hujjatni saqlayotib \"amal qiladi\" sanasini kiriting, shunda muddat hujjat bilan birga yashaydi. Keyin doki.help muddat tugashidan oldin email eslatma yuborishi mumkin — har bir oila aʼzosi uchun. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi. Sanalar har kishiga bogʻlangani uchun bolaning pasporti va ota-onaning vizasi alohida kuzatiladi, hech kimning muddati oʻtib ketmaydi. Yangilash qoidalari davlatga qarab farq qiladi, shuning uchun muddatga bogʻliq har narsa boʻyicha rasmiy talablarni tekshiring.",
+          },
+          {
+            h2: "doki.help qanday yordam beradi",
+            body: "doki.help har bir oila aʼzosining hujjatlarini maxfiy omborda saqlaydi, HTTPS orqali uzatadi, kirish esa maʼlumotlar bazasi darajasida oilangiz bilan izolyatsiya qilingan (RLS) — hujjatlarni faqat oilangiz koʻradi. Rollar kim owner, editor yoki viewer ekanini belgilaydi, shunda butun oila bitta tartibli seyfdan foydalanadi, siz esa kim nimani oʻzgartira olishini nazorat qilasiz. Ikki bosqichli kirish mavjud, ixtiyoriy AI maydon tanish esa sukut boʻyicha oʻchiq. U beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Hujjatlarni oila aʼzolari boʻyicha qanday saralash kerak?",
+            a: "Har kishiga oʻz profilini bering — turmush oʻrtogʻingiz, bolalar, ota-onangiz — va hujjatlarini oʻz nomi ostida birga saqlang. Profil ichida guvohnoma, tibbiy, safar kabi bir necha oddiy toifa hammasini oson topishga yordam beradi.",
+          },
+          {
+            q: "Har kishiga qanday toifalar ochish kerak?",
+            a: "Guvohnoma, tibbiy, safar, moliyaviy va bolalar yoki maktab hujjatlari koʻp oilalarni qamrab oladi. Hammasi har kimga kerak emas — har kishi uchun mosini ishlating.",
+          },
+          {
+            q: "Bir kishining hujjatini qanchalik tez topsa boʻladi?",
+            a: "Oila aʼzosini oching, keyin hujjatni oching — umumiy uyumni varaqlash oʻrniga ikki teginish. Aʼzolar boʻyicha ajratish qayerdan qidirishni doim bilishingizni anglatadi.",
+          },
+          {
+            q: "Muddat tugashidan oldin eslatma qanday keladi?",
+            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi, har bir oila aʼzosi uchun.",
+          },
+          {
+            q: "Butun oila bitta seyfdan foydalana oladimi?",
+            a: "Ha. Rollar kim owner, editor yoki viewer ekanini belgilaydi, shunda hamma hujjatlarga kira oladi, siz esa kim nimani oʻzgartira olishini nazorat qilasiz. Kirish maʼlumotlar bazasi darajasida oilangiz bilan izolyatsiya qilingan (RLS).",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/family-document-organizer", label: "Family document organizer" },
+        { href: "/family-document-vault", label: "Family document vault" },
+      ],
+      ru: [
+        { href: "/family-document-organizer", label: "Организатор документов семьи" },
+        { href: "/family-document-vault", label: "Семейный сейф документов" },
+      ],
+      id: [
+        { href: "/family-document-organizer", label: "Penata dokumen keluarga" },
+        { href: "/family-document-vault", label: "Brankas dokumen keluarga" },
+      ],
+      uz: [
+        { href: "/family-document-organizer", label: "Oila hujjatlari tartibchisi" },
+        { href: "/family-document-vault", label: "Oilaviy hujjatlar seyfi" },
+      ],
+    },
+  },
+  "visa-expiry-how-to-renew-in-time": {
+    slug: "visa-expiry-how-to-renew-in-time",
+    emoji: "🛂",
+    locales: {
+      en: {
+        navLabel: "Visa expiry",
+        title: "Visa Expiry: How to Renew in Time",
+        metaDescription:
+          "A calm way to stay ahead of a visa deadline: which dates matter, how early to start renewing, how to track the whole family's visas and get reminders in time.",
+        h1: "Visa expiry: how not to miss the renewal",
+        intro:
+          "A practical way to stay ahead of a visa deadline — which dates actually matter, how early to start renewing, and how to keep every family member's visa in one place so a deadline reaches you early instead of by surprise.",
+        ctaPrimary: "Add your visa and set up a reminder",
+        sections: [
+          {
+            h2: "Why a visa deadline is so easy to miss",
+            body: "A visa is easy to lose track of because nothing reminds you it's running out. You get it once, travel or settle in, and the date quietly sits in a passport or an email. There's no natural moment that says the deadline is coming — so it surfaces at the worst time, often when a trip or an appointment is already booked. The fix isn't to memorise the date; it's to store it with the document and let a reminder reach you early.",
+          },
+          {
+            h2: "Which dates actually matter",
+            body: "A visa usually involves more than one date, and it's worth knowing which ones you're tracking. The rules behind them depend on the country, so treat this as what to look for, not a universal answer.",
+            bullets: [
+              "The visa's own expiry date — when the visa itself stops being valid",
+              "Your permitted length of stay — sometimes shorter than the visa's validity",
+              "Passport requirements — many countries want your passport valid well beyond your stay",
+            ],
+          },
+          {
+            h2: "How early to start renewing",
+            body: "There's no single right answer — how early you should start depends entirely on the country and the type of visa. Some renewals are quick; others take weeks or months and need appointments, documents and waiting. As a rule of thumb, give yourself enough time to gather papers, apply and wait for processing without pressure. doki.help doesn't renew visas or give immigration advice, so for timelines and steps always check the official requirements of the destination country.",
+          },
+          {
+            h2: "Keeping the whole family's visas in one place",
+            body: "One visa is manageable; a family's visas, each with its own date and country, are not. Give each member their own profile — partner, children, parents — and store each visa with its \"valid until\" date. That way a child's visa and a parent's permit are tracked side by side, and no one's deadline slips through because it lived only in someone's memory or a single passport.",
+          },
+          {
+            h2: "How reminders help you not miss the date",
+            body: "Once a visa has a \"valid until\" date attached, doki.help can send an email reminder before it expires — 30, 15, 7 and 1 day before that date, for every member of the family. That early warning gives you room to start a renewal on your own schedule, rather than discovering the deadline the week you need to travel.",
+          },
+          {
+            h2: "How doki.help helps",
+            body: "doki.help keeps your family's visas and documents in private storage, transferred over HTTPS, with access isolated to your family at the database level (row-level security) — only your family sees them. Roles let you decide who is owner, editor or viewer, two-factor login is available, and optional AI field recognition is off by default. It's in beta and doesn't replace your original documents — doki.help reminds and stores, it doesn't renew visas or give immigration advice.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "How early should I start renewing a visa?",
+            a: "It depends entirely on the country and the visa type — some renewals take a day, others weeks or months. Give yourself a wide margin to gather documents, apply and wait, and check the official requirements of the destination country for exact timelines.",
+          },
+          {
+            q: "Which visa dates should I keep track of?",
+            a: "The visa's own expiry date, your permitted length of stay (sometimes shorter than the visa), and your passport's validity, since many countries require it to stay valid beyond your stay. The exact rules depend on the country.",
+          },
+          {
+            q: "How will I be reminded before a visa expires?",
+            a: "By email, before the \"valid until\" date you set on the visa. The reminder comes 30, 15, 7 and 1 day before that date, for every member of the family.",
+          },
+          {
+            q: "Can I track visas for everyone in the family?",
+            a: "Yes. Give each family member their own profile and store each visa with its expiry date, so a child's visa and a parent's permit are tracked side by side in one place.",
+          },
+          {
+            q: "Does doki.help renew visas or give immigration advice?",
+            a: "No. doki.help reminds and stores — it keeps your visas in one place and warns you before a deadline. For renewal steps and rules, check the official requirements of the destination country.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Срок действия визы",
+        title: "Срок действия визы: как продлить вовремя",
+        metaDescription:
+          "Спокойный способ не пропустить срок визы: какие даты важны, за сколько начинать продление, как вести визы всей семьи и получать напоминания вовремя.",
+        h1: "Срок действия визы: как не пропустить продление",
+        intro:
+          "Практичный способ держать срок визы под контролем — какие даты действительно важны, за сколько начинать продление и как хранить визы всех членов семьи в одном месте, чтобы срок находил вас заранее, а не заставал врасплох.",
+        ctaPrimary: "Добавьте визу и настройте напоминание",
+        sections: [
+          {
+            h2: "Почему срок визы легко упустить",
+            body: "Срок визы легко упустить, потому что о нём ничего не напоминает. Вы получаете её один раз, уезжаете или обустраиваетесь, и дата тихо лежит в паспорте или в почте. Нет естественного момента, который подсказал бы, что срок близко, — и он всплывает в самый неподходящий момент, часто когда поездка или запись уже назначены. Решение — не заучивать дату, а хранить её вместе с документом и получать напоминание заранее.",
+          },
+          {
+            h2: "Какие даты действительно важны",
+            body: "У визы обычно не одна дата, и стоит понимать, за какими из них вы следите. Правила за ними зависят от страны, поэтому воспринимайте это как список того, что проверить, а не как универсальный ответ.",
+            bullets: [
+              "Дата окончания визы — когда сама виза перестаёт действовать",
+              "Разрешённый срок пребывания — иногда короче срока действия визы",
+              "Требования к паспорту — многие страны хотят, чтобы паспорт действовал ещё долго после пребывания",
+            ],
+          },
+          {
+            h2: "За сколько начинать продление",
+            body: "Единого правильного ответа нет — за сколько начинать, полностью зависит от страны и типа визы. Одни продления быстрые, другие занимают недели или месяцы и требуют записи, документов и ожидания. Общий ориентир — оставить время собрать бумаги, подать заявление и дождаться оформления без спешки. doki.help не продлевает визы и не даёт миграционных консультаций, поэтому по срокам и шагам всегда сверяйтесь с официальными требованиями страны назначения.",
+          },
+          {
+            h2: "Как вести визы всей семьи в одном месте",
+            body: "Одну визу держать под контролем можно, визы всей семьи — каждая со своей датой и страной — уже нет. Заведите профиль на каждого — супруга, детей, родителей — и храните каждую визу с датой «действует до». Так виза ребёнка и разрешение родителя отслеживаются рядом, и ничей срок не теряется из-за того, что он жил только в чьей-то памяти или в одном паспорте.",
+          },
+          {
+            h2: "Как напоминания помогают не пропустить дату",
+            body: "Когда к визе привязана дата «действует до», doki.help может прислать email-напоминание до окончания срока — за 30, 15, 7 и 1 день до этой даты, для каждого члена семьи. Такое раннее предупреждение даёт время начать продление в удобном темпе, а не обнаружить срок на той неделе, когда нужно ехать.",
+          },
+          {
+            h2: "Как помогает doki.help",
+            body: "doki.help хранит визы и документы семьи в приватном хранилище, передаёт их по HTTPS, а доступ изолирован вашей семьёй на уровне базы (RLS) — документы видит только ваша семья. Роли позволяют решить, кто owner, editor или viewer, доступен двухфакторный вход, а опциональное AI-распознавание полей по умолчанию выключено. Сервис в стадии beta и не заменяет оригиналы документов — doki.help напоминает и хранит, но не продлевает визы и не даёт миграционных консультаций.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "За сколько начинать продление визы?",
+            a: "Это полностью зависит от страны и типа визы — одни продления занимают день, другие недели или месяцы. Берите широкий запас, чтобы собрать документы, подать и подождать, и сверяйтесь с официальными требованиями страны назначения по точным срокам.",
+          },
+          {
+            q: "Какие даты визы держать под контролем?",
+            a: "Дату окончания самой визы, разрешённый срок пребывания (иногда короче срока визы) и срок действия паспорта, ведь многие страны требуют, чтобы он действовал ещё после пребывания. Конкретные правила зависят от страны.",
+          },
+          {
+            q: "Как придёт напоминание до окончания визы?",
+            a: "На email, до указанной вами даты «действует до» на визе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты, для каждого члена семьи.",
+          },
+          {
+            q: "Можно вести визы для всех членов семьи?",
+            a: "Да. Заведите профиль на каждого члена семьи и храните каждую визу с датой окончания, чтобы виза ребёнка и разрешение родителя отслеживались рядом, в одном месте.",
+          },
+          {
+            q: "doki.help продлевает визы или даёт миграционные консультации?",
+            a: "Нет. doki.help напоминает и хранит — держит визы в одном месте и предупреждает до срока. По шагам и правилам продления сверяйтесь с официальными требованиями страны назначения.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Masa berlaku visa",
+        title: "Masa Berlaku Visa: Cara Perpanjang Tepat Waktu",
+        metaDescription:
+          "Cara tenang agar tidak melewatkan tenggat visa: tanggal mana yang penting, kapan mulai memperpanjang, memantau visa seluruh keluarga, dan pengingat tepat waktu.",
+        h1: "Masa berlaku visa: agar tidak melewatkan perpanjangan",
+        intro:
+          "Cara praktis untuk tetap unggul dari tenggat visa — tanggal mana yang benar-benar penting, seberapa awal mulai memperpanjang, dan cara menyimpan visa tiap anggota keluarga di satu tempat agar tenggat menghampiri Anda lebih awal, bukan mengejutkan.",
+        ctaPrimary: "Tambahkan visa dan atur pengingat",
+        sections: [
+          {
+            h2: "Mengapa tenggat visa mudah terlewat",
+            body: "Visa mudah lepas dari pantauan karena tidak ada yang mengingatkan bahwa ia hampir habis. Anda mendapatkannya sekali, lalu bepergian atau menetap, dan tanggalnya diam-diam tersimpan di paspor atau email. Tidak ada momen alami yang mengatakan tenggat sudah dekat — jadi ia muncul di saat paling tidak tepat, sering ketika perjalanan atau janji sudah dipesan. Solusinya bukan menghafal tanggal, melainkan menyimpannya bersama dokumen dan membiarkan pengingat menghampiri Anda lebih awal.",
+          },
+          {
+            h2: "Tanggal mana yang benar-benar penting",
+            body: "Visa biasanya melibatkan lebih dari satu tanggal, dan penting mengetahui yang mana yang Anda pantau. Aturan di baliknya bergantung pada negara, jadi anggap ini sebagai daftar hal yang perlu diperiksa, bukan jawaban universal.",
+            bullets: [
+              "Tanggal habis visa itu sendiri — kapan visa berhenti berlaku",
+              "Lama tinggal yang diizinkan — kadang lebih pendek dari masa berlaku visa",
+              "Persyaratan paspor — banyak negara ingin paspor berlaku jauh melewati masa tinggal",
+            ],
+          },
+          {
+            h2: "Seberapa awal mulai memperpanjang",
+            body: "Tidak ada satu jawaban yang benar — seberapa awal Anda mulai sepenuhnya bergantung pada negara dan jenis visa. Sebagian perpanjangan cepat; lainnya makan waktu berminggu-minggu atau berbulan-bulan dan perlu janji temu, dokumen, serta menunggu. Sebagai patokan, beri diri Anda cukup waktu untuk menyiapkan berkas, mengajukan, dan menunggu proses tanpa tekanan. doki.help tidak memperpanjang visa atau memberi nasihat imigrasi, jadi untuk jadwal dan langkahnya selalu periksa persyaratan resmi negara tujuan.",
+          },
+          {
+            h2: "Menyimpan visa seluruh keluarga di satu tempat",
+            body: "Satu visa masih bisa dikelola; visa satu keluarga, masing-masing dengan tanggal dan negaranya sendiri, tidak. Beri tiap anggota profilnya sendiri — pasangan, anak, orang tua — dan simpan tiap visa dengan tanggal \"berlaku sampai\". Dengan begitu visa anak dan izin orang tua terpantau berdampingan, dan tidak ada tenggat yang lolos hanya karena ia tersimpan di ingatan satu orang atau di satu paspor.",
+          },
+          {
+            h2: "Bagaimana pengingat membantu Anda tidak melewatkan tanggal",
+            body: "Setelah visa punya tanggal \"berlaku sampai\", doki.help bisa mengirim pengingat email sebelum kedaluwarsa — 30, 15, 7, dan 1 hari sebelum tanggal itu, untuk tiap anggota keluarga. Peringatan dini itu memberi ruang untuk mulai memperpanjang sesuai jadwal Anda, bukan menemukan tenggat di minggu Anda harus bepergian.",
+          },
+          {
+            h2: "Bagaimana doki.help membantu",
+            body: "doki.help menyimpan visa dan dokumen keluarga di penyimpanan privat, ditransfer lewat HTTPS, dengan akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security) — hanya keluarga Anda yang melihatnya. Peran menentukan siapa owner, editor, atau viewer, login dua faktor tersedia, dan pengenalan bidang AI opsional mati secara default. Masih beta dan tidak menggantikan dokumen asli Anda — doki.help mengingatkan dan menyimpan, bukan memperpanjang visa atau memberi nasihat imigrasi.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Seberapa awal sebaiknya mulai memperpanjang visa?",
+            a: "Itu sepenuhnya bergantung pada negara dan jenis visa — sebagian perpanjangan selesai sehari, lainnya berminggu-minggu atau berbulan-bulan. Beri margin lebar untuk menyiapkan dokumen, mengajukan, dan menunggu, serta periksa persyaratan resmi negara tujuan untuk jadwal pastinya.",
+          },
+          {
+            q: "Tanggal visa mana yang harus dipantau?",
+            a: "Tanggal habis visa itu sendiri, lama tinggal yang diizinkan (kadang lebih pendek dari visa), dan masa berlaku paspor, karena banyak negara mensyaratkannya tetap berlaku setelah masa tinggal. Aturan pastinya bergantung pada negara.",
+          },
+          {
+            q: "Bagaimana pengingat sebelum visa habis datang?",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada visa. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu, untuk tiap anggota keluarga.",
+          },
+          {
+            q: "Bisakah memantau visa untuk semua anggota keluarga?",
+            a: "Bisa. Beri tiap anggota keluarga profilnya sendiri dan simpan tiap visa dengan tanggal habisnya, agar visa anak dan izin orang tua terpantau berdampingan di satu tempat.",
+          },
+          {
+            q: "Apakah doki.help memperpanjang visa atau memberi nasihat imigrasi?",
+            a: "Tidak. doki.help mengingatkan dan menyimpan — menjaga visa di satu tempat dan memperingatkan sebelum tenggat. Untuk langkah dan aturan perpanjangan, periksa persyaratan resmi negara tujuan.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Viza muddati",
+        title: "Viza muddati: qanday oʻz vaqtida yangilash",
+        metaDescription:
+          "Viza muddatini oʻtkazib yubormaslikning sokin yoʻli: qaysi sanalar muhim, yangilashni qachon boshlash, butun oila vizalarini yuritish va oʻz vaqtida eslatma olish.",
+        h1: "Viza muddati: yangilashni qanday oʻtkazib yubormaslik",
+        intro:
+          "Viza muddatini nazoratda ushlashning amaliy yoʻli — qaysi sanalar chindan muhim, yangilashni qancha oldin boshlash va har bir oila aʼzosining vizasini bitta joyda saqlash, toki muddat sizni kutilmaganda emas, oldindan topsin.",
+        ctaPrimary: "Vizani qoʻshing va eslatma sozlang",
+        sections: [
+          {
+            h2: "Nega viza muddatini oson oʻtkazib yuboriladi",
+            body: "Viza muddatini oson oʻtkazib yuboriladi, chunki uning tugayotgani haqida hech narsa eslatmaydi. Uni bir marta olasiz, safarga chiqasiz yoki joylashib olasiz, sana esa jimgina pasportda yoki pochtada yotadi. Muddat yaqinlashganini aytadigan tabiiy lahza yoʻq — shu bois u eng nomaqbul paytda, koʻpincha safar yoki qabul allaqachon belgilangan chogʻda paydo boʻladi. Yechim — sanani yodlash emas, uni hujjat bilan birga saqlash va eslatma sizni oldindan topishiga yoʻl qoʻyish.",
+          },
+          {
+            h2: "Qaysi sanalar chindan muhim",
+            body: "Vizada odatda bittadan koʻp sana boʻladi, va qaysilarini kuzatayotganingizni bilish muhim. Ular ortidagi qoidalar davlatga bogʻliq, shuning uchun buni universal javob emas, tekshirish kerak boʻlgan roʻyxat sifatida qabul qiling.",
+            bullets: [
+              "Vizaning oʻz tugash sanasi — viza qachon amal qilishdan toʻxtaydi",
+              "Ruxsat etilgan turish muddati — baʼzida viza amal muddatidan qisqaroq",
+              "Pasportga talablar — koʻp davlatlar pasport turishdan keyin ham uzoq amal qilishini xohlaydi",
+            ],
+          },
+          {
+            h2: "Yangilashni qancha oldin boshlash kerak",
+            body: "Yagona toʻgʻri javob yoʻq — qancha oldin boshlash butunlay davlat va viza turiga bogʻliq. Baʼzi yangilashlar tez, boshqalari haftalar yoki oylar oladi va qabul, hujjatlar hamda kutishni talab qiladi. Umumiy moʻljal — qogʻozlarni yigʻish, ariza berish va rasmiylashtirishni shoshilmasdan kutish uchun yetarli vaqt qoldiring. doki.help vizalarni yangilamaydi va migratsiya boʻyicha maslahat bermaydi, shuning uchun muddatlar va qadamlar boʻyicha har doim borar davlatning rasmiy talablarini tekshiring.",
+          },
+          {
+            h2: "Butun oila vizalarini bitta joyda yuritish",
+            body: "Bitta vizani nazoratda tutsa boʻladi, oilaning vizalarini — har biri oʻz sanasi va davlati bilan — endi yoʻq. Har bir aʼzoga oʻz profilini bering — turmush oʻrtogʻingiz, bolalar, ota-onangiz — va har bir vizani \"amal qiladi\" sanasi bilan saqlang. Shunda bolaning vizasi va ota-onaning ruxsatnomasi yonma-yon kuzatiladi, hech kimning muddati faqat birovning xotirasida yoki bitta pasportda yashagani uchun oʻtib ketmaydi.",
+          },
+          {
+            h2: "Eslatmalar sanani oʻtkazib yubormaslikka qanday yordam beradi",
+            body: "Vizaga \"amal qiladi\" sanasi biriktirilgach, doki.help muddat tugashidan oldin email eslatma yuborishi mumkin — shu sanadan 30, 15, 7 va 1 kun oldin, har bir oila aʼzosi uchun. Bu erta ogohlantirish yangilashni oʻz sur'atingizda boshlashga imkon beradi, muddatni esa aynan safar kerak boʻlgan haftada bilib qolmaysiz.",
+          },
+          {
+            h2: "doki.help qanday yordam beradi",
+            body: "doki.help oila vizalari va hujjatlarini maxfiy omborda saqlaydi, HTTPS orqali uzatadi, kirish esa maʼlumotlar bazasi darajasida oilangiz bilan izolyatsiya qilingan (RLS) — hujjatlarni faqat oilangiz koʻradi. Rollar kim owner, editor yoki viewer ekanini belgilaydi, ikki bosqichli kirish mavjud, ixtiyoriy AI maydon tanish esa sukut boʻyicha oʻchiq. U beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi — doki.help eslatadi va saqlaydi, vizalarni yangilamaydi va migratsiya boʻyicha maslahat bermaydi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Vizani yangilashni qancha oldin boshlash kerak?",
+            a: "Bu butunlay davlat va viza turiga bogʻliq — baʼzi yangilashlar bir kunda, boshqalari haftalar yoki oylar oladi. Hujjat yigʻish, ariza berish va kutish uchun keng zaxira oling, aniq muddatlar boʻyicha borar davlatning rasmiy talablarini tekshiring.",
+          },
+          {
+            q: "Vizaning qaysi sanalarini kuzatish kerak?",
+            a: "Vizaning oʻz tugash sanasini, ruxsat etilgan turish muddatini (baʼzida vizadan qisqaroq) va pasport amal muddatini, chunki koʻp davlatlar u turishdan keyin ham amal qilishini talab qiladi. Aniq qoidalar davlatga bogʻliq.",
+          },
+          {
+            q: "Viza tugashidan oldin eslatma qanday keladi?",
+            a: "Email orqali, vizada siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi, har bir oila aʼzosi uchun.",
+          },
+          {
+            q: "Vizalarni oilaning barcha aʼzolari uchun yuritsa boʻladimi?",
+            a: "Ha. Har bir oila aʼzosiga oʻz profilini bering va har bir vizani tugash sanasi bilan saqlang, shunda bolaning vizasi va ota-onaning ruxsatnomasi bitta joyda yonma-yon kuzatiladi.",
+          },
+          {
+            q: "doki.help vizalarni yangiladimi yoki migratsiya maslahatini beradimi?",
+            a: "Yoʻq. doki.help eslatadi va saqlaydi — vizalarni bitta joyda ushlaydi va muddatdan oldin ogohlantiradi. Yangilash qadamlari va qoidalari boʻyicha borar davlatning rasmiy talablarini tekshiring.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/visa-expiry-reminder", label: "Visa expiry reminders" },
+        { href: "/document-expiry-reminder", label: "Document expiry reminders" },
+      ],
+      ru: [
+        { href: "/visa-expiry-reminder", label: "Напоминания о сроке визы" },
+        { href: "/document-expiry-reminder", label: "Напоминания о сроках документов" },
+      ],
+      id: [
+        { href: "/visa-expiry-reminder", label: "Pengingat masa berlaku visa" },
+        { href: "/document-expiry-reminder", label: "Pengingat masa berlaku dokumen" },
+      ],
+      uz: [
+        { href: "/visa-expiry-reminder", label: "Viza muddati eslatmalari" },
+        { href: "/document-expiry-reminder", label: "Hujjat muddati eslatmalari" },
+      ],
+    },
+  },
+  "how-to-track-insurance-policy-expiry": {
+    slug: "how-to-track-insurance-policy-expiry",
+    emoji: "🛡️",
+    locales: {
+      en: {
+        navLabel: "Track insurance expiry",
+        title: "How to Track Insurance Policy Expiry Dates",
+        metaDescription:
+          "A calm way to keep every family insurance policy renewed on time: which policies to watch, which dates to record, and how reminders reach you early.",
+        h1: "How to track insurance policy expiry for the whole family",
+        intro:
+          "A practical way to keep track of when your family's insurance policies lapse — which ones to watch, which dates to record, and how a reminder can reach you before a policy quietly expires.",
+        ctaPrimary: "Add a policy and set a reminder",
+        sections: [
+          {
+            h2: "Why policies expire without you noticing",
+            body: "Insurance rarely tells you it's about to lapse. A car policy runs for a year, health cover renews on a date you set once and forgot, travel insurance ends the day after you land, home cover sits in an email you can't find. There's no natural nudge before the coverage stops — so a gap in protection often surfaces exactly when you need to claim. The fix isn't to memorise dates; it's to store each policy's end date with the policy and let a reminder reach you early.",
+          },
+          {
+            h2: "Which policies are worth keeping an eye on",
+            body: "Not every document expires, but insurance almost always renews on a fixed date — and these are the ones worth tracking first.",
+            bullets: [
+              "Car and motor insurance",
+              "Health and medical insurance",
+              "Travel insurance for upcoming trips",
+              "Home and property insurance",
+              "Life or accident cover with a renewal date",
+            ],
+          },
+          {
+            h2: "Which dates to record",
+            body: "For each policy, note where coverage starts, when it ends, and the renewal date if it differs from the end date. The date that matters most for reminders is the \"valid until\" date — the point after which you're no longer covered. Some policies renew automatically and some don't, and grace periods vary, so check your policy documents or your insurer for how yours works.",
+          },
+          {
+            h2: "Gathering the whole family's policies in one place",
+            body: "One person's policies are manageable; a family's spread across cars, health, travel and home are not. Give each member their own profile — partner, children, parents — and store each policy with its \"valid until\" date, so a child's health cover and a parent's car policy are tracked side by side instead of scattered across inboxes and glove boxes.",
+          },
+          {
+            h2: "How reminders help you renew on time",
+            body: "Once a policy has an end date attached, doki.help can send an email reminder before it lapses — for every member of the family. The reminder comes 30, 15, 7 and 1 day before that date, so you have time to compare options, contact your insurer and renew calmly rather than discovering a gap after it's opened.",
+          },
+          {
+            h2: "How doki.help helps",
+            body: "doki.help keeps your family's policies in private storage, transferred over HTTPS, with access isolated to your family at the database level (row-level security) — only your family sees them. Add each policy's \"valid until\" date and reminders arrive 30, 15, 7 and 1 day before. Roles decide who is owner, editor or viewer, two-factor login is available, and optional AI field recognition is off by default. doki.help stores your policies and reminds you about dates — it doesn't sell or advise on insurance. It's in beta and doesn't replace your original documents.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "Which insurance policies should I track first?",
+            a: "Start with the ones that renew on a fixed date and are costly to let lapse: car, health, travel and home insurance, plus any life or accident cover with a renewal date. Add the rest over time.",
+          },
+          {
+            q: "Which dates should I record for a policy?",
+            a: "The start of coverage, the end date, and the renewal date if it differs. The end or \"valid until\" date is what reminders are based on. Check your policy documents or insurer for how renewal and any grace period work.",
+          },
+          {
+            q: "How will I be reminded before a policy expires?",
+            a: "By email, before the \"valid until\" date you set on each policy. The reminder comes 30, 15, 7 and 1 day before that date.",
+          },
+          {
+            q: "Can I track policies for everyone in the family?",
+            a: "Yes. Give each family member their own profile and store each policy with its expiry date, so a child's health cover and a parent's car policy are tracked side by side in one place.",
+          },
+          {
+            q: "Does doki.help sell or recommend insurance?",
+            a: "No. doki.help stores your policies and reminds you about their dates. It doesn't sell insurance or advise which policy to choose — for that, speak to your insurer.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Сроки страховок",
+        title: "Как отслеживать срок действия страхового полиса",
+        metaDescription:
+          "Спокойный способ продлевать страховки семьи вовремя: какие полисы контролировать, какие даты фиксировать и как напоминания приходят заранее.",
+        h1: "Как отслеживать срок действия страхового полиса для всей семьи",
+        intro:
+          "Практичный способ следить за тем, когда истекают страховки семьи — какие держать под контролем, какие даты фиксировать и как напоминание может прийти до того, как полис тихо закончится.",
+        ctaPrimary: "Добавьте полис и настройте напоминание",
+        sections: [
+          {
+            h2: "Почему полисы истекают незаметно",
+            body: "Страховка редко предупреждает, что скоро закончится. Полис на авто действует год, медицинская страховка продлевается в дату, которую вы задали однажды и забыли, туристическая заканчивается на следующий день после возвращения, страховка жилья лежит в письме, которое не найти. Естественного сигнала перед окончанием покрытия нет — поэтому пробел в защите всплывает именно тогда, когда нужно обращаться за выплатой. Решение — не заучивать даты, а хранить дату окончания вместе с полисом и получать напоминание заранее.",
+          },
+          {
+            h2: "Какие полисы стоит держать под контролем",
+            body: "Истекает не всё, но страховки почти всегда продлеваются в фиксированную дату — и именно их стоит отслеживать в первую очередь.",
+            bullets: [
+              "Автострахование (ОСАГО, КАСКО и подобные)",
+              "Медицинская страховка",
+              "Туристическая страховка на предстоящие поездки",
+              "Страхование жилья и имущества",
+              "Страхование жизни или от несчастного случая с датой продления",
+            ],
+          },
+          {
+            h2: "Какие даты фиксировать",
+            body: "По каждому полису отметьте, когда начинается покрытие, когда оно заканчивается и дату продления, если она отличается от даты окончания. Для напоминаний важнее всего дата «действует до» — момент, после которого покрытия уже нет. Одни полисы продлеваются автоматически, другие нет, а льготные периоды различаются, поэтому уточняйте в документах полиса или у страховщика, как устроен ваш.",
+          },
+          {
+            h2: "Как собрать полисы всей семьи в одном месте",
+            body: "Полисы одного человека держать под контролем ещё можно, но страховки семьи — по авто, медицине, поездкам и жилью — уже нет. Заведите профиль на каждого — супруга, детей, родителей — и храните каждый полис с датой «действует до», чтобы медицинская страховка ребёнка и автополис родителя отслеживались рядом, а не были разбросаны по почте и бардачку.",
+          },
+          {
+            h2: "Как напоминания помогают продлить вовремя",
+            body: "Когда к полису привязана дата окончания, doki.help может прислать email-напоминание до окончания срока — для каждого члена семьи. Напоминание приходит за 30, 15, 7 и 1 день до этой даты, чтобы вы успели сравнить варианты, связаться со страховщиком и спокойно продлить, а не обнаружить пробел уже после того, как он появился.",
+          },
+          {
+            h2: "Как помогает doki.help",
+            body: "doki.help хранит полисы семьи в приватном хранилище, передаёт их по HTTPS, а доступ изолирован вашей семьёй на уровне базы (RLS) — полисы видит только ваша семья. Укажите дату «действует до» по каждому полису — и напоминания придут за 30, 15, 7 и 1 день. Роли определяют, кто owner, editor или viewer, доступен двухфакторный вход, а опциональное AI-распознавание полей по умолчанию выключено. doki.help хранит полисы и напоминает о датах — он не продаёт страховки и не консультирует по ним. Сервис в стадии beta и не заменяет оригиналы документов.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Какие страховки отслеживать в первую очередь?",
+            a: "Те, что продлеваются в фиксированную дату и дорого обходятся, если их упустить: авто, медицинская, туристическая, страховка жилья, а также страхование жизни или от несчастного случая с датой продления. Остальное добавляйте постепенно.",
+          },
+          {
+            q: "Какие даты фиксировать по полису?",
+            a: "Начало покрытия, дату окончания и дату продления, если она отличается. Напоминания строятся на дате окончания, «действует до». Как работает продление и льготный период, уточняйте в документах полиса или у страховщика.",
+          },
+          {
+            q: "Как придёт напоминание до окончания полиса?",
+            a: "На email, до указанной вами даты «действует до» на каждом полисе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
+          },
+          {
+            q: "Можно отслеживать полисы для всех членов семьи?",
+            a: "Да. Заведите профиль на каждого члена семьи и храните каждый полис с датой окончания, чтобы медицинская страховка ребёнка и автополис родителя отслеживались рядом, в одном месте.",
+          },
+          {
+            q: "doki.help продаёт страховки или советует, какую выбрать?",
+            a: "Нет. doki.help хранит ваши полисы и напоминает об их датах. Он не продаёт страховки и не советует, какой полис выбрать — с этим обращайтесь к страховщику.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Pantau masa asuransi",
+        title: "Cara Memantau Masa Berlaku Polis Asuransi",
+        metaDescription:
+          "Cara tenang memperpanjang asuransi keluarga tepat waktu: polis mana yang dipantau, tanggal apa yang dicatat, dan bagaimana pengingat datang lebih awal.",
+        h1: "Cara memantau masa berlaku polis asuransi untuk seluruh keluarga",
+        intro:
+          "Cara praktis memantau kapan asuransi keluarga berakhir — mana yang perlu diawasi, tanggal apa yang dicatat, dan bagaimana pengingat bisa datang sebelum polis diam-diam habis.",
+        ctaPrimary: "Tambahkan polis dan atur pengingat",
+        sections: [
+          {
+            h2: "Mengapa polis habis tanpa Anda sadari",
+            body: "Asuransi jarang memberi tahu bahwa ia hampir habis. Polis mobil berlaku setahun, asuransi kesehatan diperpanjang pada tanggal yang Anda tetapkan sekali lalu lupa, asuransi perjalanan berakhir sehari setelah Anda mendarat, asuransi rumah tersimpan di email yang sulit ditemukan. Tidak ada dorongan alami sebelum perlindungan berhenti — jadi celah proteksi sering muncul tepat saat Anda perlu mengajukan klaim. Solusinya bukan menghafal tanggal, melainkan menyimpan tanggal berakhir bersama polisnya dan membiarkan pengingat menghampiri Anda lebih awal.",
+          },
+          {
+            h2: "Polis mana yang layak diawasi",
+            body: "Tidak semua dokumen kedaluwarsa, tetapi asuransi hampir selalu diperpanjang pada tanggal tetap — dan inilah yang layak dipantau lebih dulu.",
+            bullets: [
+              "Asuransi mobil dan kendaraan",
+              "Asuransi kesehatan dan medis",
+              "Asuransi perjalanan untuk perjalanan mendatang",
+              "Asuransi rumah dan properti",
+              "Asuransi jiwa atau kecelakaan dengan tanggal perpanjangan",
+            ],
+          },
+          {
+            h2: "Tanggal apa yang perlu dicatat",
+            body: "Untuk tiap polis, catat kapan perlindungan mulai, kapan berakhir, dan tanggal perpanjangan bila berbeda dari tanggal berakhir. Tanggal yang paling penting untuk pengingat adalah tanggal \"berlaku sampai\" — titik setelahnya Anda tidak lagi terlindungi. Sebagian polis diperpanjang otomatis dan sebagian tidak, dan masa tenggangnya berbeda-beda, jadi periksa dokumen polis Anda atau tanyakan ke penanggung tentang cara kerja milik Anda.",
+          },
+          {
+            h2: "Mengumpulkan polis seluruh keluarga di satu tempat",
+            body: "Polis satu orang masih bisa dikelola; polis satu keluarga yang tersebar di mobil, kesehatan, perjalanan, dan rumah tidak. Beri tiap anggota profilnya sendiri — pasangan, anak, orang tua — dan simpan tiap polis dengan tanggal \"berlaku sampai\", agar asuransi kesehatan anak dan polis mobil orang tua terpantau berdampingan, bukan tersebar di email dan laci mobil.",
+          },
+          {
+            h2: "Bagaimana pengingat membantu memperpanjang tepat waktu",
+            body: "Setelah polis punya tanggal berakhir, doki.help bisa mengirim pengingat email sebelum ia habis — untuk tiap anggota keluarga. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu, sehingga Anda punya waktu membandingkan pilihan, menghubungi penanggung, dan memperpanjang dengan tenang, bukan menemukan celah setelah ia terbuka.",
+          },
+          {
+            h2: "Bagaimana doki.help membantu",
+            body: "doki.help menyimpan polis keluarga di penyimpanan privat, ditransfer lewat HTTPS, dengan akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security) — hanya keluarga Anda yang melihatnya. Isi tanggal \"berlaku sampai\" tiap polis dan pengingat datang 30, 15, 7, dan 1 hari sebelumnya. Peran menentukan siapa owner, editor, atau viewer, login dua faktor tersedia, dan pengenalan bidang AI opsional mati secara default. doki.help menyimpan polis dan mengingatkan tanggalnya — ia tidak menjual atau menasihati soal asuransi. Masih beta dan tidak menggantikan dokumen asli Anda.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Polis asuransi mana yang harus dipantau lebih dulu?",
+            a: "Mulai dari yang diperpanjang pada tanggal tetap dan mahal bila dibiarkan habis: asuransi mobil, kesehatan, perjalanan, dan rumah, ditambah asuransi jiwa atau kecelakaan dengan tanggal perpanjangan. Tambahkan sisanya seiring waktu.",
+          },
+          {
+            q: "Tanggal apa yang perlu dicatat untuk sebuah polis?",
+            a: "Awal perlindungan, tanggal berakhir, dan tanggal perpanjangan bila berbeda. Pengingat didasarkan pada tanggal berakhir, \"berlaku sampai\". Periksa dokumen polis atau penanggung untuk cara kerja perpanjangan dan masa tenggang.",
+          },
+          {
+            q: "Bagaimana pengingat sebelum polis habis datang?",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap polis. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
+          },
+          {
+            q: "Bisakah memantau polis untuk semua anggota keluarga?",
+            a: "Bisa. Beri tiap anggota keluarga profilnya sendiri dan simpan tiap polis dengan tanggal berakhirnya, agar asuransi kesehatan anak dan polis mobil orang tua terpantau berdampingan di satu tempat.",
+          },
+          {
+            q: "Apakah doki.help menjual atau merekomendasikan asuransi?",
+            a: "Tidak. doki.help menyimpan polis Anda dan mengingatkan tanggalnya. Ia tidak menjual asuransi atau menyarankan polis mana yang dipilih — untuk itu, hubungi penanggung Anda.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Sugʻurta muddatlari",
+        title: "Sugʻurta polisi muddatini qanday kuzatish",
+        metaDescription:
+          "Oila sugʻurtalarini oʻz vaqtida yangilashning sokin yoʻli: qaysi polislarni nazorat qilish, qaysi sanalarni belgilash va eslatmalar qanday oldindan keladi.",
+        h1: "Butun oila uchun sugʻurta polisi muddatini qanday kuzatish",
+        intro:
+          "Oila sugʻurtalari qachon tugashini kuzatishning amaliy yoʻli — qaysilarini nazorat qilish, qaysi sanalarni belgilash va polis jimgina tugashidan oldin eslatma qanday kelishi mumkinligi.",
+        ctaPrimary: "Polis qoʻshing va eslatma sozlang",
+        sections: [
+          {
+            h2: "Nega polislar sezilmay tugaydi",
+            body: "Sugʻurta tugashidan oldin kamdan-kam ogohlantiradi. Avto polisi bir yil amal qiladi, tibbiy sugʻurta siz bir marta qoʻyib unutgan sanada yangilanadi, turistik sugʻurta qaytganingizdan keyingi kuni tugaydi, uy sugʻurtasi topib boʻlmaydigan xatda yotadi. Himoya toʻxtashidan oldin tabiiy ishora yoʻq — shu bois himoyadagi boʻshliq aynan daʼvo qilish kerak boʻlgan paytda paydo boʻladi. Yechim — sanalarni yodlash emas, tugash sanasini polis bilan birga saqlash va eslatma sizni oldindan topishiga yoʻl qoʻyish.",
+          },
+          {
+            h2: "Qaysi polislarni nazorat qilgan maʼqul",
+            body: "Hammasi tugamaydi, lekin sugʻurtalar deyarli doim belgilangan sanada yangilanadi — va aynan ularni birinchi navbatda kuzatish kerak.",
+            bullets: [
+              "Avto va transport sugʻurtasi",
+              "Tibbiy sugʻurta",
+              "Yaqin safarlar uchun turistik sugʻurta",
+              "Uy va mulk sugʻurtasi",
+              "Yangilash sanasi bor hayot yoki baxtsiz hodisa sugʻurtasi",
+            ],
+          },
+          {
+            h2: "Qaysi sanalarni belgilash kerak",
+            body: "Har bir polis boʻyicha qoplama qachon boshlanishini, qachon tugashini va tugash sanasidan farq qilsa, yangilash sanasini belgilang. Eslatmalar uchun eng muhimi — \"amal qiladi\" sanasi, undan keyin siz endi himoyalanmaysiz. Baʼzi polislar avtomatik yangilanadi, baʼzilari yoʻq, imtiyozli muddatlar ham farq qiladi, shuning uchun sizniki qanday ishlashini polis hujjatlaringizdan yoki sugʻurtachidan aniqlang.",
+          },
+          {
+            h2: "Butun oila polislarini bitta joyga yigʻish",
+            body: "Bir kishining polislarini nazorat qilsa boʻladi, oilaning avto, tibbiyot, safar va uy boʻyicha tarqoq sugʻurtalarini esa — yoʻq. Har bir aʼzoga oʻz profilini bering — turmush oʻrtogʻingiz, bolalar, ota-onangiz — va har bir polisni \"amal qiladi\" sanasi bilan saqlang, shunda bolaning tibbiy sugʻurtasi va ota-onaning avto polisi pochta va bardachokda tarqalib emas, yonma-yon kuzatiladi.",
+          },
+          {
+            h2: "Eslatmalar oʻz vaqtida yangilashga qanday yordam beradi",
+            body: "Polisga tugash sanasi biriktirilgach, doki.help u tugashidan oldin email eslatma yuborishi mumkin — har bir oila aʼzosi uchun. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi, shunda variantlarni solishtirish, sugʻurtachi bilan bogʻlanish va boʻshliq ochilgandan keyin bilib qolish emas, xotirjam yangilashga vaqtingiz boʻladi.",
+          },
+          {
+            h2: "doki.help qanday yordam beradi",
+            body: "doki.help oila polislarini maxfiy omborda saqlaydi, HTTPS orqali uzatadi, kirish esa maʼlumotlar bazasi darajasida oilangiz bilan izolyatsiya qilingan (RLS) — polislarni faqat oilangiz koʻradi. Har bir polisga \"amal qiladi\" sanasini kiriting — eslatmalar 30, 15, 7 va 1 kun oldin keladi. Rollar kim owner, editor yoki viewer ekanini belgilaydi, ikki bosqichli kirish mavjud, ixtiyoriy AI maydon tanish esa sukut boʻyicha oʻchiq. doki.help polislarni saqlaydi va sanalar haqida eslatadi — u sugʻurta sotmaydi va u boʻyicha maslahat bermaydi. U beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Qaysi sugʻurta polislarini birinchi navbatda kuzatish kerak?",
+            a: "Belgilangan sanada yangilanadigan va tugab ketsa qimmatga tushadiganlaridan boshlang: avto, tibbiy, turistik va uy sugʻurtasi, shuningdek yangilash sanasi bor hayot yoki baxtsiz hodisa sugʻurtasi. Qolganini asta qoʻshib boring.",
+          },
+          {
+            q: "Polis boʻyicha qaysi sanalarni belgilash kerak?",
+            a: "Qoplamaning boshlanishi, tugash sanasi va farq qilsa, yangilash sanasi. Eslatmalar tugash, \"amal qiladi\" sanasiga asoslanadi. Yangilash va imtiyozli muddat qanday ishlashini polis hujjatlaringizdan yoki sugʻurtachidan tekshiring.",
+          },
+          {
+            q: "Polis tugashidan oldin eslatma qanday keladi?",
+            a: "Email orqali, har bir polisda siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
+          },
+          {
+            q: "Polislarni oilaning barcha aʼzolari uchun kuzatsa boʻladimi?",
+            a: "Ha. Har bir oila aʼzosiga oʻz profilini bering va har bir polisni tugash sanasi bilan saqlang, shunda bolaning tibbiy sugʻurtasi va ota-onaning avto polisi bitta joyda yonma-yon kuzatiladi.",
+          },
+          {
+            q: "doki.help sugʻurta sotadimi yoki tavsiya qiladimi?",
+            a: "Yoʻq. doki.help polislaringizni saqlaydi va ularning sanalari haqida eslatadi. U sugʻurta sotmaydi va qaysi polisni tanlashni maslahat bermaydi — buning uchun sugʻurtachingizga murojaat qiling.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/document-expiry-reminder", label: "Document expiry reminders" },
+        { href: "/medical-document-organizer", label: "Medical document organizer" },
+      ],
+      ru: [
+        { href: "/document-expiry-reminder", label: "Напоминания о сроках документов" },
+        { href: "/medical-document-organizer", label: "Организация медицинских документов" },
+      ],
+      id: [
+        { href: "/document-expiry-reminder", label: "Pengingat masa berlaku dokumen" },
+        { href: "/medical-document-organizer", label: "Penata dokumen medis" },
+      ],
+      uz: [
+        { href: "/document-expiry-reminder", label: "Hujjat muddati eslatmalari" },
+        { href: "/medical-document-organizer", label: "Tibbiy hujjatlarni tartiblash" },
+      ],
+    },
+  },
+  "how-to-store-elderly-parents-documents": {
+    slug: "how-to-store-elderly-parents-documents",
+    emoji: "👵",
+    locales: {
+      en: {
+        navLabel: "Elderly parents' documents",
+        title: "How to Store Elderly Parents' Documents Safely",
+        metaDescription:
+          "A calm, respectful way to keep your elderly parents' documents in one place: what to gather, sort by person, add expiry dates, set reminders and share gently.",
+        h1: "How to store elderly parents' documents",
+        intro:
+          "A warm, practical way to bring your parents' important documents into one place — sorted by person, with expiry dates and reminders — so that in the moment they're needed, the whole family can find them calmly.",
+        ctaPrimary: "Gather your parents' documents in one place",
+        sections: [
+          {
+            h2: "Why this matters",
+            body: "As parents get older, their documents matter more and are often harder to locate — a policy in a drawer, an ID in a handbag, a prescription slip nobody can find. The moment you need one is rarely a calm one: a clinic visit, a renewal, a form to fill in. Having everything in one place means that when a document is suddenly needed, any family member can reach it without turning the house upside down.",
+          },
+          {
+            h2: "Which documents to gather",
+            body: "You don't need to collect everything at once. Start with the documents your parents reach for most, and add the rest gradually.",
+            bullets: [
+              "Identity: passports, ID cards, residence permits, pension documents",
+              "Medical and prescriptions: insurance, prescription lists, key reports and referrals",
+              "Insurance: health, life, home and other policies",
+              "Important contacts: doctors, insurers, a trusted relative or neighbour",
+              "Financial: bank details, pension and benefit paperwork, key contracts",
+            ],
+          },
+          {
+            h2: "Organize by person and category",
+            body: "Give each parent their own profile and keep their documents together, sorted into simple categories like identity, medical and financial. That way you always know where to look, mother's papers don't get mixed up with father's, and anyone helping out can find the right document quickly. In doki.help you can organize documents by family member from the start.",
+          },
+          {
+            h2: "Give loved ones access, gently",
+            body: "Caring for parents is usually a shared effort, so more than one person may need to reach these documents. Roles let you decide that carefully: an owner or editor can add and update documents, while a viewer can only look. So a sibling who helps with appointments can see what's needed without being able to change anything, and you stay in control of who does what.",
+          },
+          {
+            h2: "Mark deadlines and get reminders",
+            body: "Policies, IDs and permits quietly expire, and for older parents a lapsed document can mean a missed appointment or a gap in cover. As you add each one, set its \"valid until\" date so the deadline lives with the document. doki.help then sends an email reminder 30, 15, 7 and 1 day before that date. Renewal rules differ by country and document, so for anything official, check the official requirements or consult a professional.",
+          },
+          {
+            h2: "How doki.help helps",
+            body: "doki.help keeps your parents' documents in private storage, transferred over HTTPS, with access isolated to your family at the database level (row-level security) — only your family sees them. Roles let you decide who can view and who can edit, two-factor login is available, and when you need to send one document to a clinic or relative you can share a link that expires and can be revoked at any time, with a view limit and a log of every open — the recipient needs no account. Optional AI field recognition is off by default. It's in beta and doesn't replace your original documents.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "Which of my parents' documents should I store first?",
+            a: "Start with the ones they reach for most and the ones that are stressful to replace: identity documents, medical and insurance papers, prescription lists and important contacts. Add financial and other paperwork over time.",
+          },
+          {
+            q: "Can my siblings help without being able to change things?",
+            a: "Yes. Roles let you decide who can view and who can edit. A sibling can be a viewer who only looks at what's needed, while you or another editor keep the ability to add and update documents.",
+          },
+          {
+            q: "How will I be reminded before a policy or ID expires?",
+            a: "By email, before the \"valid until\" date you set on each document. The reminder comes 30, 15, 7 and 1 day before that date.",
+          },
+          {
+            q: "Can I share one document with a clinic without giving access to everything?",
+            a: "Yes. Share a single document with a link that expires and can be revoked at any time, with a view limit and a log of every open — the rest stays private and the recipient needs no account.",
+          },
+          {
+            q: "Is it safe to keep my parents' documents here?",
+            a: "Files are kept in private storage over HTTPS, access is isolated to your family at the database level (row-level security), and two-factor login is available. doki.help is in beta and doesn't replace the originals.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Документы родителей",
+        title: "Как хранить документы пожилых родителей",
+        metaDescription:
+          "Спокойный и бережный способ собрать документы пожилых родителей в одном месте: что собрать, разделить по людям, добавить сроки, напоминания и аккуратный доступ.",
+        h1: "Как хранить документы пожилых родителей",
+        intro:
+          "Тёплый и практичный способ собрать важные документы родителей в одном месте — по людям, со сроками и напоминаниями, — чтобы в нужный момент они были под рукой у всей семьи.",
+        ctaPrimary: "Соберите документы родителей в одном месте",
+        sections: [
+          {
+            h2: "Почему это важно",
+            body: "С возрастом документы родителей значат всё больше, а найти их всё труднее: полис в ящике, удостоверение в сумке, рецепт, который никак не отыскать. Момент, когда документ вдруг нужен, редко бывает спокойным — приём у врача, продление, очередная форма. Когда всё в одном месте, любой член семьи может найти нужное без спешки, не переворачивая весь дом.",
+          },
+          {
+            h2: "Какие документы собрать",
+            body: "Собирать всё сразу не нужно. Начните с тех документов, к которым родители обращаются чаще всего, а остальные добавляйте постепенно.",
+            bullets: [
+              "Удостоверяющие: паспорта, удостоверения, ВНЖ, пенсионные документы",
+              "Медицинские и рецепты: страховки, списки рецептов, ключевые заключения и направления",
+              "Страховки: медицинская, жизни, жильё и другие полисы",
+              "Важные контакты: врачи, страховые, доверенный родственник или сосед",
+              "Финансовые: банковские данные, пенсия и льготы, ключевые договоры",
+            ],
+          },
+          {
+            h2: "Как организовать по человеку и категории",
+            body: "Заведите профиль на каждого родителя и держите их документы вместе, разложив по простым категориям — удостоверяющие, медицинские, финансовые. Так вы всегда знаете, где искать, документы мамы не путаются с документами папы, а тот, кто помогает, быстро находит нужное. В doki.help документы можно организовать по членам семьи с самого начала.",
+          },
+          {
+            h2: "Как аккуратно дать доступ близким",
+            body: "Забота о родителях обычно общая, поэтому доступ к документам может быть нужен нескольким людям. Роли позволяют решить это аккуратно: owner или editor может добавлять и менять документы, а viewer — только смотреть. Так сестра или брат, кто помогает с приёмами, видит нужное, но ничего не может изменить, а вы контролируете, кто чем занимается.",
+          },
+          {
+            h2: "Как отметить сроки и получать напоминания",
+            body: "Полисы, удостоверения и разрешения тихо истекают, а для пожилых родителей просроченный документ — это пропущенный приём или пробел в страховке. Добавляя документ, укажите дату «действует до», чтобы срок жил вместе с ним. doki.help пришлёт email-напоминание за 30, 15, 7 и 1 день до этой даты. Правила продления зависят от страны и документа, поэтому по всему официальному проверяйте официальные требования или обратитесь к специалисту.",
+          },
+          {
+            h2: "Как помогает doki.help",
+            body: "doki.help хранит документы родителей в приватном хранилище, передаёт их по HTTPS, а доступ изолирован вашей семьёй на уровне базы (RLS) — документы видит только ваша семья. Роли позволяют решить, кто может смотреть, а кто редактировать, доступен двухфакторный вход, а когда нужно отправить один документ в клинику или родственнику, можно поделиться ссылкой, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом открытий — получателю не нужен аккаунт. Опциональное AI-распознавание полей по умолчанию выключено. Сервис в стадии beta и не заменяет оригиналы документов.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Какие документы родителей хранить в первую очередь?",
+            a: "Начните с тех, к которым они обращаются чаще всего, и тех, что сложно восстановить: удостоверяющие, медицинские и страховые бумаги, списки рецептов и важные контакты. Финансовое и остальное добавляйте постепенно.",
+          },
+          {
+            q: "Могут ли братья и сёстры помогать, но не иметь права менять?",
+            a: "Да. Роли позволяют решить, кто может смотреть, а кто редактировать. Родственник может быть viewer и только смотреть нужное, а вы или другой editor сохраняете возможность добавлять и менять документы.",
+          },
+          {
+            q: "Как придёт напоминание до окончания срока полиса или удостоверения?",
+            a: "На email, до указанной вами даты «действует до» на каждом документе. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
+          },
+          {
+            q: "Можно поделиться одним документом с клиникой, не открывая доступ ко всему?",
+            a: "Да. Поделитесь одним документом по ссылке, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом открытий — остальное остаётся приватным, а получателю не нужен аккаунт.",
+          },
+          {
+            q: "Безопасно ли хранить документы родителей здесь?",
+            a: "Файлы хранятся в приватном хранилище по HTTPS, доступ изолирован вашей семьёй на уровне базы (RLS), доступен двухфакторный вход. doki.help в стадии beta и не заменяет оригиналы.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Dokumen orang tua",
+        title: "Cara Menyimpan Dokumen Orang Tua Lansia",
+        metaDescription:
+          "Cara tenang dan penuh hormat menyimpan dokumen orang tua lansia di satu tempat: apa yang dikumpulkan, pilah per orang, tambah masa berlaku, pengingat, akses rapi.",
+        h1: "Cara menyimpan dokumen orang tua lansia",
+        intro:
+          "Cara yang hangat dan praktis untuk mengumpulkan dokumen penting orang tua di satu tempat — dipilah per orang, dengan masa berlaku dan pengingat — agar saat dibutuhkan, seluruh keluarga bisa menemukannya dengan tenang.",
+        ctaPrimary: "Kumpulkan dokumen orang tua di satu tempat",
+        sections: [
+          {
+            h2: "Mengapa ini penting",
+            body: "Seiring usia, dokumen orang tua makin penting dan sering makin sulit ditemukan — polis di laci, KTP di tas, resep yang tak ketemu. Saat sebuah dokumen tiba-tiba diperlukan, situasinya jarang tenang: kunjungan ke klinik, perpanjangan, formulir yang harus diisi. Dengan semuanya di satu tempat, anggota keluarga mana pun bisa menjangkaunya tanpa harus membongkar seisi rumah.",
+          },
+          {
+            h2: "Dokumen apa yang perlu dikumpulkan",
+            body: "Anda tidak perlu mengumpulkan semuanya sekaligus. Mulai dari dokumen yang paling sering dipakai orang tua, lalu tambahkan sisanya sedikit demi sedikit.",
+            bullets: [
+              "Identitas: paspor, KTP, izin tinggal, dokumen pensiun",
+              "Medis dan resep: asuransi, daftar resep, hasil dan rujukan penting",
+              "Asuransi: kesehatan, jiwa, rumah, dan polis lainnya",
+              "Kontak penting: dokter, pihak asuransi, kerabat atau tetangga tepercaya",
+              "Keuangan: data bank, dokumen pensiun dan tunjangan, kontrak penting",
+            ],
+          },
+          {
+            h2: "Tata per orang dan kategori",
+            body: "Beri tiap orang tua profilnya sendiri dan simpan dokumennya bersama, dipilah ke kategori sederhana seperti identitas, medis, dan keuangan. Dengan begitu Anda selalu tahu di mana mencari, berkas ibu tidak tercampur dengan berkas ayah, dan siapa pun yang membantu bisa cepat menemukannya. Di doki.help, dokumen bisa ditata per anggota keluarga sejak awal.",
+          },
+          {
+            h2: "Beri akses ke keluarga dengan rapi",
+            body: "Merawat orang tua biasanya kerja bersama, jadi lebih dari satu orang mungkin perlu menjangkau dokumen ini. Peran membuat Anda bisa mengaturnya dengan cermat: owner atau editor bisa menambah dan memperbarui dokumen, sedangkan viewer hanya bisa melihat. Jadi saudara yang membantu urusan janji temu bisa melihat yang diperlukan tanpa bisa mengubah apa pun, dan Anda tetap memegang kendali.",
+          },
+          {
+            h2: "Tandai tenggat dan dapatkan pengingat",
+            body: "Polis, KTP, dan izin diam-diam kedaluwarsa, dan bagi orang tua lansia dokumen yang lewat masa berlaku bisa berarti janji temu terlewat atau celah dalam perlindungan. Saat menambahkan tiap dokumen, isi tanggal \"berlaku sampai\" agar tenggatnya menempel padanya. doki.help lalu mengirim pengingat email 30, 15, 7, dan 1 hari sebelum tanggal itu. Aturan perpanjangan berbeda tiap negara dan dokumen, jadi untuk hal resmi, periksa persyaratan resmi atau konsultasikan dengan profesional.",
+          },
+          {
+            h2: "Bagaimana doki.help membantu",
+            body: "doki.help menyimpan dokumen orang tua di penyimpanan privat, ditransfer lewat HTTPS, dengan akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security) — hanya keluarga Anda yang melihatnya. Peran membuat Anda menentukan siapa yang bisa melihat dan siapa yang bisa mengedit, login dua faktor tersedia, dan saat perlu mengirim satu dokumen ke klinik atau kerabat, Anda bisa membagikan tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan — penerima tidak perlu akun. Pengenalan bidang AI opsional mati secara default. Masih beta dan tidak menggantikan dokumen asli Anda.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Dokumen orang tua mana yang disimpan lebih dulu?",
+            a: "Mulai dari yang paling sering dipakai dan yang sulit diganti: dokumen identitas, berkas medis dan asuransi, daftar resep, serta kontak penting. Tambahkan keuangan dan lainnya seiring waktu.",
+          },
+          {
+            q: "Bisakah saudara membantu tanpa bisa mengubah apa pun?",
+            a: "Bisa. Peran membuat Anda menentukan siapa yang bisa melihat dan siapa yang bisa mengedit. Saudara bisa jadi viewer yang hanya melihat yang diperlukan, sementara Anda atau editor lain tetap bisa menambah dan memperbarui dokumen.",
+          },
+          {
+            q: "Bagaimana pengingat sebelum polis atau KTP kedaluwarsa datang?",
+            a: "Lewat email, sebelum tanggal \"berlaku sampai\" yang Anda tetapkan pada tiap dokumen. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
+          },
+          {
+            q: "Bisakah berbagi satu dokumen ke klinik tanpa membuka akses ke semuanya?",
+            a: "Bisa. Bagikan satu dokumen lewat tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan — sisanya tetap privat dan penerima tidak perlu akun.",
+          },
+          {
+            q: "Apakah aman menyimpan dokumen orang tua di sini?",
+            a: "Berkas disimpan di penyimpanan privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security), dan login dua faktor tersedia. doki.help masih beta dan tidak menggantikan dokumen asli.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Ota-ona hujjatlari",
+        title: "Keksa ota-ona hujjatlarini qanday saqlash",
+        metaDescription:
+          "Keksa ota-ona hujjatlarini bitta joyda saqlashning sokin va hurmatli yoʻli: nimani yigʻish, kishilar boʻyicha ajratish, muddatlar, eslatmalar va ehtiyotkor kirish.",
+        h1: "Keksa ota-ona hujjatlarini qanday saqlash",
+        intro:
+          "Ota-onaning muhim hujjatlarini bitta joyga yigʻishning iliq va amaliy yoʻli — kishilar boʻyicha, muddat va eslatmalar bilan — toki kerak boʻlgan lahzada ular butun oila qoʻl ostida boʻlsin.",
+        ctaPrimary: "Ota-ona hujjatlarini bitta joyga yigʻing",
+        sections: [
+          {
+            h2: "Nega bu muhim",
+            body: "Yosh oʻtgani sari ota-onaning hujjatlari koʻproq ahamiyat kasb etadi va koʻpincha topish qiyinlashadi — tortmadagi polis, sumkadagi guvohnoma, hech topilmaydigan retsept. Hujjat birdan kerak boʻlgan lahza kamdan-kam sokin boʻladi: shifokor qabuli, yangilash, toʻldiriladigan ariza. Hammasi bitta joyda boʻlsa, oilaning istalgan aʼzosi butun uyni agʻdarmasdan kerakligini topa oladi.",
+          },
+          {
+            h2: "Qaysi hujjatlarni yigʻish kerak",
+            body: "Hammasini birdan yigʻish shart emas. Ota-ona eng koʻp murojaat qiladigan hujjatlardan boshlang, qolganini asta-sekin qoʻshib boring.",
+            bullets: [
+              "Guvohnoma: pasportlar, ID, yashash ruxsati, nafaqa hujjatlari",
+              "Tibbiy va retseptlar: sugʻurta, retsept roʻyxatlari, muhim xulosa va yoʻllanmalar",
+              "Sugʻurtalar: tibbiy, hayot, uy va boshqa polislar",
+              "Muhim kontaktlar: shifokorlar, sugʻurtachilar, ishonchli qarindosh yoki qoʻshni",
+              "Moliyaviy: bank maʼlumotlari, nafaqa va imtiyoz qogʻozlari, muhim shartnomalar",
+            ],
+          },
+          {
+            h2: "Kishi va toifa boʻyicha tartiblang",
+            body: "Har bir ota-onaga oʻz profilini bering va hujjatlarini birga saqlang, ularni guvohnoma, tibbiy, moliyaviy kabi sodda toifalarga ajrating. Shunda qayerdan qidirishni doim bilasiz, onaning qogʻozlari otanikiga aralashmaydi, yordam beradigan kishi kerakligini tez topadi. doki.help da hujjatlarni boshidanoq oila aʼzolari boʻyicha tartiblash mumkin.",
+          },
+          {
+            h2: "Yaqinlarga ehtiyotkorlik bilan kirish bering",
+            body: "Ota-onaga gʻamxoʻrlik odatda umumiy ish, shuning uchun bu hujjatlarga bir necha kishi kirishi kerak boʻlishi mumkin. Rollar buni ehtiyotkorlik bilan hal qilishga imkon beradi: owner yoki editor hujjatlarni qoʻsha va yangilay oladi, viewer esa faqat koʻra oladi. Shunday qilib, qabullarga yordam beradigan aka yoki opa kerakligini koʻradi, lekin hech narsani oʻzgartira olmaydi, siz esa kim nima qilishini nazorat qilib turasiz.",
+          },
+          {
+            h2: "Muddatlarni belgilang va eslatma oling",
+            body: "Polislar, guvohnomalar va ruxsatnomalar jimgina tugaydi, keksa ota-ona uchun esa muddati oʻtgan hujjat oʻtkazib yuborilgan qabul yoki sugʻurtadagi uzilish demakdir. Har bir hujjatni qoʻshayotib \"amal qiladi\" sanasini kiriting, shunda muddat u bilan birga yashaydi. doki.help shu sanadan 30, 15, 7 va 1 kun oldin email eslatma yuboradi. Yangilash qoidalari davlat va hujjatga qarab farq qiladi, shuning uchun rasmiy har narsa boʻyicha rasmiy talablarni tekshiring yoki mutaxassisga murojaat qiling.",
+          },
+          {
+            h2: "doki.help qanday yordam beradi",
+            body: "doki.help ota-ona hujjatlarini maxfiy omborda saqlaydi, HTTPS orqali uzatadi, kirish esa maʼlumotlar bazasi darajasida oilangiz bilan izolyatsiya qilingan (RLS) — hujjatlarni faqat oilangiz koʻradi. Rollar kim koʻra oladi va kim tahrirlay oladi degan qarorni sizga qoldiradi, ikki bosqichli kirish mavjud, bitta hujjatni klinikaga yoki qarindoshga yuborish kerak boʻlsa esa, muddati tugaydigan va istalgan vaqt bekor qilinadigan havola ulashishingiz mumkin, koʻrish chegarasi va har ochilish qaydi bilan — qabul qiluvchiga akkaunt kerak emas. Ixtiyoriy AI maydon tanish sukut boʻyicha oʻchiq. U beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Ota-onaning qaysi hujjatlarini birinchi saqlash kerak?",
+            a: "Ular eng koʻp murojaat qiladigan va tiklash mashaqqatli boʻlganlaridan boshlang: guvohnoma hujjatlari, tibbiy va sugʻurta qogʻozlari, retsept roʻyxatlari va muhim kontaktlar. Moliyaviy va qolganlarini asta qoʻshib boring.",
+          },
+          {
+            q: "Aka-uka va opa-singillar oʻzgartira olmasdan yordam bera oladimi?",
+            a: "Ha. Rollar kim koʻra oladi va kim tahrirlay oladi degan qarorni sizga qoldiradi. Qarindosh viewer boʻlib faqat kerakligini koʻra oladi, siz yoki boshqa editor esa hujjatlarni qoʻshish va yangilash imkonini saqlab qolasiz.",
+          },
+          {
+            q: "Polis yoki guvohnoma muddati tugashidan oldin eslatma qanday keladi?",
+            a: "Email orqali, har bir hujjatda siz belgilagan \"amal qiladi\" sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
+          },
+          {
+            q: "Bitta hujjatni hammasiga ruxsat bermay klinikaga ulashsa boʻladimi?",
+            a: "Ha. Bitta hujjatni muddati tugaydigan va istalgan vaqt bekor qilinadigan havola orqali ulashing, koʻrish chegarasi va har ochilish qaydi bilan — qolgani maxfiy qoladi, qabul qiluvchiga esa akkaunt kerak emas.",
+          },
+          {
+            q: "Ota-ona hujjatlarini bu yerda saqlash xavfsizmi?",
+            a: "Fayllar maxfiy omborda HTTPS orqali saqlanadi, kirish oilangiz darajasida izolyatsiya qilingan (RLS), ikki bosqichli kirish mavjud. doki.help beta bosqichida va asl hujjatlar oʻrnini bosmaydi.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/family-emergency-documents", label: "Family emergency documents" },
+        { href: "/medical-document-organizer", label: "Medical document organizer" },
+      ],
+      ru: [
+        { href: "/family-emergency-documents", label: "Документы семьи на экстренный случай" },
+        { href: "/medical-document-organizer", label: "Организатор медицинских документов" },
+      ],
+      id: [
+        { href: "/family-emergency-documents", label: "Dokumen darurat keluarga" },
+        { href: "/medical-document-organizer", label: "Penata dokumen medis" },
+      ],
+      uz: [
+        { href: "/family-emergency-documents", label: "Oila favqulodda hujjatlari" },
+        { href: "/medical-document-organizer", label: "Tibbiy hujjatlar tartiblagichi" },
+      ],
+    },
+  },
+  "how-to-send-a-document-securely": {
+    slug: "how-to-send-a-document-securely",
+    emoji: "🔐",
+    locales: {
+      en: {
+        navLabel: "Send a document securely",
+        title: "How to Send a Document Securely to a Lawyer or Agent",
+        metaDescription:
+          "Instead of sending a scan into a chat that lives forever, share one document with a link that expires, has a view limit and a log — and can be revoked anytime.",
+        h1: "How to send a document securely to a lawyer or agent",
+        intro:
+          "When a lawyer, an agent or an employer asks for a scan, the quickest option — dropping it into a chat or email — is also the one you have the least control over. Here is a calmer way to send a single document, with a link you can limit and revoke, without opening the rest of your vault.",
+        ctaPrimary: "Share a document with a secure link",
+        sections: [
+          {
+            h2: "Why sending a scan into a chat or email is risky",
+            body: "A file sent into a chat or an email is a copy you no longer control. It stays in that thread for as long as the account exists, gets backed up, and can be forwarded onward without you ever knowing. You can't set an expiry, you can't see who opened it, and you can't take it back. For a passport, a contract or a certificate, that's a lot of exposure for a one-time request.",
+          },
+          {
+            h2: "What sharing securely actually means",
+            body: "Sharing securely isn't a promise of absolute safety — it's a set of concrete controls over one link. You decide the terms up front and can change your mind later.",
+            bullets: [
+              "The link expires on a date you set, so access doesn't last forever",
+              "A view limit caps how many times it can be opened",
+              "A log records every open — who opened it and when",
+              "You can revoke the link at any moment, in one step",
+              "The recipient needs no account to open it",
+            ],
+          },
+          {
+            h2: "When you need this",
+            body: "A secure link fits any moment where a copy would otherwise linger somewhere you don't control.",
+            bullets: [
+              "A lawyer or notary asking for a scan of a document",
+              "A real-estate or visa agent collecting paperwork",
+              "An employer or HR requesting an ID or certificate",
+              "A relative who needs one document, not your whole vault",
+            ],
+          },
+          {
+            h2: "How to share one file without opening your whole vault",
+            body: "You don't have to grant access to everything to send one thing. Pick the single document, create a share link for it, and set the expiry and view limit. The recipient opens just that file over HTTPS, without an account, and the rest of your vault stays private and isolated to your family. When the matter is closed, revoke the link.",
+          },
+          {
+            h2: "What to check before you send",
+            body: "A few seconds of checking prevents the awkward second message.",
+            bullets: [
+              "The right document — the correct file and the current version",
+              "The right recipient — the exact person or address you mean to reach",
+              "The link terms — an expiry date and view limit that match the request",
+              "Whether to revoke it afterwards, once the document has been received",
+            ],
+          },
+          {
+            h2: "How doki.help helps",
+            body: "In doki.help you can share a single document with a link that expires and can be revoked at any time, with a view limit and a log of every open — who opened it and when. The recipient needs no account, and the rest of your vault stays private, kept in private storage over HTTPS with access isolated to your family at the database level (row-level security). Roles let you decide who is owner, editor or viewer, two-factor login is available, and optional AI field recognition is off by default. doki.help is in beta and doesn't replace your original documents.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "Why not just send the scan by email or chat?",
+            a: "Because that copy stays in the thread for as long as the account exists and can be forwarded onward. You can't set an expiry, see who opened it, or take it back. A secure link gives you those controls.",
+          },
+          {
+            q: "What does a secure link let me control?",
+            a: "You set an expiry date and a view limit, see a log of every open (who and when), and can revoke the link at any moment. The recipient needs no account to open it.",
+          },
+          {
+            q: "Can I share one document without giving access to everything?",
+            a: "Yes. Share a single document with its own link — the recipient sees only that file, and the rest of your vault stays private and isolated to your family.",
+          },
+          {
+            q: "Can I take a shared link back after sending it?",
+            a: "Yes. You can revoke the link at any time in one step, and it can also expire automatically on the date you set and after the view limit is reached.",
+          },
+          {
+            q: "Does the recipient need a doki.help account?",
+            a: "No. They open the shared document over HTTPS through the link, without creating an account. doki.help is in beta and doesn't replace your original documents.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Безопасно отправить документ",
+        title: "Как безопасно отправить документ адвокату или агенту",
+        metaDescription:
+          "Вместо скана в чат, который останется навсегда, поделитесь одним документом по ссылке с истечением, лимитом просмотров и журналом — и отзывом в любой момент.",
+        h1: "Как безопасно отправить документ адвокату или агенту",
+        intro:
+          "Когда адвокат, агент или работодатель просит скан, самый быстрый способ — бросить его в чат или почту — это и способ, над которым у вас меньше всего контроля. Есть более спокойный вариант: отправить один документ по ссылке, которую можно ограничить и отозвать, не открывая остальной сейф.",
+        ctaPrimary: "Поделитесь документом по защищённой ссылке",
+        sections: [
+          {
+            h2: "Почему отправлять скан в чат или почту рискованно",
+            body: "Файл, отправленный в чат или почту, — это копия, которую вы больше не контролируете. Она остаётся в переписке столько, сколько существует аккаунт, попадает в резервные копии и может уйти дальше пересылкой, а вы об этом даже не узнаете. Нельзя задать срок, нельзя увидеть, кто её открыл, нельзя забрать назад. Для паспорта, договора или справки это слишком много открытости ради разовой просьбы.",
+          },
+          {
+            h2: "Что значит «поделиться безопасно»",
+            body: "Поделиться безопасно — это не обещание абсолютной защиты, а набор конкретных настроек над одной ссылкой. Условия вы задаёте заранее и можете передумать позже.",
+            bullets: [
+              "Ссылка истекает в указанную вами дату, доступ не длится вечно",
+              "Лимит просмотров ограничивает, сколько раз её можно открыть",
+              "Журнал фиксирует каждое открытие — кто открыл и когда",
+              "Ссылку можно отозвать в любой момент, в один шаг",
+              "Получателю не нужен аккаунт, чтобы её открыть",
+            ],
+          },
+          {
+            h2: "Когда это нужно",
+            body: "Защищённая ссылка подходит для любого случая, где иначе копия осталась бы там, где вы её не контролируете.",
+            bullets: [
+              "Адвокат или нотариус просит скан документа",
+              "Агент по недвижимости или визам собирает бумаги",
+              "Работодатель или HR запрашивает удостоверение или справку",
+              "Родственнику нужен один документ, а не весь ваш сейф",
+            ],
+          },
+          {
+            h2: "Как поделиться одним файлом, не открывая весь сейф",
+            body: "Чтобы отправить одно, не нужно давать доступ ко всему. Выберите один документ, создайте для него ссылку и задайте срок и лимит просмотров. Получатель открывает только этот файл по HTTPS, без аккаунта, а остальной сейф остаётся приватным и изолированным вашей семьёй. Когда вопрос решён, отзовите ссылку.",
+          },
+          {
+            h2: "Что проверить перед отправкой",
+            body: "Несколько секунд проверки избавят от неловкого второго сообщения.",
+            bullets: [
+              "Тот ли документ — нужный файл и актуальная версия",
+              "Тот ли получатель — именно тот человек или адрес, что вы имеете в виду",
+              "Условия ссылки — срок и лимит просмотров под конкретную просьбу",
+              "Стоит ли отозвать её потом, когда документ уже получен",
+            ],
+          },
+          {
+            h2: "Как помогает doki.help",
+            body: "В doki.help можно поделиться одним документом по ссылке, которая истекает и отзывается в любой момент, с лимитом просмотров и журналом каждого открытия — кто открыл и когда. Получателю не нужен аккаунт, а остальной сейф остаётся приватным: документы хранятся в приватном хранилище по HTTPS, доступ изолирован вашей семьёй на уровне базы (RLS). Роли позволяют решить, кто owner, editor или viewer, доступен двухфакторный вход, а опциональное AI-распознавание полей по умолчанию выключено. doki.help в стадии beta и не заменяет оригиналы документов.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Почему не отправить скан просто по почте или в чат?",
+            a: "Потому что эта копия остаётся в переписке столько, сколько существует аккаунт, и может уйти дальше пересылкой. Нельзя задать срок, увидеть, кто её открыл, или забрать назад. Защищённая ссылка даёт эти настройки.",
+          },
+          {
+            q: "Что позволяет контролировать защищённая ссылка?",
+            a: "Вы задаёте дату истечения и лимит просмотров, видите журнал каждого открытия (кто и когда) и можете отозвать ссылку в любой момент. Получателю не нужен аккаунт, чтобы её открыть.",
+          },
+          {
+            q: "Можно поделиться одним документом, не давая доступ ко всему?",
+            a: "Да. Поделитесь одним документом по отдельной ссылке — получатель видит только этот файл, а остальной сейф остаётся приватным и изолированным вашей семьёй.",
+          },
+          {
+            q: "Можно забрать отправленную ссылку обратно?",
+            a: "Да. Ссылку можно отозвать в любой момент в один шаг, а ещё она может истечь автоматически в указанную дату и после исчерпания лимита просмотров.",
+          },
+          {
+            q: "Нужен ли получателю аккаунт doki.help?",
+            a: "Нет. Он открывает документ по ссылке по HTTPS, без создания аккаунта. doki.help в стадии beta и не заменяет оригиналы документов.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Kirim dokumen dengan aman",
+        title: "Cara Mengirim Dokumen dengan Aman ke Pengacara/Agen",
+        metaDescription:
+          "Alih-alih mengirim scan ke chat yang tersimpan selamanya, bagikan satu dokumen lewat tautan yang kedaluwarsa, berbatas tampilan, tercatat, dan bisa dicabut.",
+        h1: "Cara mengirim dokumen dengan aman ke pengacara atau agen",
+        intro:
+          "Saat pengacara, agen, atau pemberi kerja meminta scan, cara tercepat — melemparnya ke chat atau email — juga cara yang paling sedikit Anda kendalikan. Ada cara yang lebih tenang: mengirim satu dokumen lewat tautan yang bisa Anda batasi dan cabut, tanpa membuka sisa brankas.",
+        ctaPrimary: "Bagikan dokumen lewat tautan aman",
+        sections: [
+          {
+            h2: "Mengapa mengirim scan ke chat atau email berisiko",
+            body: "Berkas yang dikirim ke chat atau email adalah salinan yang tidak lagi Anda kendalikan. Ia tetap di percakapan itu selama akunnya ada, ikut tersalin ke cadangan, dan bisa diteruskan lebih jauh tanpa Anda ketahui. Anda tidak bisa memasang masa berlaku, tidak bisa melihat siapa yang membukanya, dan tidak bisa menariknya kembali. Untuk paspor, kontrak, atau sertifikat, itu keterbukaan yang terlalu besar demi satu permintaan.",
+          },
+          {
+            h2: "Apa arti \"berbagi dengan aman\"",
+            body: "Berbagi dengan aman bukan janji keamanan mutlak — melainkan sejumlah kontrol nyata atas satu tautan. Syaratnya Anda tentukan di awal dan bisa Anda ubah kemudian.",
+            bullets: [
+              "Tautan kedaluwarsa pada tanggal yang Anda tetapkan, akses tidak selamanya",
+              "Batas tampilan membatasi berapa kali ia bisa dibuka",
+              "Catatan merekam tiap pembukaan — siapa membuka dan kapan",
+              "Anda bisa mencabut tautan kapan saja, dalam satu langkah",
+              "Penerima tidak perlu akun untuk membukanya",
+            ],
+          },
+          {
+            h2: "Kapan Anda membutuhkannya",
+            body: "Tautan aman cocok untuk setiap situasi di mana salinan akan tertinggal di tempat yang tidak Anda kendalikan.",
+            bullets: [
+              "Pengacara atau notaris meminta scan dokumen",
+              "Agen properti atau visa mengumpulkan berkas",
+              "Pemberi kerja atau HRD meminta identitas atau sertifikat",
+              "Kerabat yang perlu satu dokumen, bukan seluruh brankas Anda",
+            ],
+          },
+          {
+            h2: "Cara berbagi satu berkas tanpa membuka seluruh brankas",
+            body: "Anda tak perlu memberi akses ke semua demi mengirim satu hal. Pilih satu dokumen, buatkan tautan berbagi untuknya, lalu tetapkan masa berlaku dan batas tampilan. Penerima membuka hanya berkas itu lewat HTTPS, tanpa akun, dan sisa brankas tetap privat serta terisolasi untuk keluarga Anda. Setelah urusan selesai, cabut tautannya.",
+          },
+          {
+            h2: "Yang perlu diperiksa sebelum mengirim",
+            body: "Beberapa detik memeriksa mencegah pesan kedua yang canggung.",
+            bullets: [
+              "Dokumen yang tepat — berkas yang benar dan versi terkini",
+              "Penerima yang tepat — persis orang atau alamat yang Anda tuju",
+              "Syarat tautan — masa berlaku dan batas tampilan sesuai permintaan",
+              "Perlukah dicabut setelahnya, begitu dokumen sudah diterima",
+            ],
+          },
+          {
+            h2: "Bagaimana doki.help membantu",
+            body: "Di doki.help Anda bisa membagikan satu dokumen lewat tautan yang kedaluwarsa dan bisa dicabut kapan saja, dengan batas tampilan dan catatan tiap pembukaan — siapa membuka dan kapan. Penerima tidak perlu akun, dan sisa brankas tetap privat: dokumen disimpan di penyimpanan privat lewat HTTPS dengan akses diisolasi untuk keluarga Anda di tingkat basis data (row-level security). Peran menentukan siapa owner, editor, atau viewer, login dua faktor tersedia, dan pengenalan bidang AI opsional mati secara default. doki.help masih beta dan tidak menggantikan dokumen asli Anda.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Kenapa tidak sekadar kirim scan lewat email atau chat?",
+            a: "Karena salinan itu tetap di percakapan selama akunnya ada dan bisa diteruskan lebih jauh. Anda tidak bisa memasang masa berlaku, melihat siapa membukanya, atau menariknya kembali. Tautan aman memberi kontrol itu.",
+          },
+          {
+            q: "Apa yang bisa saya kendalikan lewat tautan aman?",
+            a: "Anda menetapkan tanggal kedaluwarsa dan batas tampilan, melihat catatan tiap pembukaan (siapa dan kapan), serta bisa mencabut tautan kapan saja. Penerima tidak perlu akun untuk membukanya.",
+          },
+          {
+            q: "Bisakah berbagi satu dokumen tanpa memberi akses ke semuanya?",
+            a: "Bisa. Bagikan satu dokumen lewat tautannya sendiri — penerima hanya melihat berkas itu, dan sisa brankas tetap privat serta terisolasi untuk keluarga Anda.",
+          },
+          {
+            q: "Bisakah menarik kembali tautan setelah dikirim?",
+            a: "Bisa. Tautan bisa dicabut kapan saja dalam satu langkah, dan ia juga bisa kedaluwarsa otomatis pada tanggal yang Anda tetapkan serta setelah batas tampilan tercapai.",
+          },
+          {
+            q: "Apakah penerima perlu akun doki.help?",
+            a: "Tidak. Mereka membuka dokumen lewat tautan melalui HTTPS, tanpa membuat akun. doki.help masih beta dan tidak menggantikan dokumen asli Anda.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Hujjatni xavfsiz yuborish",
+        title: "Hujjatni advokat yoki agentga xavfsiz yuborish",
+        metaDescription:
+          "Chatda abadiy qoladigan skan oʻrniga bitta hujjatni muddati tugaydigan, koʻrish chegarali, qaydli va istalgan vaqt bekor qilinadigan havola bilan ulashing.",
+        h1: "Hujjatni advokat yoki agentga qanday xavfsiz yuborish",
+        intro:
+          "Advokat, agent yoki ish beruvchi skan soʻraganda eng tez yoʻl — uni chat yoki pochtaga tashlash — ayni paytda siz ustidan eng kam nazorat qiladigan yoʻl hamdir. Sokinroq yoʻl bor: bitta hujjatni cheklab va bekor qila oladigan havola orqali yuborish, seyfning qolganini ochmasdan.",
+        ctaPrimary: "Hujjatni himoyalangan havola orqali ulashing",
+        sections: [
+          {
+            h2: "Nega skanni chat yoki pochtaga yuborish xavfli",
+            body: "Chat yoki pochtaga yuborilgan fayl — endi siz nazorat qilmaydigan nusxa. U akkaunt mavjud boʻlgan davrgacha oʻsha yozishmada qoladi, zaxira nusxalarga tushadi va siz bilmagan holda boshqalarga uzatilishi mumkin. Muddat qoʻyib boʻlmaydi, kim ochganini koʻrib boʻlmaydi, orqaga qaytarib ham boʻlmaydi. Pasport, shartnoma yoki maʼlumotnoma uchun bu bir martalik iltimos evaziga juda koʻp ochiqlik.",
+          },
+          {
+            h2: "«Xavfsiz ulashish» nima degani",
+            body: "Xavfsiz ulashish — mutlaq xavfsizlik vaʼdasi emas, balki bitta havola ustidan aniq boshqaruvlar toʻplami. Shartlarni oldindan belgilaysiz va keyin fikringizni oʻzgartira olasiz.",
+            bullets: [
+              "Havola siz belgilagan sanada tugaydi, kirish abadiy davom etmaydi",
+              "Koʻrish chegarasi uni necha marta ochish mumkinligini cheklaydi",
+              "Qayd har ochilishni yozadi — kim ochdi va qachon",
+              "Havolani istalgan vaqt, bir qadamda bekor qilsa boʻladi",
+              "Qabul qiluvchiga uni ochish uchun akkaunt kerak emas",
+            ],
+          },
+          {
+            h2: "Bu qachon kerak boʻladi",
+            body: "Himoyalangan havola nusxa aks holda siz nazorat qilmaydigan joyda qolib ketadigan har qanday holatga mos keladi.",
+            bullets: [
+              "Advokat yoki notarius hujjat skanini soʻraganda",
+              "Koʻchmas mulk yoki viza agenti qogʻozlarni yigʻayotganda",
+              "Ish beruvchi yoki HR guvohnoma yoki maʼlumotnoma soʻraganda",
+              "Qarindoshga butun seyf emas, bitta hujjat kerak boʻlganda",
+            ],
+          },
+          {
+            h2: "Butun seyfni ochmay bitta faylni qanday ulashish",
+            body: "Bitta narsani yuborish uchun hammasiga ruxsat berish shart emas. Bitta hujjatni tanlang, unga ulashish havolasini yarating va muddat hamda koʻrish chegarasini belgilang. Qabul qiluvchi faqat oʻsha faylni HTTPS orqali, akkauntsiz ochadi, seyfning qolgani esa maxfiy va oilangiz bilan izolyatsiya qilingan holda qoladi. Masala hal boʻlgach, havolani bekor qiling.",
+          },
+          {
+            h2: "Yuborishdan oldin nimani tekshirish kerak",
+            body: "Bir necha soniyalik tekshiruv noqulay ikkinchi xabardan qutqaradi.",
+            bullets: [
+              "Toʻgʻri hujjat — kerakli fayl va joriy versiya",
+              "Toʻgʻri qabul qiluvchi — aynan siz moʻljallagan shaxs yoki manzil",
+              "Havola shartlari — iltimosga mos muddat va koʻrish chegarasi",
+              "Hujjat qabul qilingach, uni keyin bekor qilish kerakmi",
+            ],
+          },
+          {
+            h2: "doki.help qanday yordam beradi",
+            body: "doki.help da bitta hujjatni muddati tugaydigan va istalgan vaqt bekor qilinadigan havola orqali ulashish mumkin, koʻrish chegarasi va har ochilish qaydi bilan — kim ochdi va qachon. Qabul qiluvchiga akkaunt kerak emas, seyfning qolgani esa maxfiy qoladi: hujjatlar maxfiy omborda HTTPS orqali saqlanadi, kirish maʼlumotlar bazasi darajasida oilangiz bilan izolyatsiya qilingan (RLS). Rollar kim owner, editor yoki viewer ekanini belgilaydi, ikki bosqichli kirish mavjud, ixtiyoriy AI maydon tanish esa sukut boʻyicha oʻchiq. doki.help beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi.",
+          },
+        ],
+        faqHeading: "Tez-tez beriladigan savollar",
+        faq: [
+          {
+            q: "Nega skanni shunchaki pochta yoki chatga yubormaslik kerak?",
+            a: "Chunki bu nusxa akkaunt mavjud boʻlgan davrgacha yozishmada qoladi va boshqalarga uzatilishi mumkin. Muddat qoʻyib, kim ochganini koʻrib yoki orqaga qaytarib boʻlmaydi. Himoyalangan havola shu boshqaruvlarni beradi.",
+          },
+          {
+            q: "Himoyalangan havola nimani nazorat qilishga imkon beradi?",
+            a: "Siz tugash sanasi va koʻrish chegarasini belgilaysiz, har ochilish qaydini (kim va qachon) koʻrasiz va havolani istalgan vaqt bekor qila olasiz. Qabul qiluvchiga uni ochish uchun akkaunt kerak emas.",
+          },
+          {
+            q: "Hammasiga ruxsat bermay bitta hujjatni ulashsa boʻladimi?",
+            a: "Ha. Bitta hujjatni oʻz havolasi orqali ulashing — qabul qiluvchi faqat oʻsha faylni koʻradi, seyfning qolgani esa maxfiy va oilangiz bilan izolyatsiya qilingan holda qoladi.",
+          },
+          {
+            q: "Yuborilgan havolani orqaga qaytarib olsa boʻladimi?",
+            a: "Ha. Havolani istalgan vaqt bir qadamda bekor qilsa boʻladi, u yana siz belgilagan sanada va koʻrish chegarasi tugagach avtomatik tugashi ham mumkin.",
+          },
+          {
+            q: "Qabul qiluvchiga doki.help akkaunti kerakmi?",
+            a: "Yoʻq. U hujjatni havola orqali HTTPS orqali, akkaunt ochmasdan ochadi. doki.help beta bosqichida va asl hujjatlaringiz oʻrnini bosmaydi.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/secure-document-sharing", label: "Secure document sharing" },
+        { href: "/family-document-vault", label: "Family document vault" },
+      ],
+      ru: [
+        { href: "/secure-document-sharing", label: "Безопасный обмен документами" },
+        { href: "/family-document-vault", label: "Семейный сейф документов" },
+      ],
+      id: [
+        { href: "/secure-document-sharing", label: "Berbagi dokumen aman" },
+        { href: "/family-document-vault", label: "Brankas dokumen keluarga" },
+      ],
+      uz: [
+        { href: "/secure-document-sharing", label: "Hujjatlarni xavfsiz ulashish" },
+        { href: "/family-document-vault", label: "Oilaviy hujjatlar seyfi" },
+      ],
+    },
+  },
 };
 
 export const GUIDE_KEYS = Object.keys(DATA);
