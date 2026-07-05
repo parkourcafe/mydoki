@@ -184,3 +184,53 @@ body {
   .hero-rise, .pkg-check { opacity: 1; animation: none; }
   .pkg-card, .pkg-card-back, .hero-kicker-dot { animation: none; }
 }
+
+/* ── Появление карточек при прокрутке ───────────────────────────────
+   Чистый CSS (scroll-driven animations). В браузерах без поддержки и при
+   prefers-reduced-motion карточки просто видны сразу. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-up {
+      animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 45%;
+    }
+    .reveal-d1 { animation-delay: 0.06s; }
+    .reveal-d2 { animation-delay: 0.12s; }
+    .reveal-d3 { animation-delay: 0.18s; }
+  }
+}
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Акцентные карточки (diff-блок): цветовое кодирование + читаемость */
+.accent-card {
+  position: relative;
+  overflow: hidden;
+  background-color: #fdfaf5;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.accent-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--accent, #b85c38);
+}
+.accent-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.12);
+}
+.accent-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  background: color-mix(in srgb, var(--accent, #b85c38) 14%, white);
+}
