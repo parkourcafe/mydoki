@@ -85,3 +85,102 @@ body {
 .nav-link:hover {
   color: #2c2522;
 }
+
+/* ── Кинематографичный hero ─────────────────────────────────────────
+   Тёмная «сцена» с тёплыми свечениями + живая карточка пакета.
+   Все эффекты — чистый CSS (без ассетов), гаснут при reduced-motion. */
+.hero-stage {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(58rem 30rem at 82% -12%, rgba(184, 92, 56, 0.4), transparent 62%),
+    radial-gradient(44rem 26rem at -8% 108%, rgba(212, 163, 115, 0.24), transparent 60%),
+    radial-gradient(30rem 18rem at 50% 118%, rgba(184, 92, 56, 0.14), transparent 65%),
+    linear-gradient(160deg, #241b16 0%, #2c2016 55%, #241b16 100%);
+}
+.hero-stage::after {
+  /* лёгкое «зерно», чтобы градиент не выглядел пластиковым */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: repeating-conic-gradient(
+    rgba(255, 255, 255, 0.014) 0% 25%,
+    transparent 0% 50%
+  );
+  background-size: 3px 3px;
+}
+.hero-kicker-dot {
+  animation: heroPulse 2.4s ease-in-out infinite;
+}
+.hero-rise {
+  opacity: 0;
+  animation: heroRise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.hero-rise-1 { animation-delay: 0.05s; }
+.hero-rise-2 { animation-delay: 0.16s; }
+.hero-rise-3 { animation-delay: 0.27s; }
+.hero-rise-4 { animation-delay: 0.38s; }
+.hero-rise-5 { animation-delay: 0.5s; }
+.hero-accent {
+  background: linear-gradient(92deg, #e8935f 0%, #d4a373 55%, #e8b98f 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.hero-cta {
+  background: linear-gradient(135deg, #c96a3f 0%, #b85c38 60%, #a44e2e 100%);
+  box-shadow:
+    0 12px 32px -10px rgba(184, 92, 56, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: transform 0.2s ease, box-shadow 0.25s ease;
+}
+.hero-cta:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 42px -10px rgba(184, 92, 56, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.pkg-card {
+  background: linear-gradient(165deg, rgba(255, 252, 247, 0.99), rgba(249, 242, 232, 0.97));
+  box-shadow:
+    0 40px 90px -24px rgba(20, 12, 8, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.08);
+  animation: pkgFloat 7s ease-in-out infinite;
+}
+.pkg-card-back {
+  animation: pkgFloatBack 7s ease-in-out infinite;
+}
+.pkg-check {
+  opacity: 0;
+  animation: pkgCheck 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.pkg-check-1 { animation-delay: 0.55s; }
+.pkg-check-2 { animation-delay: 0.75s; }
+.pkg-check-3 { animation-delay: 0.95s; }
+.pkg-check-4 { animation-delay: 1.15s; }
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes heroPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(232, 147, 95, 0.55); }
+  50% { box-shadow: 0 0 0 6px rgba(232, 147, 95, 0); }
+}
+@keyframes pkgFloat {
+  0%, 100% { transform: translateY(0) rotate(-1.2deg); }
+  50% { transform: translateY(-10px) rotate(-0.4deg); }
+}
+@keyframes pkgFloatBack {
+  0%, 100% { transform: translateY(0) rotate(3.5deg); }
+  50% { transform: translateY(-6px) rotate(2.8deg); }
+}
+@keyframes pkgCheck {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise, .pkg-check { opacity: 1; animation: none; }
+  .pkg-card, .pkg-card-back, .hero-kicker-dot { animation: none; }
+}

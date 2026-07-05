@@ -23,18 +23,44 @@ type Step = { n: string; title: string; text: string };
 type Sec = { icon: string; title: string; text: string };
 type Faq = { q: string; a: string };
 
+type Role = { emoji: string; label: string; href: string };
+type Scenario = { emoji: string; title: string; text: string; cta: string; href: string };
+
 type Dict = {
   nav: { login: string; start: string; startShort: string };
   hero: {
-    badge: string;
-    title: string[];
+    kicker: string;
+    titlePre: string;
+    titleAccent: string;
     subtitle: string;
     cta1: string;
     cta2: string;
-    demo: string;
     trust: string[];
-    security: string;
-    imgAlt: string;
+    roles: Role[];
+    pkg: {
+      title: string;
+      vacancy: string;
+      needTitle: string;
+      need: string[];
+      readyTitle: string;
+      ready: string[];
+      send: string;
+      badge: string;
+      chip: string;
+    };
+  };
+  scenarios: { heading: string; items: Scenario[] };
+  employer: {
+    heading: string;
+    text: string;
+    cardTitle: string;
+    doLabel: string;
+    doItems: string[];
+    askLabel: string;
+    askItems: string[];
+    qLabel: string;
+    qItems: string[];
+    cta: string;
   };
   store: {
     heading: string;
@@ -46,7 +72,7 @@ type Dict = {
     medNote: string;
     cats: Cat[];
   };
-  pain: { heading: string; items: string[] };
+  pain: { heading: string; items: { t: string; d: string }[] };
   how: { heading: string; sub: string; steps: Step[] };
   security: { heading: string; sub: string; promise: string; items: Sec[] };
   cta: { heading: string; sub: string; button: string };
@@ -61,17 +87,51 @@ const M: Record<Locale, Dict> = {
   ru: {
     nav: { login: "Войти", start: "Начать бесплатно", startShort: "Начать" },
     hero: {
-      badge: "Личный сейф для документов всей семьи",
-      title: ["Семейный сейф", "для всех документов —", "и сроки под контролем"],
+      kicker: "Пакет документов — для реальных действий",
+      titlePre: "Документы, которые можно",
+      titleAccent: "сразу использовать",
       subtitle:
-        "Паспорта, анализы, визы, дипломы, справки и путёвки. Доступ с любого устройства. Напоминания работают сами.",
-      cta1: "Создать сейф бесплатно",
-      cta2: "Как это работает",
-      demo: "Посмотреть демо без регистрации →",
-      trust: ["С любого устройства", "2 ГБ бесплатно", "Вход через Google"],
-      security:
-        "Приватное хранилище · Доступ только у вашей семьи · ИИ-распознавание — по желанию",
-      imgAlt: "Документы семьи — под рукой и в порядке",
+        "Соберите резюме, ID, сертификаты, справки, портфолио и семейные документы в одном месте. Откликайтесь на вакансии, нанимайте с нужными документами или отправляйте выбранный пакет по защищённой ссылке.",
+      cta1: "Собрать первый пакет",
+      cta2: "Посмотреть демо",
+      trust: ["2 ГБ бесплатно", "Доступ можно отозвать", "Документы не передаются в AI без вашего решения"],
+      roles: [
+        { emoji: "🙋", label: "Ищу работу → резюме", href: "/login?next=/my/resume" },
+        { emoji: "💼", label: "Нанимаю → вакансия", href: "/login?next=/employer/vacancies/new" },
+        { emoji: "🎨", label: "Фрилансер → портфолио", href: "/login?next=/my/freelance" },
+      ],
+      pkg: {
+        title: "Пакет для отклика",
+        vacancy: "Вакансия: Бариста · Чангу",
+        needTitle: "Работодатель просит:",
+        need: ["CV", "ID / паспорт", "Сертификат", "Видео-ответ до 60 сек"],
+        readyTitle: "Ваш пакет готов:",
+        ready: ["Резюме готово", "ID выбран", "Сертификат выбран", "WhatsApp добавлен"],
+        send: "Отправить отклик",
+        badge: "Не весь архив — только выбранные документы.",
+        chip: "🔗 Ссылка истекает · доступ можно отозвать",
+      },
+    },
+    scenarios: {
+      heading: "Используйте документы там, где они нужны",
+      items: [
+        { emoji: "🙋", title: "Откликайтесь готовым пакетом", text: "CV, ID, сертификаты, портфолио, ответы и видео — работодателю одним кликом.", cta: "Создать резюме", href: "/login?next=/my/resume" },
+        { emoji: "💼", title: "Получайте отклики сразу с документами", text: "Создайте вакансию, выберите нужные документы и вопросы — кандидаты приходят в одно место.", cta: "Разместить вакансию", href: "/login?next=/employer/vacancies/new" },
+        { emoji: "🎨", title: "Покажите работы одной ссылкой", text: "Соберите портфолио, добавьте контакты — клиент откроет без входа.", cta: "Создать портфолио", href: "/login?next=/my/freelance" },
+        { emoji: "👪", title: "Держите важное под рукой", text: "Паспорта, страховки, справки, документы ребёнка и сроки — в одном месте.", cta: "Загрузить документы", href: "/login" },
+      ],
+    },
+    employer: {
+      heading: "Не знаете, кого нанять? Начните с задачи.",
+      text: "Опишите, что нужно сделать: «человек на смены в кафе», «кто-то отвечать в WhatsApp», «ассистент для операционки». doki.help предложит роль, задачи, документы и вопросы для кандидата.",
+      cardTitle: "Вакансия: Бариста",
+      doLabel: "Что будет делать:",
+      doItems: ["готовить кофе", "обслуживать гостей", "работать с кассой"],
+      askLabel: "Что попросить у кандидата:",
+      askItems: ["CV", "ID / паспорт", "сертификат", "видео-ответ до 60 сек"],
+      qLabel: "Вопросы:",
+      qItems: ["Когда готовы выйти?", "Какой опыт с кофемашиной?"],
+      cta: "Создать вакансию",
     },
     store: {
       heading: "Что можно хранить в архиве",
@@ -82,6 +142,7 @@ const M: Record<Locale, Dict> = {
       medCol2: ["Заключения врачей", "Прививочные сертификаты", "Медицинские справки"],
       medNote: "Напоминания о сроках — бесплатно.",
       cats: [
+        { icon: "💼", title: "Работа и карьера", items: ["CV и резюме", "Дипломы и сертификаты", "Портфолио", "Рекомендательные письма", "Трудовые договоры"] },
         { icon: "📄", title: "Личные и миграционные документы", items: ["Паспорта и загранпаспорта", "Визы и визовые документы", "Документы на гражданство", "СНИЛС, ИНН, военный билет", "Дипломы, аттестаты, сертификаты"] },
         { icon: "✈️", title: "Поездки и путешествия", items: ["Путёвки и ваучеры", "Билеты и бронирования", "Страховки для поездок", "Документы для въезда/выезда", "Согласия на выезд ребёнка"] },
         { icon: "🚗", title: "Авто и недвижимость", items: ["ОСАГО и КАСКО", "ПТС и СТС", "Выписки ЕГРН и договоры"] },
@@ -89,26 +150,26 @@ const M: Record<Locale, Dict> = {
       ],
     },
     pain: {
-      heading: "Знакомо?",
+      heading: "Документы нужны не «когда-нибудь». Они нужны срочно.",
       items: [
-        "Ребёнку утром в садик — а нужной справки не найти.",
-        "В аэропорту просят полис, а он где-то в переписке.",
-        "Врач просит прошлые анализы — они на старом телефоне.",
-        "Виза или ОСАГО заканчивается, а узнаёшь в последний момент.",
+        { t: "Отклик на работу", d: "Вакансия уже открыта, а CV, ID и сертификат лежат в разных чатах." },
+        { t: "Найм сотрудника", d: "Кандидаты присылают документы кусками в WhatsApp — потом их кто-то героически ищет." },
+        { t: "Семья и поездки", d: "В аэропорту нужен полис, в школе справка, у паспорта заканчивается срок." },
+        { t: "Фриланс и клиенты", d: "Клиент просит портфолио и подтверждения — и вы снова собираете ссылки вручную." },
       ],
     },
     how: {
-      heading: "Как это работает",
-      sub: "Загрузи документ — остальное система сделает сама",
+      heading: "Один раз собрали документы. Дальше отправляете только нужное.",
+      sub: "Главный принцип: отправляется не весь сейф, а собранный вами пакет.",
       steps: [
-        { n: "1", title: "Загрузи фото или скан", text: "Паспорт, виза, анализ, путёвка — любой документ." },
-        { n: "2", title: "Укажите срок действия", text: "Впишите дату «действует до» — приложение запомнит и напомнит заранее." },
-        { n: "3", title: "Получай напоминания", text: "Система заранее предупредит об истечении визы, анализа или ОСАГО." },
-        { n: "4", title: "Управляй доступом", text: "Отправляй временные ссылки врачам, в банк или родственникам." },
+        { n: "1", title: "Загрузите документы", text: "Резюме, паспорт, ID, дипломы, сертификаты, медсправки, портфолио, страховки." },
+        { n: "2", title: "Разложите по людям и задачам", text: "Для себя, семьи, ребёнка, кандидата, сотрудника или фриланс-профиля." },
+        { n: "3", title: "Соберите пакет", text: "Только нужные документы: для отклика, работодателя, школы, врача или поездки." },
+        { n: "4", title: "Отправьте безопасную ссылку", text: "Ссылка действует ограниченное время. Доступ можно отозвать в любой момент." },
       ],
     },
     security: {
-      heading: "Ваши документы в безопасности",
+      heading: "Вы отправляете не весь сейф — только выбранные документы",
       sub: "Мы понимаем, насколько важны эти документы — и сделали всё, чтобы вы были спокойны.",
       promise:
         "Приватность и безопасность — наш главный приоритет. Данные хранятся в защищённом облаке и передаются по HTTPS, а доступ ограничен строгими правилами на уровне базы. Мы не продаём и не обмениваем ваши данные и не передаём их для рекламы.",
@@ -121,9 +182,9 @@ const M: Record<Locale, Dict> = {
       ],
     },
     cta: {
-      heading: "Готовы собрать все документы семьи?",
-      sub: "Меньше 15 минут — и порядок надолго.",
-      button: "Создать сейф бесплатно",
+      heading: "Соберите документы один раз. Используйте каждый раз, когда они нужны.",
+      sub: "Для работы, найма, семьи, поездок и безопасной отправки документов.",
+      button: "Собрать первый пакет бесплатно",
     },
     faq: {
       heading: "Частые вопросы",
@@ -168,17 +229,51 @@ const M: Record<Locale, Dict> = {
   en: {
     nav: { login: "Sign in", start: "Get started free", startShort: "Start" },
     hero: {
-      badge: "A private vault for your whole family's documents",
-      title: ["A family vault", "for all your documents —", "with deadlines under control"],
+      kicker: "A document package — built for action",
+      titlePre: "Documents you can",
+      titleAccent: "actually use",
       subtitle:
-        "Passports, medical results, visas, diplomas, certificates and travel docs. Access from any device. Reminders run on their own.",
-      cta1: "Create your vault — free",
-      cta2: "How it works",
-      demo: "See the demo — no sign-up →",
-      trust: ["Any device", "2 GB free", "Sign in with Google"],
-      security:
-        "Private storage · Only your family has access · AI recognition is opt-in",
-      imgAlt: "A family's documents — organized and at hand",
+        "Gather your CV, ID, certificates, records, portfolio and family documents in one place. Apply to jobs, hire with the right documents, or send a selected package via a secure link.",
+      cta1: "Build your first package",
+      cta2: "See the demo",
+      trust: ["2 GB free", "Access can be revoked", "Documents never go to AI without your say"],
+      roles: [
+        { emoji: "🙋", label: "Job seeker → resume", href: "/login?next=/my/resume" },
+        { emoji: "💼", label: "Hiring → vacancy", href: "/login?next=/employer/vacancies/new" },
+        { emoji: "🎨", label: "Freelancer → portfolio", href: "/login?next=/my/freelance" },
+      ],
+      pkg: {
+        title: "Application package",
+        vacancy: "Vacancy: Barista · Canggu",
+        needTitle: "The employer asks for:",
+        need: ["CV", "ID / passport", "Certificate", "Video answer, 60 sec"],
+        readyTitle: "Your package is ready:",
+        ready: ["Resume ready", "ID selected", "Certificate selected", "WhatsApp added"],
+        send: "Send application",
+        badge: "Not your whole archive — only the documents you picked.",
+        chip: "🔗 Link expires · access can be revoked",
+      },
+    },
+    scenarios: {
+      heading: "Use your documents where they're needed",
+      items: [
+        { emoji: "🙋", title: "Apply with a ready package", text: "CV, ID, certificates, portfolio, answers and video — sent to the employer in one click.", cta: "Create a resume", href: "/login?next=/my/resume" },
+        { emoji: "💼", title: "Get applications with documents attached", text: "Create a vacancy, pick the documents and questions — candidates arrive in one place.", cta: "Post a vacancy", href: "/login?next=/employer/vacancies/new" },
+        { emoji: "🎨", title: "Show your work with one link", text: "Build a portfolio, add contacts — the client opens it with no sign-in.", cta: "Create a portfolio", href: "/login?next=/my/freelance" },
+        { emoji: "👪", title: "Keep the essentials at hand", text: "Passports, insurance, certificates, your child's documents and deadlines — in one place.", cta: "Upload documents", href: "/login" },
+      ],
+    },
+    employer: {
+      heading: "Not sure who to hire? Start from the task.",
+      text: "Describe what needs doing: “someone for cafe shifts”, “someone to answer WhatsApp”, “an assistant for operations”. doki.help will suggest the role, tasks, documents and candidate questions.",
+      cardTitle: "Vacancy: Barista",
+      doLabel: "What they'll do:",
+      doItems: ["make coffee", "serve guests", "handle the register"],
+      askLabel: "What to request:",
+      askItems: ["CV", "ID / passport", "certificate", "video answer, 60 sec"],
+      qLabel: "Questions:",
+      qItems: ["When can you start?", "Espresso machine experience?"],
+      cta: "Create a vacancy",
     },
     store: {
       heading: "What you can keep in your vault",
@@ -189,6 +284,7 @@ const M: Record<Locale, Dict> = {
       medCol2: ["Doctor's reports", "Vaccination certificates", "Medical certificates"],
       medNote: "Deadline reminders — free.",
       cats: [
+        { icon: "💼", title: "Work & career", items: ["CV & resume", "Diplomas and certificates", "Portfolio", "Reference letters", "Employment contracts"] },
         { icon: "📄", title: "Personal & immigration documents", items: ["Passports & international passports", "Visas and visa paperwork", "Citizenship documents", "Tax & social security IDs", "Diplomas and certificates"] },
         { icon: "✈️", title: "Trips & travel", items: ["Tour packages & vouchers", "Tickets and bookings", "Travel insurance", "Entry/exit documents", "Child travel consents"] },
         { icon: "🚗", title: "Vehicles & property", items: ["Car insurance", "Vehicle titles & registration", "Property records & contracts"] },
@@ -196,26 +292,26 @@ const M: Record<Locale, Dict> = {
       ],
     },
     pain: {
-      heading: "Sound familiar?",
+      heading: "Documents aren't needed “someday”. They're needed urgently.",
       items: [
-        "Daycare needs a certificate this morning — and you can't find it.",
-        "The airport asks for your insurance, and it's lost in some chat.",
-        "A doctor wants past lab results — they're on an old phone.",
-        "A visa or insurance is expiring, and you find out at the last minute.",
+        { t: "Applying for a job", d: "The vacancy is open, but your CV, ID and certificate live in different chats." },
+        { t: "Hiring someone", d: "Candidates send documents in pieces over WhatsApp — then someone heroically hunts them down." },
+        { t: "Family & travel", d: "The airport wants your insurance, the school wants a certificate, your passport is expiring." },
+        { t: "Freelance & clients", d: "A client asks for your portfolio and proof — and you're collecting links by hand again." },
       ],
     },
     how: {
-      heading: "How it works",
-      sub: "Upload a document — the app does the rest",
+      heading: "Gather your documents once. Then send only what's needed.",
+      sub: "The core principle: what you send is a package you picked — never the whole vault.",
       steps: [
-        { n: "1", title: "Upload a photo or scan", text: "Passport, visa, medical result, travel doc — any document." },
-        { n: "2", title: "Add the expiry date", text: "Enter the 'valid until' date — the app remembers and reminds you in advance." },
-        { n: "3", title: "Get reminders", text: "You'll be warned before a visa, test or insurance expires." },
-        { n: "4", title: "Control access", text: "Send expiring links to doctors, banks or relatives." },
+        { n: "1", title: "Upload your documents", text: "Resume, passport, ID, diplomas, certificates, medical records, portfolio, insurance." },
+        { n: "2", title: "Sort by people and tasks", text: "For yourself, family, a child, a candidate, an employee or a freelance profile." },
+        { n: "3", title: "Build a package", text: "Only the documents needed: for an application, employer, school, doctor or trip." },
+        { n: "4", title: "Send a secure link", text: "The link is time-limited. Access can be revoked at any moment." },
       ],
     },
     security: {
-      heading: "Your documents are safe",
+      heading: "You send only selected documents — never the whole vault",
       sub: "We know how important these documents are — and built everything so you can feel at ease.",
       promise:
         "Your privacy and security are our top priority. Your data is kept in a secure cloud and sent over HTTPS, with access locked down by strict database rules. We never sell or trade your data, and we never share it for advertising.",
@@ -228,9 +324,9 @@ const M: Record<Locale, Dict> = {
       ],
     },
     cta: {
-      heading: "Ready to gather all your family's documents?",
-      sub: "Less than 15 minutes — and order that lasts.",
-      button: "Create your vault — free",
+      heading: "Gather your documents once. Use them every time they're needed.",
+      sub: "For work, hiring, family, travel and secure document sharing.",
+      button: "Build your first package — free",
     },
     faq: {
       heading: "Frequently asked questions",
@@ -275,17 +371,51 @@ const M: Record<Locale, Dict> = {
   id: {
     nav: { login: "Masuk", start: "Mulai gratis", startShort: "Mulai" },
     hero: {
-      badge: "Brankas pribadi untuk dokumen seluruh keluarga Anda",
-      title: ["Brankas keluarga", "untuk semua dokumen —", "dan tenggat terkendali"],
+      kicker: "Paket dokumen — siap dipakai beraksi",
+      titlePre: "Dokumen yang bisa",
+      titleAccent: "langsung dipakai",
       subtitle:
-        "Paspor, hasil medis, visa, ijazah, sertifikat, dan dokumen perjalanan. Akses dari perangkat apa pun. Pengingat berjalan sendiri.",
-      cta1: "Buat brankas — gratis",
-      cta2: "Cara kerjanya",
-      demo: "Lihat demo — tanpa daftar →",
-      trust: ["Perangkat apa pun", "2 GB gratis", "Masuk dengan Google"],
-      security:
-        "Penyimpanan privat · Hanya keluarga Anda yang punya akses · Pengenalan AI opsional",
-      imgAlt: "Dokumen keluarga — tertata rapi dan mudah dijangkau",
+        "Kumpulkan CV, KTP, sertifikat, surat, portofolio, dan dokumen keluarga di satu tempat. Lamar kerja, rekrut dengan dokumen yang tepat, atau kirim paket pilihan lewat tautan aman.",
+      cta1: "Susun paket pertama",
+      cta2: "Lihat demo",
+      trust: ["2 GB gratis", "Akses bisa dicabut", "Dokumen tidak dikirim ke AI tanpa izin Anda"],
+      roles: [
+        { emoji: "🙋", label: "Cari kerja → resume", href: "/login?next=/my/resume" },
+        { emoji: "💼", label: "Merekrut → lowongan", href: "/login?next=/employer/vacancies/new" },
+        { emoji: "🎨", label: "Freelancer → portofolio", href: "/login?next=/my/freelance" },
+      ],
+      pkg: {
+        title: "Paket lamaran",
+        vacancy: "Lowongan: Barista · Canggu",
+        needTitle: "Diminta perusahaan:",
+        need: ["CV", "KTP / paspor", "Sertifikat", "Jawaban video 60 dtk"],
+        readyTitle: "Paket Anda siap:",
+        ready: ["Resume siap", "KTP dipilih", "Sertifikat dipilih", "WhatsApp ditambahkan"],
+        send: "Kirim lamaran",
+        badge: "Bukan seluruh arsip — hanya dokumen yang Anda pilih.",
+        chip: "🔗 Tautan kedaluwarsa · akses bisa dicabut",
+      },
+    },
+    scenarios: {
+      heading: "Pakai dokumen di tempat yang membutuhkannya",
+      items: [
+        { emoji: "🙋", title: "Lamar dengan paket siap kirim", text: "CV, KTP, sertifikat, portofolio, jawaban dan video — ke perusahaan dalam satu klik.", cta: "Buat resume", href: "/login?next=/my/resume" },
+        { emoji: "💼", title: "Terima lamaran lengkap dengan dokumen", text: "Buat lowongan, pilih dokumen dan pertanyaan — kandidat masuk ke satu tempat.", cta: "Pasang lowongan", href: "/login?next=/employer/vacancies/new" },
+        { emoji: "🎨", title: "Tunjukkan karya lewat satu tautan", text: "Susun portofolio, tambah kontak — klien membukanya tanpa login.", cta: "Buat portofolio", href: "/login?next=/my/freelance" },
+        { emoji: "👪", title: "Simpan yang penting di dekat Anda", text: "Paspor, asuransi, surat, dokumen anak dan tenggatnya — di satu tempat.", cta: "Unggah dokumen", href: "/login" },
+      ],
+    },
+    employer: {
+      heading: "Belum tahu mau merekrut siapa? Mulai dari tugasnya.",
+      text: "Jelaskan yang perlu dikerjakan: “orang untuk shift kafe”, “yang membalas WhatsApp”, “asisten operasional”. doki.help menyarankan peran, tugas, dokumen dan pertanyaan kandidat.",
+      cardTitle: "Lowongan: Barista",
+      doLabel: "Yang akan dikerjakan:",
+      doItems: ["membuat kopi", "melayani tamu", "menangani kasir"],
+      askLabel: "Yang diminta dari kandidat:",
+      askItems: ["CV", "KTP / paspor", "sertifikat", "jawaban video 60 dtk"],
+      qLabel: "Pertanyaan:",
+      qItems: ["Kapan bisa mulai?", "Pengalaman mesin espresso?"],
+      cta: "Buat lowongan",
     },
     store: {
       heading: "Apa saja yang bisa disimpan di brankas Anda",
@@ -296,6 +426,7 @@ const M: Record<Locale, Dict> = {
       medCol2: ["Laporan dokter", "Sertifikat vaksinasi", "Surat keterangan medis"],
       medNote: "Pengingat tenggat — gratis.",
       cats: [
+        { icon: "💼", title: "Kerja & karier", items: ["CV & resume", "Ijazah dan sertifikat", "Portofolio", "Surat rekomendasi", "Kontrak kerja"] },
         { icon: "📄", title: "Dokumen pribadi & imigrasi", items: ["Paspor & paspor internasional", "Visa dan berkas visa", "Dokumen kewarganegaraan", "NPWP & nomor jaminan sosial", "Ijazah dan sertifikat"] },
         { icon: "✈️", title: "Perjalanan & wisata", items: ["Paket tur & voucher", "Tiket dan pemesanan", "Asuransi perjalanan", "Dokumen masuk/keluar", "Surat izin perjalanan anak"] },
         { icon: "🚗", title: "Kendaraan & properti", items: ["Asuransi mobil", "BPKB & STNK kendaraan", "Sertifikat properti & kontrak"] },
@@ -303,26 +434,26 @@ const M: Record<Locale, Dict> = {
       ],
     },
     pain: {
-      heading: "Terdengar familier?",
+      heading: "Dokumen tidak dibutuhkan “kapan-kapan”. Dibutuhkannya mendesak.",
       items: [
-        "Pagi ini sekolah minta surat — dan Anda tak bisa menemukannya.",
-        "Bandara minta asuransi, tapi entah di chat yang mana.",
-        "Dokter minta hasil lab lama — adanya di ponsel lama.",
-        "Visa atau asuransi hampir habis, dan Anda baru tahu di menit terakhir.",
+        { t: "Melamar kerja", d: "Lowongan sudah dibuka, tapi CV, KTP dan sertifikat tersebar di banyak chat." },
+        { t: "Merekrut karyawan", d: "Kandidat mengirim dokumen sepotong-sepotong lewat WhatsApp — lalu seseorang mencarinya dengan heroik." },
+        { t: "Keluarga & perjalanan", d: "Bandara minta asuransi, sekolah minta surat, paspor hampir kedaluwarsa." },
+        { t: "Freelance & klien", d: "Klien minta portofolio dan bukti — dan Anda kembali mengumpulkan tautan satu per satu." },
       ],
     },
     how: {
-      heading: "Cara kerjanya",
-      sub: "Unggah dokumen — selebihnya aplikasi yang mengurus",
+      heading: "Kumpulkan dokumen sekali. Selanjutnya kirim yang perlu saja.",
+      sub: "Prinsip utama: yang terkirim adalah paket pilihan Anda — bukan seluruh brankas.",
       steps: [
-        { n: "1", title: "Unggah foto atau pindaian", text: "Paspor, visa, hasil medis, dokumen perjalanan — dokumen apa pun." },
-        { n: "2", title: "Tambahkan tanggal berlaku", text: "Masukkan tanggal 'berlaku sampai' — aplikasi mengingat dan mengingatkan lebih awal." },
-        { n: "3", title: "Terima pengingat", text: "Anda akan diingatkan sebelum visa, pemeriksaan, atau asuransi kedaluwarsa." },
-        { n: "4", title: "Kendalikan akses", text: "Kirim tautan berbatas waktu ke dokter, bank, atau kerabat." },
+        { n: "1", title: "Unggah dokumen", text: "Resume, paspor, KTP, ijazah, sertifikat, surat medis, portofolio, asuransi." },
+        { n: "2", title: "Susun per orang dan tugas", text: "Untuk Anda, keluarga, anak, kandidat, karyawan, atau profil freelance." },
+        { n: "3", title: "Susun paket", text: "Hanya dokumen yang dibutuhkan: untuk lamaran, perusahaan, sekolah, dokter, atau perjalanan." },
+        { n: "4", title: "Kirim tautan aman", text: "Tautan berbatas waktu. Akses bisa dicabut kapan saja." },
       ],
     },
     security: {
-      heading: "Dokumen Anda aman",
+      heading: "Yang terkirim hanya dokumen pilihan — bukan seluruh brankas",
       sub: "Kami paham betapa pentingnya dokumen-dokumen ini — dan membangun semuanya agar Anda merasa tenang.",
       promise:
         "Privasi dan keamanan adalah prioritas utama kami. Data Anda disimpan di cloud yang aman dan dikirim melalui HTTPS, dengan akses dibatasi aturan basis data yang ketat. Kami tidak pernah menjual atau memperdagangkan data Anda, dan tidak membagikannya untuk iklan.",
@@ -335,9 +466,9 @@ const M: Record<Locale, Dict> = {
       ],
     },
     cta: {
-      heading: "Siap mengumpulkan semua dokumen keluarga Anda?",
-      sub: "Kurang dari 15 menit — dan tertata rapi untuk seterusnya.",
-      button: "Buat brankas — gratis",
+      heading: "Kumpulkan dokumen sekali. Pakai setiap kali dibutuhkan.",
+      sub: "Untuk kerja, rekrutmen, keluarga, perjalanan, dan pengiriman dokumen yang aman.",
+      button: "Susun paket pertama — gratis",
     },
     faq: {
       heading: "Pertanyaan umum",
@@ -382,17 +513,51 @@ const M: Record<Locale, Dict> = {
   uz: {
     nav: { login: "Kirish", start: "Bepul boshlash", startShort: "Boshlash" },
     hero: {
-      badge: "Butun oilangiz hujjatlari uchun shaxsiy seyf",
-      title: ["Oilaviy seyf", "barcha hujjatlar uchun —", "muddatlar nazoratda"],
+      kicker: "Hujjatlar paketi — real harakatlar uchun",
+      titlePre: "Darhol ishlatsa boʻladigan",
+      titleAccent: "hujjatlar",
       subtitle:
-        "Pasportlar, tibbiy natijalar, vizalar, diplomlar, sertifikatlar va sayohat hujjatlari. Istalgan qurilmadan kiring. Eslatmalar oʻzi ishlaydi.",
-      cta1: "Seyf yaratish — bepul",
-      cta2: "Bu qanday ishlaydi",
-      demo: "Demoni koʻrish — roʻyxatsiz →",
-      trust: ["Istalgan qurilma", "2 GB bepul", "Google orqali kirish"],
-      security:
-        "Maxfiy xotira · Faqat oilangizda kirish · AI-aniqlash — ixtiyoriy",
-      imgAlt: "Oila hujjatlari — tartibli va qoʻl ostida",
+        "Rezyume, ID, sertifikatlar, maʼlumotnomalar, portfolio va oila hujjatlarini bitta joyga yigʻing. Vakansiyalarga ariza bering, kerakli hujjatlar bilan yollang yoki tanlangan paketni xavfsiz havola orqali yuboring.",
+      cta1: "Birinchi paketni yigʻish",
+      cta2: "Demoni koʻrish",
+      trust: ["2 GB bepul", "Kirishni bekor qilish mumkin", "Hujjatlar sizning ruxsatingizsiz AIga yuborilmaydi"],
+      roles: [
+        { emoji: "🙋", label: "Ish izlayapman → rezyume", href: "/login?next=/my/resume" },
+        { emoji: "💼", label: "Yollayapman → vakansiya", href: "/login?next=/employer/vacancies/new" },
+        { emoji: "🎨", label: "Frilanser → portfolio", href: "/login?next=/my/freelance" },
+      ],
+      pkg: {
+        title: "Ariza paketi",
+        vacancy: "Vakansiya: Barista · Changu",
+        needTitle: "Ish beruvchi soʻraydi:",
+        need: ["CV", "ID / pasport", "Sertifikat", "60 soniyalik video-javob"],
+        readyTitle: "Paketingiz tayyor:",
+        ready: ["Rezyume tayyor", "ID tanlandi", "Sertifikat tanlandi", "WhatsApp qoʻshildi"],
+        send: "Ariza yuborish",
+        badge: "Butun arxiv emas — faqat siz tanlagan hujjatlar.",
+        chip: "🔗 Havola muddatli · kirishni bekor qilish mumkin",
+      },
+    },
+    scenarios: {
+      heading: "Hujjatlarni kerak boʻlgan joyda ishlating",
+      items: [
+        { emoji: "🙋", title: "Tayyor paket bilan ariza bering", text: "CV, ID, sertifikatlar, portfolio, javoblar va video — ish beruvchiga bir bosishda.", cta: "Rezyume yaratish", href: "/login?next=/my/resume" },
+        { emoji: "💼", title: "Arizalarni hujjatlari bilan oling", text: "Vakansiya yarating, kerakli hujjat va savollarni tanlang — nomzodlar bitta joyga keladi.", cta: "Vakansiya joylash", href: "/login?next=/employer/vacancies/new" },
+        { emoji: "🎨", title: "Ishlaringizni bitta havola bilan koʻrsating", text: "Portfolio yigʻing, kontakt qoʻshing — mijoz kirishsiz ochadi.", cta: "Portfolio yaratish", href: "/login?next=/my/freelance" },
+        { emoji: "👪", title: "Muhim narsalar qoʻl ostida boʻlsin", text: "Pasportlar, sugʻurtalar, maʼlumotnomalar, bola hujjatlari va muddatlar — bitta joyda.", cta: "Hujjat yuklash", href: "/login" },
+      ],
+    },
+    employer: {
+      heading: "Kimni yollashni bilmayapsizmi? Vazifadan boshlang.",
+      text: "Nima kerakligini yozing: «kafega smenaga odam», «WhatsAppga javob beradigan», «operatsion ishlarga assistent». doki.help rol, vazifalar, hujjatlar va nomzodga savollarni taklif qiladi.",
+      cardTitle: "Vakansiya: Barista",
+      doLabel: "Nima qiladi:",
+      doItems: ["kofe tayyorlash", "mehmonlarga xizmat", "kassa bilan ishlash"],
+      askLabel: "Nomzoddan nima soʻraladi:",
+      askItems: ["CV", "ID / pasport", "sertifikat", "60 soniyalik video-javob"],
+      qLabel: "Savollar:",
+      qItems: ["Qachon chiqa olasiz?", "Kofe mashinasida tajriba?"],
+      cta: "Vakansiya yaratish",
     },
     store: {
       heading: "Seyfingizda nimalarni saqlashingiz mumkin",
@@ -403,6 +568,7 @@ const M: Record<Locale, Dict> = {
       medCol2: ["Shifokor xulosalari", "Emlash sertifikatlari", "Tibbiy maʼlumotnomalar"],
       medNote: "Muddat eslatmalari — bepul.",
       cats: [
+        { icon: "💼", title: "Ish va karyera", items: ["CV va rezyume", "Diplomlar va sertifikatlar", "Portfolio", "Tavsiya xatlari", "Mehnat shartnomalari"] },
         { icon: "📄", title: "Shaxsiy va migratsiya hujjatlari", items: ["Pasportlar va xalqaro pasportlar", "Vizalar va viza hujjatlari", "Fuqarolik hujjatlari", "Soliq va ijtimoiy sugʻurta raqamlari", "Diplomlar va sertifikatlar"] },
         { icon: "✈️", title: "Sayohatlar va sayyohlik", items: ["Tur paketlari va voucherlar", "Chiptalar va bronlar", "Sayohat sugʻurtasi", "Kirish/chiqish hujjatlari", "Bolaning sayohatiga ruxsatnomalar"] },
         { icon: "🚗", title: "Transport va mulk", items: ["Avtomobil sugʻurtasi", "Transport guvohnomalari va roʻyxati", "Mulk hujjatlari va shartnomalar"] },
@@ -410,26 +576,26 @@ const M: Record<Locale, Dict> = {
       ],
     },
     pain: {
-      heading: "Tanishmi?",
+      heading: "Hujjatlar «qachondir» emas — shoshilinch kerak boʻladi.",
       items: [
-        "Ertalab bogʻchaga maʼlumotnoma kerak — topib boʻlmayapti.",
-        "Aeroportda sugʻurta soʻrashadi, u esa qaysidir yozishmada.",
-        "Shifokor eski tahlillarni soʻrayapti — ular eski telefonda.",
-        "Viza yoki sugʻurta tugayapti, buni esa oxirgi daqiqada bilasiz.",
+        { t: "Ishga ariza", d: "Vakansiya ochiq, CV, ID va sertifikat esa turli chatlarda yotibdi." },
+        { t: "Xodim yollash", d: "Nomzodlar hujjatlarni WhatsAppda boʻlak-boʻlak yuboradi — keyin kimdir ularni qahramonlarcha qidiradi." },
+        { t: "Oila va sayohat", d: "Aeroportda sugʻurta, maktabda maʼlumotnoma kerak, pasport muddati tugayapti." },
+        { t: "Frilans va mijozlar", d: "Mijoz portfolio va tasdiqlarni soʻraydi — siz yana havolalarni qoʻlda yigʻasiz." },
       ],
     },
     how: {
-      heading: "Bu qanday ishlaydi",
-      sub: "Hujjatni yuklang — qolganini ilova bajaradi",
+      heading: "Hujjatlarni bir marta yigʻing. Keyin faqat keragini yuboring.",
+      sub: "Asosiy tamoyil: butun seyf emas, siz tanlagan paket yuboriladi.",
       steps: [
-        { n: "1", title: "Rasm yoki skan yuklang", text: "Pasport, viza, tibbiy natija, sayohat hujjati — istalgan hujjat." },
-        { n: "2", title: "Amal muddatini kiriting", text: "«Amal qiladi» sanasini kiriting — ilova eslab qoladi va oldindan eslatadi." },
-        { n: "3", title: "Eslatmalar oling", text: "Viza, tahlil yoki sugʻurta muddati tugashidan oldin ogohlantiriladi." },
-        { n: "4", title: "Kirishni boshqaring", text: "Shifokorlar, banklar yoki qarindoshlarga muddatli havolalar yuboring." },
+        { n: "1", title: "Hujjatlarni yuklang", text: "Rezyume, pasport, ID, diplomlar, sertifikatlar, tibbiy hujjatlar, portfolio, sugʻurtalar." },
+        { n: "2", title: "Odam va vazifalar boʻyicha joylang", text: "Oʻzingiz, oila, bola, nomzod, xodim yoki frilans-profil uchun." },
+        { n: "3", title: "Paket yigʻing", text: "Faqat kerakli hujjatlar: ariza, ish beruvchi, maktab, shifokor yoki sayohat uchun." },
+        { n: "4", title: "Xavfsiz havola yuboring", text: "Havola cheklangan muddat ishlaydi. Kirishni istalgan payt bekor qilish mumkin." },
       ],
     },
     security: {
-      heading: "Hujjatlaringiz xavfsiz",
+      heading: "Butun seyf emas — faqat tanlangan hujjatlar yuboriladi",
       sub: "Bu hujjatlar qanchalik muhimligini bilamiz — va xotirjam boʻlishingiz uchun hammasini puxta qurdik.",
       promise:
         "Maxfiylik va xavfsizlik — asosiy ustuvorligimiz. Maʼlumotlaringiz xavfsiz bulutda saqlanadi va HTTPS orqali uzatiladi, kirish esa maʼlumotlar bazasi darajasidagi qatʼiy qoidalar bilan cheklangan. Maʼlumotlaringizni hech qachon sotmaymiz yoki almashtirmaymiz va reklama uchun ulashmaymiz.",
@@ -442,9 +608,9 @@ const M: Record<Locale, Dict> = {
       ],
     },
     cta: {
-      heading: "Oilangizning barcha hujjatlarini yigʻishga tayyormisiz?",
-      sub: "15 daqiqadan kam vaqt — va uzoq saqlanadigan tartib.",
-      button: "Seyf yaratish — bepul",
+      heading: "Hujjatlarni bir marta yigʻing. Kerak boʻlganda har safar ishlating.",
+      sub: "Ish, yollash, oila, sayohat va hujjatlarni xavfsiz yuborish uchun.",
+      button: "Birinchi paketni yigʻish — bepul",
     },
     faq: {
       heading: "Tez-tez beriladigan savollar",
@@ -588,76 +754,111 @@ export default async function Home({
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="mx-auto max-w-screen-xl px-5 pb-8 pt-10">
-        <div className="grid items-center gap-x-8 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <div className="mb-6 inline-flex items-center gap-x-2 rounded-full border border-[#e8e0d5] bg-white px-4 py-1.5 text-sm">
-              <span className="h-2 w-2 rounded-full bg-[#b85c38]" />
-              <span className="font-medium text-[#5c5248]">{t.hero.badge}</span>
+      {/* HERO — кинематографичная тёмная сцена, герой — «пакет документов» */}
+      <section className="mx-auto max-w-screen-xl px-3 pt-4 sm:px-5 sm:pt-6">
+        <div className="hero-stage rounded-[2rem] px-5 py-10 text-[#f9f5f0] sm:px-10 sm:py-14 lg:px-14">
+          <div className="relative z-10 grid items-center gap-x-12 gap-y-12 lg:grid-cols-12">
+            <div className="lg:col-span-6">
+              <div className="hero-rise hero-rise-1 mb-6 inline-flex items-center gap-x-2.5 rounded-full border border-white/15 bg-white/[0.06] px-4 py-1.5 text-sm backdrop-blur">
+                <span className="hero-kicker-dot h-2 w-2 rounded-full bg-[#e8935f]" />
+                <span className="font-medium text-[#e9ddcd]">{t.hero.kicker}</span>
+              </div>
+
+              <h1 className="hero-rise hero-rise-2 heading-font mb-5 text-[2.5rem] leading-[1.04] tracking-[-1.4px] sm:text-[3.1rem] lg:text-[3.6rem]">
+                {t.hero.titlePre}
+                <br />
+                <span className="hero-accent">{t.hero.titleAccent}</span>
+              </h1>
+
+              <p className="hero-rise hero-rise-3 mb-8 max-w-lg text-[17px] leading-relaxed text-[#cfc2b1] sm:text-[18px]">
+                {t.hero.subtitle}
+              </p>
+
+              <div className="hero-rise hero-rise-4 mb-6 flex max-w-lg flex-col gap-3 sm:flex-row">
+                <Link href="/login" className="hero-cta flex flex-1 items-center justify-center rounded-2xl px-8 py-[16px] text-[17px] font-semibold text-white active:scale-[0.985]">
+                  {t.hero.cta1}
+                </Link>
+                <Link href="/demo" className="flex flex-1 items-center justify-center rounded-2xl border border-white/20 px-8 py-[16px] text-[17px] font-semibold text-[#f1e7d8] transition-colors hover:bg-white/[0.07]">
+                  {t.hero.cta2}
+                </Link>
+              </div>
+
+              <div className="hero-rise hero-rise-5">
+                <div className="mb-5 flex flex-wrap gap-2">
+                  {t.hero.roles.map((r) => (
+                    <Link
+                      key={r.href}
+                      href={r.href}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.05] px-3.5 py-1.5 text-[13px] font-medium text-[#dfd3c1] transition-colors hover:border-[#e8935f]/60 hover:text-white"
+                    >
+                      <span>{r.emoji}</span> {r.label}
+                    </Link>
+                  ))}
+                </div>
+                <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-[13px] text-[#a8977f]">
+                  {t.hero.trust.map((tr) => (
+                    <span key={tr} className="flex items-center gap-x-1.5">
+                      <span className="text-[#e8935f]">✓</span> {tr}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <h1 className="heading-font mb-5 text-[2.65rem] leading-[1.05] tracking-[-1.4px] text-[#2c2522] lg:text-[3.5rem]">
-              {t.hero.title.map((line, i) => (
-                <span key={i}>
-                  {line}
-                  {i < t.hero.title.length - 1 && <br />}
-                </span>
-              ))}
-            </h1>
+            {/* Живая карточка пакета — вместо статичной картинки */}
+            <div className="lg:col-span-6">
+              <div className="relative mx-auto max-w-md">
+                <div className="pkg-card-back absolute -right-3 -top-5 hidden rounded-2xl border border-white/12 bg-white/[0.07] px-4 py-2.5 text-[12px] font-medium text-[#e9ddcd] backdrop-blur sm:block">
+                  {t.hero.pkg.chip}
+                </div>
+                <div className="pkg-card relative rounded-3xl p-6 text-[#2c2522] sm:p-7">
+                  <div className="mb-1 flex items-center justify-between gap-3">
+                    <div className="text-lg font-semibold">📦 {t.hero.pkg.title}</div>
+                  </div>
+                  <p className="mb-4 text-sm text-[#8a7c6d]">{t.hero.pkg.vacancy}</p>
 
-            <p className="mb-8 max-w-md text-[19px] leading-snug text-[#5c5248]">{t.hero.subtitle}</p>
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8a7c6d]">{t.hero.pkg.needTitle}</p>
+                  <ul className="mb-4 space-y-1 text-[15px] text-[#5c5248]">
+                    {t.hero.pkg.need.map((n) => (
+                      <li key={n} className="flex items-center gap-2">
+                        <span className="text-[#b85c38]">✓</span> {n}
+                      </li>
+                    ))}
+                  </ul>
 
-            <div className="mb-8 flex max-w-lg flex-col gap-3 sm:flex-row">
-              <Link href="/login" className="accent-btn flex flex-1 items-center justify-center rounded-3xl px-8 py-[17px] text-[17px] font-semibold active:scale-[0.985]">
-                {t.hero.cta1}
-              </Link>
-              <a href="#how" className="flex flex-1 items-center justify-center rounded-3xl border border-[#d4c9b8] px-8 py-[17px] text-[17px] font-semibold transition-colors hover:bg-white">
-                {t.hero.cta2}
-              </a>
+                  <div className="mb-4 h-px bg-[#e8e0d5]" />
+
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[#8a7c6d]">{t.hero.pkg.readyTitle}</p>
+                  <ul className="mb-5 space-y-1.5 text-[15px] font-medium">
+                    {t.hero.pkg.ready.map((r, i) => (
+                      <li key={r} className={`pkg-check pkg-check-${i + 1} flex items-center gap-2`}>
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100 text-[11px] text-emerald-700">✓</span>
+                        {r}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Link href="/login" className="accent-btn block w-full rounded-2xl py-3 text-center text-[15px] font-semibold text-white">
+                    {t.hero.pkg.send}
+                  </Link>
+                </div>
+                <p className="mt-4 text-center text-[13px] text-[#a8977f]">{t.hero.pkg.badge}</p>
+              </div>
             </div>
-
-            <Link
-              href="/demo"
-              className="mb-6 inline-block text-sm font-medium text-[#b85c38] hover:underline"
-            >
-              {t.hero.demo}
-            </Link>
-
-            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#5c5248]">
-              {t.hero.trust.map((tr) => (
-                <span key={tr} className="flex items-center gap-x-2"><Check /> {tr}</span>
-              ))}
-            </div>
-            <p className="mt-3 text-xs text-[#8a7c6d]">🔒 {t.hero.security}</p>
-          </div>
-
-          <div className="mt-8 lg:col-span-5 lg:mt-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="https://d8j0ntlcm91z4.cloudfront.net/user_3EKntK4EDjG8nay4H1dy1TK30mB/hf_20260624_011709_6438e496-ffee-421a-a01a-41cca1abd28f_min.webp"
-              alt={t.hero.imgAlt}
-              width={928}
-              height={1152}
-              loading="eager"
-              className="h-auto w-full rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl"
-            />
           </div>
         </div>
       </section>
 
       {/* PAIN */}
-      <section className="mx-auto max-w-screen-xl px-4 pb-8 pt-2 sm:px-5">
-        <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-6 sm:p-7">
-          <h2 className="section-header mb-5">{t.pain.heading}</h2>
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {t.pain.items.map((it) => (
-              <li key={it} className="flex items-start gap-x-2 text-[#5c5248]">
-                <span className="mt-0.5 shrink-0 text-[#b85c38]">•</span>
-                <span>{it}</span>
-              </li>
-            ))}
-          </ul>
+      <section className="mx-auto max-w-screen-xl px-4 pb-8 pt-8 sm:px-5">
+        <h2 className="section-header mb-6">{t.pain.heading}</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {t.pain.items.map((it) => (
+            <div key={it.t} className="warm-card rounded-3xl border border-[#e8e0d5] p-6">
+              <div className="mb-1.5 text-lg font-semibold">{it.t}</div>
+              <p className="text-[#5c5248]">{it.d}</p>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -809,6 +1010,59 @@ export default async function Home({
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* SCENARIOS — используйте документы там, где они нужны */}
+      <section className="mx-auto max-w-screen-xl px-5 py-12">
+        <h2 className="section-header mb-6">{t.scenarios.heading}</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          {t.scenarios.items.map((s) => (
+            <div key={s.title} className="warm-card flex flex-col rounded-3xl border border-[#e8e0d5] p-7">
+              <div className="mb-2 text-3xl">{s.emoji}</div>
+              <div className="mb-1.5 text-xl font-semibold">{s.title}</div>
+              <p className="mb-5 flex-1 text-[#5c5248]">{s.text}</p>
+              <Link href={s.href} className="inline-flex w-fit items-center rounded-2xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-semibold transition-colors hover:border-[#b85c38] hover:text-[#b85c38]">
+                {s.cta} →
+              </Link>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* EMPLOYER — не знаете, кого нанять */}
+      <section className="mx-auto max-w-screen-xl px-5 py-6">
+        <div className="rounded-[2rem] bg-[#2c2522] px-6 py-10 text-[#f9f5f0] sm:px-10">
+          <div className="grid items-center gap-x-12 gap-y-8 lg:grid-cols-2">
+            <div>
+              <h2 className="heading-font mb-4 text-3xl tracking-tight sm:text-4xl">{t.employer.heading}</h2>
+              <p className="mb-6 max-w-lg leading-relaxed text-[#cfc2b1]">{t.employer.text}</p>
+              <Link href="/login?next=/employer/vacancies/new" className="hero-cta inline-flex items-center rounded-2xl px-8 py-[15px] text-[16px] font-semibold text-white">
+                {t.employer.cta}
+              </Link>
+            </div>
+            <div className="rounded-3xl bg-[#fdfaf5] p-6 text-[#2c2522] shadow-2xl sm:p-7">
+              <div className="mb-4 text-lg font-semibold">{t.employer.cardTitle}</div>
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[#8a7c6d]">{t.employer.doLabel}</p>
+              <ul className="mb-4 space-y-1 text-[15px] text-[#5c5248]">
+                {t.employer.doItems.map((d) => (
+                  <li key={d} className="flex items-center gap-2"><span className="text-[#b85c38]">✓</span> {d}</li>
+                ))}
+              </ul>
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[#8a7c6d]">{t.employer.askLabel}</p>
+              <ul className="mb-4 space-y-1 text-[15px] text-[#5c5248]">
+                {t.employer.askItems.map((d) => (
+                  <li key={d} className="flex items-center gap-2"><span className="text-[#b85c38]">✓</span> {d}</li>
+                ))}
+              </ul>
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-[#8a7c6d]">{t.employer.qLabel}</p>
+              <ul className="space-y-1 text-[15px] text-[#5c5248]">
+                {t.employer.qItems.map((d) => (
+                  <li key={d} className="flex items-center gap-2"><span className="text-[#b85c38]">•</span> {d}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
