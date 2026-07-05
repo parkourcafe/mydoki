@@ -6,6 +6,10 @@ import type { VacancyInitial } from "@/app/employer/vacancies/new/VacancyForm";
 // Ответы детерминированно собираются в черновик вакансии (без AI). Контент
 // на русском (пилот). Кастомные значения хранятся как "custom:<текст>".
 
+// Ключ для сохранения ответов диалога (чтобы не терять «весь журнал» при
+// сбое/перерисовке). Чистится после успешного создания вакансии.
+export const WIZARD_STORAGE_KEY = "doki_vacancy_wizard_v1";
+
 export type Option = { value: string; label: string };
 
 export type Step = {

@@ -14,10 +14,12 @@ import { createVacancy, updateVacancy } from "@/app/employer/actions";
 import { track } from "@/lib/analytics";
 import RolePicker from "./RolePicker";
 import type { RoleTemplate } from "@/lib/roleTemplates";
+import { WIZARD_STORAGE_KEY } from "@/lib/vacancyWizard";
 
 const M = {
   en: {
     title: "New vacancy",
+    previewNote: "✅ Draft ready — check it, fix anything missing, then publish.",
     jobTitle: "Job title",
     jobTitlePh: "e.g. Barista",
     company: "Company name",
@@ -81,6 +83,7 @@ const M = {
   },
   id: {
     title: "Lowongan baru",
+    previewNote: "✅ Draf siap — periksa, perbaiki yang kurang, lalu terbitkan.",
     jobTitle: "Nama posisi",
     jobTitlePh: "mis. Barista",
     company: "Nama perusahaan",
@@ -144,6 +147,7 @@ const M = {
   },
   ru: {
     title: "Новая вакансия",
+    previewNote: "✅ Черновик собран — проверь, поправь что нужно и опубликуй.",
     jobTitle: "Должность",
     jobTitlePh: "напр. Бариста",
     company: "Название компании",
@@ -207,6 +211,7 @@ const M = {
   },
   uz: {
     title: "Yangi vakansiya",
+    previewNote: "✅ Qoralama tayyor — tekshiring, kerakli joyni tuzating va e'lon qiling.",
     jobTitle: "Lavozim",
     jobTitlePh: "mas. Barista",
     company: "Kompaniya nomi",
@@ -488,6 +493,11 @@ export default function VacancyForm({
       } else {
         const { id } = await createVacancy(payload);
         track("vacancy_created", { vacancy_id: id });
+        try {
+          sessionStorage.removeItem(WIZARD_STORAGE_KEY);
+        } catch {
+          /* ignore */
+        }
         router.push(`/employer/vacancies/${id}?created=1`);
       }
     } catch {
@@ -499,6 +509,12 @@ export default function VacancyForm({
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-5">
       <h1 className="text-2xl font-semibold">{isEdit ? t.editTitle : t.title}</h1>
+
+      {fromWizard && (
+        <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+          {t.previewNote}
+        </p>
+      )}
 
       {!isEdit && (
         <RolePicker
