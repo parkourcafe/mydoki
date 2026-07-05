@@ -37,6 +37,12 @@ export function mkCustom(text: string): string {
 export const STEPS: Step[] = [
   { id: "role", kind: "role", title: "Кого именно ищем?", hint: "Выбери близкую роль — под неё подставим задачи и документы." },
   {
+    id: "location",
+    kind: "text",
+    title: "Где работа? (куда приглашаешь)",
+    placeholder: "напр. Чангу, Бали",
+  },
+  {
     id: "schedule",
     kind: "single",
     title: "Формат и график работы?",
@@ -289,7 +295,7 @@ export function buildDraft(a: Answers, defaultCompany: string): VacancyInitial {
   return {
     title,
     company_name: defaultCompany,
-    location: null,
+    location: str(a, "location") || null,
     salary_range,
     schedule: str(a, "schedule") || null,
     description: description || null,
