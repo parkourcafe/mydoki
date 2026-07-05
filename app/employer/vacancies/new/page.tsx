@@ -5,6 +5,7 @@ import SubmitButton from "@/components/SubmitButton";
 import { saveEmployerProfile } from "@/app/employer/actions";
 import VacancyForm from "./VacancyForm";
 import EmployerVerification from "@/app/employer/EmployerVerification";
+import VacancyLimitReached from "./VacancyLimitReached";
 
 const M = {
   en: {
@@ -95,6 +96,18 @@ export default async function NewVacancyPage() {
   // вакансии (общая функция create_vacancy требует verified_at).
   if (!profile.verified_at) {
     return <EmployerVerification locale={locale} />;
+  }
+
+  // Лимит бесплатного тарифа: считаем АКТИВНЫЕ вакансии. Если достигнут —
+  // показываем экран «напишите нам» вместо формы (монетизация, пилот).
+  const limit = (profile.vacancy_limit as number | null) ?? 3;
+  const { count: activeCount } = await supabase
+    .from("vacancies")
+    .select("id", { count: "exact", head: true })
+    .eq("employer_id", profile.id)
+    .eq("status", "active");
+  if ((activeCount ?? 0) >= limit) {
+    return <VacancyLimitReached locale={locale} limit={limit} />;
   }
 
   return <VacancyForm locale={locale} defaultCompany={profile.company_name} />;
