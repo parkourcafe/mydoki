@@ -164,7 +164,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const t = M[locale];
   return {
-    title: `${t.metaTitle} · doki.help`,
+    title: t.metaTitle,
     description: t.metaDesc,
   };
 }

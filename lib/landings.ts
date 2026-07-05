@@ -1690,7 +1690,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Will I know if someone opened it?",
-            a: "Yes. Every open is recorded in an access log for that link. (TODO: confirm exactly what the log shows with the team.)",
+            a: "Yes. Every open is recorded in an access log for that link — you can see which document was opened and when.",
           },
           {
             q: "Do links expire automatically?",
@@ -1760,7 +1760,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Узнаю ли я, что кто-то открыл?",
-            a: "Да. Каждое открытие фиксируется в логе доступа этой ссылки. (TODO: уточнить у команды, что именно показывает лог.)",
+            a: "Да. Каждое открытие фиксируется в логе доступа этой ссылки — видно, какой документ открывали и когда.",
           },
           {
             q: "Истекают ли ссылки автоматически?",
@@ -1830,7 +1830,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Apakah saya tahu jika seseorang membukanya?",
-            a: "Ya. Tiap pembukaan dicatat dalam log akses tautan itu. (TODO: konfirmasi ke tim apa saja yang ditampilkan log.)",
+            a: "Ya. Tiap pembukaan dicatat dalam log akses tautan itu — Anda bisa melihat dokumen mana yang dibuka dan kapan.",
           },
           {
             q: "Apakah tautan kedaluwarsa otomatis?",
@@ -1900,7 +1900,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Kimdir ochganini bilamanmi?",
-            a: "Ha. Har bir ochilish oʻsha havolaning kirish jurnalida qayd etiladi. (TODO: jurnal aniq nimani koʻrsatishini jamoa bilan tasdiqlash.)",
+            a: "Ha. Har bir ochilish oʻsha havolaning kirish jurnalida qayd etiladi — qaysi hujjat qachon ochilganini koʻrasiz.",
           },
           {
             q: "Havolalar avtomatik muddati tugaydimi?",
@@ -1998,7 +1998,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Is it free?",
-            a: "Yes. The free tier includes 2 GB, reminders, family access and offline access. A paid tier may come later. (TODO: confirm data storage region with the team.)",
+            a: "Yes. The free tier includes 2 GB, reminders, family access and offline access. A paid tier may come later. Documents are stored in secure cloud (Supabase); servers may be located outside Russia — see our Privacy Policy.",
           },
         ],
       },
@@ -2068,7 +2068,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Это бесплатно?",
-            a: "Да. Бесплатный тариф включает 2 ГБ, напоминания, семейный доступ и офлайн-доступ. Платный тариф может появиться позже. (TODO: уточнить у команды регион хранения данных.)",
+            a: "Да. Бесплатный тариф включает 2 ГБ, напоминания, семейный доступ и офлайн-доступ. Платный тариф может появиться позже. Документы хранятся в защищённом облаке (Supabase); серверы могут находиться вне РФ — подробности в Политике конфиденциальности.",
           },
         ],
       },
@@ -2138,7 +2138,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Apakah gratis?",
-            a: "Ya. Paket gratis mencakup 2 GB, pengingat, akses keluarga dan akses offline. Paket berbayar mungkin hadir nanti. (TODO: konfirmasi wilayah penyimpanan data ke tim.)",
+            a: "Ya. Paket gratis mencakup 2 GB, pengingat, akses keluarga dan akses offline. Paket berbayar mungkin hadir nanti. Dokumen disimpan di cloud aman (Supabase); server bisa berada di luar Rusia — lihat Kebijakan Privasi kami.",
           },
         ],
       },
@@ -2208,7 +2208,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Bu bepulmi?",
-            a: "Ha. Bepul tarif 2 GB, eslatmalar, oilaviy kirish va oflayn kirishni oʻz ichiga oladi. Pullik tarif keyinroq paydo boʻlishi mumkin. (TODO: maʼlumotlar saqlanadigan hududni jamoa bilan tasdiqlash.)",
+            a: "Ha. Bepul tarif 2 GB, eslatmalar, oilaviy kirish va oflayn kirishni oʻz ichiga oladi. Pullik tarif keyinroq paydo boʻlishi mumkin. Hujjatlar xavfsiz bulutda (Supabase) saqlanadi; serverlar Rossiyadan tashqarida boʻlishi mumkin — Maxfiylik siyosatimizga qarang.",
           },
         ],
       },
@@ -2303,7 +2303,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How is sensitive medical data protected?",
-            a: "Files are kept in a private bucket over HTTPS, access is isolated to your family at the database level, and two-factor login is available. (TODO: confirm at-rest encryption and data region with the team.)",
+            a: "Files are kept in a private bucket over HTTPS, access is isolated to your family at the database level, and two-factor login is available. Servers may be located outside Russia — see our Privacy Policy. (TODO: confirm at-rest encryption with the team.)",
           },
         ],
       },
@@ -2374,7 +2374,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Как защищены чувствительные медицинские данные?",
-            a: "Файлы хранятся в приватном bucket по HTTPS, доступ изолирован вашей семьёй на уровне базы, доступен двухфакторный вход. (TODO: уточнить у команды шифрование at-rest и регион хранения.)",
+            a: "Файлы хранятся в приватном bucket по HTTPS, доступ изолирован вашей семьёй на уровне базы, доступен двухфакторный вход. Серверы могут находиться вне РФ — подробности в Политике конфиденциальности. (TODO: уточнить у команды шифрование at-rest.)",
           },
         ],
       },
@@ -2445,7 +2445,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Bagaimana data medis sensitif dilindungi?",
-            a: "Berkas disimpan di bucket privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data, dan login dua faktor tersedia. (TODO: konfirmasi enkripsi at-rest dan wilayah penyimpanan ke tim.)",
+            a: "Berkas disimpan di bucket privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data, dan login dua faktor tersedia. Server bisa berada di luar Rusia — lihat Kebijakan Privasi kami. (TODO: konfirmasi enkripsi at-rest ke tim.)",
           },
         ],
       },
@@ -2516,7 +2516,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Nozik tibbiy maʼlumot qanday himoyalanadi?",
-            a: "Fayllar maxfiy bucketda HTTPS orqali saqlanadi, kirish oilangiz darajasida izolyatsiya qilingan, ikki bosqichli kirish mavjud. (TODO: at-rest shifrlash va saqlash hududini jamoa bilan tasdiqlash.)",
+            a: "Fayllar maxfiy bucketda HTTPS orqali saqlanadi, kirish oilangiz darajasida izolyatsiya qilingan, ikki bosqichli kirish mavjud. Serverlar Rossiyadan tashqarida boʻlishi mumkin — Maxfiylik siyosatimizga qarang. (TODO: at-rest shifrlashni jamoa bilan tasdiqlash.)",
           },
         ],
       },
