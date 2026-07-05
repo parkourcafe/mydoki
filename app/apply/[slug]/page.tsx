@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getLocale } from "@/lib/i18n";
 import type { Vacancy } from "@/lib/career";
+import VacancyDescription from "@/components/VacancyDescription";
 import ApplyForm from "./ApplyForm";
 
 // Apply-страница раздаётся прямой ссылкой (WhatsApp/QR), не через поиск.
@@ -166,11 +167,7 @@ export default async function ApplyPage({
           </div>
         )}
 
-        {vacancy.description && (
-          <p className="mt-4 whitespace-pre-wrap text-sm leading-relaxed text-slate-700">
-            {vacancy.description}
-          </p>
-        )}
+        <VacancyDescription description={vacancy.description} className="mt-4 space-y-3" />
       </div>
 
       {/* Application form */}

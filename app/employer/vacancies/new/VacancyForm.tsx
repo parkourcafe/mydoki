@@ -328,12 +328,14 @@ export default function VacancyForm({
   mode = "create",
   vacancyId,
   initial,
+  fromWizard = false,
 }: {
   locale: Locale;
   defaultCompany: string;
   mode?: "create" | "edit";
   vacancyId?: string;
   initial?: VacancyInitial;
+  fromWizard?: boolean;
 }) {
   const t = M[locale];
   const router = useRouter();
@@ -371,7 +373,7 @@ export default function VacancyForm({
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pickerOpen, setPickerOpen] = useState(!isEdit);
+  const [pickerOpen, setPickerOpen] = useState(!isEdit && !fromWizard);
 
   // Выбор роли из библиотеки → заполняем название, 4 блока и документы.
   function applyRole(r: RoleTemplate) {

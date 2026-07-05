@@ -311,7 +311,8 @@ export default function ApplyForm({
     if (!fullName.trim()) return setError(t.errName);
     if (!isValidWhatsapp(whatsapp)) return setError(t.errWa);
     for (let i = 0; i < requiredDocuments.length; i++) {
-      if (requiredDocuments[i].required && !files[i]) {
+      // Отсутствие поля required у старых записей трактуем как обязательный.
+      if (requiredDocuments[i].required !== false && !files[i]) {
         return setError(t.errDoc(requiredDocuments[i].label));
       }
     }
@@ -516,7 +517,7 @@ export default function ApplyForm({
                         {doc.label}
                       </p>
                       <p className="text-xs text-slate-400">
-                        {doc.required ? t.required : t.optional}
+                        {doc.required !== false ? t.required : t.optional}
                       </p>
                     </div>
                     <label className="btn-ghost shrink-0 cursor-pointer">
