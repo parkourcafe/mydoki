@@ -26,6 +26,15 @@ const M = {
     schedule: "Schedule",
     schedulePh: "e.g. Full-time, shifts",
     description: "Description",
+    descSection: "Job description",
+    descWho: "Who we're looking for",
+    descWhoPh: "e.g. A cook for a small cafe kitchen",
+    descPurpose: "Why / what for",
+    descPurposePh: "e.g. We can't keep up at rush hour — need a second cook",
+    descExpect: "What we expect",
+    descExpectPh: "e.g. Cook from the menu, keep things clean, work as a team",
+    descSkills: "Skills needed",
+    descSkillsPh: "e.g. 1+ year kitchen experience, knows local cuisine",
     urgency: "Urgency",
     normal: "Normal",
     hiringNow: "Hiring now",
@@ -78,6 +87,15 @@ const M = {
     schedule: "Jadwal",
     schedulePh: "mis. Penuh waktu, shift",
     description: "Deskripsi",
+    descSection: "Deskripsi lowongan",
+    descWho: "Siapa yang dicari",
+    descWhoPh: "mis. Juru masak untuk dapur kafe kecil",
+    descPurpose: "Untuk apa",
+    descPurposePh: "mis. Kewalahan saat jam sibuk — butuh juru masak kedua",
+    descExpect: "Yang diharapkan",
+    descExpectPh: "mis. Masak sesuai menu, jaga kebersihan, kerja tim",
+    descSkills: "Keterampilan",
+    descSkillsPh: "mis. Pengalaman dapur 1+ tahun, tahu masakan lokal",
     urgency: "Urgensi",
     normal: "Normal",
     hiringNow: "Butuh cepat",
@@ -130,6 +148,15 @@ const M = {
     schedule: "График",
     schedulePh: "напр. Полный день, смены",
     description: "Описание",
+    descSection: "Описание вакансии",
+    descWho: "Кого ищем",
+    descWhoPh: "напр. Повар на кухню небольшого кафе",
+    descPurpose: "Для чего / зачем",
+    descPurposePh: "напр. Не успеваем в часы пик — нужен второй повар",
+    descExpect: "Что ожидаем",
+    descExpectPh: "напр. Готовить по меню, держать чистоту, работать в команде",
+    descSkills: "Какие навыки",
+    descSkillsPh: "напр. Опыт на кухне от 1 года, знание местной кухни",
     urgency: "Срочность",
     normal: "Обычная",
     hiringNow: "Срочный набор",
@@ -182,6 +209,15 @@ const M = {
     schedule: "Jadval",
     schedulePh: "mas. To‘liq kun, smenalar",
     description: "Tavsif",
+    descSection: "Vakansiya tavsifi",
+    descWho: "Kim kerak",
+    descWhoPh: "mas. Kichik kafe oshxonasiga oshpaz",
+    descPurpose: "Nima uchun",
+    descPurposePh: "mas. Gavjum vaqtda ulgurmayapmiz — ikkinchi oshpaz kerak",
+    descExpect: "Nima kutamiz",
+    descExpectPh: "mas. Menyu bo‘yicha pishirish, tozalik, jamoada ishlash",
+    descSkills: "Qanday ko‘nikmalar",
+    descSkillsPh: "mas. Oshxonada 1+ yil tajriba, mahalliy taomlarni bilish",
     urgency: "Shoshilinchlik",
     normal: "Oddiy",
     hiringNow: "Shoshilinch",
@@ -224,6 +260,51 @@ const M = {
   },
 } as const;
 
+// Описание вакансии храним ОДНИМ полем `description` (кандидат видит цельный
+// текст), но в форме делим на 4 части. Маркеры-эмодзи в заголовках не зависят
+// от языка — по ним разбираем текст обратно на части при редактировании.
+const DESC_SECTIONS = [
+  { emoji: "👤", key: "who" },
+  { emoji: "🎯", key: "purpose" },
+  { emoji: "✅", key: "expect" },
+  { emoji: "🧩", key: "skills" },
+] as const;
+
+type DescParts = { who: string; purpose: string; expect: string; skills: string };
+
+function combineDescription(parts: DescParts, labels: DescParts): string {
+  return DESC_SECTIONS.map(({ emoji, key }) => {
+    const text = parts[key].trim();
+    return text ? `${emoji} ${labels[key]}\n${text}` : "";
+  })
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+function parseDescription(desc: string | null | undefined): DescParts {
+  const out: DescParts = { who: "", purpose: "", expect: "", skills: "" };
+  if (!desc) return out;
+  const hasMarkers = DESC_SECTIONS.some(({ emoji }) => desc.includes(emoji));
+  if (!hasMarkers) return { ...out, who: desc.trim() }; // старый цельный текст
+  const buf: Record<keyof DescParts, string[]> = {
+    who: [],
+    purpose: [],
+    expect: [],
+    skills: [],
+  };
+  let current: keyof DescParts | null = null;
+  for (const line of desc.split("\n")) {
+    const hit = DESC_SECTIONS.find(({ emoji }) => line.trimStart().startsWith(emoji));
+    if (hit) {
+      current = hit.key;
+      continue;
+    }
+    if (current) buf[current].push(line);
+  }
+  for (const { key } of DESC_SECTIONS) out[key] = buf[key].join("\n").trim();
+  return out;
+}
+
 export type VacancyInitial = {
   title: string;
   company_name: string;
@@ -261,7 +342,11 @@ export default function VacancyForm({
   const [location, setLocation] = useState(initial?.location ?? "");
   const [salary, setSalary] = useState(initial?.salary_range ?? "");
   const [schedule, setSchedule] = useState(initial?.schedule ?? "");
-  const [description, setDescription] = useState(initial?.description ?? "");
+  const initDesc = parseDescription(initial?.description);
+  const [descWho, setDescWho] = useState(initDesc.who);
+  const [descPurpose, setDescPurpose] = useState(initDesc.purpose);
+  const [descExpect, setDescExpect] = useState(initDesc.expect);
+  const [descSkills, setDescSkills] = useState(initDesc.skills);
   const [urgency, setUrgency] = useState<"normal" | "hiring_now">(
     initial?.urgency ?? "normal"
   );
@@ -343,7 +428,11 @@ export default function VacancyForm({
         location: location.trim(),
         salary_range: salary.trim() || undefined,
         schedule: schedule.trim() || undefined,
-        description: description.trim() || undefined,
+        description:
+          combineDescription(
+            { who: descWho, purpose: descPurpose, expect: descExpect, skills: descSkills },
+            { who: t.descWho, purpose: t.descPurpose, expect: t.descExpect, skills: t.descSkills }
+          ) || undefined,
         urgency,
         closes_at: closesAt || null,
         required_documents: cleanDocs,
@@ -409,11 +498,26 @@ export default function VacancyForm({
           </label>
           <input type="date" className="input" value={closesAt} onChange={(e) => setClosesAt(e.target.value)} />
         </div>
-        <div className="sm:col-span-2">
-          <label className="label">
-            {t.description} <span className="font-normal text-slate-400">({t.optional})</span>
-          </label>
-          <textarea rows={4} className="input" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <div className="sm:col-span-2 space-y-3">
+          <p className="label">
+            {t.descSection} <span className="font-normal text-slate-400">({t.optional})</span>
+          </p>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-600">👤 {t.descWho}</label>
+            <textarea rows={3} className="input" value={descWho} onChange={(e) => setDescWho(e.target.value)} placeholder={t.descWhoPh} />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-600">🎯 {t.descPurpose}</label>
+            <textarea rows={3} className="input" value={descPurpose} onChange={(e) => setDescPurpose(e.target.value)} placeholder={t.descPurposePh} />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-600">✅ {t.descExpect}</label>
+            <textarea rows={4} className="input" value={descExpect} onChange={(e) => setDescExpect(e.target.value)} placeholder={t.descExpectPh} />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-600">🧩 {t.descSkills}</label>
+            <textarea rows={3} className="input" value={descSkills} onChange={(e) => setDescSkills(e.target.value)} placeholder={t.descSkillsPh} />
+          </div>
         </div>
       </div>
 
