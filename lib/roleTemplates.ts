@@ -5,7 +5,7 @@ import type { DocType } from "./career";
 // задачами, «идеальным профилем» (4 блока описания) и типовыми документами.
 // Контент пока на русском (пилот); локализация ID/EN — следующим шагом.
 
-export type RoleGroup = "cafe" | "hotel" | "general";
+export type RoleGroup = "cafe" | "hotel" | "assistant" | "general";
 
 export type RoleTemplate = {
   key: string;
@@ -17,15 +17,19 @@ export type RoleTemplate = {
   solves: string;
   /** Стартовый текст для 4 блоков описания. */
   blocks: { who: string; purpose: string; expect: string; skills: string };
-  /** Типовые документы (label строится по локали при выборе). */
-  docs: { type: DocType; required: boolean }[];
+  /** Типовые документы. label необязателен (иначе строится по локали). */
+  docs: { type: DocType; required: boolean; label?: string }[];
 };
 
 export const ROLE_GROUPS: { key: RoleGroup; emoji: string; title: string }[] = [
   { key: "cafe", emoji: "☕", title: "Кафе / Ресторан" },
   { key: "hotel", emoji: "🏨", title: "Отель" },
-  { key: "general", emoji: "🧩", title: "Общие / ассистенты" },
+  { key: "assistant", emoji: "🧑‍💼", title: "Ассистенты" },
+  { key: "general", emoji: "🧩", title: "Общие" },
 ];
+
+const SIM = { type: "other" as DocType, required: true, label: "Права (SIM C)" };
+const INTRO = { type: "other" as DocType, required: false, label: "Голосовое или видео-интро" };
 
 const KTP = { type: "ktp" as DocType, required: true };
 const HEALTH = { type: "health_cert" as DocType, required: true };
@@ -203,10 +207,11 @@ export const ROLE_TEMPLATES: RoleTemplate[] = [
     },
     docs: [KTP],
   },
+  // ── Ассистенты ───────────────────────────────────────────────────
   {
     key: "personal_assistant",
     emoji: "🗂️",
-    group: "general",
+    group: "assistant",
     title: "Личный ассистент",
     solves: "С тебя снимают рутину — освобождается время и голова",
     blocks: {
@@ -216,6 +221,76 @@ export const ROLE_TEMPLATES: RoleTemplate[] = [
       skills: "Организованность, честность, инициатива. Английский и права — плюс.",
     },
     docs: [KTP, CV],
+  },
+  {
+    key: "field_project_assistant",
+    emoji: "🛵",
+    group: "assistant",
+    title: "Полевой ассистент (Field & Project)",
+    solves: "Звонит, ездит, находит контакты и приводит клиентов",
+    blocks: {
+      who: "Энергичный, самостоятельный человек с уверенной речью, который не боится звонить незнакомым и ездить на встречи.",
+      purpose: "Быть «в поле»: искать контакты, договариваться, встречаться и приводить клиентов — и вечером понятно отчитываться.",
+      expect: "Звонки и WhatsApp, поиск контактов, выезды на встречи, размещение объявлений, короткие demo, follow-up, ежедневный отчёт.",
+      skills: "Уверенная речь, презентабельность, организованность, инициатива. Свой скутер и права (SIM C) — обязательно. Bahasa Indonesia + English.",
+    },
+    docs: [KTP, CV, SIM, INTRO],
+  },
+  {
+    key: "executive_assistant",
+    emoji: "🗓️",
+    group: "assistant",
+    title: "Executive Assistant",
+    solves: "Держит календарь, коммуникацию и делегирование",
+    blocks: {
+      who: "Собранный, надёжный человек, который держит порядок в делах руководителя.",
+      purpose: "Разгрузить руководителя: календарь, переписка, задачи, контроль поручений.",
+      expect: "Вести календарь и встречи, фильтровать коммуникацию, ставить и контролировать задачи, готовить материалы.",
+      skills: "Организованность, грамотность, английский. Опыт ассистентом — плюс.",
+    },
+    docs: [KTP, CV],
+  },
+  {
+    key: "chief_of_staff",
+    emoji: "🎯",
+    group: "assistant",
+    title: "Chief of Staff",
+    solves: "Правая рука: стратегия и контроль проектов",
+    blocks: {
+      who: "Зрелый, самостоятельный человек, которому можно доверить проекты и решения.",
+      purpose: "Быть правой рукой владельца: вести проекты, координировать людей, следить за результатами.",
+      expect: "Вести ключевые проекты, координировать команду, готовить решения, контролировать сроки и KPI.",
+      skills: "Опыт управления проектами/командой, стратегическое мышление, английский.",
+    },
+    docs: [KTP, CV],
+  },
+  {
+    key: "operations_manager",
+    emoji: "⚙️",
+    group: "assistant",
+    title: "Operations Manager",
+    solves: "Процессы, команда и операционка работают сами",
+    blocks: {
+      who: "Системный организатор, который наводит порядок в процессах.",
+      purpose: "Чтобы операционка (процессы, команда, поставщики) работала стабильно без ручного управления.",
+      expect: "Настраивать процессы, вести команду и графики, работать с поставщиками и закупками, отвечать за стандарты.",
+      skills: "Опыт в операционном управлении, работа с людьми и цифрами, английский.",
+    },
+    docs: [KTP, CV],
+  },
+  {
+    key: "sales_outreach_assistant",
+    emoji: "📈",
+    group: "assistant",
+    title: "Sales / Outreach Assistant",
+    solves: "Лиды, звонки и закрытые сделки",
+    blocks: {
+      who: "Общительный, настойчивый человек, который не боится продавать и звонить.",
+      purpose: "Приводить лиды и доводить их до сделки: звонки, переписка, follow-up.",
+      expect: "Искать лиды, звонить и писать, вести CRM, назначать встречи, доводить до оплаты, отчитываться.",
+      skills: "Уверенная речь, настойчивость, дисциплина. Опыт в продажах — плюс. Bahasa Indonesia + English.",
+    },
+    docs: [KTP, CV, INTRO],
   },
   {
     key: "all_rounder",

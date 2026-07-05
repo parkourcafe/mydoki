@@ -383,7 +383,7 @@ export default function VacancyForm({
     setDocs(
       r.docs.map((d) => ({
         type: d.type,
-        label: docTypeLabel(locale, d.type),
+        label: d.label ?? docTypeLabel(locale, d.type),
         required: d.required,
       }))
     );
