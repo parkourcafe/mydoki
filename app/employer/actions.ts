@@ -169,6 +169,23 @@ export async function createVacancy(
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
+  // Backstop лимита бесплатного тарифа (основная проверка — на странице /new).
+  // Считаем активные вакансии работодателя; при достижении лимита не создаём.
+  const { data: prof } = await supabase
+    .from("employer_profiles")
+    .select("id, vacancy_limit")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (prof) {
+    const limit = (prof.vacancy_limit as number | null) ?? 3;
+    const { count } = await supabase
+      .from("vacancies")
+      .select("id", { count: "exact", head: true })
+      .eq("employer_id", prof.id)
+      .eq("status", "active");
+    if ((count ?? 0) >= limit) throw new Error("VACANCY_LIMIT_REACHED");
+  }
+
   const { data, error } = await supabase.rpc("create_vacancy", {
     p_title: input.title,
     p_company_name: input.company_name,
