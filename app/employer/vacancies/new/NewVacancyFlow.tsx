@@ -10,9 +10,11 @@ import WizardIntake from "./WizardIntake";
 export default function NewVacancyFlow({
   locale,
   defaultCompany,
+  aiEnabled,
 }: {
   locale: Locale;
   defaultCompany: string;
+  aiEnabled: boolean;
 }) {
   const [mode, setMode] = useState<"wizard" | "form">("wizard");
   const [draft, setDraft] = useState<VacancyInitial | undefined>();
@@ -22,6 +24,7 @@ export default function NewVacancyFlow({
       <WizardIntake
         locale={locale}
         defaultCompany={defaultCompany}
+        aiEnabled={aiEnabled}
         onComplete={(d) => {
           setDraft(d);
           setMode("form");

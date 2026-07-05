@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
+import { polishVacancyDraft } from "@/app/employer/actions";
 import { ROLE_GROUPS, ROLE_TEMPLATES } from "@/lib/roleTemplates";
 import {
   STEPS,
@@ -17,20 +18,22 @@ import {
 import type { VacancyInitial } from "./VacancyForm";
 
 const M = {
-  ru: { step: "Шаг", of: "из", back: "← Назад", skip: "Пропустить", custom: "Свой вариант", customPh: "Впиши свой вариант", next: "Далее", enough: "Уже хватает — собрать черновик →", summary: "Проверь ответы", refine: "← Уточнить ещё", build: "✨ Собрать вакансию", manual: "Заполнить форму вручную", add: "+ добавить" },
-  en: { step: "Step", of: "of", back: "← Back", skip: "Skip", custom: "Custom", customPh: "Type your own", next: "Next", enough: "Enough — build a draft →", summary: "Check your answers", refine: "← Add more", build: "✨ Build the vacancy", manual: "Fill the form manually", add: "+ add" },
-  id: { step: "Langkah", of: "dari", back: "← Kembali", skip: "Lewati", custom: "Lainnya", customPh: "Tulis sendiri", next: "Lanjut", enough: "Cukup — buat draf →", summary: "Periksa jawaban", refine: "← Tambah lagi", build: "✨ Buat lowongan", manual: "Isi formulir manual", add: "+ tambah" },
-  uz: { step: "Qadam", of: "dan", back: "← Orqaga", skip: "O‘tkazish", custom: "Boshqa", customPh: "O‘zingiznikini yozing", next: "Keyingi", enough: "Yetarli — qoralama →", summary: "Javoblarni tekshiring", refine: "← Yana qo‘shish", build: "✨ Vakansiya tuzish", manual: "Formani qo‘lda to‘ldirish", add: "+ qo‘shish" },
+  ru: { step: "Шаг", of: "из", back: "← Назад", skip: "Пропустить", custom: "Свой вариант", customPh: "Впиши свой вариант", next: "Далее", enough: "Уже хватает — собрать черновик →", summary: "Проверь ответы", refine: "← Уточнить ещё", build: "Собрать вакансию", buildAI: "✨ Собрать с AI", building: "AI пишет вакансию…", manual: "Заполнить форму вручную", add: "+ добавить" },
+  en: { step: "Step", of: "of", back: "← Back", skip: "Skip", custom: "Custom", customPh: "Type your own", next: "Next", enough: "Enough — build a draft →", summary: "Check your answers", refine: "← Add more", build: "Build the vacancy", buildAI: "✨ Build with AI", building: "AI is writing…", manual: "Fill the form manually", add: "+ add" },
+  id: { step: "Langkah", of: "dari", back: "← Kembali", skip: "Lewati", custom: "Lainnya", customPh: "Tulis sendiri", next: "Lanjut", enough: "Cukup — buat draf →", summary: "Periksa jawaban", refine: "← Tambah lagi", build: "Buat lowongan", buildAI: "✨ Buat dengan AI", building: "AI sedang menulis…", manual: "Isi formulir manual", add: "+ tambah" },
+  uz: { step: "Qadam", of: "dan", back: "← Orqaga", skip: "O‘tkazish", custom: "Boshqa", customPh: "O‘zingiznikini yozing", next: "Keyingi", enough: "Yetarli — qoralama →", summary: "Javoblarni tekshiring", refine: "← Yana qo‘shish", build: "Vakansiya tuzish", buildAI: "✨ AI bilan tuzish", building: "AI yozmoqda…", manual: "Formani qo‘lda to‘ldirish", add: "+ qo‘shish" },
 } as const;
 
 export default function WizardIntake({
   locale,
   defaultCompany,
+  aiEnabled,
   onComplete,
   onSkip,
 }: {
   locale: Locale;
   defaultCompany: string;
+  aiEnabled: boolean;
   onComplete: (draft: VacancyInitial) => void;
   onSkip: () => void;
 }) {
@@ -39,6 +42,7 @@ export default function WizardIntake({
   const [idx, setIdx] = useState(0);
   const [phase, setPhase] = useState<"q" | "summary">("q");
   const [customVal, setCustomVal] = useState("");
+  const [busy, setBusy] = useState(false);
 
   const steps = useMemo(() => visibleSteps(answers), [answers]);
   const step = steps[Math.min(idx, steps.length - 1)];
@@ -70,8 +74,18 @@ export default function WizardIntake({
     setCustomVal("");
   }
   function finish() {
-    track("wizard_completed", { answered: Object.keys(answers).length });
+    track("wizard_completed", { answered: Object.keys(answers).length, ai: false });
     onComplete(buildDraft(answers, defaultCompany));
+  }
+  async function finishAI() {
+    setBusy(true);
+    try {
+      const res = await polishVacancyDraft(answers, defaultCompany);
+      track("wizard_completed", { answered: Object.keys(answers).length, ai: res.aiUsed });
+      onComplete(res.draft);
+    } catch {
+      finish(); // сеть/сервер упали — отдаём детерминированный черновик
+    }
   }
 
   // ── Summary ────────────────────────────────────────────────────────
@@ -92,12 +106,19 @@ export default function WizardIntake({
             ))}
           </dl>
         </div>
-        <div className="flex gap-2">
-          <button type="button" onClick={() => { setPhase("q"); setIdx(0); }} className="btn-ghost">
-            {t.refine}
-          </button>
-          <button type="button" onClick={finish} className="btn-primary flex-1">
+        <div className="space-y-2">
+          {aiEnabled && (
+            <button type="button" onClick={finishAI} disabled={busy} className="btn-primary w-full">
+              {busy ? t.building : t.buildAI}
+            </button>
+          )}
+          <button type="button" onClick={finish} disabled={busy}
+            className={aiEnabled ? "btn-ghost w-full" : "btn-primary w-full"}>
             {t.build}
+          </button>
+          <button type="button" onClick={() => { setPhase("q"); setIdx(0); }} disabled={busy}
+            className="block w-full text-center text-sm text-brand-600 hover:underline disabled:opacity-40">
+            {t.refine}
           </button>
         </div>
       </div>

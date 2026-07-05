@@ -6,6 +6,7 @@ import { saveEmployerProfile } from "@/app/employer/actions";
 import NewVacancyFlow from "./NewVacancyFlow";
 import EmployerVerification from "@/app/employer/EmployerVerification";
 import VacancyLimitReached from "./VacancyLimitReached";
+import { aiTextConfigured } from "@/lib/vacancyAI";
 
 const M = {
   en: {
@@ -110,5 +111,11 @@ export default async function NewVacancyPage() {
     return <VacancyLimitReached locale={locale} limit={limit} />;
   }
 
-  return <NewVacancyFlow locale={locale} defaultCompany={profile.company_name} />;
+  return (
+    <NewVacancyFlow
+      locale={locale}
+      defaultCompany={profile.company_name}
+      aiEnabled={aiTextConfigured()}
+    />
+  );
 }
