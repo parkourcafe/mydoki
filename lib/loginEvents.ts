@@ -90,7 +90,7 @@ async function sendNewDeviceEmail(
   const key = process.env.RESEND_API_KEY;
   if (!key || !to) return;
   const from =
-    process.env.ALERT_EMAIL_FROM || "Семейный сейф <onboarding@resend.dev>";
+    process.env.ALERT_EMAIL_FROM || "Семейный сейф <noreply@doki.help>";
   const when = info.when.toLocaleString(t.dateTag);
   try {
     await fetch("https://api.resend.com/emails", {
