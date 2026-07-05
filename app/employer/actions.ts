@@ -136,6 +136,7 @@ export async function polishVacancyDraft(
       text.trim() ? `${emoji} ${label}\n${text.trim()}` : "";
     const description =
       [
+        block("🏠", "О месте", p.place),
         block("👤", "Кого ищем", p.who),
         block("🎯", "Для чего", p.purpose),
         block("✅", "Что ожидаем", p.expect),

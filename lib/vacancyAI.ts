@@ -58,6 +58,7 @@ async function callLLM(system: string, user: string): Promise<string> {
 }
 
 export type PolishResult = {
+  place: string;
   who: string;
   purpose: string;
   expect: string;
@@ -68,6 +69,7 @@ export type PolishResult = {
 const SYSTEM = `Ты — опытный HR-редактор. Тебе дают черновик вакансии для малого бизнеса (кафе, отели, ассистенты; рынок в т.ч. Индонезия).
 Перепиши его в профессиональную, тёплую и конкретную вакансию.
 Верни ТОЛЬКО JSON-объект (без markdown, без пояснений) со строго такими ключами:
+- "place": о заведении и о работодателе — 1–2 тёплых предложения (или пустая строка, если в черновике этого нет; не выдумывай);
 - "who": кого ищем — 1–2 предложения;
 - "purpose": для чего / зачем эта роль — 1–2 предложения;
 - "expect": что человек будет делать — 2–4 коротких пункта через перенос строки;
@@ -96,6 +98,7 @@ export async function polishVacancy(
   const raw = pickJson(text);
   const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
   return {
+    place: str(raw.place),
     who: str(raw.who),
     purpose: str(raw.purpose),
     expect: str(raw.expect),
