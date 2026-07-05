@@ -6,7 +6,12 @@ import { recordLogin } from "@/lib/loginEvents";
 import { getLocale } from "@/lib/i18n";
 import { safeNextPath } from "@/lib/nextPath";
 
-export type AuthState = { error?: string; message?: string };
+export type AuthState = {
+  error?: string;
+  message?: string;
+  needsConfirm?: boolean;
+  email?: string;
+};
 
 const M = {
   ru: {
@@ -21,6 +26,8 @@ const M = {
     weakPassword: "Пароль слишком простой — минимум 8 символов.",
     loginFailed: "Не удалось войти. Проверьте данные и попробуйте снова.",
     signupFailed: "Не удалось создать аккаунт. Попробуйте ещё раз.",
+    resendSent: "Письмо отправлено повторно. Проверьте почту (и папку «Спам»).",
+    resendFailed: "Не удалось отправить письмо. Попробуйте чуть позже.",
   },
   en: {
     missingCredentials: "Enter your email and password.",
@@ -34,6 +41,8 @@ const M = {
     weakPassword: "Password is too weak — at least 8 characters.",
     loginFailed: "Could not sign in. Check your details and try again.",
     signupFailed: "Could not create the account. Please try again.",
+    resendSent: "Confirmation email sent again. Check your inbox (and Spam).",
+    resendFailed: "Couldn't send the email. Please try again shortly.",
   },
   id: {
     missingCredentials: "Masukkan email dan kata sandi Anda.",
@@ -47,6 +56,8 @@ const M = {
     weakPassword: "Kata sandi terlalu lemah — minimal 8 karakter.",
     loginFailed: "Gagal masuk. Periksa data Anda lalu coba lagi.",
     signupFailed: "Gagal membuat akun. Silakan coba lagi.",
+    resendSent: "Email konfirmasi dikirim ulang. Periksa kotak masuk (dan Spam).",
+    resendFailed: "Gagal mengirim email. Coba lagi sebentar lagi.",
   },
   uz: {
     missingCredentials: "Email va parolni kiriting.",
@@ -60,6 +71,8 @@ const M = {
     weakPassword: "Parol juda oddiy — kamida 8 ta belgi.",
     loginFailed: "Kirib boʻlmadi. Maʼlumotlarni tekshirib, qayta urinib koʻring.",
     signupFailed: "Hisob yaratib boʻlmadi. Qaytadan urinib koʻring.",
+    resendSent: "Tasdiqlash xati qayta yuborildi. Pochtangizni (va Spam) tekshiring.",
+    resendFailed: "Xat yuborilmadi. Birozdan soʻng qayta urining.",
   },
 } as const;
 
@@ -72,6 +85,7 @@ function mapAuthError(
     alreadyRegistered: string;
     rateLimit: string;
     weakPassword: string;
+    resendFailed: string;
   },
   fallback: string
 ): string {
@@ -81,6 +95,9 @@ function mapAuthError(
   if (m.includes("already registered") || m.includes("already been registered"))
     return t.alreadyRegistered;
   if (m.includes("rate limit") || m.includes("too many")) return t.rateLimit;
+  // Supabase не смог отправить письмо (SMTP не настроен/ошибка провайдера).
+  if (m.includes("error sending") || m.includes("confirmation email"))
+    return t.resendFailed;
   if (m.includes("password")) return t.weakPassword;
   return fallback;
 }
@@ -96,9 +113,31 @@ export async function login(
 
   const supabase = await getSupabaseServer();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
-  if (error) return { error: mapAuthError(error.message, t, t.loginFailed) };
+  if (error) {
+    const notConfirmed = error.message.toLowerCase().includes("email not confirmed");
+    return {
+      error: mapAuthError(error.message, t, t.loginFailed),
+      ...(notConfirmed ? { needsConfirm: true, email } : {}),
+    };
+  }
   await recordLogin(supabase);
   redirect(safeNextPath(formData.get("next")));
+}
+
+/** Повторно отправить письмо подтверждения email (кнопка на входе). */
+export async function resendConfirmation(email: string): Promise<AuthState> {
+  const t = M[await getLocale()];
+  const clean = (email || "").trim();
+  if (!clean) return { error: t.missingCredentials, needsConfirm: true };
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.auth.resend({ type: "signup", email: clean });
+  if (error)
+    return {
+      error: mapAuthError(error.message, t, t.resendFailed),
+      needsConfirm: true,
+      email: clean,
+    };
+  return { message: t.resendSent };
 }
 
 export async function signup(
@@ -116,9 +155,7 @@ export async function signup(
   if (error) return { error: mapAuthError(error.message, t, t.signupFailed) };
 
   if (!data.session) {
-    return {
-      message: t.confirmEmail,
-    };
+    return { message: t.confirmEmail, needsConfirm: true, email };
   }
   await recordLogin(supabase);
   redirect(safeNextPath(formData.get("next")));
