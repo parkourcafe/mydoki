@@ -1174,18 +1174,28 @@ export default async function Home({
           <p className="text-xl text-[#5c5248]">{t.security.sub}</p>
           <p className="mx-auto mt-4 max-w-2xl text-[#5c5248]">{t.security.promise}</p>
         </div>
-        <div className="mx-auto grid max-w-4xl gap-5 md:grid-cols-2">
-          {t.security.items.map((s) => (
-            <div key={s.title} className="warm-card rounded-3xl border border-[#e8e0d5] p-7">
-              <div className="flex gap-x-4">
-                <div className="text-3xl">{s.icon}</div>
-                <div>
-                  <div className="mb-2 text-xl font-semibold">{s.title}</div>
-                  <p className="text-[#5c5248]">{s.text}</p>
-                </div>
+        {/* 5 карточек: на lg — 3+2 без «сироты», последняя строка по центру */}
+        <div className="mx-auto grid max-w-5xl gap-5 sm:grid-cols-2 lg:grid-cols-6">
+          {t.security.items.map((s, i) => {
+            const accents = ["#b85c38", "#6b8f71", "#c99a2e", "#7d6b8f", "#4f7fa3"];
+            const span =
+              i < 3
+                ? "lg:col-span-2"
+                : i === 3
+                  ? "lg:col-span-2 lg:col-start-2"
+                  : "lg:col-span-2";
+            return (
+              <div
+                key={s.title}
+                className={`accent-card reveal-up reveal-d${i % 3} rounded-3xl border border-[#e8e0d5] p-7 ${span}`}
+                style={{ "--accent": accents[i % accents.length] } as React.CSSProperties}
+              >
+                <div className="accent-chip mb-4" aria-hidden="true">{s.icon}</div>
+                <div className="mb-2 text-xl font-bold leading-snug">{s.title}</div>
+                <p className="text-[16px] leading-relaxed text-[#4a4038]">{s.text}</p>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="mt-8 text-center">
           <Link
@@ -1197,19 +1207,35 @@ export default async function Home({
         </div>
       </section>
 
-      {/* WHY BETTER THAN A REGULAR CLOUD */}
+      {/* WHY BETTER THAN A REGULAR CLOUD — цветовое кодирование + reveal */}
       <section className="mx-auto max-w-screen-xl px-5 py-12">
-        <div className="mb-6">
+        <div className="mb-8">
           <h2 className="section-header mb-2">{t.diff.heading}</h2>
           <p className="text-xl text-[#5c5248]">{t.diff.intro}</p>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {t.diff.items.map((d) => (
-            <div key={d.t} className="warm-card rounded-3xl border border-[#e8e0d5] p-6">
-              <div className="mb-1.5 text-xl font-semibold">{d.t}</div>
-              <p className="text-[#5c5248]">{d.d}</p>
-            </div>
-          ))}
+        <div className="grid gap-5 sm:grid-cols-2">
+          {t.diff.items.map((d, i) => {
+            const looks = [
+              { accent: "#b85c38", emoji: "⏰" },
+              { accent: "#6b8f71", emoji: "🗂️" },
+              { accent: "#c99a2e", emoji: "🔗" },
+              { accent: "#7d6b8f", emoji: "✈️" },
+            ];
+            const look = looks[i % looks.length];
+            return (
+              <div
+                key={d.t}
+                className={`accent-card reveal-up reveal-d${i % 4} rounded-3xl border border-[#e8e0d5] p-7`}
+                style={{ "--accent": look.accent } as React.CSSProperties}
+              >
+                <div className="accent-chip mb-4" aria-hidden="true">{look.emoji}</div>
+                <div className="mb-2 text-[22px] font-bold leading-snug" style={{ color: look.accent }}>
+                  {d.t}
+                </div>
+                <p className="text-[17px] leading-relaxed text-[#4a4038]">{d.d}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 
