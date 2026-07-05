@@ -10,6 +10,24 @@ import { landingLinks } from "@/lib/landings";
 import { checklistLinks } from "@/lib/checklists";
 import { trustLinks } from "@/lib/trust";
 
+// Сгенерированные кинематографичные ассеты (Higgsfield · nano-banana / kling).
+// Хостинг — тот же CDN, что использовался для прежней hero-картинки.
+const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3EKntK4EDjG8nay4H1dy1TK30mB";
+const MEDIA = {
+  heroVideo: `${CDN}/hf_20260705_173559_470d784d-c825-4060-9400-401a45fa6312.mp4`,
+  heroPoster: `${CDN}/hf_20260705_173205_0c5580fc-2c91-4fb3-9491-b220403182bb_min.webp`,
+  chaos: `${CDN}/hf_20260705_173216_9403d270-0146-4f13-b568-6a22749745c0_min.webp`,
+  employer: `${CDN}/hf_20260705_174154_99154d83-7edc-496c-9a27-e6d039f29f05_min.webp`,
+  phone: `${CDN}/hf_20260705_180101_daf59700-7ab3-4177-91ba-adfb7c76e067_min.webp`,
+};
+
+const MEDIA_ALT: Record<Locale, { chaos: string; employer: string; phone: string }> = {
+  ru: { chaos: "Из хаоса чатов и папок — в один аккуратный пакет документов", employer: "Владелец кафе спокойно просматривает кандидатов с документами", phone: "Приложение doki.help на телефоне: документы семьи разложены по разделам" },
+  en: { chaos: "From chat-and-folder chaos into one tidy document package", employer: "A cafe owner calmly reviewing candidates with documents", phone: "The doki.help app on a phone: family documents neatly organized" },
+  id: { chaos: "Dari kekacauan chat dan folder menjadi satu paket dokumen rapi", employer: "Pemilik kafe meninjau kandidat lengkap dengan dokumen", phone: "Aplikasi doki.help di ponsel: dokumen keluarga tertata rapi" },
+  uz: { chaos: "Chat va papkalar tartibsizligidan — bitta ozoda hujjatlar paketiga", employer: "Kafe egasi hujjatlari bilan nomzodlarni xotirjam koʻrib chiqmoqda", phone: "Telefondagi doki.help ilovasi: oila hujjatlari tartib bilan joylangan" },
+};
+
 // Заголовки блоков внутренней перелинковки на новые SEO-страницы.
 const MORE_HEADINGS: Record<Locale, { tools: string; checklists: string }> = {
   ru: { tools: "Напоминания о сроках и сейфы", checklists: "Чеклисты документов" },
@@ -757,6 +775,28 @@ export default async function Home({
       {/* HERO — кинематографичная тёмная сцена, герой — «пакет документов» */}
       <section className="mx-auto max-w-screen-xl px-3 pt-4 sm:px-5 sm:pt-6">
         <div className="hero-stage rounded-[2rem] px-5 py-10 text-[#f9f5f0] sm:px-10 sm:py-14 lg:px-14">
+          {/* Кинематографичный фон: видео (постер как fallback), затемнение
+              слева под текст. При prefers-reduced-motion видео скрывается. */}
+          <div className="absolute inset-0 overflow-hidden rounded-[2rem]" aria-hidden="true">
+            <video
+              className="h-full w-full object-cover opacity-40 motion-reduce:hidden"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={MEDIA.heroPoster}
+              src={MEDIA.heroVideo}
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={MEDIA.heroPoster}
+              alt=""
+              className="hidden h-full w-full object-cover opacity-40 motion-reduce:block"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#241b16]/95 via-[#241b16]/70 to-[#241b16]/25" />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#241b16]/80 to-transparent" />
+          </div>
           <div className="relative z-10 grid items-center gap-x-12 gap-y-12 lg:grid-cols-12">
             <div className="lg:col-span-6">
               <div className="hero-rise hero-rise-1 mb-6 inline-flex items-center gap-x-2.5 rounded-full border border-white/15 bg-white/[0.06] px-4 py-1.5 text-sm backdrop-blur">
@@ -852,7 +892,7 @@ export default async function Home({
       {/* PAIN */}
       <section className="mx-auto max-w-screen-xl px-4 pb-8 pt-8 sm:px-5">
         <h2 className="section-header mb-6">{t.pain.heading}</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mb-6 grid gap-4 sm:grid-cols-2">
           {t.pain.items.map((it) => (
             <div key={it.t} className="warm-card rounded-3xl border border-[#e8e0d5] p-6">
               <div className="mb-1.5 text-lg font-semibold">{it.t}</div>
@@ -860,6 +900,15 @@ export default async function Home({
             </div>
           ))}
         </div>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={MEDIA.chaos}
+          alt={MEDIA_ALT[locale].chaos}
+          loading="lazy"
+          width={1376}
+          height={768}
+          className="h-auto w-full rounded-3xl border border-[#e8e0d5] object-cover shadow-xl"
+        />
       </section>
 
       {/* FOR WHOM */}
@@ -998,18 +1047,30 @@ export default async function Home({
           <h2 className="section-header mb-3">{t.how.heading}</h2>
           <p className="text-xl text-[#5c5248]">{t.how.sub}</p>
         </div>
-        <div className="mx-auto grid max-w-3xl gap-x-8 gap-y-8 md:grid-cols-2">
-          {t.how.steps.map((s) => (
-            <div key={s.n} className="flex gap-5">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#e8e0d5] bg-white text-2xl font-semibold text-[#b85c38]">
-                {s.n}
+        <div className="mx-auto grid max-w-5xl items-center gap-x-12 gap-y-10 lg:grid-cols-[1fr_auto]">
+          <div className="grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            {t.how.steps.map((s) => (
+              <div key={s.n} className="flex gap-5">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-[#e8e0d5] bg-white text-2xl font-semibold text-[#b85c38]">
+                  {s.n}
+                </div>
+                <div>
+                  <div className="mb-1.5 text-xl font-semibold">{s.title}</div>
+                  <p className="text-[#5c5248]">{s.text}</p>
+                </div>
               </div>
-              <div>
-                <div className="mb-1.5 text-xl font-semibold">{s.title}</div>
-                <p className="text-[#5c5248]">{s.text}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+          {/* Как приложение выглядит на телефоне — живой кадр продукта */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={MEDIA.phone}
+            alt={MEDIA_ALT[locale].phone}
+            loading="lazy"
+            width={896}
+            height={1200}
+            className="mx-auto h-auto w-64 rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl sm:w-72"
+          />
         </div>
       </section>
 
@@ -1040,6 +1101,15 @@ export default async function Home({
               <Link href="/login?next=/employer/vacancies/new" className="hero-cta inline-flex items-center rounded-2xl px-8 py-[15px] text-[16px] font-semibold text-white">
                 {t.employer.cta}
               </Link>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={MEDIA.employer}
+                alt={MEDIA_ALT[locale].employer}
+                loading="lazy"
+                width={1200}
+                height={896}
+                className="mt-8 hidden h-auto w-full max-w-md rounded-3xl border border-white/10 object-cover shadow-2xl lg:block"
+              />
             </div>
             <div className="rounded-3xl bg-[#fdfaf5] p-6 text-[#2c2522] shadow-2xl sm:p-7">
               <div className="mb-4 text-lg font-semibold">{t.employer.cardTitle}</div>
