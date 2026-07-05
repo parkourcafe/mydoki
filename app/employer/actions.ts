@@ -10,9 +10,6 @@ import type {
   ScreeningQuestion,
   ApplicationStatus,
 } from "@/lib/career";
-import { buildDraft, type Answers } from "@/lib/vacancyWizard";
-import { polishVacancy } from "@/lib/vacancyAI";
-import type { VacancyInitial } from "./vacancies/new/VacancyForm";
 
 // ── Верификация работодателя (код на email) ──────────────────────────
 // Функции set/confirm_employer_verification хранят и сверяют ХЕШ кода —
@@ -117,52 +114,6 @@ export async function confirmEmployerVerification(
     revalidatePath("/employer");
   }
   return { ok: data === true };
-}
-
-/**
- * Фаза 2: собрать черновик вакансии из ответов визарда и отполировать AI.
- * Название/документы/зарплата — детерминированно (надёжно); AI переписывает
- * только 4 блока описания и предлагает скрининг-вопросы. При отсутствии AI
- * или ошибке — возвращается детерминированный черновик (aiUsed: false).
- */
-export async function polishVacancyDraft(
-  answers: Answers,
-  defaultCompany: string
-): Promise<{ draft: VacancyInitial; aiUsed: boolean }> {
-  const draft = buildDraft(answers, defaultCompany);
-  try {
-    const p = await polishVacancy(draft.title, draft.description ?? "");
-    const block = (emoji: string, label: string, text: string) =>
-      text.trim() ? `${emoji} ${label}\n${text.trim()}` : "";
-    const description =
-      [
-        block("🏠", "О месте", p.place),
-        block("👤", "Кого ищем", p.who),
-        block("🎯", "Для чего", p.purpose),
-        block("✅", "Что ожидаем", p.expect),
-        block("🧩", "Какие навыки", p.skills),
-      ]
-        .filter(Boolean)
-        .join("\n\n") || draft.description;
-
-    const aiQuestions: ScreeningQuestion[] = p.questions.map((q) => ({
-      question: q,
-      type: "text",
-      required: false,
-    }));
-
-    return {
-      draft: {
-        ...draft,
-        description,
-        screening_questions: [...draft.screening_questions, ...aiQuestions],
-      },
-      aiUsed: true,
-    };
-  } catch {
-    // AI недоступен или ошибка — отдаём детерминированный черновик.
-    return { draft, aiUsed: false };
-  }
 }
 
 /** Создать/обновить профиль работодателя для текущего пользователя. */

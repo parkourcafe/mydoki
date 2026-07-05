@@ -1,9 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { track } from "@/lib/analytics";
-import { polishVacancyDraft } from "@/app/employer/actions";
 import { ROLE_GROUPS, ROLE_TEMPLATES } from "@/lib/roleTemplates";
 import {
   STEPS,
@@ -12,6 +11,7 @@ import {
   isCustom,
   customText,
   mkCustom,
+  WIZARD_STORAGE_KEY,
   type Answers,
   type Step,
 } from "@/lib/vacancyWizard";
@@ -43,6 +43,35 @@ export default function WizardIntake({
   const [phase, setPhase] = useState<"q" | "summary">("q");
   const [customVal, setCustomVal] = useState("");
   const [busy, setBusy] = useState(false);
+  const [restored, setRestored] = useState(false);
+
+  // Восстанавливаем ответы, если экран перерисовался/сбросился — чтобы не
+  // терять «весь журнал». Сохраняем на каждый шаг.
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(WIZARD_STORAGE_KEY);
+      if (saved) {
+        const s = JSON.parse(saved) as { answers?: Answers; idx?: number; phase?: "q" | "summary" };
+        if (s.answers && Object.keys(s.answers).length) {
+          setAnswers(s.answers);
+          if (typeof s.idx === "number") setIdx(s.idx);
+          if (s.phase) setPhase(s.phase);
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    setRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (!restored) return;
+    try {
+      sessionStorage.setItem(WIZARD_STORAGE_KEY, JSON.stringify({ answers, idx, phase }));
+    } catch {
+      /* ignore */
+    }
+  }, [restored, answers, idx, phase]);
 
   const steps = useMemo(() => visibleSteps(answers), [answers]);
   const step = steps[Math.min(idx, steps.length - 1)];
@@ -80,9 +109,14 @@ export default function WizardIntake({
   async function finishAI() {
     setBusy(true);
     try {
-      const res = await polishVacancyDraft(answers, defaultCompany);
-      track("wizard_completed", { answered: Object.keys(answers).length, ai: res.aiUsed });
-      onComplete(res.draft);
+      const res = await fetch("/api/employer/vacancy-draft", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ answers, defaultCompany }),
+      });
+      const data = (await res.json()) as { draft: VacancyInitial; aiUsed?: boolean };
+      track("wizard_completed", { answered: Object.keys(answers).length, ai: !!data.aiUsed });
+      onComplete(data.draft);
     } catch {
       finish(); // сеть/сервер упали — отдаём детерминированный черновик
     }
