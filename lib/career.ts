@@ -168,9 +168,10 @@ export function normalizeWhatsapp(raw: string): string {
 }
 
 /** Ссылка wa.me/<цифры без плюса>. */
-export function waLink(whatsapp: string): string {
+export function waLink(whatsapp: string, text?: string): string {
   const digits = normalizeWhatsapp(whatsapp).replace(/\D/g, "");
-  return `https://wa.me/${digits}`;
+  const q = text ? `?text=${encodeURIComponent(text)}` : "";
+  return `https://wa.me/${digits}${q}`;
 }
 
 /** Базовая валидация номера (после нормализации 10–15 цифр). */

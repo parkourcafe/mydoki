@@ -84,6 +84,33 @@ export default async function ApplyPage({
 
   const vacancy = data as Vacancy | null;
 
+  // Doc-reuse: если кандидат залогинен на doki.help — предзаполним данные из
+  // резюме и предложим прикрепить документы из его сейфа (RLS отдаёт только
+  // его собственные).
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  let vaultDocs: { id: string; title: string; category: string }[] = [];
+  let prefill: { fullName: string; whatsapp: string; email: string } | null = null;
+  if (user) {
+    const [{ data: docs }, { data: resume }] = await Promise.all([
+      supabase.from("documents").select("id, title, category, document_files(id)"),
+      supabase
+        .from("resumes")
+        .select("full_name, contact, email")
+        .eq("user_id", user.id)
+        .maybeSingle(),
+    ]);
+    vaultDocs = ((docs ?? []) as { id: string; title: string; category: string; document_files: unknown[] }[])
+      .filter((d) => (d.document_files?.length ?? 0) > 0)
+      .map((d) => ({ id: d.id, title: d.title, category: d.category }));
+    prefill = {
+      fullName: resume?.full_name ?? "",
+      whatsapp: resume?.contact ?? "",
+      email: resume?.email ?? user.email ?? "",
+    };
+  }
+
   if (!vacancy) {
     return (
       <Shell>
@@ -157,6 +184,8 @@ export default async function ApplyPage({
           screeningQuestions={vacancy.screening_questions ?? []}
           videoScreening={vacancy.video_screening ?? "off"}
           videoQuestion={vacancy.video_question ?? null}
+          vaultDocs={vaultDocs}
+          prefill={prefill}
         />
       </div>
 

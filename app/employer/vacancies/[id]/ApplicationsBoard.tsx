@@ -37,6 +37,10 @@ const M = {
     empty: "No applications match this filter yet.",
     shortlist: "Shortlist", reject: "Reject", whatsapp: "WhatsApp", markHired: "Mark as hired",
     requestDoc: "Request doc", soon: "Coming soon",
+    reqDocMsg: (list: string) =>
+      list
+        ? `Hello! Your application is missing some documents: ${list}. Could you please send them in reply to this message?`
+        : `Hello! Could you please send the remaining documents for your application?`,
     stNew: "New", stViewed: "Viewed", stShortlisted: "Shortlisted", stRejected: "Rejected", stHired: "Hired",
     answersNone: "No answers", docsNone: "No documents required",
   },
@@ -46,6 +50,10 @@ const M = {
     empty: "Belum ada lamaran yang cocok dengan filter ini.",
     shortlist: "Pilih", reject: "Tolak", whatsapp: "WhatsApp", markHired: "Tandai diterima",
     requestDoc: "Minta dokumen", soon: "Segera hadir",
+    reqDocMsg: (list: string) =>
+      list
+        ? `Halo! Lamaran Anda kurang beberapa dokumen: ${list}. Boleh dikirim sebagai balasan pesan ini?`
+        : `Halo! Boleh kirimkan dokumen yang tersisa untuk lamaran Anda?`,
     stNew: "Baru", stViewed: "Dilihat", stShortlisted: "Terpilih", stRejected: "Ditolak", stHired: "Diterima",
     answersNone: "Tidak ada jawaban", docsNone: "Tidak ada dokumen wajib",
   },
@@ -55,6 +63,10 @@ const M = {
     empty: "Пока нет откликов под этот фильтр.",
     shortlist: "В шортлист", reject: "Отклонить", whatsapp: "WhatsApp", markHired: "Принят на работу",
     requestDoc: "Запросить док.", soon: "Скоро",
+    reqDocMsg: (list: string) =>
+      list
+        ? `Здравствуйте! По вашему отклику не хватает документов: ${list}. Пришлите их, пожалуйста, в ответ на это сообщение.`
+        : `Здравствуйте! Пришлите, пожалуйста, недостающие документы по вашему отклику.`,
     stNew: "Новый", stViewed: "Просмотрен", stShortlisted: "Отобран", stRejected: "Отклонён", stHired: "Принят",
     answersNone: "Нет ответов", docsNone: "Документы не требуются",
   },
@@ -64,6 +76,10 @@ const M = {
     empty: "Bu filtrga mos ariza yo‘q.",
     shortlist: "Tanlash", reject: "Rad etish", whatsapp: "WhatsApp", markHired: "Ishga qabul qilindi",
     requestDoc: "Hujjat so‘rash", soon: "Tez orada",
+    reqDocMsg: (list: string) =>
+      list
+        ? `Assalomu alaykum! Arizangizda ba'zi hujjatlar yetishmaydi: ${list}. Iltimos, shu xabarga javoban yuboring.`
+        : `Assalomu alaykum! Iltimos, arizangiz uchun qolgan hujjatlarni yuboring.`,
     stNew: "Yangi", stViewed: "Ko‘rilgan", stShortlisted: "Tanlangan", stRejected: "Rad etilgan", stHired: "Qabul qilingan",
     answersNone: "Javoblar yo‘q", docsNone: "Hujjat talab qilinmaydi",
   },
@@ -321,14 +337,23 @@ export default function ApplicationsBoard({
                 >
                   💬 {t.whatsapp}
                 </a>
-                <button
-                  type="button"
-                  disabled
-                  title={t.soon}
-                  className="btn border border-amber-200 bg-amber-50 text-amber-700 opacity-60"
+                <a
+                  href={waLink(
+                    a.whatsapp,
+                    t.reqDocMsg(
+                      requiredOnly
+                        .filter((d) => !hasType(a, d.type))
+                        .map((d) => d.label)
+                        .join(", "),
+                    ),
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => track("doc_requested", { vacancy_id: vacancyId })}
+                  className="btn border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100"
                 >
                   📄 {t.requestDoc}
-                </button>
+                </a>
                 {a.status !== "rejected" && a.status !== "hired" && (
                   <button
                     type="button"

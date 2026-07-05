@@ -14,7 +14,7 @@ import {
   type ScreeningQuestion,
   type VideoScreening,
 } from "@/lib/career";
-import { submitApplication } from "../actions";
+import { submitApplication, attachVaultDocs } from "../actions";
 import VideoRecorder from "./VideoRecorder";
 import TurnstileWidget from "@/components/TurnstileWidget";
 
@@ -52,6 +52,8 @@ const M = {
     videoLabel: "Video answer",
     videoOptionalNote: "Optional",
     errVideoReq: "Please record or upload your video answer.",
+    vaultTitle: "Attach from your vault",
+    vaultHint: "You're signed in — attach documents you already keep in Doki instead of re-uploading.",
     errConsent: "Please agree to the consent to continue.",
     errFileType: "Only PDF, JPG or PNG files are allowed.",
     errFileSize: "File is too large (max 10MB).",
@@ -99,6 +101,8 @@ const M = {
     videoLabel: "Jawaban video",
     videoOptionalNote: "Opsional",
     errVideoReq: "Rekam atau unggah jawaban video Anda.",
+    vaultTitle: "Lampirkan dari brankas",
+    vaultHint: "Anda sudah masuk — lampirkan dokumen yang sudah tersimpan di Doki tanpa unggah ulang.",
     errConsent: "Setujui persetujuan untuk melanjutkan.",
     errFileType: "Hanya berkas PDF, JPG, atau PNG.",
     errFileSize: "Berkas terlalu besar (maks 10MB).",
@@ -146,6 +150,8 @@ const M = {
     videoLabel: "Видео-ответ",
     videoOptionalNote: "по желанию",
     errVideoReq: "Запишите или загрузите видео-ответ.",
+    vaultTitle: "Прикрепить из сейфа",
+    vaultHint: "Вы вошли в аккаунт — прикрепите документы, которые уже хранятся в Doki, вместо повторной загрузки.",
     errConsent: "Подтвердите согласие, чтобы продолжить.",
     errFileType: "Только PDF, JPG или PNG.",
     errFileSize: "Файл слишком большой (макс. 10 МБ).",
@@ -193,6 +199,8 @@ const M = {
     videoLabel: "Video javob",
     videoOptionalNote: "ixtiyoriy",
     errVideoReq: "Video javobingizni yozing yoki yuklang.",
+    vaultTitle: "Seyfdan biriktirish",
+    vaultHint: "Siz tizimga kirgansiz — qayta yuklamasdan Doki'dagi hujjatlaringizni biriktiring.",
     errConsent: "Davom etish uchun rozilikni tasdiqlang.",
     errFileType: "Faqat PDF, JPG yoki PNG.",
     errFileSize: "Fayl juda katta (maks 10MB).",
@@ -224,6 +232,8 @@ export default function ApplyForm({
   screeningQuestions,
   videoScreening,
   videoQuestion,
+  vaultDocs,
+  prefill,
 }: {
   locale: Locale;
   vacancyId: string;
@@ -233,13 +243,15 @@ export default function ApplyForm({
   screeningQuestions: ScreeningQuestion[];
   videoScreening: VideoScreening;
   videoQuestion: string | null;
+  vaultDocs: { id: string; title: string; category: string }[];
+  prefill: { fullName: string; whatsapp: string; email: string } | null;
 }) {
   const t = M[locale];
   const consentText = t.consentTpl(companyName);
 
-  const [fullName, setFullName] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState(prefill?.fullName ?? "");
+  const [whatsapp, setWhatsapp] = useState(prefill?.whatsapp ?? "");
+  const [email, setEmail] = useState(prefill?.email ?? "");
   const [files, setFiles] = useState<Record<number, File>>({});
   const [docStatus, setDocStatus] = useState<Record<number, UploadState>>({});
   const [answers, setAnswers] = useState<Record<number, string>>({});
@@ -249,6 +261,7 @@ export default function ApplyForm({
   const [doneToken, setDoneToken] = useState<string | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [vaultPicked, setVaultPicked] = useState<Record<string, boolean>>({});
 
   function onVideo(file: File | null) {
     setVideoFile(file);
@@ -350,6 +363,18 @@ export default function ApplyForm({
           name: file.name,
           size: file.size,
         });
+      }
+
+      // Doc-reuse: выбранные документы из сейфа копируем на сервере в bucket
+      // applications и добавляем к отправляемым документам.
+      const pickedIds = Object.keys(vaultPicked).filter((id) => vaultPicked[id]);
+      if (pickedIds.length) {
+        const attached = await attachVaultDocs({
+          applicationId,
+          vacancyId,
+          documentIds: pickedIds,
+        });
+        uploaded.push(...attached);
       }
 
       // Видео-ответ грузим в отдельный приватный bucket и регистрируем как
@@ -531,6 +556,33 @@ export default function ApplyForm({
                 </li>
               );
             })}
+          </ul>
+        </div>
+      )}
+
+      {vaultDocs.length > 0 && (
+        <div className="space-y-2">
+          <div>
+            <p className="label">📁 {t.vaultTitle}</p>
+            <p className="text-xs text-slate-500">{t.vaultHint}</p>
+          </div>
+          <ul className="space-y-1">
+            {vaultDocs.map((d) => (
+              <li key={d.id}>
+                <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4"
+                    checked={!!vaultPicked[d.id]}
+                    onChange={(e) => {
+                      markStarted();
+                      setVaultPicked((p) => ({ ...p, [d.id]: e.target.checked }));
+                    }}
+                  />
+                  <span className="truncate">📄 {d.title}</span>
+                </label>
+              </li>
+            ))}
           </ul>
         </div>
       )}
