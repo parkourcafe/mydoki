@@ -928,75 +928,19 @@ export default async function Home({
               </li>
             ))}
           </ul>
+          {/* Только 4 крупных сегмента, без иконок. Остальная SEO-перелинковка
+              переехала в тихий каталог перед футером (см. LINK HUB). */}
           <div className="mt-6 flex flex-wrap gap-2">
             {segmentLinks(locale).map((s) => (
               <Link
                 key={s.key}
                 href={`/for/${s.key}`}
-                className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+                className="inline-flex items-center rounded-2xl border border-[#e8e0d5] bg-white px-4 py-2 text-[15px] font-medium text-[#5c5248] transition-colors hover:border-[#b85c38] hover:text-[#b85c38]"
               >
-                <span>{s.emoji}</span> {s.label}
+                {s.label}
               </Link>
             ))}
           </div>
-          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
-            <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{comparisonsHeading(locale)}</div>
-            <div className="flex flex-wrap gap-2">
-              {comparisonLinks(locale).map((cmp) => (
-                <Link
-                  key={cmp.key}
-                  href={`/vs/${cmp.key}`}
-                  className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
-                >
-                  <span>{cmp.emoji}</span> {cmp.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
-            <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].tools}</div>
-            <div className="flex flex-wrap gap-2">
-              {landingLinks(locale).map((l) => (
-                <Link
-                  key={l.key}
-                  href={`/${l.key}`}
-                  className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
-                >
-                  <span>{l.emoji}</span> {l.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
-            <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].checklists}</div>
-            <div className="flex flex-wrap gap-2">
-              {checklistLinks(locale).map((l) => (
-                <Link
-                  key={l.key}
-                  href={`/checklists/${l.key}`}
-                  className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
-                >
-                  <span>{l.emoji}</span> {l.label}
-                </Link>
-              ))}
-            </div>
-          </div>
-          {locale === "ru" && (
-            <div className="mt-5 border-t border-[#e8e0d5] pt-5">
-              <div className="mb-3 text-sm font-medium text-[#8a7c6d]">По документам</div>
-              <div className="flex flex-wrap gap-2">
-                {usecaseLinks().map((uc) => (
-                  <Link
-                    key={uc.key}
-                    href={`/keep/${uc.key}`}
-                    className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
-                  >
-                    <span>{uc.emoji}</span> {uc.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
@@ -1279,6 +1223,64 @@ export default async function Home({
           <Link href="/login" className="inline-flex items-center justify-center rounded-3xl bg-[#b85c38] px-10 py-4 text-lg font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]">
             {t.cta.button}
           </Link>
+        </div>
+      </section>
+
+      {/* LINK HUB — SEO-перелинковка. Тихий каталог текстовых ссылок без
+          иконок и рамок: страницы остаются связанными с главной (не сироты),
+          но не шумят в продуктовой части. */}
+      <section className="border-t border-[#e8e0d5] px-5 py-10">
+        <div className="mx-auto grid max-w-screen-xl gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <div className="mb-3 text-sm font-semibold text-[#2c2522]">{comparisonsHeading(locale)}</div>
+            <ul className="space-y-1.5">
+              {comparisonLinks(locale).map((cmp) => (
+                <li key={cmp.key}>
+                  <Link href={`/vs/${cmp.key}`} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
+                    {cmp.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div className="mb-3 text-sm font-semibold text-[#2c2522]">{MORE_HEADINGS[locale].tools}</div>
+            <ul className="space-y-1.5">
+              {landingLinks(locale).map((l) => (
+                <li key={l.key}>
+                  <Link href={`/${l.key}`} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <div className="mb-3 text-sm font-semibold text-[#2c2522]">{MORE_HEADINGS[locale].checklists}</div>
+            <ul className="space-y-1.5">
+              {checklistLinks(locale).map((l) => (
+                <li key={l.key}>
+                  <Link href={`/checklists/${l.key}`} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {locale === "ru" && (
+            <div>
+              <div className="mb-3 text-sm font-semibold text-[#2c2522]">По документам</div>
+              <ul className="space-y-1.5">
+                {usecaseLinks().map((uc) => (
+                  <li key={uc.key}>
+                    <Link href={`/keep/${uc.key}`} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
+                      {uc.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </section>
 
