@@ -27,7 +27,8 @@ const M = {
     errExpired: "Код истёк. Запросите новый.",
     errTooMany: "Слишком много попыток. Запросите новый код позже.",
     errNoEmail: "У профиля нет email — добавьте его в настройках компании.",
-    errSend: "Не удалось отправить письмо. Попробуйте ещё раз.",
+    errNoKey: "На сайте не настроена отправка писем: нет RESEND_API_KEY в проекте doki.help. Добавьте ключ в Vercel и передеплойте.",
+    errSend: "Resend не принял письмо (вероятно, домен не подтверждён или адрес не разрешён в бесплатном режиме).",
     errGeneric: "Что-то пошло не так. Попробуйте ещё раз.",
   },
   en: {
@@ -48,7 +49,8 @@ const M = {
     errExpired: "The code has expired. Request a new one.",
     errTooMany: "Too many attempts. Request a new code later.",
     errNoEmail: "Your profile has no email — add one in company settings.",
-    errSend: "Couldn't send the email. Please try again.",
+    errNoKey: "Email sending isn't configured: RESEND_API_KEY is missing in the doki.help project. Add it in Vercel and redeploy.",
+    errSend: "Resend rejected the email (domain likely not verified, or recipient not allowed in free mode).",
     errGeneric: "Something went wrong. Please try again.",
   },
   id: {
@@ -69,7 +71,8 @@ const M = {
     errExpired: "Kode kedaluwarsa. Minta yang baru.",
     errTooMany: "Terlalu banyak percobaan. Minta kode baru nanti.",
     errNoEmail: "Profil tak punya email — tambahkan di pengaturan perusahaan.",
-    errSend: "Gagal mengirim email. Coba lagi.",
+    errNoKey: "Pengiriman email belum diatur: RESEND_API_KEY tidak ada di proyek doki.help. Tambahkan di Vercel lalu redeploy.",
+    errSend: "Resend menolak email (domain mungkin belum diverifikasi, atau penerima tak diizinkan di mode gratis).",
     errGeneric: "Terjadi kesalahan. Coba lagi.",
   },
   uz: {
@@ -90,7 +93,8 @@ const M = {
     errExpired: "Kod muddati tugadi. Yangisini so‘rang.",
     errTooMany: "Urinishlar juda ko‘p. Keyinroq yangi kod so‘rang.",
     errNoEmail: "Profilda email yo‘q — kompaniya sozlamalarida qo‘shing.",
-    errSend: "Xat yuborilmadi. Qayta urining.",
+    errNoKey: "Xat yuborish sozlanmagan: doki.help loyihasida RESEND_API_KEY yo‘q. Vercel'ga qo‘shing va qayta deploy qiling.",
+    errSend: "Resend xatni qabul qilmadi (domen tasdiqlanmagan yoki manzil bepul rejimda ruxsat etilmagan).",
     errGeneric: "Xatolik yuz berdi. Qayta urining.",
   },
 } as const;
@@ -103,12 +107,14 @@ export default function EmployerVerification({ locale }: { locale: Locale }) {
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [detail, setDetail] = useState<string | null>(null);
 
   function mapErr(key: string) {
     switch (key) {
       case "no_email":
         return t.errNoEmail;
       case "email_off":
+        return t.errNoKey;
       case "send_failed":
         return t.errSend;
       case "expired":
@@ -123,10 +129,12 @@ export default function EmployerVerification({ locale }: { locale: Locale }) {
   async function onSend() {
     setBusy(true);
     setError(null);
+    setDetail(null);
     const res = await requestEmployerVerification();
     setBusy(false);
     if ("error" in res) {
       setError(mapErr(res.error));
+      setDetail(res.detail ?? null); // сырой ответ Resend — для диагностики
     } else {
       setSentTo(res.sentTo);
       setStage("code");
@@ -136,6 +144,7 @@ export default function EmployerVerification({ locale }: { locale: Locale }) {
   async function onConfirm() {
     setBusy(true);
     setError(null);
+    setDetail(null);
     const res = await confirmEmployerVerification(code);
     setBusy(false);
     if ("error" in res) {
@@ -202,6 +211,11 @@ export default function EmployerVerification({ locale }: { locale: Locale }) {
         )}
 
         {error && <p className="text-sm text-red-600">{error}</p>}
+        {detail && (
+          <p className="break-words rounded bg-slate-50 px-2 py-1 font-mono text-[11px] text-slate-500">
+            Resend: {detail}
+          </p>
+        )}
       </div>
     </div>
   );
