@@ -1,6 +1,10 @@
+"use client";
+
+import { useEffect } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { waLink } from "@/lib/career";
+import { track } from "@/lib/analytics";
 
 // Контакты поддержки для ручного апгрейда (пилот: оплата переводом в переписке).
 const SUPPORT_WHATSAPP = "+6281943286395";
@@ -53,6 +57,12 @@ export default function VacancyLimitReached({
   limit: number;
 }) {
   const t = M[locale];
+
+  // Спрос: сколько работодателей упёрлись в бесплатный лимит.
+  useEffect(() => {
+    track("vacancy_limit_reached", { limit });
+  }, [limit]);
+
   return (
     <div className="mx-auto max-w-lg">
       <div className="card space-y-4 text-center">
@@ -66,12 +76,14 @@ export default function VacancyLimitReached({
             href={waLink(SUPPORT_WHATSAPP, t.waText)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => track("upsell_contact_clicked", { channel: "whatsapp" })}
             className="btn-primary w-full"
           >
             💬 {t.wa}
           </a>
           <a
             href={`mailto:${SUPPORT_EMAIL}`}
+            onClick={() => track("upsell_contact_clicked", { channel: "email" })}
             className="block w-full rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             ✉️ {t.email}
