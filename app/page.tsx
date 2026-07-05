@@ -19,6 +19,8 @@ const MEDIA = {
   chaos: `${CDN}/hf_20260705_173216_9403d270-0146-4f13-b568-6a22749745c0_min.webp`,
   employer: `${CDN}/hf_20260705_174154_99154d83-7edc-496c-9a27-e6d039f29f05_min.webp`,
   phone: `${CDN}/hf_20260705_180101_daf59700-7ab3-4177-91ba-adfb7c76e067_min.webp`,
+  aiScanPoster: `${CDN}/hf_20260705_184004_737afa3e-e56e-42f4-97c7-d9fc0f3fd4a6_min.webp`,
+  aiScanVideo: `${CDN}/hf_20260705_184118_1f7d77c8-e242-4840-9866-6afaf9b5dca8.mp4`,
 };
 
 const MEDIA_ALT: Record<Locale, { chaos: string; employer: string; phone: string }> = {
@@ -1066,8 +1068,28 @@ export default async function Home({
                 </div>
               ))}
             </div>
-            <div className="mt-8 rounded-2xl border border-[#e8e0d5] bg-white p-5 text-[15px] leading-relaxed text-[#5c5248]">
-              {t.how.aiNote}
+            <div className="mt-8 grid items-center gap-5 rounded-2xl border border-[#e8e0d5] bg-white p-5 sm:grid-cols-[1fr_auto]">
+              <p className="text-[15px] leading-relaxed text-[#5c5248]">{t.how.aiNote}</p>
+              {/* AI находит срок действия на фото — короткая сцена-петля */}
+              <div className="relative mx-auto w-full max-w-[240px] overflow-hidden rounded-xl border border-[#e8e0d5] shadow-lg sm:w-56" aria-hidden="true">
+                <video
+                  className="h-auto w-full object-cover motion-reduce:hidden"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  poster={MEDIA.aiScanPoster}
+                  src={MEDIA.aiScanVideo}
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={MEDIA.aiScanPoster}
+                  alt=""
+                  loading="lazy"
+                  className="hidden h-auto w-full object-cover motion-reduce:block"
+                />
+              </div>
             </div>
           </div>
           {/* Как приложение выглядит на телефоне — живой кадр продукта */}
