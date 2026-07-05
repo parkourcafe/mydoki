@@ -163,7 +163,7 @@ const M: Record<Locale, Dict> = {
       medNote: "Напоминания о сроках — бесплатно.",
       cats: [
         { icon: "💼", title: "Работа и карьера", items: ["CV и резюме", "Дипломы и сертификаты", "Портфолио", "Рекомендательные письма", "Трудовые договоры"] },
-        { icon: "📄", title: "Личные и миграционные документы", items: ["Паспорта и загранпаспорта", "Визы и визовые документы", "Документы на гражданство", "СНИЛС, ИНН, военный билет", "Дипломы, аттестаты, сертификаты"] },
+        { icon: "📄", title: "Личные и миграционные документы", items: ["Паспорта и загранпаспорта", "Визы и визовые документы", "Документы на гражданство", "СНИЛС, ИНН, военный билет", "Вид на жительство"] },
         { icon: "✈️", title: "Поездки и путешествия", items: ["Путёвки и ваучеры", "Билеты и бронирования", "Страховки для поездок", "Документы для въезда/выезда", "Согласия на выезд ребёнка"] },
         { icon: "🚗", title: "Авто и недвижимость", items: ["ОСАГО и КАСКО", "ПТС и СТС", "Выписки ЕГРН и договоры"] },
         { icon: "🧾", title: "Квитанции и справки", items: ["Квитанции и чеки об оплате", "Справки с работы / учёбы", "Доверенности"] },
@@ -306,7 +306,7 @@ const M: Record<Locale, Dict> = {
       medNote: "Deadline reminders — free.",
       cats: [
         { icon: "💼", title: "Work & career", items: ["CV & resume", "Diplomas and certificates", "Portfolio", "Reference letters", "Employment contracts"] },
-        { icon: "📄", title: "Personal & immigration documents", items: ["Passports & international passports", "Visas and visa paperwork", "Citizenship documents", "Tax & social security IDs", "Diplomas and certificates"] },
+        { icon: "📄", title: "Personal & immigration documents", items: ["Passports & international passports", "Visas and visa paperwork", "Citizenship documents", "Tax & social security IDs", "Residence permits"] },
         { icon: "✈️", title: "Trips & travel", items: ["Tour packages & vouchers", "Tickets and bookings", "Travel insurance", "Entry/exit documents", "Child travel consents"] },
         { icon: "🚗", title: "Vehicles & property", items: ["Car insurance", "Vehicle titles & registration", "Property records & contracts"] },
         { icon: "🧾", title: "Receipts & certificates", items: ["Payment receipts", "Work / study certificates", "Powers of attorney"] },
@@ -449,7 +449,7 @@ const M: Record<Locale, Dict> = {
       medNote: "Pengingat tenggat — gratis.",
       cats: [
         { icon: "💼", title: "Kerja & karier", items: ["CV & resume", "Ijazah dan sertifikat", "Portofolio", "Surat rekomendasi", "Kontrak kerja"] },
-        { icon: "📄", title: "Dokumen pribadi & imigrasi", items: ["Paspor & paspor internasional", "Visa dan berkas visa", "Dokumen kewarganegaraan", "NPWP & nomor jaminan sosial", "Ijazah dan sertifikat"] },
+        { icon: "📄", title: "Dokumen pribadi & imigrasi", items: ["Paspor & paspor internasional", "Visa dan berkas visa", "Dokumen kewarganegaraan", "NPWP & nomor jaminan sosial", "Izin tinggal (KITAS)"] },
         { icon: "✈️", title: "Perjalanan & wisata", items: ["Paket tur & voucher", "Tiket dan pemesanan", "Asuransi perjalanan", "Dokumen masuk/keluar", "Surat izin perjalanan anak"] },
         { icon: "🚗", title: "Kendaraan & properti", items: ["Asuransi mobil", "BPKB & STNK kendaraan", "Sertifikat properti & kontrak"] },
         { icon: "🧾", title: "Kuitansi & surat keterangan", items: ["Bukti pembayaran", "Surat keterangan kerja / studi", "Surat kuasa"] },
@@ -592,7 +592,7 @@ const M: Record<Locale, Dict> = {
       medNote: "Muddat eslatmalari — bepul.",
       cats: [
         { icon: "💼", title: "Ish va karyera", items: ["CV va rezyume", "Diplomlar va sertifikatlar", "Portfolio", "Tavsiya xatlari", "Mehnat shartnomalari"] },
-        { icon: "📄", title: "Shaxsiy va migratsiya hujjatlari", items: ["Pasportlar va xalqaro pasportlar", "Vizalar va viza hujjatlari", "Fuqarolik hujjatlari", "Soliq va ijtimoiy sugʻurta raqamlari", "Diplomlar va sertifikatlar"] },
+        { icon: "📄", title: "Shaxsiy va migratsiya hujjatlari", items: ["Pasportlar va xalqaro pasportlar", "Vizalar va viza hujjatlari", "Fuqarolik hujjatlari", "Soliq va ijtimoiy sugʻurta raqamlari", "Yashash ruxsatnomasi"] },
         { icon: "✈️", title: "Sayohatlar va sayyohlik", items: ["Tur paketlari va voucherlar", "Chiptalar va bronlar", "Sayohat sugʻurtasi", "Kirish/chiqish hujjatlari", "Bolaning sayohatiga ruxsatnomalar"] },
         { icon: "🚗", title: "Transport va mulk", items: ["Avtomobil sugʻurtasi", "Transport guvohnomalari va roʻyxati", "Mulk hujjatlari va shartnomalar"] },
         { icon: "🧾", title: "Kvitansiyalar va maʼlumotnomalar", items: ["Toʻlov kvitansiyalari", "Ish / oʻqish maʼlumotnomalari", "Ishonchnomalar"] },
@@ -951,42 +951,56 @@ export default async function Home({
           <p className="text-xl text-[#5c5248]">{t.store.sub}</p>
         </div>
 
-        <div className="grid gap-4">
-          <div className="warm-card rounded-3xl border border-[#e8e0d5] p-7">
-            <div className="flex items-start gap-x-5">
-              <div className="mt-1 text-5xl">🩺</div>
-              <div className="flex-1">
-                <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-                  <div className="text-2xl font-semibold">{t.store.medTitle}</div>
-                  <span className="rounded-full bg-gradient-to-r from-[#b85c38] to-[#d4a373] px-3 py-0.5 text-xs font-semibold text-white">
-                    {t.store.medBadge}
-                  </span>
+        <div className="grid gap-5">
+          {/* Медицина — выделенная карточка: 6 пунктов ровной сеткой */}
+          <div
+            className="accent-card reveal-up rounded-3xl border border-[#e8e0d5] p-7"
+            style={{ "--accent": "#b85c38" } as React.CSSProperties}
+          >
+            <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <div className="accent-chip" aria-hidden="true">🩺</div>
+              <div className="text-2xl font-bold">{t.store.medTitle}</div>
+              <span className="rounded-full bg-gradient-to-r from-[#b85c38] to-[#d4a373] px-3.5 py-1 text-[13px] font-semibold text-white">
+                {t.store.medBadge}
+              </span>
+            </div>
+            <div className="grid gap-x-8 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
+              {[...t.store.medCol1, ...t.store.medCol2].map((it) => (
+                <div
+                  key={it}
+                  className="flex items-center gap-2.5 border-b border-[#f0e8dc] py-3 text-[16px] text-[#4a4038]"
+                >
+                  <span className="shrink-0 font-semibold text-[#b85c38]">✓</span>
+                  {it}
                 </div>
-                <div className="grid grid-cols-1 gap-x-8 text-[#5c5248] md:grid-cols-2">
-                  <ul className="space-y-1.5 text-[15px]">
-                    {t.store.medCol1.map((it) => <li key={it}>• {it}</li>)}
-                  </ul>
-                  <ul className="mt-3 space-y-1.5 text-[15px] md:mt-0">
-                    {t.store.medCol2.map((it) => <li key={it}>• {it}</li>)}
-                  </ul>
-                </div>
-                <div className="mt-4 text-sm font-medium text-[#b85c38]">{t.store.medNote}</div>
-              </div>
+              ))}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {t.store.cats.map((c) => (
-              <div key={c.title} className="warm-card rounded-3xl border border-[#e8e0d5] p-6">
-                <div className="mb-3 flex items-center gap-x-2 text-xl font-semibold">
-                  <span>{c.icon}</span>
-                  <span>{c.title}</span>
+          {/* Остальные категории: цветовое кодирование + строки-«полоски» */}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {t.store.cats.map((c, i) => {
+              const accents = ["#b85c38", "#4f7fa3", "#6b8f71", "#c99a2e", "#7d6b8f"];
+              return (
+                <div
+                  key={c.title}
+                  className={`accent-card reveal-up reveal-d${i % 3} rounded-3xl border border-[#e8e0d5] p-7`}
+                  style={{ "--accent": accents[i % accents.length] } as React.CSSProperties}
+                >
+                  <div className="mb-3 flex items-center gap-x-3">
+                    <div className="accent-chip" aria-hidden="true">{c.icon}</div>
+                    <span className="text-xl font-bold">{c.title}</span>
+                  </div>
+                  <ul className="divide-y divide-[#f0e8dc]">
+                    {c.items.map((it) => (
+                      <li key={it} className="py-2.5 text-[16px] text-[#4a4038]">
+                        {it}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-1.5 text-[15px] text-[#5c5248]">
-                  {c.items.map((it) => <li key={it}>{it}</li>)}
-                </ul>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
