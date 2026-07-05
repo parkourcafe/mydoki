@@ -43,6 +43,14 @@ export const STEPS: Step[] = [
     placeholder: "напр. Чангу, Бали",
   },
   {
+    id: "place",
+    kind: "text",
+    title: "Расскажи о месте и о себе",
+    hint: "Что за заведение, атмосфера, пара слов от тебя — это привлекает кандидатов.",
+    optional: true,
+    placeholder: "напр. Уютное кафе на 30 мест, семейная атмосфера. Я владелец, ценю честность.",
+  },
+  {
     id: "schedule",
     kind: "single",
     title: "Формат и график работы?",
@@ -245,6 +253,7 @@ export function buildDraft(a: Answers, defaultCompany: string): VacancyInitial {
   const skills = joinLines(baseSkills, skillLines);
 
   const description = [
+    block("🏠", "О месте", str(a, "place")),
     block("👤", "Кого ищем", who),
     block("🎯", "Для чего", basePurpose),
     block("✅", "Что ожидаем", expect),

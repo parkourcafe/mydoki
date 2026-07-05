@@ -29,6 +29,8 @@ const M = {
     schedulePh: "e.g. Full-time, shifts",
     description: "Description",
     descSection: "Job description",
+    descPlace: "About the place & you",
+    descPlacePh: "e.g. Cozy 30-seat cafe in Canggu, family vibe. I'm the owner — I value honesty and initiative.",
     descWho: "Who we're looking for",
     descWhoPh: "e.g. A cook for a small cafe kitchen",
     descPurpose: "Why / what for",
@@ -90,6 +92,8 @@ const M = {
     schedulePh: "mis. Penuh waktu, shift",
     description: "Deskripsi",
     descSection: "Deskripsi lowongan",
+    descPlace: "Tentang tempat & Anda",
+    descPlacePh: "mis. Kafe nyaman 30 kursi di Canggu, suasana kekeluargaan. Saya pemiliknya — menghargai kejujuran dan inisiatif.",
     descWho: "Siapa yang dicari",
     descWhoPh: "mis. Juru masak untuk dapur kafe kecil",
     descPurpose: "Untuk apa",
@@ -151,6 +155,8 @@ const M = {
     schedulePh: "напр. Полный день, смены",
     description: "Описание",
     descSection: "Описание вакансии",
+    descPlace: "О месте и о вас",
+    descPlacePh: "напр. Уютное кафе на 30 мест в Чангу, семейная атмосфера. Я — владелец, ценю честность и инициативу.",
     descWho: "Кого ищем",
     descWhoPh: "напр. Повар на кухню небольшого кафе",
     descPurpose: "Для чего / зачем",
@@ -212,6 +218,8 @@ const M = {
     schedulePh: "mas. To‘liq kun, smenalar",
     description: "Tavsif",
     descSection: "Vakansiya tavsifi",
+    descPlace: "Joy va o‘zingiz haqida",
+    descPlacePh: "mas. Changuda 30 o‘rinli qulay kafe, oilaviy muhit. Men egasiman — halollik va tashabbusni qadrlayman.",
     descWho: "Kim kerak",
     descWhoPh: "mas. Kichik kafe oshxonasiga oshpaz",
     descPurpose: "Nima uchun",
@@ -266,13 +274,20 @@ const M = {
 // текст), но в форме делим на 4 части. Маркеры-эмодзи в заголовках не зависят
 // от языка — по ним разбираем текст обратно на части при редактировании.
 const DESC_SECTIONS = [
+  { emoji: "🏠", key: "place" },
   { emoji: "👤", key: "who" },
   { emoji: "🎯", key: "purpose" },
   { emoji: "✅", key: "expect" },
   { emoji: "🧩", key: "skills" },
 ] as const;
 
-type DescParts = { who: string; purpose: string; expect: string; skills: string };
+type DescParts = {
+  place: string;
+  who: string;
+  purpose: string;
+  expect: string;
+  skills: string;
+};
 
 function combineDescription(parts: DescParts, labels: DescParts): string {
   return DESC_SECTIONS.map(({ emoji, key }) => {
@@ -284,11 +299,12 @@ function combineDescription(parts: DescParts, labels: DescParts): string {
 }
 
 function parseDescription(desc: string | null | undefined): DescParts {
-  const out: DescParts = { who: "", purpose: "", expect: "", skills: "" };
+  const out: DescParts = { place: "", who: "", purpose: "", expect: "", skills: "" };
   if (!desc) return out;
   const hasMarkers = DESC_SECTIONS.some(({ emoji }) => desc.includes(emoji));
   if (!hasMarkers) return { ...out, who: desc.trim() }; // старый цельный текст
   const buf: Record<keyof DescParts, string[]> = {
+    place: [],
     who: [],
     purpose: [],
     expect: [],
@@ -347,6 +363,7 @@ export default function VacancyForm({
   const [salary, setSalary] = useState(initial?.salary_range ?? "");
   const [schedule, setSchedule] = useState(initial?.schedule ?? "");
   const initDesc = parseDescription(initial?.description);
+  const [descPlace, setDescPlace] = useState(initDesc.place);
   const [descWho, setDescWho] = useState(initDesc.who);
   const [descPurpose, setDescPurpose] = useState(initDesc.purpose);
   const [descExpect, setDescExpect] = useState(initDesc.expect);
@@ -453,8 +470,8 @@ export default function VacancyForm({
         schedule: schedule.trim() || undefined,
         description:
           combineDescription(
-            { who: descWho, purpose: descPurpose, expect: descExpect, skills: descSkills },
-            { who: t.descWho, purpose: t.descPurpose, expect: t.descExpect, skills: t.descSkills }
+            { place: descPlace, who: descWho, purpose: descPurpose, expect: descExpect, skills: descSkills },
+            { place: t.descPlace, who: t.descWho, purpose: t.descPurpose, expect: t.descExpect, skills: t.descSkills }
           ) || undefined,
         urgency,
         closes_at: closesAt || null,
@@ -534,6 +551,10 @@ export default function VacancyForm({
           <p className="label">
             {t.descSection} <span className="font-normal text-slate-400">({t.optional})</span>
           </p>
+          <div>
+            <label className="mb-1 block text-sm font-medium text-slate-600">🏠 {t.descPlace}</label>
+            <textarea rows={3} className="input" value={descPlace} onChange={(e) => setDescPlace(e.target.value)} placeholder={t.descPlacePh} />
+          </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-slate-600">👤 {t.descWho}</label>
             <textarea rows={3} className="input" value={descWho} onChange={(e) => setDescWho(e.target.value)} placeholder={t.descWhoPh} />
