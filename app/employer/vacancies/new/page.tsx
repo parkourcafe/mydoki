@@ -97,5 +97,15 @@ export default async function NewVacancyPage() {
     return <EmployerVerification locale={locale} />;
   }
 
-  return <VacancyForm locale={locale} defaultCompany={profile.company_name} />;
+  // Env-гейт Layer 2 (§8): AI-freeform выключается значением "off" без касания
+  // manual/template-путей. Не платформа фиче-флагов — простой переключатель.
+  const aiEnabled = process.env.VACANCY_AI_COMPOSER !== "off";
+
+  return (
+    <VacancyForm
+      locale={locale}
+      defaultCompany={profile.company_name}
+      aiEnabled={aiEnabled}
+    />
+  );
 }

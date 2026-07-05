@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import {
@@ -9,9 +9,20 @@ import {
   type DocType,
   type RequiredDocument,
   type ScreeningQuestion,
+  type ScorecardCriterion,
+  type CreatedVia,
 } from "@/lib/career";
 import { createVacancy, updateVacancy } from "@/app/employer/actions";
 import { track } from "@/lib/analytics";
+import { runQualityCheck } from "@/lib/vacancyQuality";
+import { templatePrefill, type VacancyTemplate } from "@/lib/vacancyTemplates";
+import type { VacancyDraft } from "@/lib/vacancyDraft";
+import TemplateChips from "./TemplateChips";
+import QualityPanel from "./QualityPanel";
+import AiComposer from "./AiComposer";
+
+// Источник создания для аналитики §10 (event source enum).
+type CreateSource = "manual" | "template" | "ai_freeform";
 
 const M = {
   en: {
@@ -65,6 +76,10 @@ const M = {
     errCompany: "Please enter a company name.",
     errLocation: "Please enter a location.",
     errGeneric: "Could not create the vacancy. Please try again.",
+    aiButton: "✨ Help me write this vacancy",
+    scorecardTitle: "Hiring scorecard (planning only)",
+    scorecardHint:
+      "Criteria for the role — visible only to you here. Not shown to candidates and not used to score anyone.",
   },
   id: {
     title: "Lowongan baru",
@@ -117,6 +132,10 @@ const M = {
     errCompany: "Masukkan nama perusahaan.",
     errLocation: "Masukkan lokasi.",
     errGeneric: "Gagal membuat lowongan. Coba lagi.",
+    aiButton: "✨ Bantu saya menulis lowongan ini",
+    scorecardTitle: "Kartu skor perekrutan (perencanaan saja)",
+    scorecardHint:
+      "Kriteria untuk peran — hanya terlihat oleh Anda di sini. Tidak ditampilkan ke kandidat dan tidak dipakai menilai siapa pun.",
   },
   ru: {
     title: "Новая вакансия",
@@ -169,6 +188,10 @@ const M = {
     errCompany: "Введите название компании.",
     errLocation: "Введите локацию.",
     errGeneric: "Не удалось создать вакансию. Попробуйте ещё раз.",
+    aiButton: "✨ Помочь составить вакансию",
+    scorecardTitle: "Карта критериев найма (только планирование)",
+    scorecardHint:
+      "Критерии для роли — видны только вам здесь. Кандидатам не показываются и никого не оценивают.",
   },
   uz: {
     title: "Yangi vakansiya",
@@ -221,6 +244,10 @@ const M = {
     errCompany: "Kompaniya nomini kiriting.",
     errLocation: "Manzilni kiriting.",
     errGeneric: "Vakansiya yaratilmadi. Qayta urining.",
+    aiButton: "✨ Vakansiya tuzishga yordam bering",
+    scorecardTitle: "Yollash mezonlari (faqat rejalashtirish)",
+    scorecardHint:
+      "Rol uchun mezonlar — bu yerda faqat sizga ko‘rinadi. Nomzodlarga ko‘rsatilmaydi va hech kimni baholashda ishlatilmaydi.",
   },
 } as const;
 
@@ -245,12 +272,15 @@ export default function VacancyForm({
   mode = "create",
   vacancyId,
   initial,
+  aiEnabled = false,
 }: {
   locale: Locale;
   defaultCompany: string;
   mode?: "create" | "edit";
   vacancyId?: string;
   initial?: VacancyInitial;
+  /** Env-гейт AI-freeform (Layer 2). Вычисляется на сервере и приходит пропом. */
+  aiEnabled?: boolean;
 }) {
   const t = M[locale];
   const router = useRouter();
@@ -284,6 +314,121 @@ export default function VacancyForm({
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // ── T11 Vacancy Composer state ──────────────────────────────────
+  const [createdVia, setCreatedVia] = useState<CreatedVia>("manual");
+  const [roleTemplate, setRoleTemplate] = useState<string | null>(null);
+  const [scorecard, setScorecard] = useState<ScorecardCriterion[]>([]);
+  const [showAi, setShowAi] = useState(false);
+
+  // Аналитика §10: событие started фиксируем один раз с первым источником;
+  // время до публикации — от монтирования формы.
+  const startedRef = useRef(false);
+  const publishedRef = useRef(false);
+  const sourceRef = useRef<CreateSource>("manual");
+  const stepRef = useRef<string>("open");
+  const startTimeRef = useRef<number>(Date.now());
+
+  function markStarted(source: CreateSource) {
+    if (isEdit || startedRef.current) return;
+    startedRef.current = true;
+    sourceRef.current = source;
+    track("vacancy_create_started", { source });
+  }
+
+  // Проверка качества (Layer 3) — чистая, только по состоянию формы (§7).
+  const quality = useMemo(
+    () =>
+      runQualityCheck({
+        salary_range: salary,
+        description,
+        required_documents: docs,
+        screening_questions: questions,
+      }),
+    [salary, description, docs, questions]
+  );
+
+  function selectTemplate(tpl: VacancyTemplate) {
+    const pre = templatePrefill(tpl, locale);
+    setTitle(pre.title);
+    setDocs(pre.required_documents);
+    setQuestions(pre.screening_questions);
+    setRoleTemplate(pre.role_template);
+    setScorecard([]);
+    setCreatedVia("template");
+    stepRef.current = "template";
+    markStarted("template");
+    track("vacancy_template_selected", {
+      template_id: tpl.id,
+      category: pre.category,
+    });
+  }
+
+  function applyDraft(draft: VacancyDraft, _fieldsGenerated: number) {
+    let applied = 0;
+    if (draft.title) {
+      setTitle(draft.title);
+      applied++;
+    }
+    if (draft.company_name) {
+      setCompany(draft.company_name);
+      applied++;
+    }
+    if (draft.location) {
+      setLocation(draft.location);
+      applied++;
+    }
+    if (draft.salary_range) {
+      setSalary(draft.salary_range);
+      applied++;
+    }
+    if (draft.schedule) {
+      setSchedule(draft.schedule);
+      applied++;
+    }
+    if (draft.description) {
+      setDescription(draft.description);
+      applied++;
+    }
+    if (draft.urgency) setUrgency(draft.urgency);
+    if (draft.required_documents?.length) {
+      setDocs(draft.required_documents);
+      applied++;
+    }
+    if (draft.screening_questions?.length) {
+      setQuestions(draft.screening_questions);
+      applied++;
+    }
+    // scorecard хранится ТОЛЬКО как метаданные вакансии (§8) — здесь для
+    // планирования работодателя, не показывается кандидатам и никого не оценивает.
+    if (draft.scorecard?.length) setScorecard(draft.scorecard);
+
+    setCreatedVia("ai");
+    setRoleTemplate(null);
+    stepRef.current = "ai_applied";
+    markStarted("ai_freeform");
+    setShowAi(false);
+    track("vacancy_ai_draft_applied", { fields_applied_count: applied });
+  }
+
+  // Аналитика §10: событие abandoned, если работодатель ушёл, начав, но не
+  // опубликовав. Только режим создания.
+  useEffect(() => {
+    if (isEdit) return;
+    const report = () => {
+      if (publishedRef.current || !startedRef.current) return;
+      track("vacancy_creation_abandoned", {
+        last_step: stepRef.current,
+        source: sourceRef.current,
+      });
+    };
+    window.addEventListener("beforeunload", report);
+    return () => {
+      window.removeEventListener("beforeunload", report);
+      report();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function addDoc() {
     setDocs((p) => [...p, { type: "other", label: docTypeLabel(locale, "other"), required: false }]);
@@ -351,14 +496,48 @@ export default function VacancyForm({
         video_screening: videoScreening,
         video_question:
           videoScreening !== "off" ? videoQuestion.trim() || null : null,
+        created_via: createdVia,
+        role_template: roleTemplate,
+        clarity_score: quality.clarityScore,
+        scorecard,
       };
 
       if (isEdit && vacancyId) {
         await updateVacancy({ id: vacancyId, ...payload });
         router.push(`/employer/vacancies/${vacancyId}?updated=1`);
       } else {
+        // §10: финальный прогон проверки качества (аналитика) — данные кандидатов
+        // не используются (§7).
+        track("vacancy_quality_check_run", {
+          clarity_score: quality.clarityScore,
+          missing_fields_count: quality.missingFieldsCount,
+          warnings_count: quality.warnings.length,
+        });
+
         const { id } = await createVacancy(payload);
+        publishedRef.current = true;
+
+        const fieldsCompleted =
+          [
+            title.trim(),
+            company.trim(),
+            location.trim(),
+            salary.trim(),
+            schedule.trim(),
+            description.trim(),
+          ].filter(Boolean).length +
+          (cleanDocs.length ? 1 : 0) +
+          (cleanQuestions.length ? 1 : 0);
+
         track("vacancy_created", { vacancy_id: id });
+        track("vacancy_published", {
+          source: sourceRef.current,
+          time_to_publish_seconds: Math.round(
+            (Date.now() - startTimeRef.current) / 1000
+          ),
+          fields_completed_count: fieldsCompleted,
+          clarity_score: quality.clarityScore,
+        });
         router.push(`/employer/vacancies/${id}?created=1`);
       }
     } catch {
@@ -368,9 +547,44 @@ export default function VacancyForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto max-w-2xl space-y-5">
       <h1 className="text-2xl font-semibold">{isEdit ? t.editTitle : t.title}</h1>
 
+      {/* Layer 1 — role-шаблоны (первичная поверхность) и Layer 2 — AI-freeform
+          (вторичная кнопка за env-гейтом). Только при создании. */}
+      {!isEdit && (
+        <TemplateChips
+          locale={locale}
+          activeId={roleTemplate}
+          onSelect={selectTemplate}
+        />
+      )}
+      {!isEdit && aiEnabled && !showAi && (
+        <button
+          type="button"
+          onClick={() => {
+            setShowAi(true);
+            stepRef.current = "ai_open";
+            markStarted("ai_freeform");
+          }}
+          className="btn-ghost w-full"
+        >
+          {t.aiButton}
+        </button>
+      )}
+      {!isEdit && aiEnabled && showAi && (
+        <AiComposer
+          locale={locale}
+          onApply={applyDraft}
+          onClose={() => setShowAi(false)}
+        />
+      )}
+
+    <form
+      onSubmit={handleSubmit}
+      onChangeCapture={() => markStarted("manual")}
+      className="space-y-5"
+    >
       <div className="card grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label className="label">{t.jobTitle} *</label>
@@ -579,11 +793,40 @@ export default function VacancyForm({
         </div>
       </div>
 
+      {/* Layer 3 — детерминированная проверка качества (только по форме, §7). */}
+      <QualityPanel locale={locale} result={quality} />
+
+      {/* §8: scorecard — спящие метаданные ДЛЯ РОЛИ. Показываем ТОЛЬКО здесь, в
+          редакторе вакансии, как планирование работодателя. Read-only. Никогда
+          не попадает на кандидат-фейсинг экраны и никого не оценивает. */}
+      {scorecard.length > 0 && (
+        <div className="card space-y-3">
+          <div>
+            <p className="label">🗂️ {t.scorecardTitle}</p>
+            <p className="text-xs text-slate-500">{t.scorecardHint}</p>
+          </div>
+          <ul className="space-y-2">
+            {scorecard.map((c, i) => (
+              <li
+                key={i}
+                className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+              >
+                <span className="text-slate-700">{c.criterion}</span>
+                <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
+                  {c.weight}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
 
       <button type="submit" disabled={busy} className="btn-primary w-full">
         {busy ? (isEdit ? t.saving : t.creating) : isEdit ? t.save : t.create}
       </button>
     </form>
+    </div>
   );
 }

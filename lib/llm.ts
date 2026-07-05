@@ -1,4 +1,10 @@
 import "server-only";
+import type { Locale } from "./i18n";
+import {
+  extractJsonObject,
+  sanitizeDraft,
+  type VacancyDraft,
+} from "./vacancyDraft";
 
 /**
  * Клиент LLM для GLM (Zhipu / z.ai). API OpenAI-совместимый.
@@ -158,4 +164,85 @@ export async function lawyerChat(
     messages,
   });
   return text.trim();
+}
+
+/* ── AI-черновик вакансии (T11 Layer 2, §6) ─────────────────────── */
+
+// Язык вывода вакансии (D8): по умолчанию id, запасной — en. Текстовые поля
+// генерируем на языке локали вакансии.
+const OUTPUT_LANGUAGE: Record<Locale, string> = {
+  id: "Bahasa Indonesia",
+  en: "English",
+  ru: "Russian",
+  uz: "Uzbek",
+};
+
+export type VacancyDraftAnswer = { question: string; answer: string };
+
+function draftSystemPrompt(locale: Locale): string {
+  const lang = OUTPUT_LANGUAGE[locale] ?? OUTPUT_LANGUAGE.en;
+  // Строгий контракт: ТОЛЬКО JSON, только поля D2 + спящий scorecard.
+  return `You help an employer turn a rough description into a clean job vacancy draft.
+Return ONLY a JSON object — no prose, no markdown, no code fences.
+Write all human-readable text fields in ${lang}.
+
+The JSON MUST have exactly these keys and nothing else:
+{
+  "title": string,
+  "company_name": string,
+  "location": string,
+  "salary_range": string | null,
+  "schedule": string | null,
+  "urgency": "normal" | "hiring_now",
+  "description": string,
+  "required_documents": [{ "type": "cv|ktp|diploma|health_cert|certificate|other", "label": string, "required": boolean }],
+  "screening_questions": [{ "question": string, "type": "text|yes_no" }],
+  "scorecard": [{ "criterion": string, "weight": number }]
+}
+
+Rules:
+- required_documents: 2–5 items. For Indonesian roles always include KTP.
+- screening_questions: 1–4 short items; "type" is only "text" or "yes_no".
+- scorecard: 3–5 hiring criteria FOR THE ROLE (skills/traits the ideal hire needs), NOT an evaluation of any specific candidate; integer weights that sum to ~100.
+- Do NOT invent interview questions, test tasks, or any candidate profile/description. Do NOT add keys beyond the schema above.
+- If a value is unknown, use null (for salary_range/schedule) or a sensible generic default. Never leave the JSON malformed.`;
+}
+
+function draftUserPrompt(
+  freeform: string,
+  answers: VacancyDraftAnswer[]
+): string {
+  const lines = [`Employer's description:\n${freeform.trim()}`];
+  const qa = answers
+    .map((a) => a.answer.trim() && `- ${a.question} ${a.answer.trim()}`)
+    .filter(Boolean);
+  if (qa.length) lines.push(`\nClarifying answers:\n${qa.join("\n")}`);
+  lines.push("\nReturn only the JSON object.");
+  return lines.join("\n");
+}
+
+/**
+ * Генерирует и санитизирует AI-черновик вакансии. Бросает при отсутствии ключа
+ * (NO_API_KEY) или если модель не вернула валидный JSON (NO_JSON). Никогда не
+ * публикует — вызывающий кладёт результат в поля формы (D6).
+ */
+export async function generateVacancyDraft(
+  freeform: string,
+  answers: VacancyDraftAnswer[],
+  locale: Locale
+): Promise<{ draft: VacancyDraft; fieldsGenerated: number }> {
+  const messages: ChatMessage[] = [
+    { role: "system", content: draftSystemPrompt(locale) },
+    { role: "user", content: draftUserPrompt(freeform, answers) },
+  ];
+
+  const text = await chat({
+    model: TEXT_MODEL,
+    temperature: 0.3,
+    max_tokens: 900,
+    messages,
+  });
+
+  const raw = extractJsonObject(text);
+  return sanitizeDraft(raw, locale);
 }

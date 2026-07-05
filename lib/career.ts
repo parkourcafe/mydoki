@@ -27,6 +27,19 @@ export type ScreeningQuestion = {
 
 export type Urgency = "normal" | "hiring_now";
 export type VideoScreening = "off" | "optional" | "required";
+export type CreatedVia = "manual" | "template" | "ai";
+
+/**
+ * «Спящий» критерий найма ДЛЯ РОЛИ (не оценка кандидата). Хранится как
+ * метаданные уровня вакансии. Правила использования — канонично в
+ * DEV_TASK §8: в MVP не участвует ни в каком скоринге/ранжировании/
+ * фильтрации кандидатов и не читается ни одним кандидат-фейсинг компонентом.
+ */
+export type ScorecardCriterion = {
+  criterion: string;
+  /** Ориентировочный вес критерия, 0–100. */
+  weight: number;
+};
 export type VacancyStatus = "active" | "paused" | "closed";
 export type ApplicationStatus =
   | "new"
@@ -63,6 +76,12 @@ export type Vacancy = {
   status: VacancyStatus;
   closes_at: string | null;
   created_at: string;
+  // T11 Vacancy Composer (Screen 1). Все поля добавлены миграцией
+  // 20260705000000_vacancy_composer и на кандидат-фейсинг экранах не читаются.
+  role_template?: string | null;
+  created_via?: CreatedVia;
+  clarity_score?: number | null;
+  scorecard?: ScorecardCriterion[];
 };
 
 export type Application = {

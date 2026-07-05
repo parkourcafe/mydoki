@@ -9,6 +9,8 @@ import type {
   RequiredDocument,
   ScreeningQuestion,
   ApplicationStatus,
+  CreatedVia,
+  ScorecardCriterion,
 } from "@/lib/career";
 
 // ── Верификация работодателя (код на email) ──────────────────────────
@@ -150,6 +152,12 @@ export type CreateVacancyInput = {
   screening_questions: ScreeningQuestion[];
   video_screening?: "off" | "optional" | "required";
   video_question?: string | null;
+  // T11 Vacancy Composer — как создана вакансия и сопутствующие метаданные.
+  created_via?: CreatedVia;
+  role_template?: string | null;
+  clarity_score?: number | null;
+  /** Спящие критерии найма ДЛЯ РОЛИ (§8) — не оценка кандидата. */
+  scorecard?: ScorecardCriterion[];
 };
 
 /** Создать вакансию через RPC (генерит уникальный slug). Возвращает id/slug. */
@@ -177,18 +185,24 @@ export async function createVacancy(
   if (error) throw error;
   const res = data as { id: string; slug: string };
 
-  // Видео-скрининг не входит в RPC create_vacancy — если задан, дописываем
-  // прямым RLS-обновлением (владелец), сразу после создания.
+  // Видео-скрининг и метаданные Vacancy Composer (created_via, role_template,
+  // clarity_score, scorecard) не входят в RPC create_vacancy — дописываем их
+  // прямым RLS-обновлением (владелец) сразу после создания. Так же, как видео.
   const mode = input.video_screening ?? "off";
+  const patch: Record<string, unknown> = {
+    created_via: input.created_via ?? "manual",
+    role_template: input.role_template ?? null,
+    clarity_score:
+      typeof input.clarity_score === "number" ? input.clarity_score : null,
+    // scorecard хранится ТОЛЬКО как метаданные вакансии (§8); ни один
+    // кандидат-фейсинг экран его не читает.
+    scorecard: input.scorecard ?? [],
+  };
   if (mode !== "off") {
-    await supabase
-      .from("vacancies")
-      .update({
-        video_screening: mode,
-        video_question: input.video_question?.trim() || null,
-      })
-      .eq("id", res.id);
+    patch.video_screening = mode;
+    patch.video_question = input.video_question?.trim() || null;
   }
+  await supabase.from("vacancies").update(patch).eq("id", res.id);
 
   revalidatePath("/employer");
   return res;
