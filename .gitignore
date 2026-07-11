@@ -30,3 +30,10 @@ next-env.d.ts
 /test-results
 /playwright-report
 /playwright/.cache
+
+# twa / bubblewrap (сборка Android-пакета для RuStore) — ключ подписи и артефакты
+*.keystore
+*.jks
+/app-release-*.aab
+/app-release-*.apk
+android/

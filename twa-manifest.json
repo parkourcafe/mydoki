@@ -1,0 +1,54 @@
+{
+  "packageId": "help.doki.twa",
+  "host": "doki.help",
+  "name": "doki.help — семейный архив документов",
+  "launcherName": "doki.help",
+  "display": "standalone",
+  "orientation": "portrait",
+  "themeColor": "#b85c38",
+  "themeColorDark": "#b85c38",
+  "navigationColor": "#f9f5f0",
+  "navigationColorDark": "#1a1512",
+  "navigationDividerColor": "#e7ddd2",
+  "navigationDividerColorDark": "#1a1512",
+  "backgroundColor": "#f9f5f0",
+  "enableNotifications": true,
+  "startUrl": "/ru/my",
+  "iconUrl": "https://doki.help/icon-512",
+  "maskableIconUrl": "https://doki.help/icon-512",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "doki"
+  },
+  "appVersionName": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "Мои документы",
+      "shortName": "Документы",
+      "url": "/ru/my/documents",
+      "chosenIconUrl": "https://doki.help/icon-192"
+    },
+    {
+      "name": "Сроки и напоминания",
+      "shortName": "Сроки",
+      "url": "/ru/my/reminders",
+      "chosenIconUrl": "https://doki.help/icon-192"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://doki.help/manifest.webmanifest",
+  "fallbackType": "customtabs",
+  "features": {},
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://doki.help/",
+  "minSdkVersion": 23,
+  "appVersion": "1.0.0",
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": []
+}
