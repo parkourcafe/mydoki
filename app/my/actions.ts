@@ -15,6 +15,7 @@ import {
   evalExpiry,
   evalNameMatch,
 } from "@/lib/documentChecks";
+import { parseOffsets } from "@/lib/reminders";
 
 export async function signOut() {
   const supabase = await getSupabaseServer();
@@ -508,6 +509,50 @@ export async function revokeShare(formData: FormData) {
   const { error } = await supabase.rpc("revoke_share", { p_share_id: id });
   if (error) throw error;
   revalidatePath(`/my/documents/${document_id}`);
+}
+
+/** Создать ручное напоминание (заголовок, дата, offsets, опц. документ). */
+export async function createReminder(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const title = String(formData.get("title") ?? "").trim();
+  const due_at = String(formData.get("due_at") ?? "").trim();
+  if (!title || !due_at) return;
+  const document_id = String(formData.get("document_id") ?? "") || null;
+  const offsets = parseOffsets(String(formData.get("offsets") ?? ""));
+  const { error } = await supabase.from("reminders").insert({
+    household_id: householdId,
+    document_id,
+    due_at,
+    title,
+    offsets,
+  });
+  if (error) throw error;
+  revalidatePath("/my/reminders");
+}
+
+/** Переключить «выполнено» у ручного напоминания. */
+export async function toggleReminder(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  const done = String(formData.get("done") ?? "") === "true";
+  if (!id) return;
+  const { error } = await supabase
+    .from("reminders")
+    .update({ done: !done })
+    .eq("id", id);
+  if (error) throw error;
+  revalidatePath("/my/reminders");
+}
+
+/** Удалить ручное напоминание. */
+export async function deleteReminderItem(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const { error } = await supabase.from("reminders").delete().eq("id", id);
+  if (error) throw error;
+  revalidatePath("/my/reminders");
 }
 
 export async function createInvitation(formData: FormData) {

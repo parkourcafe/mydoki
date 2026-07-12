@@ -102,6 +102,20 @@ export type LoginEvent = {
   created_at: string;
 };
 
+export type Reminder = {
+  id: string;
+  household_id: string;
+  document_id: string | null;
+  member_id: string | null;
+  due_at: string;
+  title: string | null;
+  message: string | null;
+  offsets: number[];
+  channel: string;
+  done: boolean;
+  created_at: string;
+};
+
 export type Share = {
   id: string;
   household_id: string;

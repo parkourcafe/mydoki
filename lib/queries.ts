@@ -12,6 +12,7 @@ import type {
   LoginEvent,
   Member,
   RecordRow,
+  Reminder,
   Share,
 } from "./types";
 
@@ -323,6 +324,19 @@ export async function searchDocuments(
     .limit(50);
   if (error) throw error;
   return (data ?? []) as DocumentRow[];
+}
+
+/** Ручные напоминания пространства (активные сверху, свежие первыми). */
+export async function listReminders(householdId: string): Promise<Reminder[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("reminders")
+    .select("*")
+    .eq("household_id", householdId)
+    .order("done", { ascending: true })
+    .order("due_at", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as Reminder[];
 }
 
 export async function listLoginEvents(limit = 10): Promise<LoginEvent[]> {
