@@ -15,7 +15,13 @@ const PATTERN = /подделк|фальшив|поддельн|фейк|\bfake\
 // Исключаемые файлы: другой контекст, не проверки документов.
 // EmployerVerification — «fake employers» о верификации работодателя,
 // защите кандидатов; к вердиктам о подлинности документов не относится.
-const IGNORE_FILES = ["EmployerVerification.tsx"];
+// guardrails/prompts — здесь эти слова ОПРЕДЕЛЯЮТСЯ как запретные и модели
+// запрещается их писать (сам механизм запрета, а не вердикт).
+const IGNORE_FILES = [
+  "EmployerVerification.tsx",
+  "lib/ai/guardrails.ts",
+  "lib/ai/prompts.ts",
+];
 
 const hits = [];
 
