@@ -53,3 +53,22 @@ test("redaction: паспорт и медицина заблокированы �
   assert.equal(canSendDocumentToModel("education").allowed, true);
   assert.equal(canSendDocumentToModel("career").allowed, true);
 });
+
+import { checkCompleteness } from "../../lib/ai/completeness.ts";
+
+test("checkCompleteness: недостающие и предоставленные документы", () => {
+  const required = [
+    { type: "cv", label: "CV", required: true },
+    { type: "ktp", label: "KTP", required: true },
+    { type: "diploma", label: "Diploma", required: false },
+  ];
+  const r = checkCompleteness(required, ["cv"]);
+  assert.equal(r.complete, false);
+  assert.deepEqual(r.missing.map((m) => m.type), ["ktp"]); // diploma необязателен
+  assert.deepEqual(r.provided.map((m) => m.type), ["cv"]);
+});
+
+test("checkCompleteness: всё на месте → complete", () => {
+  const required = [{ type: "cv", label: "CV", required: true }];
+  assert.equal(checkCompleteness(required, ["cv", "extra"]).complete, true);
+});

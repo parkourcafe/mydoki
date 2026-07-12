@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { normalizeWhatsapp } from "@/lib/career";
+import { checkCompleteness } from "@/lib/ai/completeness";
+import { runAgent, aiTextConfigured } from "@/lib/ai";
 import type {
   RequiredDocument,
   ScreeningQuestion,
@@ -447,6 +449,86 @@ export async function signApplicationVideo(path: string): Promise<string | null>
     .from("video-screenings")
     .createSignedUrl(path, 300);
   return data?.signedUrl ?? null;
+}
+
+/**
+ * Candidate Analyzer: детерминированная проверка комплектности (без LLM) +
+ * evidence/consistency через runAgent (если настроен текстовый LLM). Каждый
+ * прогон логируется в ai_runs со state='needs_review' — Human Review Gate.
+ */
+export async function analyzeCandidate(applicationId: string, vacancyId: string) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data: vac } = await supabase
+    .from("vacancies")
+    .select("required_documents")
+    .eq("id", vacancyId)
+    .maybeSingle();
+  const { data: docRows } = await supabase
+    .from("application_documents")
+    .select("document_type")
+    .eq("application_id", applicationId);
+  const providedTypes = (docRows ?? []).map((d) => d.document_type as string);
+  const comp = checkCompleteness(
+    (vac?.required_documents as RequiredDocument[]) ?? [],
+    providedTypes
+  );
+
+  await supabase.from("ai_runs").insert({
+    kind: "completeness",
+    subject_type: "application",
+    subject_id: applicationId,
+    prompt_version: "completeness-det-1",
+    output: { missing: comp.missing, provided: comp.provided, complete: comp.complete },
+    groundings: comp.missing.map((m) => ({
+      claim: `Не хватает документа: ${m.label}`,
+      source: "vacancy.required_documents",
+      quote: m.type,
+    })),
+    state: "needs_review",
+  });
+
+  // Evidence/consistency — по доступному тексту (ответы), только при наличии
+  // текстового LLM. runAgent логирует свои ai_runs и применяет guardrails.
+  if (aiTextConfigured()) {
+    const { data: answers } = await supabase
+      .from("application_answers")
+      .select("question, answer")
+      .eq("application_id", applicationId);
+    const text = (answers ?? [])
+      .map((a) => `${a.question}: ${a.answer}`)
+      .join("\n")
+      .trim();
+    if (text) {
+      await runAgent({ kind: "evidence_extraction", user: text, subjectType: "application", subjectId: applicationId });
+      await runAgent({ kind: "consistency_check", user: text, subjectType: "application", subjectId: applicationId });
+    }
+  }
+
+  revalidatePath(`/employer/candidates/${applicationId}`);
+}
+
+/** Ревью AI-прогона (Human Review Gate): принять / отредактировать / отклонить. */
+export async function reviewAiRun(
+  runId: string,
+  applicationId: string,
+  action: "accepted" | "edited" | "rejected"
+) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+  const { error } = await supabase
+    .from("ai_runs")
+    .update({ reviewed_by: user.id, review_action: action, state: "reviewed" })
+    .eq("id", runId);
+  if (error) throw error;
+  revalidatePath(`/employer/candidates/${applicationId}`);
 }
 
 /** Автопометка «просмотрено» при открытии дашборда (new→viewed). */

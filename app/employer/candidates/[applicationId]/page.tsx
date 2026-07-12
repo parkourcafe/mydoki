@@ -5,6 +5,7 @@ import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { waLink, type RequiredDocument } from "@/lib/career";
 import CandidateActions from "./CandidateActions";
+import CandidateAI, { type AiRunView } from "./CandidateAI";
 
 const M = {
   ru: {
@@ -225,17 +226,25 @@ export default async function CandidatePage({
         path: d.file_path as string,
       }));
 
-  const [{ data: answerData }, { data: eventData }] = await Promise.all([
-    supabase
-      .from("application_answers")
-      .select("question, answer, question_type")
-      .eq("application_id", app.id),
-    supabase
-      .from("application_events")
-      .select("id, actor_kind, type, payload, created_at")
-      .eq("application_id", app.id)
-      .order("created_at", { ascending: false }),
-  ]);
+  const [{ data: answerData }, { data: eventData }, { data: runData }] =
+    await Promise.all([
+      supabase
+        .from("application_answers")
+        .select("question, answer, question_type")
+        .eq("application_id", app.id),
+      supabase
+        .from("application_events")
+        .select("id, actor_kind, type, payload, created_at")
+        .eq("application_id", app.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("ai_runs")
+        .select("id, kind, output, groundings, state, review_action, created_at")
+        .eq("subject_type", "application")
+        .eq("subject_id", app.id)
+        .order("created_at", { ascending: false }),
+    ]);
+  const aiRuns = (runData ?? []) as AiRunView[];
   const answers = (answerData ?? []) as {
     question: string;
     answer: string;
@@ -297,6 +306,13 @@ export default async function CandidatePage({
         state={(app.state ?? "active") as "active" | "hired" | "rejected" | "withdrawn"}
         docs={docs}
         consentRevoked={consentRevoked}
+      />
+
+      <CandidateAI
+        locale={locale}
+        applicationId={app.id}
+        vacancyId={vacancy.id}
+        runs={aiRuns}
       />
 
       <section className="card">
