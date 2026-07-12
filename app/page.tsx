@@ -778,6 +778,68 @@ export default async function Home({
         </div>
       </nav>
 
+      {/* ТРИ ВХОДА — люди / работодатели / семьи (ТЗ §5.1) */}
+      <section className="mx-auto max-w-screen-xl px-3 pt-4 sm:px-5 sm:pt-6" aria-label="entrances">
+        {(() => {
+          const E = {
+            ru: {
+              heading: "Кому это нужно",
+              people: "Для людей", peopleD: "Храните документы, сроки, делитесь по защищённой ссылке, откликайтесь на вакансии.",
+              employers: "Для работодателей", employersD: "Создавайте вакансии, принимайте отклики, смотрите кандидатов с фактами и пробелами.",
+              families: "Для семей", familiesD: "Документы детей и близких в одном пространстве.", soon: "скоро",
+            },
+            en: {
+              heading: "Who it's for",
+              people: "For people", peopleD: "Store documents and deadlines, share via a secure link, apply to jobs.",
+              employers: "For employers", employersD: "Create vacancies, receive applications, review candidates with facts and gaps.",
+              families: "For families", familiesD: "Documents of children and relatives in one space.", soon: "soon",
+            },
+            id: {
+              heading: "Untuk siapa",
+              people: "Untuk orang", peopleD: "Simpan dokumen dan tenggat, bagikan lewat tautan aman, lamar pekerjaan.",
+              employers: "Untuk perusahaan", employersD: "Buat lowongan, terima lamaran, tinjau kandidat dengan fakta dan kekurangan.",
+              families: "Untuk keluarga", familiesD: "Dokumen anak dan kerabat dalam satu ruang.", soon: "segera",
+            },
+            uz: {
+              heading: "Kimlar uchun",
+              people: "Odamlar uchun", peopleD: "Hujjatlar va muddatlarni saqlang, xavfsiz havola orqali ulashing, ishga ariza bering.",
+              employers: "Ish beruvchilar uchun", employersD: "Vakansiya yarating, arizalarni qabul qiling, nomzodlarni faktlar bilan koʻring.",
+              families: "Oilalar uchun", familiesD: "Bolalar va yaqinlar hujjatlari bitta makonda.", soon: "tez orada",
+            },
+          }[locale];
+          const cards = [
+            { href: "/for/job-seekers", emoji: "🧑‍💼", title: E.people, desc: E.peopleD, soon: false },
+            { href: "/for/employers", emoji: "🏢", title: E.employers, desc: E.employersD, soon: false },
+            { href: "/for/families", emoji: "👨‍👩‍👧", title: E.families, desc: E.familiesD, soon: true },
+          ];
+          return (
+            <div>
+              <h2 className="sr-only">{E.heading}</h2>
+              <div className="grid gap-3 sm:grid-cols-3">
+                {cards.map((c) => (
+                  <Link
+                    key={c.href}
+                    href={c.href}
+                    className="group rounded-2xl border border-[#e8e0d5] bg-[#fdfaf5] p-5 transition-colors hover:bg-white"
+                  >
+                    <div className="text-2xl">{c.emoji}</div>
+                    <div className="mt-2 flex items-center gap-2 font-semibold">
+                      {c.title}
+                      {c.soon && (
+                        <span className="rounded-full bg-[#efe7db] px-2 py-0.5 text-xs font-normal text-[#8a7a63]">
+                          {E.soon}
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 text-sm text-[#6b5f52]">{c.desc}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          );
+        })()}
+      </section>
+
       {/* HERO — кинематографичная тёмная сцена, герой — «пакет документов» */}
       <section className="mx-auto max-w-screen-xl px-3 pt-4 sm:px-5 sm:pt-6">
         <div className="hero-stage rounded-[2rem] px-5 py-10 text-[#f9f5f0] sm:px-10 sm:py-14 lg:px-14">

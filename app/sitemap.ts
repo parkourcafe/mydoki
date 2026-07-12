@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/demo",
     "/pricing",
     "/security",
+    "/about",
     "/privacy",
     "/terms",
     ...SEGMENT_KEYS.map((k) => `/for/${k}`),
