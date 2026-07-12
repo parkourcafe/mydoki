@@ -10,6 +10,11 @@ import {
   getOrCreateHouseholdId,
   getStorageInfo,
 } from "@/lib/queries";
+import {
+  evalDateConsistency,
+  evalExpiry,
+  evalNameMatch,
+} from "@/lib/documentChecks";
 
 export async function signOut() {
   const supabase = await getSupabaseServer();
@@ -183,6 +188,7 @@ export async function createDocumentMeta(input: {
   doc_number?: string;
   issued_at?: string;
   expires_at?: string;
+  holder_name?: string;
   notes?: string;
   tags?: string[];
 }): Promise<{ id: string; householdId: string }> {
@@ -214,6 +220,7 @@ export async function createDocumentMeta(input: {
       doc_number: clean(input.doc_number),
       issued_at: clean(input.issued_at),
       expires_at: clean(input.expires_at),
+      holder_name: clean(input.holder_name),
       notes: clean(input.notes),
       tags: input.tags ?? [],
     })
@@ -227,6 +234,10 @@ export async function createDocumentMeta(input: {
 }
 
 // Файл уже загружен браузером в storage — здесь только запись метаданных.
+// Пишем И в document_files (совместимость), И в document_versions (новая
+// неизменяемая история), затем обновляем current_version_id документа.
+// fileHash — sha256 hex, посчитанный браузером (базовая точка для будущей
+// проверки целостности); пустая строка допустима (досчитается при проверке).
 export async function attachDocumentFile(input: {
   documentId: string;
   householdId: string;
@@ -234,6 +245,7 @@ export async function attachDocumentFile(input: {
   fileName: string;
   mimeType: string | null;
   sizeBytes: number;
+  fileHash?: string;
 }) {
   const supabase = await getSupabaseServer();
 
@@ -254,7 +266,165 @@ export async function attachDocumentFile(input: {
     size_bytes: input.sizeBytes,
   });
   if (error) throw error;
+
+  const { data: version, error: vErr } = await supabase
+    .from("document_versions")
+    .insert({
+      document_id: input.documentId,
+      household_id: input.householdId,
+      storage_path: input.storagePath,
+      file_hash: (input.fileHash ?? "").trim(),
+      mime: input.mimeType ?? "application/octet-stream",
+      size_bytes: input.sizeBytes,
+      note: input.fileName,
+    })
+    .select("id")
+    .single();
+  if (vErr) throw vErr;
+
+  await supabase
+    .from("documents")
+    .update({ current_version_id: version.id })
+    .eq("id", input.documentId);
+
   revalidatePath(`/my/documents/${input.documentId}`);
+}
+
+/** Обёртка для кнопки «Проверить сейчас» (форма → runDocumentChecks). */
+export async function runChecks(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  await runDocumentChecks(id);
+}
+
+/** Архивировать документ (скрывается из списков; файлы и история остаются). */
+export async function archiveDocument(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const { error } = await supabase
+    .from("documents")
+    .update({ status: "archived" })
+    .eq("id", id);
+  if (error) throw error;
+  revalidatePath(`/my/documents/${id}`);
+}
+
+/** Вернуть документ из архива. */
+export async function unarchiveDocument(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const { error } = await supabase
+    .from("documents")
+    .update({ status: "active" })
+    .eq("id", id);
+  if (error) throw error;
+  revalidatePath(`/my/documents/${id}`);
+}
+
+/**
+ * Запустить автопроверки по текущей версии документа. Идемпотентно: каждый
+ * запуск создаёт новые строки document_checks (история сохраняется).
+ * Результаты — только pass/mismatch/unreadable; вердиктов о подлинности нет.
+ */
+export async function runDocumentChecks(documentId: string): Promise<void> {
+  const { createHash } = await import("node:crypto");
+  const supabase = await getSupabaseServer();
+
+  const { data: doc } = await supabase
+    .from("documents")
+    .select(
+      "id, household_id, member_id, issued_at, expires_at, holder_name, current_version_id"
+    )
+    .eq("id", documentId)
+    .maybeSingle();
+  if (!doc?.current_version_id) return;
+
+  const { data: version } = await supabase
+    .from("document_versions")
+    .select("id, storage_path, file_hash")
+    .eq("id", doc.current_version_id)
+    .maybeSingle();
+  if (!version) return;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const outcomes: {
+    check_type: string;
+    result: string;
+    details: Record<string, unknown>;
+  }[] = [];
+
+  const expiry = evalExpiry(doc.expires_at as string | null, today);
+  if (expiry) outcomes.push(expiry);
+
+  const dateConsistency = evalDateConsistency(
+    doc.issued_at as string | null,
+    doc.expires_at as string | null,
+    today
+  );
+  if (dateConsistency) outcomes.push(dateConsistency);
+
+  if (doc.member_id) {
+    const { data: member } = await supabase
+      .from("members")
+      .select("full_name")
+      .eq("id", doc.member_id)
+      .maybeSingle();
+    const nameMatch = evalNameMatch(
+      doc.holder_name as string | null,
+      (member?.full_name as string | null) ?? null
+    );
+    if (nameMatch) outcomes.push(nameMatch);
+  }
+
+  // Целостность файла: сервер скачивает текущую версию и считает sha256.
+  const integrity = await (async () => {
+    try {
+      const { data: blob, error } = await supabase.storage
+        .from("vault-files")
+        .download(version.storage_path);
+      if (error || !blob) {
+        return { check_type: "file_integrity", result: "unreadable", details: {} };
+      }
+      const buf = Buffer.from(await blob.arrayBuffer());
+      const hash = createHash("sha256").update(buf).digest("hex");
+      const stored = (version.file_hash as string) ?? "";
+      if (!stored) {
+        // legacy-версия без эталона — фиксируем текущий хэш (write-once).
+        await supabase.rpc("set_document_version_hash", {
+          p_version_id: version.id,
+          p_hash: hash,
+        });
+        return {
+          check_type: "file_integrity",
+          result: "pass",
+          details: { legacy_hash_set: true },
+        };
+      }
+      return {
+        check_type: "file_integrity",
+        result: hash === stored ? "pass" : "mismatch",
+        details: {},
+      };
+    } catch {
+      return { check_type: "file_integrity", result: "unreadable", details: {} };
+    }
+  })();
+  outcomes.push(integrity);
+
+  if (outcomes.length) {
+    await supabase.from("document_checks").insert(
+      outcomes.map((o) => ({
+        document_version_id: version.id,
+        household_id: doc.household_id,
+        check_type: o.check_type,
+        result: o.result,
+        details: o.details,
+      }))
+    );
+  }
+  revalidatePath(`/my/documents/${documentId}`);
 }
 
 export async function deleteDocument(formData: FormData) {

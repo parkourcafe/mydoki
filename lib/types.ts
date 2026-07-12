@@ -42,6 +42,9 @@ export type DocumentRow = {
   expires_at: string | null;
   notes: string | null;
   tags: string[];
+  status: "active" | "archived";
+  current_version_id: string | null;
+  holder_name: string | null;
   created_at: string;
 };
 
@@ -54,6 +57,29 @@ export type DocumentFile = {
   mime_type: string | null;
   size_bytes: number | null;
   created_at: string;
+};
+
+export type DocumentVersion = {
+  id: string;
+  document_id: string;
+  household_id: string;
+  storage_path: string;
+  file_hash: string;
+  mime: string;
+  size_bytes: number;
+  note: string | null;
+  uploaded_by: string | null;
+  created_at: string;
+};
+
+export type DocumentCheck = {
+  id: string;
+  document_version_id: string;
+  household_id: string;
+  check_type: "expiry" | "name_match" | "date_consistency" | "file_integrity";
+  result: "pass" | "mismatch" | "unreadable";
+  details: Record<string, unknown>;
+  checked_at: string;
 };
 
 export type RecordRow = {

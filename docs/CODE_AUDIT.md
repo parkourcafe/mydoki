@@ -210,7 +210,7 @@
 | PR | Подфаза | Содержание |
 |---|---|---|
 | PR-0 | Фаза 0 | Этот документ + канонические доки в `docs/` ✅ |
-| PR-1 | 1A Vault | `document_versions` (immutable) + `document_checks` + категория-маппинг + `status` archived + карточка документа (версии/проверки). Envelope encryption не делаем (v1.1 §12.2 — только после отдельного решения) |
+| PR-1 | 1A Vault | ✅ **Выполнено.** `document_versions` (immutable — нет update/delete-политик) + `document_checks` (expiry/name_match/date_consistency/file_integrity) + `documents.status/current_version_id/holder_name` + бэкофилл из `document_files` (dual-write для совместимости с Doki.id) + write-once RPC хэша + маппинг категорий (`lib/docTypes.ts`) + карточка документа (Версии/Проверки/Архив, 4 локали) + переключатель архива. Тесты: RLS-неизменяемость (`tests/rls/document_versions.sql`), unit (`tests/unit/vault.test.ts`), лексика (`tests/lexicon.mjs`) — прогнаны на локальном Postgres. Envelope encryption не делаем (v1.1 §12.2 — только после отдельного решения). Файл ТЗ: `docs/tasks/tz-pr1.md` |
 | PR-2 | 1A Vault | Напоминания: offsets jsonb + ручные; `due_reminders`/cron переписать поверх; письма Resend (есть) |
 | PR-3 | 1A Vault | Стабилизация безопасности: `log_audit` на просмотры/скачивания (владелец, работодатель, share) + UI журнала; Turnstile fail-closed; INSERT-политики applications вместо `with check(true)`; `WITH CHECK` на UPDATE; атомарный view_count |
 | PR-4 | 1B Hiring | `companies`/`company_members` (+перенос из employer_profiles, совместимый слой) + `/employer/settings` (компания, участники, срок хранения, тексты согласий); генерация типов БД |

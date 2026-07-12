@@ -5,8 +5,10 @@ import { getLocale } from "./i18n";
 import type {
   Asset,
   CustomCategory,
+  DocumentCheck,
   DocumentFile,
   DocumentRow,
+  DocumentVersion,
   LoginEvent,
   Member,
   RecordRow,
@@ -138,14 +140,13 @@ export async function getMember(id: string): Promise<Member | null> {
 }
 
 export async function listDocumentsByMember(
-  memberId: string
+  memberId: string,
+  includeArchived = false
 ): Promise<DocumentRow[]> {
   const supabase = await getSupabaseServer();
-  const { data, error } = await supabase
-    .from("documents")
-    .select("*")
-    .eq("member_id", memberId)
-    .order("created_at", { ascending: false });
+  let query = supabase.from("documents").select("*").eq("member_id", memberId);
+  if (!includeArchived) query = query.eq("status", "active");
+  const { data, error } = await query.order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as DocumentRow[];
 }
@@ -172,14 +173,13 @@ export async function getAsset(id: string): Promise<Asset | null> {
 }
 
 export async function listDocumentsByAsset(
-  assetId: string
+  assetId: string,
+  includeArchived = false
 ): Promise<DocumentRow[]> {
   const supabase = await getSupabaseServer();
-  const { data, error } = await supabase
-    .from("documents")
-    .select("*")
-    .eq("asset_id", assetId)
-    .order("created_at", { ascending: false });
+  let query = supabase.from("documents").select("*").eq("asset_id", assetId);
+  if (!includeArchived) query = query.eq("status", "active");
+  const { data, error } = await query.order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as DocumentRow[];
 }
@@ -222,14 +222,16 @@ export async function getCustomCategory(
 
 /** Все документы пространства (для обзора «Документы» по категориям). */
 export async function listAllDocuments(
-  householdId: string
+  householdId: string,
+  includeArchived = false
 ): Promise<DocumentRow[]> {
   const supabase = await getSupabaseServer();
-  const { data, error } = await supabase
+  let query = supabase
     .from("documents")
     .select("*")
-    .eq("household_id", householdId)
-    .order("created_at", { ascending: false });
+    .eq("household_id", householdId);
+  if (!includeArchived) query = query.eq("status", "active");
+  const { data, error } = await query.order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as DocumentRow[];
 }
@@ -274,6 +276,7 @@ export async function listExpiring(
     .from("documents")
     .select("*")
     .eq("household_id", householdId)
+    .eq("status", "active")
     .not("expires_at", "is", null)
     .lte("expires_at", until.toISOString().slice(0, 10))
     .order("expires_at", { ascending: true });
@@ -303,7 +306,8 @@ export async function searchDocuments(
   let query = supabase
     .from("documents")
     .select("*")
-    .eq("household_id", householdId);
+    .eq("household_id", householdId)
+    .eq("status", "active");
 
   const term = q.trim();
   if (term) {
@@ -330,6 +334,46 @@ export async function listLoginEvents(limit = 10): Promise<LoginEvent[]> {
     .limit(limit);
   if (error) throw error;
   return (data ?? []) as LoginEvent[];
+}
+
+/** Версии документа (новые сверху). Неизменяемая история файлов. */
+export async function listVersions(
+  documentId: string
+): Promise<DocumentVersion[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("document_versions")
+    .select("*")
+    .eq("document_id", documentId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as DocumentVersion[];
+}
+
+/** Автопроверки по конкретной версии (новые сверху). */
+export async function listChecksByVersion(
+  versionId: string
+): Promise<DocumentCheck[]> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase
+    .from("document_checks")
+    .select("*")
+    .eq("document_version_id", versionId)
+    .order("checked_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as DocumentCheck[];
+}
+
+/** Подписать одну версию (короткий signed URL). */
+export async function signVersion(
+  storagePath: string,
+  expiresIn = 120
+): Promise<string | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase.storage
+    .from("vault-files")
+    .createSignedUrl(storagePath, expiresIn);
+  return data?.signedUrl ?? null;
 }
 
 export async function listSharesByDocument(

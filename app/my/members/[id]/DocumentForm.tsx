@@ -5,7 +5,24 @@ import { useRouter } from "next/navigation";
 import { categories, docSubtypes, type DocCategory } from "@/lib/categories";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
-import { attachDocumentFile, createDocumentMeta } from "@/app/my/actions";
+import {
+  attachDocumentFile,
+  createDocumentMeta,
+  runDocumentChecks,
+} from "@/app/my/actions";
+
+/** sha256 файла (hex) средствами браузера. Пусто, если Web Crypto недоступен. */
+async function sha256Hex(file: File): Promise<string> {
+  try {
+    const buf = await file.arrayBuffer();
+    const digest = await crypto.subtle.digest("SHA-256", buf);
+    return Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  } catch {
+    return "";
+  }
+}
 
 const M = {
   ru: {
@@ -35,6 +52,9 @@ const M = {
     docNumber: "Номер",
     issuedAt: "Дата выдачи",
     expiresAt: "Действует до",
+    holder: "Имя владельца в документе",
+    holderHint:
+      "Если заполнено — сверим с именем человека и отметим несоответствие для ручной проверки.",
     tags: "Теги (через запятую)",
     tagsPh: "срочно, оригинал",
     notes: "Заметки",
@@ -77,6 +97,9 @@ const M = {
     docNumber: "Number",
     issuedAt: "Issue date",
     expiresAt: "Valid until",
+    holder: "Holder name in the document",
+    holderHint:
+      "If filled, we compare it with the person's name and flag any mismatch for manual review.",
     tags: "Tags (comma-separated)",
     tagsPh: "urgent, original",
     notes: "Notes",
@@ -119,6 +142,9 @@ const M = {
     docNumber: "Raqami",
     issuedAt: "Berilgan sana",
     expiresAt: "Amal qilish muddati",
+    holder: "Hujjatdagi egasining ismi",
+    holderHint:
+      "Toʻldirilsa — shaxs ismi bilan solishtiramiz va nomuvofiqlikni qoʻlda tekshirish uchun belgilaymiz.",
     tags: "Teglar (vergul bilan)",
     tagsPh: "shoshilinch, asl nusxa",
     notes: "Izohlar",
@@ -161,6 +187,9 @@ const M = {
     docNumber: "Nomor",
     issuedAt: "Tanggal terbit",
     expiresAt: "Berlaku sampai",
+    holder: "Nama pemilik pada dokumen",
+    holderHint:
+      "Jika diisi, kami bandingkan dengan nama orangnya dan tandai ketidaksesuaian untuk pemeriksaan manual.",
     tags: "Tag (dipisahkan koma)",
     tagsPh: "mendesak, asli",
     notes: "Catatan",
@@ -186,6 +215,7 @@ type Fields = {
   doc_number: string;
   issued_at: string;
   expires_at: string;
+  holder_name: string;
   tags: string;
   notes: string;
 };
@@ -198,6 +228,7 @@ const EMPTY: Fields = {
   doc_number: "",
   issued_at: "",
   expires_at: "",
+  holder_name: "",
   tags: "",
   notes: "",
 };
@@ -360,6 +391,7 @@ export default function DocumentForm({
         doc_number: f.doc_number,
         issued_at: f.issued_at,
         expires_at: f.expires_at,
+        holder_name: f.holder_name,
         notes: f.notes,
         tags,
       });
@@ -376,6 +408,7 @@ export default function DocumentForm({
               upsert: false,
             });
           if (error) throw new Error(t.fileErr(file.name, error.message));
+          const fileHash = await sha256Hex(file);
           await attachDocumentFile({
             documentId: id,
             householdId,
@@ -383,10 +416,17 @@ export default function DocumentForm({
             fileName: file.name,
             mimeType: file.type || null,
             sizeBytes: file.size,
+            fileHash,
           });
         }
       }
 
+      // Автопроверки по загруженной версии (best-effort — сбой не мешает).
+      try {
+        await runDocumentChecks(id);
+      } catch {
+        /* проверки можно перезапустить кнопкой в карточке */
+      }
       router.push(`/my/documents/${id}`);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
@@ -572,6 +612,18 @@ export default function DocumentForm({
           onChange={(e) => set("expires_at", e.target.value)}
           className="input"
         />
+      </div>
+      <div className="sm:col-span-2">
+        <label className="label">
+          {t.holder}{" "}
+          <span className="font-normal text-slate-400">({t.optional})</span>
+        </label>
+        <input
+          value={f.holder_name}
+          onChange={(e) => set("holder_name", e.target.value)}
+          className="input"
+        />
+        <p className="mt-1 text-xs text-slate-400">{t.holderHint}</p>
       </div>
       <div className="sm:col-span-2">
         <label className="label">{t.tags}</label>
