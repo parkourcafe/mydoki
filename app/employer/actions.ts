@@ -198,7 +198,57 @@ export type CreateVacancyInput = {
   screening_questions: ScreeningQuestion[];
   video_screening?: "off" | "optional" | "required";
   video_question?: string | null;
+  // Структурированные блоки (§8 v1.1) — необязательны.
+  problem_statement?: string | null;
+  must_have?: string[];
+  trainable?: string[];
+  scorecard?: string[];
+  stages?: string[];
+  success_criteria_probation?: string | null;
 };
+
+/** Поля структуры вакансии для прямого RLS-обновления (владелец). */
+function structuredFields(input: CreateVacancyInput) {
+  const fields: Record<string, unknown> = {};
+  if (input.problem_statement !== undefined)
+    fields.problem_statement = input.problem_statement?.trim() || null;
+  if (input.must_have !== undefined) fields.must_have = input.must_have;
+  if (input.trainable !== undefined) fields.trainable = input.trainable;
+  if (input.scorecard !== undefined) fields.scorecard = input.scorecard;
+  if (input.stages !== undefined && input.stages.length)
+    fields.stages = input.stages;
+  if (input.success_criteria_probation !== undefined)
+    fields.success_criteria_probation =
+      input.success_criteria_probation?.trim() || null;
+  return fields;
+}
+
+/**
+ * Снимок текущего состояния вакансии в vacancy_versions (неизменяемая
+ * история условий). Делается кодом doki.help — не триггером, чтобы записи
+ * Doki.id в общую таблицу vacancies не порождали версий.
+ */
+async function snapshotVacancy(
+  supabase: Awaited<ReturnType<typeof getSupabaseServer>>,
+  vacancyId: string
+): Promise<void> {
+  const { data: vac } = await supabase
+    .from("vacancies")
+    .select("*")
+    .eq("id", vacancyId)
+    .maybeSingle();
+  if (!vac) return;
+  const { count } = await supabase
+    .from("vacancy_versions")
+    .select("id", { count: "exact", head: true })
+    .eq("vacancy_id", vacancyId);
+  const { error } = await supabase.from("vacancy_versions").insert({
+    vacancy_id: vacancyId,
+    version_no: (count ?? 0) + 1,
+    snapshot: vac,
+  });
+  if (error) throw error;
+}
 
 /** Создать вакансию через RPC (генерит уникальный slug). Возвращает id/slug. */
 export async function createVacancy(
@@ -242,19 +292,20 @@ export async function createVacancy(
   if (error) throw error;
   const res = data as { id: string; slug: string };
 
-  // Видео-скрининг не входит в RPC create_vacancy — если задан, дописываем
-  // прямым RLS-обновлением (владелец), сразу после создания.
+  // Видео-скрининг и структурные поля не входят в RPC create_vacancy —
+  // дописываем прямым RLS-обновлением (владелец) сразу после создания.
   const mode = input.video_screening ?? "off";
+  const extra: Record<string, unknown> = { ...structuredFields(input) };
   if (mode !== "off") {
-    await supabase
-      .from("vacancies")
-      .update({
-        video_screening: mode,
-        video_question: input.video_question?.trim() || null,
-      })
-      .eq("id", res.id);
+    extra.video_screening = mode;
+    extra.video_question = input.video_question?.trim() || null;
+  }
+  extra.published_at = new Date().toISOString();
+  if (Object.keys(extra).length) {
+    await supabase.from("vacancies").update(extra).eq("id", res.id);
   }
 
+  await snapshotVacancy(supabase, res.id);
   revalidatePath("/employer");
   return res;
 }
@@ -291,10 +342,15 @@ export async function updateVacancy(
       screening_questions: input.screening_questions ?? [],
       video_screening: input.video_screening ?? "off",
       video_question: input.video_question?.trim() || null,
+      ...structuredFields(input),
       updated_at: new Date().toISOString(),
     })
     .eq("id", input.id);
   if (error) throw error;
+
+  // Правка опубликованной вакансии фиксирует новый снимок — условия уже
+  // поданных откликов не меняются задним числом (v1.1 §8).
+  await snapshotVacancy(supabase, input.id);
   revalidatePath(`/employer/vacancies/${input.id}`);
   revalidatePath("/employer");
   return { id: input.id };

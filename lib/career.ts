@@ -62,8 +62,24 @@ export type Vacancy = {
   video_question: string | null;
   status: VacancyStatus;
   closes_at: string | null;
+  // Структурированные блоки (§8 v1.1). Могут отсутствовать у старых вакансий.
+  problem_statement?: string | null;
+  must_have?: string[];
+  trainable?: string[];
+  scorecard?: string[];
+  stages?: string[];
+  success_criteria_probation?: string | null;
+  published_at?: string | null;
   created_at: string;
 };
+
+export const DEFAULT_STAGES = [
+  "new",
+  "review",
+  "interview",
+  "assignment",
+  "decision",
+];
 
 export type Application = {
   id: string;
