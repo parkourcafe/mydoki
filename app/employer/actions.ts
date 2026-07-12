@@ -144,6 +144,47 @@ export async function saveEmployerProfile(formData: FormData) {
   redirect("/employer/vacancies/new");
 }
 
+/** Сохранить настройки компании (данные, срок хранения, текст согласия). */
+export async function saveCompanySettings(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const company_name = String(formData.get("company_name") ?? "").trim();
+  if (!company_name) return;
+  const contact_whatsapp = String(formData.get("contact_whatsapp") ?? "").trim();
+  const contact_email = String(formData.get("contact_email") ?? "").trim();
+  const country = String(formData.get("country") ?? "").trim();
+  const default_consent_text = String(
+    formData.get("default_consent_text") ?? ""
+  ).trim();
+  const retentionRaw = Number(formData.get("retention_months") ?? 12);
+  const retention_months =
+    Number.isFinite(retentionRaw) && retentionRaw > 0
+      ? Math.min(120, Math.round(retentionRaw))
+      : 12;
+
+  const { error } = await supabase.from("employer_profiles").upsert(
+    {
+      user_id: user.id,
+      company_name,
+      contact_whatsapp: contact_whatsapp
+        ? normalizeWhatsapp(contact_whatsapp)
+        : null,
+      contact_email: contact_email || null,
+      country: country || null,
+      default_consent_text: default_consent_text || null,
+      retention_months,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id" }
+  );
+  if (error) throw error;
+  revalidatePath("/employer/settings");
+}
+
 export type CreateVacancyInput = {
   title: string;
   company_name: string;
