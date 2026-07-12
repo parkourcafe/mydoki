@@ -371,6 +371,66 @@ export async function setApplicationStatus(
   revalidatePath(`/employer/vacancies/${vacancyId}`);
 }
 
+/** Переместить отклик по этапам воронки (в пределах stages вакансии). */
+export async function setApplicationStage(
+  applicationId: string,
+  vacancyId: string,
+  stage: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("set_application_stage", {
+    p_application_id: applicationId,
+    p_stage: stage,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+}
+
+/** Отказ кандидату — только с указанием причины. */
+export async function rejectApplication(
+  applicationId: string,
+  vacancyId: string,
+  reason: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("reject_application", {
+    p_application_id: applicationId,
+    p_reason: reason,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+}
+
+/** Заметка команды к отклику (лента событий). */
+export async function addApplicationNote(
+  applicationId: string,
+  vacancyId: string,
+  note: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("add_application_note", {
+    p_application_id: applicationId,
+    p_note: note,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+}
+
+/** Запросить у кандидата недостающие документы (событие document_request). */
+export async function requestApplicationDocuments(
+  applicationId: string,
+  vacancyId: string,
+  note: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("request_application_documents", {
+    p_application_id: applicationId,
+    p_note: note,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+}
+
 /** Свежий signed URL (2 мин) на файл отклика. RLS пускает только владельца. */
 export async function signApplicationDoc(path: string): Promise<string | null> {
   const supabase = await getSupabaseServer();

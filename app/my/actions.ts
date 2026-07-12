@@ -555,6 +555,30 @@ export async function deleteReminderItem(formData: FormData) {
   revalidatePath("/my/reminders");
 }
 
+/** Кандидат отзывает свой отклик (state → withdrawn). */
+export async function withdrawApplication(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("withdraw_application", {
+    p_application_id: id,
+  });
+  if (error) throw error;
+  revalidatePath("/my/applications");
+}
+
+/** Кандидат отзывает согласие на обработку (по секретному токену). */
+export async function revokeApplicationConsent(formData: FormData) {
+  const token = String(formData.get("token") ?? "");
+  if (!token) return;
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("revoke_application_consent", {
+    p_token: token,
+  });
+  if (error) throw error;
+  revalidatePath("/my/applications");
+}
+
 export async function createInvitation(formData: FormData) {
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
