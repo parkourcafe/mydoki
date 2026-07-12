@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getOrCreateHouseholdId } from "@/lib/queries";
+import { hashSharePassword } from "@/lib/shareAccess";
 
 /** Создать пакетную ссылку на несколько документов. Возвращает токен. */
 export async function createSharePackage(input: {
@@ -10,6 +11,8 @@ export async function createSharePackage(input: {
   days: number;
   allowDownload: boolean;
   title?: string;
+  password?: string;
+  maxViews?: number;
 }): Promise<{ token: string } | { error: string }> {
   if (!input.documentIds.length) return { error: "empty" };
   const supabase = await getSupabaseServer();
@@ -17,6 +20,8 @@ export async function createSharePackage(input: {
 
   const days = Math.max(1, Math.min(90, Number(input.days) || 7));
   const expires_at = new Date(Date.now() + days * 86400_000).toISOString();
+  const max_views =
+    input.maxViews && input.maxViews > 0 ? Math.round(input.maxViews) : null;
 
   const { data, error } = await supabase
     .from("share_packages")
@@ -25,6 +30,8 @@ export async function createSharePackage(input: {
       title: input.title?.trim() || null,
       expires_at,
       allow_download: input.allowDownload,
+      max_views,
+      password_hash: hashSharePassword(input.password),
     })
     .select("id, token")
     .single();

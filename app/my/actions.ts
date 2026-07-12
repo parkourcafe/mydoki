@@ -16,6 +16,7 @@ import {
   evalNameMatch,
 } from "@/lib/documentChecks";
 import { parseOffsets } from "@/lib/reminders";
+import { hashSharePassword } from "@/lib/shareAccess";
 
 export async function signOut() {
   const supabase = await getSupabaseServer();
@@ -497,6 +498,7 @@ export async function createShare(formData: FormData) {
     max_views,
     watermark: formData.get("watermark") != null,
     allow_download: formData.get("allow_download") != null,
+    password_hash: hashSharePassword(String(formData.get("password") ?? "")),
   });
   if (error) throw error;
   revalidatePath(`/my/documents/${document_id}`);

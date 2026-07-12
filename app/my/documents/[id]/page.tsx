@@ -52,6 +52,7 @@ const M = {
     revoke: "Отозвать",
     days: "Действует, дней",
     viewsLimit: "Лимит просмотров",
+    sharePw: "Пароль (необязательно)",
     noLimit: "0 — без лимита",
     watermark: "Водяной знак",
     downloadLabel: "Скачивание",
@@ -106,6 +107,7 @@ const M = {
     revoke: "Revoke",
     days: "Valid, days",
     viewsLimit: "View limit",
+    sharePw: "Password (optional)",
     noLimit: "0 — no limit",
     watermark: "Watermark",
     downloadLabel: "Download",
@@ -160,6 +162,7 @@ const M = {
     revoke: "Bekor qilish",
     days: "Amal qiladi, kun",
     viewsLimit: "Koʻrishlar limiti",
+    sharePw: "Parol (ixtiyoriy)",
     noLimit: "0 — limitsiz",
     watermark: "Suv belgisi",
     downloadLabel: "Yuklab olish",
@@ -214,6 +217,7 @@ const M = {
     revoke: "Cabut",
     days: "Berlaku, hari",
     viewsLimit: "Batas tampilan",
+    sharePw: "Kata sandi (opsional)",
     noLimit: "0 — tanpa batas",
     watermark: "Tanda air",
     downloadLabel: "Unduhan",
@@ -601,6 +605,10 @@ export default async function DocumentPage({
           <label className="flex items-end gap-2 pb-2 text-sm">
             <input type="checkbox" name="allow_download" /> {t.downloadLabel}
           </label>
+          <div className="sm:col-span-2">
+            <label className="label">{t.sharePw}</label>
+            <input name="password" type="text" className="input" autoComplete="off" />
+          </div>
           <div className="sm:col-span-4">
             <button className="btn-primary">{t.createLink}</button>
           </div>
