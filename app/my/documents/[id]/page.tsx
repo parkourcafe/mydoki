@@ -13,7 +13,8 @@ import {
 } from "@/lib/queries";
 import { categoryLabel } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
-import type { DocumentCheck } from "@/lib/types";
+import { logAudit, listDocumentAudit } from "@/lib/audit";
+import type { AuditEntry, DocumentCheck } from "@/lib/types";
 import CopyButton from "@/components/CopyButton";
 import FileActions from "@/components/FileActions";
 import OfflineSave from "@/components/OfflineSave";
@@ -76,6 +77,10 @@ const M = {
     rMismatchExpiry: "срок истёк",
     rMismatch: "не совпадает — нужна ручная проверка",
     rUnreadable: "не удалось проверить",
+    accessLog: "История доступов",
+    noAccessLog: "Доступов пока не зафиксировано.",
+    aView: "Просмотр",
+    aShareView: "Просмотр по ссылке",
     dateLocale: "ru-RU",
   },
   en: {
@@ -126,6 +131,10 @@ const M = {
     rMismatchExpiry: "expired",
     rMismatch: "does not match — manual review needed",
     rUnreadable: "could not check",
+    accessLog: "Access history",
+    noAccessLog: "No access recorded yet.",
+    aView: "View",
+    aShareView: "View via link",
     dateLocale: "en-US",
   },
   uz: {
@@ -176,6 +185,10 @@ const M = {
     rMismatchExpiry: "muddati tugagan",
     rMismatch: "mos emas — qoʻlda tekshirish kerak",
     rUnreadable: "tekshirib boʻlmadi",
+    accessLog: "Kirishlar tarixi",
+    noAccessLog: "Hozircha kirishlar qayd etilmagan.",
+    aView: "Koʻrish",
+    aShareView: "Havola orqali koʻrish",
     dateLocale: "uz-UZ",
   },
   id: {
@@ -226,6 +239,10 @@ const M = {
     rMismatchExpiry: "kedaluwarsa",
     rMismatch: "tidak cocok — perlu pemeriksaan manual",
     rUnreadable: "tidak dapat diperiksa",
+    accessLog: "Riwayat akses",
+    noAccessLog: "Belum ada akses yang tercatat.",
+    aView: "Dilihat",
+    aShareView: "Dilihat via tautan",
     dateLocale: "id-ID",
   },
 } as const;
@@ -261,6 +278,10 @@ function checkResult(
   return { text, className: "text-amber-600" };
 }
 
+function auditActionLabel(t: Dict, a: AuditEntry): string {
+  return a.action === "document.share_view" ? t.aShareView : t.aView;
+}
+
 export default async function DocumentPage({
   params,
 }: {
@@ -272,11 +293,14 @@ export default async function DocumentPage({
   const doc = await getDocument(id);
   if (!doc) notFound();
 
-  const [files, shares, versions] = await Promise.all([
+  const [files, shares, versions, auditLog] = await Promise.all([
     listFiles(id),
     listSharesByDocument(id),
     listVersions(id),
+    listDocumentAudit(id),
   ]);
+  // Фиксируем просмотр документа владельцем/членом семьи (best-effort).
+  await logAudit(doc.household_id, "document.view", "document", doc.id);
   const checks = doc.current_version_id
     ? await listChecksByVersion(doc.current_version_id)
     : [];
@@ -581,6 +605,26 @@ export default async function DocumentPage({
             <button className="btn-primary">{t.createLink}</button>
           </div>
         </form>
+      </section>
+
+      <section className="card">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          {t.accessLog}
+        </h2>
+        {auditLog.length === 0 ? (
+          <p className="text-sm text-slate-400">{t.noAccessLog}</p>
+        ) : (
+          <ul className="divide-y divide-slate-100 text-sm">
+            {auditLog.map((a) => (
+              <li key={a.id} className="flex items-center justify-between gap-3 py-2">
+                <span className="text-slate-600">{auditActionLabel(t, a)}</span>
+                <span className="text-xs text-slate-400">
+                  {new Date(a.created_at).toLocaleString(t.dateLocale)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <section className="card">

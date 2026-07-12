@@ -102,6 +102,17 @@ export type LoginEvent = {
   created_at: string;
 };
 
+export type AuditEntry = {
+  id: string;
+  household_id: string | null;
+  actor_user_id: string | null;
+  action: string;
+  entity_type: string | null;
+  entity_id: string | null;
+  metadata: Record<string, unknown>;
+  created_at: string;
+};
+
 export type Reminder = {
   id: string;
   household_id: string;
