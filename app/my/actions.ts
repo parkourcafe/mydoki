@@ -284,10 +284,11 @@ export async function attachDocumentFile(input: {
     .single();
   if (vErr) throw vErr;
 
-  await supabase
+  const { error: curErr } = await supabase
     .from("documents")
     .update({ current_version_id: version.id })
     .eq("id", input.documentId);
+  if (curErr) throw curErr;
 
   revalidatePath(`/my/documents/${input.documentId}`);
 }

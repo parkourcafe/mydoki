@@ -126,24 +126,27 @@ export default async function MyApplicationsPage() {
                 >
                   {t.open}
                 </Link>
-                {(a.state === "active" || a.state === null) && (
-                  <div className="flex gap-2">
-                    {!a.consent_revoked_at && (
-                      <form action={revokeApplicationConsent}>
-                        <input type="hidden" name="token" value={a.access_token} />
-                        <button className="text-xs text-slate-400 hover:underline">
-                          {t.revokeConsent}
-                        </button>
-                      </form>
-                    )}
+                <div className="flex gap-2">
+                  {/* Отзыв согласия — право на защиту данных, доступно и
+                      после отказа/найма (пока согласие не отозвано). */}
+                  {a.state !== "withdrawn" && !a.consent_revoked_at && (
+                    <form action={revokeApplicationConsent}>
+                      <input type="hidden" name="token" value={a.access_token} />
+                      <button className="text-xs text-slate-400 hover:underline">
+                        {t.revokeConsent}
+                      </button>
+                    </form>
+                  )}
+                  {/* Отзыв отклика — только пока он в работе. */}
+                  {(a.state === "active" || a.state === null) && (
                     <form action={withdrawApplication}>
                       <input type="hidden" name="id" value={a.id} />
                       <button className="text-xs text-red-500 hover:underline">
                         {t.withdraw}
                       </button>
                     </form>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </li>
           ))}

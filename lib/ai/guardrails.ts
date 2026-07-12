@@ -20,10 +20,13 @@ export type EvidenceItem = {
 const FORBIDDEN = [
   /балл/i,
   /рейтинг/i,
-  /рекомендуе?м?\s+(нанять|отказать|отклонить)/i,
+  /ранжир/i,
+  // рекомендация нанять/отказать — с любыми словами между глаголом-рекоменд.
+  // и «нанять/отказать/взять/отклонить» (до ~30 симв.), а также «стоит/лучше».
+  /(рекоменд|совет|стоит|лучше|нужно)[^.]{0,30}(нанять|наня|отказать|отклон|взять|не бра)/i,
   /\branking\b/i,
   /\bscore\b/i,
-  /recommend(ed)?\s+to\s+(hire|reject)/i,
+  /(recommend|should|advise)[^.]{0,30}(hire|hiring|reject|not\s+hire|decline)/i,
   /подделк/i,
   /фальшив/i,
   /поддельн/i,
@@ -37,9 +40,19 @@ export function containsForbidden(text: string): boolean {
   return FORBIDDEN.some((re) => re.test(text));
 }
 
-/** Любой из пунктов нарушает лексику → вывод отклоняется (перегенерация). */
+/**
+ * Любой из пунктов нарушает лексику → вывод отклоняется. Проверяем ВСЕ
+ * отображаемые работодателю поля (text, category, source, quote), иначе
+ * запрещённая формулировка могла бы просочиться через цитату-источник.
+ */
 export function outputViolatesPolicy(items: EvidenceItem[]): boolean {
-  return items.some((i) => containsForbidden(i.text) || containsForbidden(i.category));
+  return items.some(
+    (i) =>
+      containsForbidden(i.text) ||
+      containsForbidden(i.category) ||
+      containsForbidden(i.source ?? "") ||
+      containsForbidden(i.quote ?? "")
+  );
 }
 
 /** Есть ли у пункта основание (источник + цитата/значение). */

@@ -12,15 +12,20 @@
 --
 -- План отката:
 --   grant insert, update, delete on applications, application_documents,
---     application_answers to anon, authenticated;
+--     application_answers to anon;
 --   (политики member-read и атомарность view_count безопасно оставить)
 
--- ── 1. Анти-абьюз + анти-tampering: запись только через RPC ──────────
--- Закрывает прямой POST в /rest/v1/applications мимо rate-limit/Turnstile
--- (submit_application) и прямой PATCH произвольных колонок (в т.ч. consent_text).
-revoke insert, update, delete on applications          from anon, authenticated;
-revoke insert, update, delete on application_documents from anon, authenticated;
-revoke insert, update, delete on application_answers   from anon, authenticated;
+-- ── 1. Анти-абьюз: анонимная запись только через RPC ────────────────
+-- Закрывает главный вектор — прямой POST ботом в /rest/v1/applications под
+-- ключом anon, мимо rate-limit/Turnstile (submit_application). Отзываем
+-- ТОЛЬКО у anon: публичная подача Doki.id тоже идёт через тот же SECURITY
+-- DEFINER RPC (bypass grants), поэтому риск поломки Doki.id ~ нулевой.
+-- authenticated-гранты НЕ трогаем (там мог бы быть прямой доступ Doki.id);
+-- прямая запись авторизованного — меньший вектор (нужен аккаунт), а
+-- cross-tenant блокирует WITH CHECK ниже. select сохранён для RLS-чтения.
+revoke insert, update, delete on applications          from anon;
+revoke insert, update, delete on application_documents from anon;
+revoke insert, update, delete on application_answers   from anon;
 
 -- Defense-in-depth: даже если грант вернут, UPDATE-политике добавляем
 -- WITH CHECK (нельзя переназначить отклик на чужую вакансию).

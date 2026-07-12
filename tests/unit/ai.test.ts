@@ -72,3 +72,22 @@ test("checkCompleteness: всё на месте → complete", () => {
   const required = [{ type: "cv", label: "CV", required: true }];
   assert.equal(checkCompleteness(required, ["cv", "extra"]).complete, true);
 });
+
+test("outputViolatesPolicy сканирует quote и source, не только text", () => {
+  assert.equal(
+    outputViolatesPolicy([{ category: "fact", text: "ок", source: "CV", quote: "итоговый балл 90" }]),
+    true
+  );
+  assert.equal(
+    outputViolatesPolicy([{ category: "fact", text: "ок", source: "рейтинг кандидатов", quote: "q" }]),
+    true
+  );
+});
+
+test("containsForbidden ловит расширенные формулировки рекомендаций/подлинности", () => {
+  assert.ok(containsForbidden("рекомендую срочно нанять этого кандидата"));
+  assert.ok(containsForbidden("советую отказать"));
+  assert.ok(containsForbidden("we should definitely hire them"));
+  assert.ok(containsForbidden("ранжирование кандидатов"));
+  assert.ok(!containsForbidden("кандидат работал барменом 3 года"));
+});

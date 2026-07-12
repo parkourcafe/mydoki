@@ -463,6 +463,16 @@ export async function analyzeCandidate(applicationId: string, vacancyId: string)
   } = await supabase.auth.getUser();
   if (!user) return;
 
+  // Гард: не анализируем при отозванном согласии (прекращение обработки).
+  // RLS уже ограничивает видимость строки владельцем/участником вакансии.
+  const { data: appRow } = await supabase
+    .from("applications")
+    .select("consent_revoked_at")
+    .eq("id", applicationId)
+    .eq("vacancy_id", vacancyId)
+    .maybeSingle();
+  if (!appRow || (appRow as { consent_revoked_at: string | null }).consent_revoked_at) return;
+
   const { data: vac } = await supabase
     .from("vacancies")
     .select("required_documents")
