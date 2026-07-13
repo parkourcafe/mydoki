@@ -99,6 +99,15 @@
 - ⚠️ проверить: **актуальный локальный UMK** (напр. Бали/ваш регентство) на
   текущий год — цифры меняются ежегодно.
 
+  **Ставки по Бали на 2026 (действуют с 01.01.2026, официальный SK Disnaker Bali):**
+  - UMP Бали 2026: **Rp 3 207 459** (+7,04% к Rp 2 996 561);
+  - UMK Badung: **Rp 3 791 002,57** (самый высокий); Денпасар: Rp 3 499 878,78;
+    Gianyar: Rp 3 316 798,48; Tabanan: Rp 3 287 678,87;
+  - Bangli, Buleleng, Jembrana, Karangasem: Rp 3 207 459 (приравнены к UMP).
+  - Источник: SK Disnaker Bali (UMK/UMSK 2026), PDF —
+    https://disnakeresdm.baliprov.go.id/wp-content/uploads/2025/12/PENGUMUMAN-DAN-SK-UMK-UMSK-TAHUN-2026.pdf
+  - ⚠️ на 2027 и далее — сверять свежий SK губернатора.
+
 ## 5. Прекращение трудовых отношений (PHK) и выходные выплаты
 - **category:** `termination` · **slug:** `termination-severance`
 - **title:** Прекращение (PHK) и выходные выплаты
@@ -115,6 +124,27 @@
 - **source:** PP 35/2021; UU 2/2004 (разрешение трудовых споров)
 - **source_version:** PP 35/2021 на дату сверки
 - ⚠️ проверить: множители по каждому основанию PHK и точные сроки уведомления.
+
+  **Компоненты и множители (PP 35/2021 — ориентир, требует юр-сверки):**
+  - **UP** (Uang Pesangon) — по стажу, максимум **9 мес.** оклада (потолок
+    при стаже ≥8 лет).
+  - **UPMK** (Uang Penghargaan Masa Kerja) — за выслугу, только при стаже
+    **≥3 лет**, до **10 мес.** (при стаже ≥24 лет).
+  - **UPH** (Uang Penggantian Hak) — компенсация прав: неиспользованный
+    отпуск; расходы на возвращение к месту найма; при наличии — 15% от
+    (UP+UPMK) на жильё/медицину.
+  - Множители к UP/UPMK по основанию PHK (примеры; полную таблицу сверить по
+    PP 35/2021):
+    - эффективность для предотвращения убытков (компания прибыльна): UP ×1, UPMK ×1;
+    - эффективность из-за фактических убытков / закрытие из-за убытков: UP ×0,5, UPMK ×1;
+    - выход на пенсию: UP ×1,75, UPMK ×1, UPH;
+    - смерть/инвалидность/длительная болезнь: до UP ×2, UPMK ×1, UPH;
+    - увольнение по инициативе работодателя (ряд оснований): до UP ×2;
+    - по собственному желанию (resign): UP/UPMK — как правило нет, выплачиваются
+      UPH + «uang pisah» (по договору/регламенту) — **сверить**;
+    - грубое нарушение/срочные основания: UP/UPMK нет, UPH (+ uang pisah).
+  - Источник таблицы: PP 35/2021, ст. 40–57; сводка (Daya Mandiri, актуарии) —
+    https://www.dayamandiri.co.id/konsultan-aktuaria/images/upload/File/severance-benefits-summary-pp35-2021-20210222-final.pdf
 
 ## 6. Как пользоваться разделом (мета — безопасно публиковать)
 - **category:** `general` · **slug:** `how-to-use`
@@ -142,3 +172,6 @@
 - Мин. оплата 2026 (ANTARA): https://en.antaranews.com/news/388441/indonesia-to-base-2026-minimum-wage-formula-on-decent-living-standards
 - Прекращение (L&E Global): https://leglobal.law/countries/indonesia/employment-law/employment-law-overview-indonesia/termination-of-employment-contracts-in-indonesia/
 - Выходные выплаты / ILO (справочно): https://www.ilo.org/sites/default/files/wcmsp5/groups/public/@asia/@ro-bangkok/@ilo-jakarta/documents/publication/wcms_765084.pdf
+- Множители выплат PP 35/2021 (сводка, актуарии Daya Mandiri): https://www.dayamandiri.co.id/konsultan-aktuaria/images/upload/File/severance-benefits-summary-pp35-2021-20210222-final.pdf
+- UMK/UMSK Бали 2026 (офиц. SK Disnaker Bali, PDF): https://disnakeresdm.baliprov.go.id/wp-content/uploads/2025/12/PENGUMUMAN-DAN-SK-UMK-UMSK-TAHUN-2026.pdf
+- UMP/UMK Бали 2026 (Kompas): https://money.kompas.com/read/2025/12/31/111556126/gaji-umr-denpasar-2026-cek-ump-bali-2026-dan-daftar-lengkap-umk-bali-2026

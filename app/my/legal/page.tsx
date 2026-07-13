@@ -3,10 +3,12 @@ import { getLocale, type Locale } from "@/lib/i18n";
 import {
   type LegalTopic,
   LEGAL_JURISDICTION,
+  HOW_TO_USE_SLUG,
   legalCategoryLabel,
   jurisdictionName,
   legalDisclaimer,
   specialistRouteText,
+  howToUseText,
 } from "@/lib/legal";
 
 const M = {
@@ -82,8 +84,12 @@ export default async function LegalInfoPage() {
                   {legalCategoryLabel(locale, topic.category)}
                 </span>
               </div>
-              {topic.body && (
-                <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">{topic.body}</p>
+              {topic.slug === HOW_TO_USE_SLUG ? (
+                <p className="mt-2 text-sm text-slate-700">{howToUseText(locale)}</p>
+              ) : (
+                topic.body && (
+                  <p className="mt-2 whitespace-pre-wrap text-sm text-slate-700">{topic.body}</p>
+                )
               )}
               <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
                 {topic.source && <span>{t.source}: {topic.source}</span>}

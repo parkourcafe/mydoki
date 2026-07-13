@@ -6,10 +6,12 @@ import assert from "node:assert/strict";
 import {
   LEGAL_JURISDICTION,
   LEGAL_CATEGORIES,
+  HOW_TO_USE_SLUG,
   legalCategoryLabel,
   jurisdictionName,
   legalDisclaimer,
   specialistRouteText,
+  howToUseText,
 } from "../../lib/legal.ts";
 
 test("LEGAL_JURISDICTION — одна юрисдикция запуска (ID)", () => {
@@ -44,4 +46,13 @@ test("specialistRouteText: маршрут к специалисту во все�
   for (const loc of ["ru", "en", "id", "uz"] as const) {
     assert.ok(specialistRouteText(loc).length > 0, loc);
   }
+});
+
+test("howToUseText: мета-текст локализован и не является юр-советом", () => {
+  assert.equal(HOW_TO_USE_SLUG, "how-to-use");
+  for (const loc of ["ru", "en", "id", "uz"] as const) {
+    assert.ok(howToUseText(loc).length > 40, loc);
+  }
+  assert.match(howToUseText("en").toLowerCase(), /not legal advice/);
+  assert.match(howToUseText("ru").toLowerCase(), /не юридическая консультация/);
 });

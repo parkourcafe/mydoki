@@ -126,3 +126,18 @@ const SPECIALIST_ROUTE: Record<Locale, string> = {
 export function specialistRouteText(locale: Locale): string {
   return SPECIALIST_ROUTE[locale];
 }
+
+// Мета-тема «как пользоваться» рендерится локализованно: в БД тело строки
+// how-to-use хранится нейтрально, а показываем этот текст по локали пользователя.
+export const HOW_TO_USE_SLUG = "how-to-use";
+
+const HOW_TO_USE: Record<Locale, string> = {
+  ru: "Здесь собраны справочные материалы по трудовым отношениям для одной юрисдикции. У каждой темы указаны источник, версия и дата сверки. Это не юридическая консультация и не заменяет специалиста; право может меняться. По вашей конкретной ситуации обратитесь к квалифицированному юристу или в местную инспекцию труда.",
+  en: "This section gathers reference materials on employment for a single jurisdiction. Each topic cites a source, version and review date. It is not legal advice and does not replace a specialist; the law may change. For your specific situation, consult a qualified lawyer or the local labour office.",
+  id: "Bagian ini mengumpulkan materi rujukan tentang hubungan kerja untuk satu yurisdiksi. Setiap topik mencantumkan sumber, versi, dan tanggal peninjauan. Ini bukan nasihat hukum dan tidak menggantikan spesialis; hukum bisa berubah. Untuk situasi Anda, konsultasikan dengan pengacara yang berkualifikasi atau kantor tenaga kerja setempat.",
+  uz: "Bu bo‘limda bitta yurisdiksiya bo‘yicha mehnat munosabatlariga oid ma'lumot materiallari to‘plangan. Har bir mavzuda manba, versiya va tekshirilgan sana ko‘rsatilgan. Bu yuridik maslahat emas va mutaxassis o‘rnini bosmaydi; qonun o‘zgarishi mumkin. O‘z holatingiz bo‘yicha malakali yurist yoki mahalliy mehnat idorasiga murojaat qiling.",
+};
+
+export function howToUseText(locale: Locale): string {
+  return HOW_TO_USE[locale];
+}
