@@ -6,6 +6,7 @@ import { getLocale } from "@/lib/i18n";
 import { waLink, type RequiredDocument } from "@/lib/career";
 import CandidateActions from "./CandidateActions";
 import CandidateAI, { type AiRunView } from "./CandidateAI";
+import EmployeeOnboard from "./EmployeeOnboard";
 
 const M = {
   ru: {
@@ -141,6 +142,7 @@ const M = {
 type AppRow = {
   id: string;
   vacancy_id: string;
+  user_id: string | null;
   full_name: string;
   whatsapp: string;
   email: string | null;
@@ -185,7 +187,7 @@ export default async function CandidatePage({
   const { data: appData } = await supabase
     .from("applications")
     .select(
-      "id, vacancy_id, full_name, whatsapp, email, status, stage, state, rejected_reason, consent_text, consent_given_at, consent_revoked_at, created_at"
+      "id, vacancy_id, user_id, full_name, whatsapp, email, status, stage, state, rejected_reason, consent_text, consent_given_at, consent_revoked_at, created_at"
     )
     .eq("id", applicationId)
     .maybeSingle();
@@ -252,6 +254,19 @@ export default async function CandidatePage({
   }[];
   const events = (eventData ?? []) as EventRow[];
 
+  // Оформление сотрудника доступно после найма. Ищем уже созданную запись
+  // employment по этому отклику (одна каноническая запись — v1.1 §7.4).
+  const isHired = app.state === "hired" || app.status === "hired";
+  let existingEmploymentId: string | null = null;
+  if (isHired) {
+    const { data: empRow } = await supabase
+      .from("employments")
+      .select("id")
+      .eq("application_id", app.id)
+      .maybeSingle();
+    existingEmploymentId = (empRow?.id as string) ?? null;
+  }
+
   const stages = vacancy.stages ?? ["new", "review", "interview", "assignment", "decision"];
   const stateLabel =
     app.state === "hired" ? t.stHired
@@ -296,6 +311,16 @@ export default async function CandidatePage({
           </p>
         )}
       </div>
+
+      {isHired && (
+        <EmployeeOnboard
+          locale={locale}
+          applicationId={app.id}
+          defaultPosition={vacancy.title}
+          hasAccount={!!app.user_id}
+          existingEmploymentId={existingEmploymentId}
+        />
+      )}
 
       <CandidateActions
         locale={locale}

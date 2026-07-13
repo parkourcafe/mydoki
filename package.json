@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test:unit": "node --test --experimental-strip-types tests/unit/vault.test.ts tests/unit/reminders.test.ts tests/unit/ai.test.ts",
+    "test:unit": "node --test --experimental-strip-types tests/unit/vault.test.ts tests/unit/reminders.test.ts tests/unit/ai.test.ts tests/unit/employment.test.ts",
     "test:lexicon": "node tests/lexicon.mjs",
     "test:e2e": "playwright test"
   },

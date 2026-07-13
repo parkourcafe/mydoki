@@ -6,6 +6,7 @@ import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { normalizeWhatsapp } from "@/lib/career";
 import { checkCompleteness } from "@/lib/ai/completeness";
+import { normalizeEmploymentType } from "@/lib/employment";
 import { runAgent, aiTextConfigured } from "@/lib/ai";
 import type {
   RequiredDocument,
@@ -539,6 +540,68 @@ export async function reviewAiRun(
     .eq("id", runId);
   if (error) throw error;
   revalidatePath(`/employer/candidates/${applicationId}`);
+}
+
+// ── Employment (проекция работодателя) ───────────────────────────────
+
+/**
+ * Оформить сотрудника из hired-отклика. RPC create_employment_from_application
+ * (SECURITY DEFINER) проверяет владение вакансией и state='hired', создаёт
+ * ОДНУ каноническую запись employment (идемпотентно). Возвращает id записи.
+ */
+export async function createEmploymentFromApplication(
+  applicationId: string,
+  position: string,
+  type: string,
+  startDate: string | null
+): Promise<{ id: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("create_employment_from_application", {
+    p_application_id: applicationId,
+    p_position: position,
+    p_type: type || "full_time",
+    p_start_date: startDate || null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  revalidatePath("/employer/employees");
+  return { id: data as string };
+}
+
+/**
+ * Правка карточки сотрудника работодателем (должность/тип/даты/статус). RLS
+ * (employments company update) пускает только владельца/рекрутёра компании.
+ */
+export async function updateEmployment(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const id = String(formData.get("id") ?? "");
+  const position = String(formData.get("position") ?? "").trim();
+  if (!id || !position) return;
+  const employment_type = normalizeEmploymentType(formData.get("employment_type"));
+  const start_date = String(formData.get("start_date") ?? "").trim() || null;
+  const end_date = String(formData.get("end_date") ?? "").trim() || null;
+  const status = String(formData.get("status") ?? "active") === "ended" ? "ended" : "active";
+
+  const { error } = await supabase
+    .from("employments")
+    .update({
+      position,
+      employment_type,
+      start_date,
+      end_date,
+      status,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .eq("manual", false); // работодатель правит только записи «от работодателя»
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${id}`);
+  revalidatePath("/employer/employees");
 }
 
 /** Автопометка «просмотрено» при открытии дашборда (new→viewed). */
