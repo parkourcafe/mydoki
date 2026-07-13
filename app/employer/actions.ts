@@ -653,6 +653,84 @@ export async function updateEmployment(formData: FormData) {
   revalidatePath("/employer/employees");
 }
 
+// ── Онбординг (P2-3) ─────────────────────────────────────────────────
+
+/** Старт онбординга: сид чек-листа (локализованные шаблоны) + точек 7/30/60/90. */
+export async function startOnboarding(
+  employmentId: string,
+  titles: string[]
+): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("start_onboarding", {
+    p_employment_id: employmentId,
+    p_task_titles: titles && titles.length ? titles : null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/employees/${employmentId}`);
+  return {};
+}
+
+/** Сменить статус задачи/точки онбординга (RLS: только компания). */
+export async function setOnboardingTaskStatus(
+  taskId: string,
+  employmentId: string,
+  status: "pending" | "done" | "skipped"
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("onboarding_tasks")
+    .update({
+      status,
+      done_at: status === "done" ? new Date().toISOString() : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Добавить свою задачу в чек-лист. */
+export async function addOnboardingTask(
+  employmentId: string,
+  title: string,
+  sort: number
+) {
+  const clean = title.trim();
+  if (!clean) return;
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.from("onboarding_tasks").insert({
+    employment_id: employmentId,
+    title: clean,
+    kind: "task",
+    sort,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Заметка к контрольной точке (например, итог 30-дневного чек-ина). */
+export async function setOnboardingNote(
+  taskId: string,
+  employmentId: string,
+  note: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("onboarding_tasks")
+    .update({ note: note.trim() || null, updated_at: new Date().toISOString() })
+    .eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Удалить задачу онбординга. */
+export async function deleteOnboardingTask(taskId: string, employmentId: string) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.from("onboarding_tasks").delete().eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
 /** Автопометка «просмотрено» при открытии дашборда (new→viewed). */
 export async function markApplicationsViewed(applicationIds: string[]) {
   if (!applicationIds.length) return;

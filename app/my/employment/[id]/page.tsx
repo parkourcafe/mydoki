@@ -9,7 +9,9 @@ import {
   employmentStatusLabel,
   formatPeriod,
 } from "@/lib/employment";
+import type { OnboardingTask } from "@/lib/onboarding";
 import EditEmploymentForm from "./EditEmploymentForm";
+import OnboardingProgress from "./OnboardingProgress";
 
 const M = {
   ru: {
@@ -82,6 +84,19 @@ export default async function EmploymentDetailPage({
   const emp = data as Employment | null;
   if (!emp) notFound();
 
+  // Онбординг (read-only проекция для человека) — только для записей от
+  // работодателя (у ручных онбординга нет).
+  let onboardingTasks: OnboardingTask[] = [];
+  if (!emp.manual) {
+    const { data: onbData } = await supabase
+      .from("onboarding_tasks")
+      .select("*")
+      .eq("employment_id", emp.id)
+      .order("sort", { ascending: true });
+    onboardingTasks = (onbData ?? []) as OnboardingTask[];
+  }
+  const today = new Date().toISOString().slice(0, 10);
+
   return (
     <div className="mx-auto max-w-2xl space-y-6">
       <div>
@@ -119,6 +134,15 @@ export default async function EmploymentDetailPage({
         <p className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-500">
           {t.readonly}
         </p>
+      )}
+
+      {!emp.manual && (
+        <OnboardingProgress
+          locale={locale}
+          startDate={emp.start_date}
+          today={today}
+          tasks={onboardingTasks}
+        />
       )}
     </div>
   );

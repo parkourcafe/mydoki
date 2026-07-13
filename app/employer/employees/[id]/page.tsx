@@ -9,7 +9,9 @@ import {
   employmentStatusLabel,
   formatPeriod,
 } from "@/lib/employment";
+import type { OnboardingTask } from "@/lib/onboarding";
 import EmployeeEditForm from "./EmployeeEditForm";
+import OnboardingManager from "./OnboardingManager";
 
 const M = {
   ru: {
@@ -92,6 +94,14 @@ export default async function EmployeeDetailPage({
     name = (appRow?.full_name as string) ?? "";
   }
 
+  const { data: onbData } = await supabase
+    .from("onboarding_tasks")
+    .select("*")
+    .eq("employment_id", emp.id)
+    .order("sort", { ascending: true });
+  const onboardingTasks = (onbData ?? []) as OnboardingTask[];
+  const today = new Date().toISOString().slice(0, 10);
+
   return (
     <div className="space-y-6">
       <div>
@@ -132,6 +142,14 @@ export default async function EmployeeDetailPage({
       </section>
 
       <EmployeeEditForm locale={locale} employment={emp} />
+
+      <OnboardingManager
+        locale={locale}
+        employmentId={emp.id}
+        startDate={emp.start_date}
+        today={today}
+        tasks={onboardingTasks}
+      />
     </div>
   );
 }
