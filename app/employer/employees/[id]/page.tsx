@@ -16,6 +16,7 @@ import EmployeeEditForm from "./EmployeeEditForm";
 import OnboardingManager from "./OnboardingManager";
 import EmploymentDocs from "./EmploymentDocs";
 import AmendmentsManager from "./AmendmentsManager";
+import ProcessGuideHint from "@/components/ProcessGuideHint";
 
 const M = {
   ru: {
@@ -208,6 +209,9 @@ export default async function EmployeeDetailPage({
         employmentId={emp.id}
         amendments={amendments}
       />
+
+      <ProcessGuideHint locale={locale} context="amendment" />
+
 
       <EmploymentDocs
         locale={locale}

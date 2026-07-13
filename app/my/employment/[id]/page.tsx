@@ -16,6 +16,7 @@ import EditEmploymentForm from "./EditEmploymentForm";
 import OnboardingProgress from "./OnboardingProgress";
 import EmploymentDocs from "@/app/employer/employees/[id]/EmploymentDocs";
 import AmendmentsPanel from "./AmendmentsPanel";
+import ProcessGuideHint from "@/components/ProcessGuideHint";
 
 const M = {
   ru: {
@@ -154,6 +155,13 @@ export default async function EmploymentDetailPage({
         <p className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-500">
           {t.readonly}
         </p>
+      )}
+
+      {!emp.manual && (
+        <ProcessGuideHint
+          locale={locale}
+          context={amendments.some((a) => a.status === "proposed") ? "amendment" : "employment"}
+        />
       )}
 
       {!emp.manual && (
