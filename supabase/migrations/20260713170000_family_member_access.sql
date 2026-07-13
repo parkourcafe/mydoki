@@ -102,11 +102,13 @@ begin
     end if;
   end if;
 
-  delete from household_members
-    where household_id = p_household and user_id = p_user;
-
+  -- Пишем аудит ДО удаления: при выходе (self) вызывающий после delete уже
+  -- не член семьи, и membership-гард log_audit отбросил бы запись.
   perform log_audit(p_household, 'household.member_removed', 'household_member',
     p_user::text, jsonb_build_object('role', v_current, 'self', v_is_self));
+
+  delete from household_members
+    where household_id = p_household and user_id = p_user;
 end; $$;
 revoke execute on function public.remove_household_member(uuid, uuid) from public, anon;
 grant execute on function public.remove_household_member(uuid, uuid) to authenticated;
