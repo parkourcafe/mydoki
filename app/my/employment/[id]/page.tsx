@@ -10,8 +10,10 @@ import {
   formatPeriod,
 } from "@/lib/employment";
 import type { OnboardingTask } from "@/lib/onboarding";
+import type { EmploymentDocument } from "@/lib/employmentDocs";
 import EditEmploymentForm from "./EditEmploymentForm";
 import OnboardingProgress from "./OnboardingProgress";
+import EmploymentDocs from "@/app/employer/employees/[id]/EmploymentDocs";
 
 const M = {
   ru: {
@@ -84,16 +86,25 @@ export default async function EmploymentDetailPage({
   const emp = data as Employment | null;
   if (!emp) notFound();
 
-  // Онбординг (read-only проекция для человека) — только для записей от
-  // работодателя (у ручных онбординга нет).
+  // Онбординг и документы (read-only проекция для человека) — только для
+  // записей от работодателя (у ручных их нет).
   let onboardingTasks: OnboardingTask[] = [];
+  let employmentDocs: EmploymentDocument[] = [];
   if (!emp.manual) {
-    const { data: onbData } = await supabase
-      .from("onboarding_tasks")
-      .select("*")
-      .eq("employment_id", emp.id)
-      .order("sort", { ascending: true });
+    const [{ data: onbData }, { data: edData }] = await Promise.all([
+      supabase
+        .from("onboarding_tasks")
+        .select("*")
+        .eq("employment_id", emp.id)
+        .order("sort", { ascending: true }),
+      supabase
+        .from("employment_documents")
+        .select("*")
+        .eq("employment_id", emp.id)
+        .order("uploaded_at", { ascending: false }),
+    ]);
     onboardingTasks = (onbData ?? []) as OnboardingTask[];
+    employmentDocs = (edData ?? []) as EmploymentDocument[];
   }
   const today = new Date().toISOString().slice(0, 10);
 
@@ -142,6 +153,16 @@ export default async function EmploymentDetailPage({
           startDate={emp.start_date}
           today={today}
           tasks={onboardingTasks}
+        />
+      )}
+
+      {!emp.manual && employmentDocs.length > 0 && (
+        <EmploymentDocs
+          locale={locale}
+          employmentId={emp.id}
+          today={today}
+          docs={employmentDocs}
+          canManage={false}
         />
       )}
     </div>

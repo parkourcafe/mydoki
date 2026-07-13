@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { categoryLabel, type DocCategory } from "@/lib/categories";
 import { bucketKind, DEFAULT_OFFSETS, todayUTC } from "@/lib/reminders";
+import { docTypeLabel } from "@/lib/employmentDocs";
 
-// Ежедневный крон (Vercel Cron): письма о документах с истекающим сроком и
-// о ручных напоминаниях. Пороги (offsets [30,7,1] и т.п.) считаются в TS
-// (см. lib/reminders); дедуп — reminder_sent / reminder_sent_manual.
+// Ежедневный крон (Vercel Cron): письма о документах с истекающим сроком,
+// ручных напоминаниях и документах сотрудников (визы/договоры/сертификации —
+// работодателю). Пороги (offsets [30,7,1]) считаются в TS (см. lib/reminders);
+// дедуп — reminder_sent / reminder_sent_manual / employment_reminder_sent.
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
@@ -23,6 +25,15 @@ type ManualCand = {
   due_on: string;
   offsets: unknown;
   household_id: string;
+  email: string;
+};
+type EmpDocCand = {
+  document_id: string;
+  title: string;
+  doc_type: string;
+  expires_on: string;
+  employment_id: string;
+  company_name: string;
   email: string;
 };
 
@@ -48,11 +59,19 @@ function fmtDate(d: string): string {
 
 type DocItem = { title: string; category: string; date: string; urgent: boolean };
 type ManualItem = { title: string; date: string; urgent: boolean };
+type EmpDocItem = {
+  title: string;
+  docType: string;
+  company: string;
+  date: string;
+  urgent: boolean;
+};
 
 async function sendDigest(
   to: string,
   docs: DocItem[],
-  manual: ManualItem[]
+  manual: ManualItem[],
+  empdocs: EmpDocItem[]
 ): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key) return false;
@@ -83,6 +102,19 @@ async function sendDigest(
     )
     .join("\n");
 
+  const empLis = empdocs
+    .slice()
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((r) => {
+      const tp = docTypeLabel("ru", r.docType);
+      return `<li style="margin:4px 0">${r.urgent ? "⚠️ " : "🗓️ "}<b>${escapeHtml(
+        r.title
+      )}</b> <span style="color:#888">(${escapeHtml(tp)} · ${escapeHtml(
+        r.company
+      )})</span> — действует до <b>${fmtDate(r.date)}</b></li>`;
+    })
+    .join("\n");
+
   const blocks: string[] = [];
   if (docLis)
     blocks.push(
@@ -91,6 +123,10 @@ async function sendDigest(
   if (manualLis)
     blocks.push(
       `<p>Ваши напоминания:</p><ul style="padding-left:18px">${manualLis}</ul>`
+    );
+  if (empLis)
+    blocks.push(
+      `<p>Истекают документы ваших сотрудников:</p><ul style="padding-left:18px">${empLis}</ul>`
     );
 
   const html = `<div style="font-family:system-ui,sans-serif;max-width:480px">
@@ -146,17 +182,21 @@ export async function GET(req: Request) {
 
   const today = todayUTC(new Date());
 
-  const [docRes, manRes] = await Promise.all([
+  const [docRes, manRes, empRes] = await Promise.all([
     admin.rpc("due_reminder_candidates"),
     admin.rpc("due_manual_reminder_candidates"),
+    admin.rpc("due_employment_document_candidates"),
   ]);
   if (docRes.error)
     return NextResponse.json({ error: docRes.error.message }, { status: 500 });
   if (manRes.error)
     return NextResponse.json({ error: manRes.error.message }, { status: 500 });
+  if (empRes.error)
+    return NextResponse.json({ error: empRes.error.message }, { status: 500 });
 
   const docCands = (docRes.data ?? []) as DocCand[];
   const manCands = (manRes.data ?? []) as ManualCand[];
+  const empCands = (empRes.data ?? []) as EmpDocCand[];
 
   // Порог на сегодня для каждого кандидата.
   const docDue = docCands
@@ -165,10 +205,14 @@ export async function GET(req: Request) {
   const manDue = manCands
     .map((m) => ({ m, kind: bucketKind(m.due_on, today, offsetsOf(m.offsets)) }))
     .filter((x): x is { m: ManualCand; kind: string } => x.kind != null);
+  const empDue = empCands
+    .map((e) => ({ e, kind: bucketKind(e.expires_on, today, DEFAULT_OFFSETS) }))
+    .filter((x): x is { e: EmpDocCand; kind: string } => x.kind != null);
 
   // Дедуп: подтягиваем уже отправленные строки по нужным ключам.
   const docIds = [...new Set(docDue.map((x) => x.d.document_id))];
   const manIds = [...new Set(manDue.map((x) => x.m.reminder_id))];
+  const empIds = [...new Set(empDue.map((x) => x.e.document_id))];
 
   const sentDoc = new Set<string>();
   if (docIds.length) {
@@ -188,11 +232,20 @@ export async function GET(req: Request) {
     for (const r of data ?? [])
       sentMan.add(`${r.reminder_id}|${r.due_on}|${r.kind}|${r.email}`);
   }
+  const sentEmp = new Set<string>();
+  if (empIds.length) {
+    const { data } = await admin
+      .from("employment_reminder_sent")
+      .select("document_id, expires_on, kind, email")
+      .in("document_id", empIds);
+    for (const r of data ?? [])
+      sentEmp.add(`${r.document_id}|${r.expires_on}|${r.kind}|${r.email}`);
+  }
 
   // Группируем к отправке по email + собираем строки для записи дедупа.
   const byEmail = new Map<
     string,
-    { docs: DocItem[]; manual: ManualItem[] }
+    { docs: DocItem[]; manual: ManualItem[]; empdocs: EmpDocItem[] }
   >();
   const toRecordDoc: {
     document_id: string;
@@ -206,11 +259,17 @@ export async function GET(req: Request) {
     kind: string;
     email: string;
   }[] = [];
+  const toRecordEmp: {
+    document_id: string;
+    expires_on: string;
+    kind: string;
+    email: string;
+  }[] = [];
 
   for (const { d, kind } of docDue) {
     const key = `${d.document_id}|${d.expires_on}|${kind}|${d.email}`;
     if (sentDoc.has(key)) continue;
-    const bucket = byEmail.get(d.email) ?? { docs: [], manual: [] };
+    const bucket = byEmail.get(d.email) ?? { docs: [], manual: [], empdocs: [] };
     bucket.docs.push({
       title: d.title,
       category: d.category,
@@ -228,7 +287,7 @@ export async function GET(req: Request) {
   for (const { m, kind } of manDue) {
     const key = `${m.reminder_id}|${m.due_on}|${kind}|${m.email}`;
     if (sentMan.has(key)) continue;
-    const bucket = byEmail.get(m.email) ?? { docs: [], manual: [] };
+    const bucket = byEmail.get(m.email) ?? { docs: [], manual: [], empdocs: [] };
     bucket.manual.push({
       title: m.title,
       date: m.due_on,
@@ -242,16 +301,37 @@ export async function GET(req: Request) {
       email: m.email,
     });
   }
+  for (const { e, kind } of empDue) {
+    const key = `${e.document_id}|${e.expires_on}|${kind}|${e.email}`;
+    if (sentEmp.has(key)) continue;
+    const bucket = byEmail.get(e.email) ?? { docs: [], manual: [], empdocs: [] };
+    bucket.empdocs.push({
+      title: e.title,
+      docType: e.doc_type,
+      company: e.company_name,
+      date: e.expires_on,
+      urgent: kind === "d1" || kind === "d7",
+    });
+    byEmail.set(e.email, bucket);
+    toRecordEmp.push({
+      document_id: e.document_id,
+      expires_on: e.expires_on,
+      kind,
+      email: e.email,
+    });
+  }
 
   let sent = 0;
   for (const [email, bucket] of byEmail) {
-    const ok = await sendDigest(email, bucket.docs, bucket.manual);
+    const ok = await sendDigest(email, bucket.docs, bucket.manual, bucket.empdocs);
     if (!ok) continue;
     sent++;
     const dRows = toRecordDoc.filter((r) => r.email === email);
     const mRows = toRecordMan.filter((r) => r.email === email);
+    const eRows = toRecordEmp.filter((r) => r.email === email);
     if (dRows.length) await admin.from("reminder_sent").insert(dRows);
     if (mRows.length) await admin.from("reminder_sent_manual").insert(mRows);
+    if (eRows.length) await admin.from("employment_reminder_sent").insert(eRows);
   }
 
   return NextResponse.json({
@@ -259,5 +339,6 @@ export async function GET(req: Request) {
     emailsSent: sent,
     documents: docDue.length,
     manual: manDue.length,
+    employmentDocs: empDue.length,
   });
 }

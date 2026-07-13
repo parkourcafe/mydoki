@@ -653,6 +653,59 @@ export async function updateEmployment(formData: FormData) {
   revalidatePath("/employer/employees");
 }
 
+// ── Документы сотрудника (P2-4) ──────────────────────────────────────
+
+/** Записать загруженный документ сотрудника (файл уже в bucket employment-docs). */
+export async function attachEmploymentDocument(input: {
+  employmentId: string;
+  docType: string;
+  label: string;
+  storagePath: string;
+  fileName: string;
+  sizeBytes: number | null;
+  expiresAt: string | null;
+}) {
+  const supabase = await getSupabaseServer();
+  const label = input.label.trim() || input.fileName;
+  const { error } = await supabase.from("employment_documents").insert({
+    employment_id: input.employmentId,
+    doc_type: input.docType,
+    label,
+    file_path: input.storagePath,
+    file_name: input.fileName,
+    file_size: input.sizeBytes,
+    expires_at: input.expiresAt || null,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${input.employmentId}`);
+}
+
+/** Удалить документ сотрудника (строку + файл из bucket). */
+export async function deleteEmploymentDocument(
+  docId: string,
+  employmentId: string,
+  storagePath: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("employment_documents")
+    .delete()
+    .eq("id", docId);
+  if (error) throw error;
+  // Удаление файла — best-effort (RLS storage пускает только компанию).
+  await supabase.storage.from("employment-docs").remove([storagePath]).catch(() => {});
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Свежий signed URL (5 мин) на документ сотрудника. RLS: компания и сам сотрудник. */
+export async function signEmploymentDoc(path: string): Promise<string | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase.storage
+    .from("employment-docs")
+    .createSignedUrl(path, 300);
+  return data?.signedUrl ?? null;
+}
+
 // ── Онбординг (P2-3) ─────────────────────────────────────────────────
 
 /** Старт онбординга: сид чек-листа (локализованные шаблоны) + точек 7/30/60/90. */

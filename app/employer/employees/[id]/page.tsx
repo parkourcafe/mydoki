@@ -10,8 +10,10 @@ import {
   formatPeriod,
 } from "@/lib/employment";
 import type { OnboardingTask } from "@/lib/onboarding";
+import type { EmploymentDocument } from "@/lib/employmentDocs";
 import EmployeeEditForm from "./EmployeeEditForm";
 import OnboardingManager from "./OnboardingManager";
+import EmploymentDocs from "./EmploymentDocs";
 
 const M = {
   ru: {
@@ -94,12 +96,20 @@ export default async function EmployeeDetailPage({
     name = (appRow?.full_name as string) ?? "";
   }
 
-  const { data: onbData } = await supabase
-    .from("onboarding_tasks")
-    .select("*")
-    .eq("employment_id", emp.id)
-    .order("sort", { ascending: true });
+  const [{ data: onbData }, { data: edData }] = await Promise.all([
+    supabase
+      .from("onboarding_tasks")
+      .select("*")
+      .eq("employment_id", emp.id)
+      .order("sort", { ascending: true }),
+    supabase
+      .from("employment_documents")
+      .select("*")
+      .eq("employment_id", emp.id)
+      .order("uploaded_at", { ascending: false }),
+  ]);
   const onboardingTasks = (onbData ?? []) as OnboardingTask[];
+  const employmentDocs = (edData ?? []) as EmploymentDocument[];
   const today = new Date().toISOString().slice(0, 10);
 
   return (
@@ -149,6 +159,14 @@ export default async function EmployeeDetailPage({
         startDate={emp.start_date}
         today={today}
         tasks={onboardingTasks}
+      />
+
+      <EmploymentDocs
+        locale={locale}
+        employmentId={emp.id}
+        today={today}
+        docs={employmentDocs}
+        canManage
       />
     </div>
   );
