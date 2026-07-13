@@ -634,6 +634,7 @@ export async function updateEmployment(formData: FormData) {
   const employment_type = normalizeEmploymentType(formData.get("employment_type"));
   const start_date = String(formData.get("start_date") ?? "").trim() || null;
   const end_date = String(formData.get("end_date") ?? "").trim() || null;
+  const next_review_date = String(formData.get("next_review_date") ?? "").trim() || null;
   const status = String(formData.get("status") ?? "active") === "ended" ? "ended" : "active";
 
   const { error } = await supabase
@@ -643,6 +644,7 @@ export async function updateEmployment(formData: FormData) {
       employment_type,
       start_date,
       end_date,
+      next_review_date,
       status,
       updated_at: new Date().toISOString(),
     })

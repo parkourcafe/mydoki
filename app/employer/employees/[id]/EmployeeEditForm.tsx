@@ -17,6 +17,7 @@ const M = {
     type: "Тип занятости",
     start: "Начало",
     end: "Окончание",
+    review: "Плановый пересмотр",
     status: "Статус",
     active: "Работает",
     ended: "Завершено",
@@ -29,6 +30,7 @@ const M = {
     type: "Employment type",
     start: "Start",
     end: "End",
+    review: "Next review",
     status: "Status",
     active: "Active",
     ended: "Ended",
@@ -41,6 +43,7 @@ const M = {
     type: "Jenis kerja",
     start: "Mulai",
     end: "Selesai",
+    review: "Tinjauan berikutnya",
     status: "Status",
     active: "Aktif",
     ended: "Selesai",
@@ -53,6 +56,7 @@ const M = {
     type: "Bandlik turi",
     start: "Boshlanishi",
     end: "Tugashi",
+    review: "Keyingi ko‘rib chiqish",
     status: "Holat",
     active: "Ishlayapti",
     ended: "Yakunlangan",
@@ -117,12 +121,18 @@ export default function EmployeeEditForm({
           <input type="date" name="end_date" defaultValue={employment.end_date ?? ""} className="input" />
         </div>
       </div>
-      <div>
-        <label className="label">{t.status}</label>
-        <select name="status" defaultValue={employment.status} className="input">
-          <option value="active">{t.active}</option>
-          <option value="ended">{t.ended}</option>
-        </select>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="label">{t.review}</label>
+          <input type="date" name="next_review_date" defaultValue={employment.next_review_date ?? ""} className="input" />
+        </div>
+        <div>
+          <label className="label">{t.status}</label>
+          <select name="status" defaultValue={employment.status} className="input">
+            <option value="active">{t.active}</option>
+            <option value="ended">{t.ended}</option>
+          </select>
+        </div>
       </div>
       <div className="flex gap-2">
         <button type="submit" disabled={pending} className="btn-primary">
