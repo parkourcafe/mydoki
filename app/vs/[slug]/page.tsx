@@ -12,6 +12,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
 const UI = {
   ru: {
     start: "Начать бесплатно",
+    startShort: "Начать",
     back: "← На главную",
     table: "Сравнение по пунктам",
     verdict: "Коротко",
@@ -24,6 +25,7 @@ const UI = {
   },
   en: {
     start: "Start for free",
+    startShort: "Start",
     back: "← Home",
     table: "Side by side",
     verdict: "Bottom line",
@@ -36,6 +38,7 @@ const UI = {
   },
   id: {
     start: "Mulai gratis",
+    startShort: "Mulai",
     back: "← Beranda",
     table: "Perbandingan",
     verdict: "Kesimpulan",
@@ -48,6 +51,7 @@ const UI = {
   },
   uz: {
     start: "Bepul boshlash",
+    startShort: "Boshlash",
     back: "← Bosh sahifa",
     table: "Taqqoslash",
     verdict: "Qisqacha",
@@ -149,10 +153,11 @@ export default async function ComparisonPage({
                 <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
               </div>
             </Link>
-            <div className="flex items-center gap-x-4">
+            <div className="flex shrink-0 items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale={locale} />
-              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
-                {t.start}
+              <Link href="/login" className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
+                <span className="sm:hidden">{t.startShort}</span>
+                <span className="hidden sm:inline">{t.start}</span>
               </Link>
             </div>
           </div>

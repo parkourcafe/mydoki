@@ -12,6 +12,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
 // поэтому интерфейс тоже фиксированно русский.
 const T = {
   start: "Начать бесплатно",
+  startShort: "Начать",
   back: "← На главную",
   docs: "Что сюда сложить",
   pains: "Знакомо?",
@@ -95,10 +96,11 @@ export default async function UsecasePage({
                 <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
               </div>
             </Link>
-            <div className="flex items-center gap-x-4">
+            <div className="flex shrink-0 items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale="ru" />
-              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
-                {T.start}
+              <Link href="/login" className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
+                <span className="sm:hidden">{T.startShort}</span>
+                <span className="hidden sm:inline">{T.start}</span>
               </Link>
             </div>
           </div>

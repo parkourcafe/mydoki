@@ -7,11 +7,11 @@ import { getLanding } from "@/lib/landings";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
 
 // Локализованные UI-подписи (как в /for/[segment]).
-const UI: Record<Locale, { start: string; home: string; seeAlso: string; privacy: string; terms: string; ctaSub: string }> = {
-  ru: { start: "Начать бесплатно", home: "← На главную", seeAlso: "Смотрите также", privacy: "Конфиденциальность", terms: "Условия", ctaSub: "Меньше 15 минут — и порядок надолго." },
-  en: { start: "Start for free", home: "← Home", seeAlso: "See also", privacy: "Privacy", terms: "Terms", ctaSub: "Less than 15 minutes — and order that lasts." },
-  id: { start: "Mulai gratis", home: "← Beranda", seeAlso: "Lihat juga", privacy: "Privasi", terms: "Ketentuan", ctaSub: "Kurang dari 15 menit — dan tertata rapi untuk seterusnya." },
-  uz: { start: "Bepul boshlash", home: "← Bosh sahifa", seeAlso: "Shuningdek", privacy: "Maxfiylik", terms: "Shartlar", ctaSub: "15 daqiqadan kam — va uzoq saqlanadigan tartib." },
+const UI: Record<Locale, { start: string; startShort: string; home: string; seeAlso: string; privacy: string; terms: string; ctaSub: string }> = {
+  ru: { start: "Начать бесплатно", startShort: "Начать", home: "← На главную", seeAlso: "Смотрите также", privacy: "Конфиденциальность", terms: "Условия", ctaSub: "Меньше 15 минут — и порядок надолго." },
+  en: { start: "Start for free", startShort: "Start", home: "← Home", seeAlso: "See also", privacy: "Privacy", terms: "Terms", ctaSub: "Less than 15 minutes — and order that lasts." },
+  id: { start: "Mulai gratis", startShort: "Mulai", home: "← Beranda", seeAlso: "Lihat juga", privacy: "Privasi", terms: "Ketentuan", ctaSub: "Kurang dari 15 menit — dan tertata rapi untuk seterusnya." },
+  uz: { start: "Bepul boshlash", startShort: "Boshlash", home: "← Bosh sahifa", seeAlso: "Shuningdek", privacy: "Maxfiylik", terms: "Shartlar", ctaSub: "15 daqiqadan kam — va uzoq saqlanadigan tartib." },
 };
 
 function Dot() {
@@ -68,21 +68,28 @@ export default async function LandingPage({ slug }: { slug: string }) {
       <nav className="sticky top-0 z-50 border-b border-[#e8e0d5] bg-[#fdfaf5]">
         <div className="mx-auto max-w-screen-xl px-5">
           <div className="flex h-16 items-center justify-between">
-            <Link href={`/${locale}`} className="flex items-center gap-x-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#b85c38] text-white">
+            <Link href={`/${locale}`} className="flex shrink-0 items-center gap-x-2 sm:gap-x-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-[#b85c38] text-white">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
                 </svg>
               </div>
-              <div>
-                <span className="text-2xl font-semibold tracking-tighter">doki</span>
-                <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
+              <div className="whitespace-nowrap">
+                <span className="text-xl font-semibold tracking-tighter sm:text-2xl">doki</span>
+                <span className="text-xl font-semibold tracking-tighter text-[#c17a5e] sm:text-2xl">.help</span>
               </div>
             </Link>
-            <div className="flex items-center gap-x-4">
+            <div className="flex shrink-0 items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale={locale} />
-              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
-                {t.start}
+              <Link
+                href="/login"
+                className="accent-btn shrink-0 whitespace-nowrap rounded-3xl px-4 py-2 text-sm font-semibold sm:px-6 sm:py-2.5"
+              >
+                {/* Короткий CTA на мобильном, полный — на ≥sm: длинные метки
+                    (напр. RU «Начать бесплатно») не влезают рядом с
+                    переключателем языков на узких экранах. */}
+                <span className="sm:hidden">{t.startShort}</span>
+                <span className="hidden sm:inline">{t.start}</span>
               </Link>
             </div>
           </div>
