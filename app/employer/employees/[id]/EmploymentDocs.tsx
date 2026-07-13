@@ -16,6 +16,7 @@ import {
   deleteEmploymentDocument,
   signEmploymentDoc,
 } from "@/app/employer/actions";
+import { acknowledgeEmploymentDocument } from "@/app/my/actions";
 
 const M = {
   ru: {
@@ -33,6 +34,9 @@ const M = {
     confirmDel: "Удалить документ?",
     open: "Открыть",
     noExpiry: "без срока",
+    acknowledged: "Получение подтверждено",
+    pending: "Ожидает подтверждения",
+    ack: "Подтвердить получение",
     st: { ok: "", soon: "истекает", expired: "просрочен", none: "" } as Record<ExpiryStatus, string>,
   },
   en: {
@@ -50,6 +54,9 @@ const M = {
     confirmDel: "Delete document?",
     open: "Open",
     noExpiry: "no expiry",
+    acknowledged: "Receipt confirmed",
+    pending: "Awaiting confirmation",
+    ack: "Acknowledge receipt",
     st: { ok: "", soon: "expiring", expired: "expired", none: "" } as Record<ExpiryStatus, string>,
   },
   id: {
@@ -67,6 +74,9 @@ const M = {
     confirmDel: "Hapus dokumen?",
     open: "Buka",
     noExpiry: "tanpa masa berlaku",
+    acknowledged: "Penerimaan dikonfirmasi",
+    pending: "Menunggu konfirmasi",
+    ack: "Konfirmasi penerimaan",
     st: { ok: "", soon: "segera habis", expired: "kedaluwarsa", none: "" } as Record<ExpiryStatus, string>,
   },
   uz: {
@@ -84,6 +94,9 @@ const M = {
     confirmDel: "Hujjat oʻchirilsinmi?",
     open: "Ochish",
     noExpiry: "muddatsiz",
+    acknowledged: "Qabul tasdiqlandi",
+    pending: "Tasdiq kutilmoqda",
+    ack: "Qabulni tasdiqlash",
     st: { ok: "", soon: "muddati tugayapti", expired: "muddati oʻtgan", none: "" } as Record<ExpiryStatus, string>,
   },
 } as const;
@@ -229,12 +242,33 @@ export default function EmploymentDocs({
                     {docTypeLabel(locale, d.doc_type)}
                     {d.expires_at ? ` · ${t.expires} ${d.expires_at}` : ` · ${t.noExpiry}`}
                   </p>
+                  {d.acknowledged_at ? (
+                    <p className="text-xs text-emerald-600">✓ {t.acknowledged}</p>
+                  ) : (
+                    <p className="text-xs text-slate-400">{t.pending}</p>
+                  )}
                 </div>
                 <div className="flex shrink-0 items-center gap-2">
                   {st !== "ok" && st !== "none" && (
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${stCls[st]}`}>
                       {t.st[st]}
                     </span>
+                  )}
+                  {/* Подтверждение получения — только сотрудник (read-only view). */}
+                  {!canManage && !d.acknowledged_at && (
+                    <button
+                      type="button"
+                      disabled={pending}
+                      onClick={() =>
+                        startT(async () => {
+                          await acknowledgeEmploymentDocument(d.id, employmentId);
+                          router.refresh();
+                        })
+                      }
+                      className="btn-ghost"
+                    >
+                      {t.ack}
+                    </button>
                   )}
                   {canManage && (
                     <button

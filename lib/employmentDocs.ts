@@ -17,6 +17,8 @@ export type EmploymentDocType =
   | "visa"
   | "permit"
   | "certification"
+  | "settlement"
+  | "reference"
   | "other";
 
 export const EMPLOYMENT_DOC_TYPES: EmploymentDocType[] = [
@@ -24,6 +26,8 @@ export const EMPLOYMENT_DOC_TYPES: EmploymentDocType[] = [
   "visa",
   "permit",
   "certification",
+  "settlement",
+  "reference",
   "other",
 ];
 
@@ -38,6 +42,8 @@ export type EmploymentDocument = {
   expires_at: string | null;
   uploaded_by: string | null;
   uploaded_at: string;
+  acknowledged_at: string | null;
+  acknowledged_by: string | null;
 };
 
 const TYPE_LABELS: Record<Locale, Record<EmploymentDocType, string>> = {
@@ -46,6 +52,8 @@ const TYPE_LABELS: Record<Locale, Record<EmploymentDocType, string>> = {
     visa: "Виза",
     permit: "Разрешение на работу",
     certification: "Сертификация",
+    settlement: "Расчёт",
+    reference: "Рекомендация/справка",
     other: "Другое",
   },
   en: {
@@ -53,6 +61,8 @@ const TYPE_LABELS: Record<Locale, Record<EmploymentDocType, string>> = {
     visa: "Visa",
     permit: "Work permit",
     certification: "Certification",
+    settlement: "Settlement",
+    reference: "Reference letter",
     other: "Other",
   },
   id: {
@@ -60,6 +70,8 @@ const TYPE_LABELS: Record<Locale, Record<EmploymentDocType, string>> = {
     visa: "Visa",
     permit: "Izin kerja",
     certification: "Sertifikasi",
+    settlement: "Penyelesaian",
+    reference: "Surat referensi",
     other: "Lainnya",
   },
   uz: {
@@ -67,6 +79,8 @@ const TYPE_LABELS: Record<Locale, Record<EmploymentDocType, string>> = {
     visa: "Viza",
     permit: "Ishlash ruxsatnomasi",
     certification: "Sertifikatsiya",
+    settlement: "Hisob-kitob",
+    reference: "Tavsiyanoma",
     other: "Boshqa",
   },
 };

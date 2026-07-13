@@ -708,6 +708,24 @@ export async function respondToAmendment(
   return { ok: res.ok === true, status: res.status, error: res.error };
 }
 
+/**
+ * Сотрудник подтверждает получение документа (расчёт/рекомендация и др., P4-2).
+ * RPC acknowledge_employment_document проверяет, что вызывающий — сотрудник
+ * этой записи, и идемпотентно фиксирует время/actor получения.
+ */
+export async function acknowledgeEmploymentDocument(
+  docId: string,
+  employmentId: string
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("acknowledge_employment_document", {
+    p_id: docId,
+  });
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/my/employment/${employmentId}`);
+  return { ok: true };
+}
+
 /** Удалить своё ручное место работы. */
 export async function deleteManualEmployment(formData: FormData) {
   const supabase = await getSupabaseServer();
