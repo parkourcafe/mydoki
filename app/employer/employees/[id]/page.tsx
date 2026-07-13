@@ -12,10 +12,12 @@ import {
 import type { OnboardingTask } from "@/lib/onboarding";
 import { type EmploymentDocument, expiryStatus } from "@/lib/employmentDocs";
 import type { Amendment } from "@/lib/amendments";
+import type { OffboardingTask } from "@/lib/offboarding";
 import EmployeeEditForm from "./EmployeeEditForm";
 import OnboardingManager from "./OnboardingManager";
 import EmploymentDocs from "./EmploymentDocs";
 import AmendmentsManager from "./AmendmentsManager";
+import OffboardingManager from "./OffboardingManager";
 import ProcessGuideHint from "@/components/ProcessGuideHint";
 
 const M = {
@@ -111,7 +113,7 @@ export default async function EmployeeDetailPage({
     name = (appRow?.full_name as string) ?? "";
   }
 
-  const [{ data: onbData }, { data: edData }, { data: amData }] = await Promise.all([
+  const [{ data: onbData }, { data: edData }, { data: amData }, { data: obData }] = await Promise.all([
     supabase
       .from("onboarding_tasks")
       .select("*")
@@ -127,10 +129,16 @@ export default async function EmployeeDetailPage({
       .select("*")
       .eq("employment_id", emp.id)
       .order("created_at", { ascending: false }),
+    supabase
+      .from("offboarding_tasks")
+      .select("*")
+      .eq("employment_id", emp.id)
+      .order("sort", { ascending: true }),
   ]);
   const onboardingTasks = (onbData ?? []) as OnboardingTask[];
   const employmentDocs = (edData ?? []) as EmploymentDocument[];
   const amendments = (amData ?? []) as Amendment[];
+  const offboardingTasks = (obData ?? []) as OffboardingTask[];
   const today = new Date().toISOString().slice(0, 10);
 
   return (
@@ -209,6 +217,15 @@ export default async function EmployeeDetailPage({
         employmentId={emp.id}
         amendments={amendments}
       />
+
+      {emp.status === "active" && (
+        <OffboardingManager
+          locale={locale}
+          employmentId={emp.id}
+          lastWorkingDay={emp.last_working_day}
+          tasks={offboardingTasks}
+        />
+      )}
 
       <ProcessGuideHint locale={locale} context="amendment" />
 

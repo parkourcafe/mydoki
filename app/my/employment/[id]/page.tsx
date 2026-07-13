@@ -12,10 +12,12 @@ import {
 import type { OnboardingTask } from "@/lib/onboarding";
 import type { EmploymentDocument } from "@/lib/employmentDocs";
 import type { Amendment } from "@/lib/amendments";
+import type { OffboardingTask } from "@/lib/offboarding";
 import EditEmploymentForm from "./EditEmploymentForm";
 import OnboardingProgress from "./OnboardingProgress";
 import EmploymentDocs from "@/app/employer/employees/[id]/EmploymentDocs";
 import AmendmentsPanel from "./AmendmentsPanel";
+import OffboardingProgress from "./OffboardingProgress";
 import ProcessGuideHint from "@/components/ProcessGuideHint";
 
 const M = {
@@ -94,8 +96,9 @@ export default async function EmploymentDetailPage({
   let onboardingTasks: OnboardingTask[] = [];
   let employmentDocs: EmploymentDocument[] = [];
   let amendments: Amendment[] = [];
+  let offboardingTasks: OffboardingTask[] = [];
   if (!emp.manual) {
-    const [{ data: onbData }, { data: edData }, { data: amData }] = await Promise.all([
+    const [{ data: onbData }, { data: edData }, { data: amData }, { data: obData }] = await Promise.all([
       supabase
         .from("onboarding_tasks")
         .select("*")
@@ -111,10 +114,16 @@ export default async function EmploymentDetailPage({
         .select("*")
         .eq("employment_id", emp.id)
         .order("created_at", { ascending: false }),
+      supabase
+        .from("offboarding_tasks")
+        .select("*")
+        .eq("employment_id", emp.id)
+        .order("sort", { ascending: true }),
     ]);
     onboardingTasks = (onbData ?? []) as OnboardingTask[];
     employmentDocs = (edData ?? []) as EmploymentDocument[];
     amendments = (amData ?? []) as Amendment[];
+    offboardingTasks = (obData ?? []) as OffboardingTask[];
   }
   const today = new Date().toISOString().slice(0, 10);
 
@@ -184,6 +193,14 @@ export default async function EmploymentDetailPage({
           today={today}
           docs={employmentDocs}
           canManage={false}
+        />
+      )}
+
+      {!emp.manual && (
+        <OffboardingProgress
+          locale={locale}
+          lastWorkingDay={emp.last_working_day}
+          tasks={offboardingTasks}
         />
       )}
     </div>

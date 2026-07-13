@@ -847,6 +847,57 @@ export async function deleteOnboardingTask(taskId: string, employmentId: string)
   revalidatePath(`/employer/employees/${employmentId}`);
 }
 
+// ── Оффбординг (P4-1) ────────────────────────────────────────────────
+
+/** Старт оффбординга: дата последнего дня + сид чек-листа выхода. */
+export async function startOffboarding(
+  employmentId: string,
+  lastWorkingDay: string | null,
+  titles: string[]
+): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("start_offboarding", {
+    p_employment_id: employmentId,
+    p_last_working_day: lastWorkingDay || null,
+    p_task_titles: titles && titles.length ? titles : null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/employees/${employmentId}`);
+  return {};
+}
+
+/** Сменить статус задачи оффбординга (RLS: только компания). */
+export async function setOffboardingTaskStatus(
+  taskId: string,
+  employmentId: string,
+  status: "pending" | "done" | "skipped"
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("offboarding_tasks")
+    .update({
+      status,
+      done_at: status === "done" ? new Date().toISOString() : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Завершить оффбординг → employment переходит в ended. */
+export async function completeOffboarding(
+  employmentId: string
+): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("complete_offboarding", {
+    p_employment_id: employmentId,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/employees/${employmentId}`);
+  return {};
+}
+
 /** Автопометка «просмотрено» при открытии дашборда (new→viewed). */
 export async function markApplicationsViewed(applicationIds: string[]) {
   if (!applicationIds.length) return;

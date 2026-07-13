@@ -37,6 +37,7 @@ export type Employment = {
   manual: boolean;
   compensation: string | null;
   next_review_date: string | null;
+  last_working_day: string | null;
   created_by: string | null;
   created_at: string;
   updated_at: string;
