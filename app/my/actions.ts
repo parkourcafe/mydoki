@@ -726,6 +726,36 @@ export async function acknowledgeEmploymentDocument(
   return { ok: true };
 }
 
+/**
+ * Внешнее подтверждение занятости (P4-4). Человек создаёт секретную ссылку
+ * для своей записи ОТ РАБОТОДАТЕЛЯ (RPC проверяет employee=auth.uid() и
+ * manual=false). Возвращает токен (один активный на запись).
+ */
+export async function createEmploymentVerification(
+  employmentId: string
+): Promise<{ token: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("create_employment_verification", {
+    p_employment_id: employmentId,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/my/employment/${employmentId}`);
+  return { token: data as string };
+}
+
+/** Отозвать ссылку-подтверждение занятости. */
+export async function revokeEmploymentVerification(
+  employmentId: string
+): Promise<{ ok: boolean }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("revoke_employment_verification", {
+    p_employment_id: employmentId,
+  });
+  if (error) return { ok: false };
+  revalidatePath(`/my/employment/${employmentId}`);
+  return { ok: true };
+}
+
 /** Удалить своё ручное место работы. */
 export async function deleteManualEmployment(formData: FormData) {
   const supabase = await getSupabaseServer();
