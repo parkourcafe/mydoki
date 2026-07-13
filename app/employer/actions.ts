@@ -5,6 +5,9 @@ import { revalidatePath } from "next/cache";
 import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { normalizeWhatsapp } from "@/lib/career";
+import { checkCompleteness } from "@/lib/ai/completeness";
+import { normalizeEmploymentType } from "@/lib/employment";
+import { runAgent, aiTextConfigured } from "@/lib/ai";
 import type {
   RequiredDocument,
   ScreeningQuestion,
@@ -144,6 +147,47 @@ export async function saveEmployerProfile(formData: FormData) {
   redirect("/employer/vacancies/new");
 }
 
+/** Сохранить настройки компании (данные, срок хранения, текст согласия). */
+export async function saveCompanySettings(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const company_name = String(formData.get("company_name") ?? "").trim();
+  if (!company_name) return;
+  const contact_whatsapp = String(formData.get("contact_whatsapp") ?? "").trim();
+  const contact_email = String(formData.get("contact_email") ?? "").trim();
+  const country = String(formData.get("country") ?? "").trim();
+  const default_consent_text = String(
+    formData.get("default_consent_text") ?? ""
+  ).trim();
+  const retentionRaw = Number(formData.get("retention_months") ?? 12);
+  const retention_months =
+    Number.isFinite(retentionRaw) && retentionRaw > 0
+      ? Math.min(120, Math.round(retentionRaw))
+      : 12;
+
+  const { error } = await supabase.from("employer_profiles").upsert(
+    {
+      user_id: user.id,
+      company_name,
+      contact_whatsapp: contact_whatsapp
+        ? normalizeWhatsapp(contact_whatsapp)
+        : null,
+      contact_email: contact_email || null,
+      country: country || null,
+      default_consent_text: default_consent_text || null,
+      retention_months,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id" }
+  );
+  if (error) throw error;
+  revalidatePath("/employer/settings");
+}
+
 export type CreateVacancyInput = {
   title: string;
   company_name: string;
@@ -157,7 +201,57 @@ export type CreateVacancyInput = {
   screening_questions: ScreeningQuestion[];
   video_screening?: "off" | "optional" | "required";
   video_question?: string | null;
+  // Структурированные блоки (§8 v1.1) — необязательны.
+  problem_statement?: string | null;
+  must_have?: string[];
+  trainable?: string[];
+  scorecard?: string[];
+  stages?: string[];
+  success_criteria_probation?: string | null;
 };
+
+/** Поля структуры вакансии для прямого RLS-обновления (владелец). */
+function structuredFields(input: CreateVacancyInput) {
+  const fields: Record<string, unknown> = {};
+  if (input.problem_statement !== undefined)
+    fields.problem_statement = input.problem_statement?.trim() || null;
+  if (input.must_have !== undefined) fields.must_have = input.must_have;
+  if (input.trainable !== undefined) fields.trainable = input.trainable;
+  if (input.scorecard !== undefined) fields.scorecard = input.scorecard;
+  if (input.stages !== undefined && input.stages.length)
+    fields.stages = input.stages;
+  if (input.success_criteria_probation !== undefined)
+    fields.success_criteria_probation =
+      input.success_criteria_probation?.trim() || null;
+  return fields;
+}
+
+/**
+ * Снимок текущего состояния вакансии в vacancy_versions (неизменяемая
+ * история условий). Делается кодом doki.help — не триггером, чтобы записи
+ * Doki.id в общую таблицу vacancies не порождали версий.
+ */
+async function snapshotVacancy(
+  supabase: Awaited<ReturnType<typeof getSupabaseServer>>,
+  vacancyId: string
+): Promise<void> {
+  const { data: vac } = await supabase
+    .from("vacancies")
+    .select("*")
+    .eq("id", vacancyId)
+    .maybeSingle();
+  if (!vac) return;
+  const { count } = await supabase
+    .from("vacancy_versions")
+    .select("id", { count: "exact", head: true })
+    .eq("vacancy_id", vacancyId);
+  const { error } = await supabase.from("vacancy_versions").insert({
+    vacancy_id: vacancyId,
+    version_no: (count ?? 0) + 1,
+    snapshot: vac,
+  });
+  if (error) throw error;
+}
 
 /** Создать вакансию через RPC (генерит уникальный slug). Возвращает id/slug. */
 export async function createVacancy(
@@ -201,19 +295,20 @@ export async function createVacancy(
   if (error) throw error;
   const res = data as { id: string; slug: string };
 
-  // Видео-скрининг не входит в RPC create_vacancy — если задан, дописываем
-  // прямым RLS-обновлением (владелец), сразу после создания.
+  // Видео-скрининг и структурные поля не входят в RPC create_vacancy —
+  // дописываем прямым RLS-обновлением (владелец) сразу после создания.
   const mode = input.video_screening ?? "off";
+  const extra: Record<string, unknown> = { ...structuredFields(input) };
   if (mode !== "off") {
-    await supabase
-      .from("vacancies")
-      .update({
-        video_screening: mode,
-        video_question: input.video_question?.trim() || null,
-      })
-      .eq("id", res.id);
+    extra.video_screening = mode;
+    extra.video_question = input.video_question?.trim() || null;
+  }
+  extra.published_at = new Date().toISOString();
+  if (Object.keys(extra).length) {
+    await supabase.from("vacancies").update(extra).eq("id", res.id);
   }
 
+  await snapshotVacancy(supabase, res.id);
   revalidatePath("/employer");
   return res;
 }
@@ -250,10 +345,15 @@ export async function updateVacancy(
       screening_questions: input.screening_questions ?? [],
       video_screening: input.video_screening ?? "off",
       video_question: input.video_question?.trim() || null,
+      ...structuredFields(input),
       updated_at: new Date().toISOString(),
     })
     .eq("id", input.id);
   if (error) throw error;
+
+  // Правка опубликованной вакансии фиксирует новый снимок — условия уже
+  // поданных откликов не меняются задним числом (v1.1 §8).
+  await snapshotVacancy(supabase, input.id);
   revalidatePath(`/employer/vacancies/${input.id}`);
   revalidatePath("/employer");
   return { id: input.id };
@@ -269,6 +369,66 @@ export async function setApplicationStatus(
   const { error } = await supabase.rpc("update_application_status", {
     p_application_id: applicationId,
     p_new_status: status,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+}
+
+/** Переместить отклик по этапам воронки (в пределах stages вакансии). */
+export async function setApplicationStage(
+  applicationId: string,
+  vacancyId: string,
+  stage: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("set_application_stage", {
+    p_application_id: applicationId,
+    p_stage: stage,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+}
+
+/** Отказ кандидату — только с указанием причины. */
+export async function rejectApplication(
+  applicationId: string,
+  vacancyId: string,
+  reason: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("reject_application", {
+    p_application_id: applicationId,
+    p_reason: reason,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+}
+
+/** Заметка команды к отклику (лента событий). */
+export async function addApplicationNote(
+  applicationId: string,
+  vacancyId: string,
+  note: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("add_application_note", {
+    p_application_id: applicationId,
+    p_note: note,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+}
+
+/** Запросить у кандидата недостающие документы (событие document_request). */
+export async function requestApplicationDocuments(
+  applicationId: string,
+  vacancyId: string,
+  note: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("request_application_documents", {
+    p_application_id: applicationId,
+    p_note: note,
   });
   if (error) throw error;
   revalidatePath(`/employer/vacancies/${vacancyId}`);
@@ -290,6 +450,338 @@ export async function signApplicationVideo(path: string): Promise<string | null>
     .from("video-screenings")
     .createSignedUrl(path, 300);
   return data?.signedUrl ?? null;
+}
+
+/**
+ * Candidate Analyzer: детерминированная проверка комплектности (без LLM) +
+ * evidence/consistency через runAgent (если настроен текстовый LLM). Каждый
+ * прогон логируется в ai_runs со state='needs_review' — Human Review Gate.
+ */
+export async function analyzeCandidate(applicationId: string, vacancyId: string) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  // Гард: не анализируем при отозванном согласии (прекращение обработки).
+  // RLS уже ограничивает видимость строки владельцем/участником вакансии.
+  const { data: appRow } = await supabase
+    .from("applications")
+    .select("consent_revoked_at")
+    .eq("id", applicationId)
+    .eq("vacancy_id", vacancyId)
+    .maybeSingle();
+  if (!appRow || (appRow as { consent_revoked_at: string | null }).consent_revoked_at) return;
+
+  const { data: vac } = await supabase
+    .from("vacancies")
+    .select("required_documents")
+    .eq("id", vacancyId)
+    .maybeSingle();
+  const { data: docRows } = await supabase
+    .from("application_documents")
+    .select("document_type")
+    .eq("application_id", applicationId);
+  const providedTypes = (docRows ?? []).map((d) => d.document_type as string);
+  const comp = checkCompleteness(
+    (vac?.required_documents as RequiredDocument[]) ?? [],
+    providedTypes
+  );
+
+  await supabase.from("ai_runs").insert({
+    kind: "completeness",
+    subject_type: "application",
+    subject_id: applicationId,
+    prompt_version: "completeness-det-1",
+    output: { missing: comp.missing, provided: comp.provided, complete: comp.complete },
+    groundings: comp.missing.map((m) => ({
+      claim: `Не хватает документа: ${m.label}`,
+      source: "vacancy.required_documents",
+      quote: m.type,
+    })),
+    state: "needs_review",
+  });
+
+  // Evidence/consistency — по доступному тексту (ответы), только при наличии
+  // текстового LLM. runAgent логирует свои ai_runs и применяет guardrails.
+  if (aiTextConfigured()) {
+    const { data: answers } = await supabase
+      .from("application_answers")
+      .select("question, answer")
+      .eq("application_id", applicationId);
+    const text = (answers ?? [])
+      .map((a) => `${a.question}: ${a.answer}`)
+      .join("\n")
+      .trim();
+    if (text) {
+      await runAgent({ kind: "evidence_extraction", user: text, subjectType: "application", subjectId: applicationId });
+      await runAgent({ kind: "consistency_check", user: text, subjectType: "application", subjectId: applicationId });
+    }
+  }
+
+  revalidatePath(`/employer/candidates/${applicationId}`);
+}
+
+/** Ревью AI-прогона (Human Review Gate): принять / отредактировать / отклонить. */
+export async function reviewAiRun(
+  runId: string,
+  applicationId: string,
+  action: "accepted" | "edited" | "rejected"
+) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+  const { error } = await supabase
+    .from("ai_runs")
+    .update({ reviewed_by: user.id, review_action: action, state: "reviewed" })
+    .eq("id", runId);
+  if (error) throw error;
+  revalidatePath(`/employer/candidates/${applicationId}`);
+}
+
+// ── Оффер (P2-2) ─────────────────────────────────────────────────────
+
+export type OfferInput = {
+  applicationId: string;
+  position: string;
+  type: string;
+  compensation?: string | null;
+  startDate?: string | null;
+  terms?: string | null;
+  disclaimer?: string | null;
+};
+
+/** Создать/обновить черновик оффера (работодатель). */
+export async function saveOffer(
+  input: OfferInput
+): Promise<{ id: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("upsert_offer", {
+    p_application_id: input.applicationId,
+    p_position: input.position,
+    p_type: input.type || "full_time",
+    p_compensation: input.compensation || null,
+    p_start_date: input.startDate || null,
+    p_terms: input.terms || null,
+    p_disclaimer: input.disclaimer || null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${input.applicationId}`);
+  return { id: data as string };
+}
+
+/** Отправить оффер кандидату. */
+export async function sendOffer(applicationId: string): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("send_offer", { p_application_id: applicationId });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  return {};
+}
+
+/** Отозвать оффер (работодатель). */
+export async function withdrawOffer(applicationId: string): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("withdraw_offer", { p_application_id: applicationId });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  return {};
+}
+
+// ── Employment (проекция работодателя) ───────────────────────────────
+
+/**
+ * Оформить сотрудника из hired-отклика. RPC create_employment_from_application
+ * (SECURITY DEFINER) проверяет владение вакансией и state='hired', создаёт
+ * ОДНУ каноническую запись employment (идемпотентно). Возвращает id записи.
+ */
+export async function createEmploymentFromApplication(
+  applicationId: string,
+  position: string,
+  type: string,
+  startDate: string | null
+): Promise<{ id: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("create_employment_from_application", {
+    p_application_id: applicationId,
+    p_position: position,
+    p_type: type || "full_time",
+    p_start_date: startDate || null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  revalidatePath("/employer/employees");
+  return { id: data as string };
+}
+
+/**
+ * Правка карточки сотрудника работодателем (должность/тип/даты/статус). RLS
+ * (employments company update) пускает только владельца/рекрутёра компании.
+ */
+export async function updateEmployment(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const id = String(formData.get("id") ?? "");
+  const position = String(formData.get("position") ?? "").trim();
+  if (!id || !position) return;
+  const employment_type = normalizeEmploymentType(formData.get("employment_type"));
+  const start_date = String(formData.get("start_date") ?? "").trim() || null;
+  const end_date = String(formData.get("end_date") ?? "").trim() || null;
+  const status = String(formData.get("status") ?? "active") === "ended" ? "ended" : "active";
+
+  const { error } = await supabase
+    .from("employments")
+    .update({
+      position,
+      employment_type,
+      start_date,
+      end_date,
+      status,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .eq("manual", false); // работодатель правит только записи «от работодателя»
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${id}`);
+  revalidatePath("/employer/employees");
+}
+
+// ── Документы сотрудника (P2-4) ──────────────────────────────────────
+
+/** Записать загруженный документ сотрудника (файл уже в bucket employment-docs). */
+export async function attachEmploymentDocument(input: {
+  employmentId: string;
+  docType: string;
+  label: string;
+  storagePath: string;
+  fileName: string;
+  sizeBytes: number | null;
+  expiresAt: string | null;
+}) {
+  const supabase = await getSupabaseServer();
+  const label = input.label.trim() || input.fileName;
+  const { error } = await supabase.from("employment_documents").insert({
+    employment_id: input.employmentId,
+    doc_type: input.docType,
+    label,
+    file_path: input.storagePath,
+    file_name: input.fileName,
+    file_size: input.sizeBytes,
+    expires_at: input.expiresAt || null,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${input.employmentId}`);
+}
+
+/** Удалить документ сотрудника (строку + файл из bucket). */
+export async function deleteEmploymentDocument(
+  docId: string,
+  employmentId: string,
+  storagePath: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("employment_documents")
+    .delete()
+    .eq("id", docId);
+  if (error) throw error;
+  // Удаление файла — best-effort (RLS storage пускает только компанию).
+  await supabase.storage.from("employment-docs").remove([storagePath]).catch(() => {});
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Свежий signed URL (5 мин) на документ сотрудника. RLS: компания и сам сотрудник. */
+export async function signEmploymentDoc(path: string): Promise<string | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase.storage
+    .from("employment-docs")
+    .createSignedUrl(path, 300);
+  return data?.signedUrl ?? null;
+}
+
+// ── Онбординг (P2-3) ─────────────────────────────────────────────────
+
+/** Старт онбординга: сид чек-листа (локализованные шаблоны) + точек 7/30/60/90. */
+export async function startOnboarding(
+  employmentId: string,
+  titles: string[]
+): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("start_onboarding", {
+    p_employment_id: employmentId,
+    p_task_titles: titles && titles.length ? titles : null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/employees/${employmentId}`);
+  return {};
+}
+
+/** Сменить статус задачи/точки онбординга (RLS: только компания). */
+export async function setOnboardingTaskStatus(
+  taskId: string,
+  employmentId: string,
+  status: "pending" | "done" | "skipped"
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("onboarding_tasks")
+    .update({
+      status,
+      done_at: status === "done" ? new Date().toISOString() : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Добавить свою задачу в чек-лист. */
+export async function addOnboardingTask(
+  employmentId: string,
+  title: string,
+  sort: number
+) {
+  const clean = title.trim();
+  if (!clean) return;
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.from("onboarding_tasks").insert({
+    employment_id: employmentId,
+    title: clean,
+    kind: "task",
+    sort,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Заметка к контрольной точке (например, итог 30-дневного чек-ина). */
+export async function setOnboardingNote(
+  taskId: string,
+  employmentId: string,
+  note: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("onboarding_tasks")
+    .update({ note: note.trim() || null, updated_at: new Date().toISOString() })
+    .eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Удалить задачу онбординга. */
+export async function deleteOnboardingTask(taskId: string, employmentId: string) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.from("onboarding_tasks").delete().eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
 }
 
 /** Автопометка «просмотрено» при открытии дашборда (new→viewed). */

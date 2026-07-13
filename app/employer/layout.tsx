@@ -6,10 +6,10 @@ import { signOut } from "@/app/my/actions";
 import SignOutButton from "@/components/SignOutButton";
 
 const M = {
-  en: { brand: "Doki for employers", newVacancy: "+ New vacancy", vacancies: "Vacancies", signOut: "Sign out" },
-  id: { brand: "Doki untuk perusahaan", newVacancy: "+ Lowongan baru", vacancies: "Lowongan", signOut: "Keluar" },
-  ru: { brand: "Doki для работодателей", newVacancy: "+ Новая вакансия", vacancies: "Вакансии", signOut: "Выйти" },
-  uz: { brand: "Ish beruvchilar uchun Doki", newVacancy: "+ Yangi vakansiya", vacancies: "Vakansiyalar", signOut: "Chiqish" },
+  en: { brand: "Doki for employers", newVacancy: "+ New vacancy", vacancies: "Vacancies", employees: "Employees", settings: "Settings", signOut: "Sign out" },
+  id: { brand: "Doki untuk perusahaan", newVacancy: "+ Lowongan baru", vacancies: "Lowongan", employees: "Karyawan", settings: "Pengaturan", signOut: "Keluar" },
+  ru: { brand: "Doki для работодателей", newVacancy: "+ Новая вакансия", vacancies: "Вакансии", employees: "Сотрудники", settings: "Настройки", signOut: "Выйти" },
+  uz: { brand: "Ish beruvchilar uchun Doki", newVacancy: "+ Yangi vakansiya", vacancies: "Vakansiyalar", employees: "Xodimlar", settings: "Sozlamalar", signOut: "Chiqish" },
 } as const;
 
 export default async function EmployerLayout({
@@ -30,6 +30,12 @@ export default async function EmployerLayout({
             {t.brand}
           </Link>
           <div className="flex items-center gap-2">
+            <Link href="/employer/employees" className="btn-ghost">
+              {t.employees}
+            </Link>
+            <Link href="/employer/settings" className="btn-ghost">
+              {t.settings}
+            </Link>
             <Link href="/employer/vacancies/new" className="btn-primary">
               {t.newVacancy}
             </Link>

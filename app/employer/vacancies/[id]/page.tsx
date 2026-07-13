@@ -48,10 +48,17 @@ export default async function VacancyDashboard({
 
   const { data: appData } = await supabase
     .from("applications")
-    .select("id, full_name, whatsapp, email, status, created_at")
+    .select("id, full_name, whatsapp, email, status, created_at, consent_revoked_at")
     .eq("vacancy_id", vacancy.id)
     .order("created_at", { ascending: false });
-  const rows = (appData ?? []) as Omit<BoardApp, "documents" | "answers">[];
+  const appRows = (appData ?? []) as (Omit<BoardApp, "documents" | "answers"> & {
+    consent_revoked_at: string | null;
+  })[];
+  // Отзыв согласия: прекращаем показывать документы кандидата на доске.
+  const revoked = new Set(
+    appRows.filter((r) => r.consent_revoked_at).map((r) => r.id)
+  );
+  const rows = appRows.map(({ consent_revoked_at: _c, ...r }) => r);
 
   // Автопометка «просмотрено»: все new → viewed при открытии дашборда.
   const newIds = rows.filter((r) => r.status === "new").map((r) => r.id);
@@ -104,7 +111,8 @@ export default async function VacancyDashboard({
 
   const applications: BoardApp[] = rows.map((r) => ({
     ...r,
-    documents: docsByApp[r.id] ?? [],
+    // При отозванном согласии документы не отдаём (доступ закрыт).
+    documents: revoked.has(r.id) ? [] : docsByApp[r.id] ?? [],
     answers: answersByApp[r.id] ?? [],
   }));
 

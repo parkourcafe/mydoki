@@ -5,19 +5,27 @@ import {
   getAsset,
   getDocument,
   getMember,
+  listChecksByVersion,
   listFiles,
   listSharesByDocument,
+  listVersions,
   signFiles,
 } from "@/lib/queries";
 import { categoryLabel } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import { logAudit, listDocumentAudit } from "@/lib/audit";
+import type { AuditEntry, DocumentCheck } from "@/lib/types";
 import CopyButton from "@/components/CopyButton";
 import FileActions from "@/components/FileActions";
 import OfflineSave from "@/components/OfflineSave";
+import VersionUpload from "./VersionUpload";
 import {
+  archiveDocument,
   createShare,
   deleteDocument,
   revokeShare,
+  runChecks,
+  unarchiveDocument,
 } from "@/app/my/actions";
 
 const M = {
@@ -44,11 +52,36 @@ const M = {
     revoke: "Отозвать",
     days: "Действует, дней",
     viewsLimit: "Лимит просмотров",
+    sharePw: "Пароль (необязательно)",
     noLimit: "0 — без лимита",
     watermark: "Водяной знак",
     downloadLabel: "Скачивание",
     createLink: "Создать ссылку",
     deleteDoc: "Удалить документ",
+    versions: "Версии",
+    noVersions: "Версий пока нет.",
+    current: "текущая",
+    checks: "Проверки",
+    runCheck: "Проверить сейчас",
+    noChecks: "Проверки ещё не запускались.",
+    lastChecked: "Проверено",
+    archiveSection: "Архив",
+    archiveBtn: "Архивировать",
+    unarchiveBtn: "Вернуть из архива",
+    archivedBadge: "В архиве",
+    archivedNote: "Документ в архиве — скрыт из списков. Файлы и история сохранены.",
+    rExpiry: "Срок действия",
+    rNameMatch: "Совпадение имени",
+    rDateConsistency: "Согласованность дат",
+    rFileIntegrity: "Целостность файла",
+    rPass: "в порядке",
+    rMismatchExpiry: "срок истёк",
+    rMismatch: "не совпадает — нужна ручная проверка",
+    rUnreadable: "не удалось проверить",
+    accessLog: "История доступов",
+    noAccessLog: "Доступов пока не зафиксировано.",
+    aView: "Просмотр",
+    aShareView: "Просмотр по ссылке",
     dateLocale: "ru-RU",
   },
   en: {
@@ -74,11 +107,36 @@ const M = {
     revoke: "Revoke",
     days: "Valid, days",
     viewsLimit: "View limit",
+    sharePw: "Password (optional)",
     noLimit: "0 — no limit",
     watermark: "Watermark",
     downloadLabel: "Download",
     createLink: "Create link",
     deleteDoc: "Delete document",
+    versions: "Versions",
+    noVersions: "No versions yet.",
+    current: "current",
+    checks: "Checks",
+    runCheck: "Check now",
+    noChecks: "No checks have run yet.",
+    lastChecked: "Checked",
+    archiveSection: "Archive",
+    archiveBtn: "Archive",
+    unarchiveBtn: "Restore from archive",
+    archivedBadge: "Archived",
+    archivedNote: "This document is archived — hidden from lists. Files and history are kept.",
+    rExpiry: "Expiry",
+    rNameMatch: "Name match",
+    rDateConsistency: "Date consistency",
+    rFileIntegrity: "File integrity",
+    rPass: "OK",
+    rMismatchExpiry: "expired",
+    rMismatch: "does not match — manual review needed",
+    rUnreadable: "could not check",
+    accessLog: "Access history",
+    noAccessLog: "No access recorded yet.",
+    aView: "View",
+    aShareView: "View via link",
     dateLocale: "en-US",
   },
   uz: {
@@ -104,11 +162,36 @@ const M = {
     revoke: "Bekor qilish",
     days: "Amal qiladi, kun",
     viewsLimit: "Koʻrishlar limiti",
+    sharePw: "Parol (ixtiyoriy)",
     noLimit: "0 — limitsiz",
     watermark: "Suv belgisi",
     downloadLabel: "Yuklab olish",
     createLink: "Havola yaratish",
     deleteDoc: "Hujjatni oʻchirish",
+    versions: "Versiyalar",
+    noVersions: "Hozircha versiyalar yoʻq.",
+    current: "joriy",
+    checks: "Tekshiruvlar",
+    runCheck: "Hozir tekshirish",
+    noChecks: "Tekshiruvlar hali oʻtkazilmagan.",
+    lastChecked: "Tekshirilgan",
+    archiveSection: "Arxiv",
+    archiveBtn: "Arxivlash",
+    unarchiveBtn: "Arxivdan qaytarish",
+    archivedBadge: "Arxivda",
+    archivedNote: "Hujjat arxivda — roʻyxatlardan yashirilgan. Fayllar va tarix saqlanadi.",
+    rExpiry: "Amal muddati",
+    rNameMatch: "Ism mosligi",
+    rDateConsistency: "Sanalar muvofiqligi",
+    rFileIntegrity: "Fayl yaxlitligi",
+    rPass: "joyida",
+    rMismatchExpiry: "muddati tugagan",
+    rMismatch: "mos emas — qoʻlda tekshirish kerak",
+    rUnreadable: "tekshirib boʻlmadi",
+    accessLog: "Kirishlar tarixi",
+    noAccessLog: "Hozircha kirishlar qayd etilmagan.",
+    aView: "Koʻrish",
+    aShareView: "Havola orqali koʻrish",
     dateLocale: "uz-UZ",
   },
   id: {
@@ -134,11 +217,36 @@ const M = {
     revoke: "Cabut",
     days: "Berlaku, hari",
     viewsLimit: "Batas tampilan",
+    sharePw: "Kata sandi (opsional)",
     noLimit: "0 — tanpa batas",
     watermark: "Tanda air",
     downloadLabel: "Unduhan",
     createLink: "Buat tautan",
     deleteDoc: "Hapus dokumen",
+    versions: "Versi",
+    noVersions: "Belum ada versi.",
+    current: "saat ini",
+    checks: "Pemeriksaan",
+    runCheck: "Periksa sekarang",
+    noChecks: "Belum ada pemeriksaan yang dijalankan.",
+    lastChecked: "Diperiksa",
+    archiveSection: "Arsip",
+    archiveBtn: "Arsipkan",
+    unarchiveBtn: "Kembalikan dari arsip",
+    archivedBadge: "Diarsipkan",
+    archivedNote: "Dokumen diarsipkan — disembunyikan dari daftar. Berkas dan riwayat tetap tersimpan.",
+    rExpiry: "Masa berlaku",
+    rNameMatch: "Kecocokan nama",
+    rDateConsistency: "Konsistensi tanggal",
+    rFileIntegrity: "Integritas berkas",
+    rPass: "oke",
+    rMismatchExpiry: "kedaluwarsa",
+    rMismatch: "tidak cocok — perlu pemeriksaan manual",
+    rUnreadable: "tidak dapat diperiksa",
+    accessLog: "Riwayat akses",
+    noAccessLog: "Belum ada akses yang tercatat.",
+    aView: "Dilihat",
+    aShareView: "Dilihat via tautan",
     dateLocale: "id-ID",
   },
 } as const;
@@ -148,6 +256,34 @@ function fmtBytes(n: number | null) {
   if (n < 1024) return `${n} B`;
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(0)} KB`;
   return `${(n / 1024 / 1024).toFixed(1)} MB`;
+}
+
+type Dict = (typeof M)[keyof typeof M];
+
+function checkTypeLabel(t: Dict, type: DocumentCheck["check_type"]): string {
+  return {
+    expiry: t.rExpiry,
+    name_match: t.rNameMatch,
+    date_consistency: t.rDateConsistency,
+    file_integrity: t.rFileIntegrity,
+  }[type];
+}
+
+/** Текст и цвет результата проверки. mismatch = «нужна ручная проверка». */
+function checkResult(
+  t: Dict,
+  c: DocumentCheck
+): { text: string; className: string } {
+  if (c.result === "pass")
+    return { text: t.rPass, className: "text-emerald-600" };
+  if (c.result === "unreadable")
+    return { text: t.rUnreadable, className: "text-slate-400" };
+  const text = c.check_type === "expiry" ? t.rMismatchExpiry : t.rMismatch;
+  return { text, className: "text-amber-600" };
+}
+
+function auditActionLabel(t: Dict, a: AuditEntry): string {
+  return a.action === "document.share_view" ? t.aShareView : t.aView;
 }
 
 export default async function DocumentPage({
@@ -161,10 +297,25 @@ export default async function DocumentPage({
   const doc = await getDocument(id);
   if (!doc) notFound();
 
-  const [files, shares] = await Promise.all([
+  const [files, shares, versions, auditLog] = await Promise.all([
     listFiles(id),
     listSharesByDocument(id),
+    listVersions(id),
+    listDocumentAudit(id),
   ]);
+  // Фиксируем просмотр документа владельцем/членом семьи (best-effort).
+  await logAudit(doc.household_id, "document.view", "document", doc.id);
+  const checks = doc.current_version_id
+    ? await listChecksByVersion(doc.current_version_id)
+    : [];
+  // Последняя по времени проверка каждого типа — актуальный статус.
+  const latestChecks = Object.values(
+    checks.reduce<Record<string, DocumentCheck>>((acc, c) => {
+      if (!acc[c.check_type]) acc[c.check_type] = c;
+      return acc;
+    }, {})
+  );
+  const lastCheckedAt = checks.length ? checks[0].checked_at : null;
   const member = doc.member_id ? await getMember(doc.member_id) : null;
   const asset = doc.asset_id ? await getAsset(doc.asset_id) : null;
   const signed = await signFiles(files);
@@ -232,7 +383,14 @@ export default async function DocumentPage({
             ← {asset.title}
           </Link>
         )}
-        <h1 className="mt-2 text-2xl font-semibold">{doc.title}</h1>
+        <h1 className="mt-2 flex items-center gap-2 text-2xl font-semibold">
+          {doc.title}
+          {doc.status === "archived" && (
+            <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-medium text-slate-600">
+              {t.archivedBadge}
+            </span>
+          )}
+        </h1>
       </div>
 
       <section className="card">
@@ -297,6 +455,76 @@ export default async function DocumentPage({
         <div className="mt-4 border-t border-slate-100 pt-4">
           <OfflineSave locale={locale} meta={offlineMeta} files={offlineFiles} />
         </div>
+      </section>
+
+      <section className="card">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          {t.versions}
+        </h2>
+        {versions.length === 0 ? (
+          <p className="text-sm text-slate-400">{t.noVersions}</p>
+        ) : (
+          <ul className="divide-y divide-slate-100">
+            {versions.map((v, i) => (
+              <li key={v.id} className="flex items-center justify-between gap-3 py-2">
+                <div className="min-w-0 text-sm">
+                  <div className="truncate font-medium">
+                    {v.note ?? t.file}
+                    {(v.id === doc.current_version_id || (!doc.current_version_id && i === 0)) && (
+                      <span className="ml-2 rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700">
+                        {t.current}
+                      </span>
+                    )}
+                  </div>
+                  <div className="truncate text-xs text-slate-400">
+                    {new Date(v.created_at).toLocaleDateString(t.dateLocale)} · {v.mime}{" "}
+                    {fmtBytes(v.size_bytes)}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+        <VersionUpload
+          documentId={doc.id}
+          householdId={doc.household_id}
+          locale={locale}
+        />
+      </section>
+
+      <section className="card">
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+            {t.checks}
+          </h2>
+          <form action={runChecks}>
+            <input type="hidden" name="id" value={doc.id} />
+            <button className="btn-ghost text-xs">{t.runCheck}</button>
+          </form>
+        </div>
+        {latestChecks.length === 0 ? (
+          <p className="text-sm text-slate-400">{t.noChecks}</p>
+        ) : (
+          <ul className="space-y-2">
+            {latestChecks.map((c) => {
+              const r = checkResult(t, c);
+              return (
+                <li
+                  key={c.id}
+                  className="flex items-center justify-between gap-3 text-sm"
+                >
+                  <span className="text-slate-600">{checkTypeLabel(t, c.check_type)}</span>
+                  <span className={`font-medium ${r.className}`}>{r.text}</span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {lastCheckedAt && (
+          <p className="mt-3 text-xs text-slate-400">
+            {t.lastChecked}: {new Date(lastCheckedAt).toLocaleString(t.dateLocale)}
+          </p>
+        )}
       </section>
 
       <section className="card">
@@ -377,10 +605,54 @@ export default async function DocumentPage({
           <label className="flex items-end gap-2 pb-2 text-sm">
             <input type="checkbox" name="allow_download" /> {t.downloadLabel}
           </label>
+          <div className="sm:col-span-2">
+            <label className="label">{t.sharePw}</label>
+            <input name="password" type="text" className="input" autoComplete="off" />
+          </div>
           <div className="sm:col-span-4">
             <button className="btn-primary">{t.createLink}</button>
           </div>
         </form>
+      </section>
+
+      <section className="card">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          {t.accessLog}
+        </h2>
+        {auditLog.length === 0 ? (
+          <p className="text-sm text-slate-400">{t.noAccessLog}</p>
+        ) : (
+          <ul className="divide-y divide-slate-100 text-sm">
+            {auditLog.map((a) => (
+              <li key={a.id} className="flex items-center justify-between gap-3 py-2">
+                <span className="text-slate-600">{auditActionLabel(t, a)}</span>
+                <span className="text-xs text-slate-400">
+                  {new Date(a.created_at).toLocaleString(t.dateLocale)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="card">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          {t.archiveSection}
+        </h2>
+        {doc.status === "archived" ? (
+          <div className="flex flex-wrap items-center gap-3">
+            <form action={unarchiveDocument}>
+              <input type="hidden" name="id" value={doc.id} />
+              <button className="btn-ghost">{t.unarchiveBtn}</button>
+            </form>
+            <p className="text-xs text-slate-400">{t.archivedNote}</p>
+          </div>
+        ) : (
+          <form action={archiveDocument}>
+            <input type="hidden" name="id" value={doc.id} />
+            <button className="btn-ghost">{t.archiveBtn}</button>
+          </form>
+        )}
       </section>
 
       <section>

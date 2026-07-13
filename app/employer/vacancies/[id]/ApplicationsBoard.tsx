@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import {
   timeAgo,
@@ -251,7 +252,12 @@ export default function ApplicationsBoard({
             <li key={a.id} className="card">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="font-medium">{a.full_name}</p>
+                  <Link
+                    href={`/employer/candidates/${a.id}`}
+                    className="font-medium hover:underline"
+                  >
+                    {a.full_name}
+                  </Link>
                   <p className="text-xs text-slate-400">{timeAgo(a.created_at, locale)}</p>
                 </div>
                 <StatusBadge status={a.status} t={t} />

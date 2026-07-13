@@ -109,17 +109,18 @@ export async function attachVaultDocs(input: {
 }
 
 /**
- * Проверка Turnstile. Включается только если задан TURNSTILE_SECRET_KEY —
- * до этого пропускаем (сайт не ломается). Блокируем ТОЛЬКО когда Cloudflare
- * явно ответил «не пройдено»; при сетевой ошибке нашей стороны — пропускаем,
- * чтобы не резать легитимных кандидатов из-за нашего сбоя.
+ * Проверка Turnstile. Включается только если задан TURNSTILE_SECRET_KEY
+ * (не настроено — Turnstile выключен по конфигурации, сайт не ломается).
+ * Когда Turnstile активен, проверка fail-closed: пропускаем только при
+ * явном success=true от Cloudflare. Нет токена, не-200, невалидный ответ
+ * или сетевая ошибка → блокируем (иначе бот проходит при нашем сбое).
  */
 async function turnstileOk(
   token: string | null | undefined,
   ip: string | null,
 ): Promise<boolean> {
   const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return true; // не настроено — не блокируем
+  if (!secret) return true; // не настроено — Turnstile выключен
   if (!token) return false; // настроено, но токена нет — это спам/бот
   try {
     const body = new URLSearchParams({ secret, response: token });
@@ -128,10 +129,11 @@ async function turnstileOk(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       { method: "POST", body },
     );
+    if (!res.ok) return false; // Cloudflare недоступен — fail-closed
     const data = (await res.json()) as { success?: boolean };
     return data.success === true;
   } catch {
-    return true; // наш сбой — не блокируем
+    return false; // сетевой сбой при активном Turnstile — fail-closed
   }
 }
 

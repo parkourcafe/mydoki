@@ -1,7 +1,10 @@
+import { cookies, headers } from "next/headers";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { categoryLabel, type DocCategory } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import { hashIp, shareCookieName } from "@/lib/shareAccess";
+import { unlockShare } from "./actions";
 
 // Приватная страница расшаренного документа: никогда не индексируем и не
 // переходим по ссылкам — токен-URL не должен попадать в поиск.
@@ -42,6 +45,11 @@ const M = {
     download: "↓ Скачать оригинал",
     footer:
       "🔐 Защищённая ссылка «Семейного сейфа». Доступ ограничен по времени и логируется.",
+    pwTitle: "Ссылка защищена паролем",
+    pwHint: "Введите пароль, который прислал отправитель.",
+    pwPh: "Пароль",
+    unlock: "Открыть",
+    pwWrong: "Неверный пароль. Попробуйте ещё раз.",
   },
   en: {
     invalidTitle: "Link is invalid",
@@ -57,6 +65,11 @@ const M = {
     download: "↓ Download original",
     footer:
       "🔐 Secure “Family Vault” link. Access is time-limited and logged.",
+    pwTitle: "This link is password-protected",
+    pwHint: "Enter the password the sender gave you.",
+    pwPh: "Password",
+    unlock: "Open",
+    pwWrong: "Wrong password. Please try again.",
   },
   id: {
     invalidTitle: "Tautan tidak valid",
@@ -72,6 +85,11 @@ const M = {
     download: "↓ Unduh asli",
     footer:
       "🔐 Tautan aman “Brankas Keluarga”. Akses dibatasi waktu dan dicatat.",
+    pwTitle: "Tautan dilindungi kata sandi",
+    pwHint: "Masukkan kata sandi dari pengirim.",
+    pwPh: "Kata sandi",
+    unlock: "Buka",
+    pwWrong: "Kata sandi salah. Coba lagi.",
   },
   uz: {
     invalidTitle: "Havola yaroqsiz",
@@ -87,8 +105,44 @@ const M = {
     download: "↓ Asl nusxasini yuklab olish",
     footer:
       "🔐 «Oilaviy seyf»ning xavfsiz havolasi. Kirish vaqt bilan cheklangan va qayd etiladi.",
+    pwTitle: "Havola parol bilan himoyalangan",
+    pwHint: "Yuboruvchi bergan parolni kiriting.",
+    pwPh: "Parol",
+    unlock: "Ochish",
+    pwWrong: "Parol notoʻgʻri. Qaytadan urinib koʻring.",
   },
 } as const;
+
+function PwForm({
+  token,
+  t,
+  wrong,
+}: {
+  token: string;
+  t: (typeof M)[keyof typeof M];
+  wrong: boolean;
+}) {
+  return (
+    <div className="card text-center">
+      <div className="mb-2 text-3xl">🔒</div>
+      <h1 className="text-lg font-semibold">{t.pwTitle}</h1>
+      <p className="mt-1 text-sm text-slate-500">{t.pwHint}</p>
+      {wrong && <p className="mt-2 text-sm text-red-600">{t.pwWrong}</p>}
+      <form action={unlockShare} className="mt-4 flex flex-col gap-2">
+        <input type="hidden" name="token" value={token} />
+        <input type="hidden" name="scope" value="s" />
+        <input
+          name="password"
+          type="password"
+          required
+          placeholder={t.pwPh}
+          className="input"
+        />
+        <button className="btn-primary">{t.unlock}</button>
+      </form>
+    </div>
+  );
+}
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
@@ -107,9 +161,29 @@ export default async function SharePage({
   const t = M[locale];
   const { token } = await params;
 
+  const cookieStore = await cookies();
+  const pwHash = cookieStore.get(shareCookieName(token))?.value ?? null;
+  const h = await headers();
+  const ipHash = hashIp((h.get("x-forwarded-for") ?? "").split(",")[0].trim() || null);
+  const userAgent = (h.get("user-agent") ?? "").slice(0, 300) || null;
+
   const supabase = await getSupabaseServer();
-  const { data } = await supabase.rpc("get_shared_document", { p_token: token });
-  const shared = data as SharedDoc | null;
+  const { data } = await supabase.rpc("get_shared_document", {
+    p_token: token,
+    p_password_hash: pwHash,
+    p_ip_hash: ipHash,
+    p_user_agent: userAgent,
+  });
+  const shared = data as (SharedDoc & { locked?: boolean }) | null;
+
+  // Пароль требуется (или неверный) — показываем форму ввода.
+  if (shared && (shared as { locked?: boolean }).locked) {
+    return (
+      <Shell>
+        <PwForm token={token} t={t} wrong={pwHash !== null} />
+      </Shell>
+    );
+  }
 
   if (!shared) {
     return (

@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getLocale, type Locale } from "@/lib/i18n";
+import { withdrawApplication, revokeApplicationConsent } from "@/app/my/actions";
 
 type MyApp = {
   id: string;
   status: "new" | "viewed" | "shortlisted" | "rejected" | "hired";
+  stage: string | null;
+  state: "active" | "hired" | "rejected" | "withdrawn" | null;
+  consent_revoked_at: string | null;
   created_at: string;
   access_token: string;
   vacancy_title: string;
@@ -20,6 +24,10 @@ const M = {
     open: "Открыть статус →",
     on: "от",
     st: { new: "Отправлено", viewed: "Просмотрено", shortlisted: "В шортлисте", rejected: "Не выбран", hired: "Приняты 🎉" },
+    withdrawn: "Отозван",
+    withdraw: "Отозвать отклик",
+    revokeConsent: "Отозвать согласие",
+    consentRevoked: "Согласие отозвано",
   },
   en: {
     title: "My applications",
@@ -28,6 +36,10 @@ const M = {
     open: "Open status →",
     on: "on",
     st: { new: "Submitted", viewed: "Viewed", shortlisted: "Shortlisted", rejected: "Not selected", hired: "Hired 🎉" },
+    withdrawn: "Withdrawn",
+    withdraw: "Withdraw application",
+    revokeConsent: "Revoke consent",
+    consentRevoked: "Consent revoked",
   },
   id: {
     title: "Lamaran saya",
@@ -36,6 +48,10 @@ const M = {
     open: "Buka status →",
     on: "pada",
     st: { new: "Terkirim", viewed: "Dilihat", shortlisted: "Terpilih", rejected: "Tidak dipilih", hired: "Diterima 🎉" },
+    withdrawn: "Ditarik",
+    withdraw: "Tarik lamaran",
+    revokeConsent: "Cabut persetujuan",
+    consentRevoked: "Persetujuan dicabut",
   },
   uz: {
     title: "Mening arizalarim",
@@ -44,6 +60,10 @@ const M = {
     open: "Holatni ochish →",
     on: "sana",
     st: { new: "Yuborildi", viewed: "Ko‘rildi", shortlisted: "Tanlangan", rejected: "Tanlanmadi", hired: "Qabul qilindi 🎉" },
+    withdrawn: "Qaytarib olindi",
+    withdraw: "Arizani qaytarib olish",
+    revokeConsent: "Rozilikni bekor qilish",
+    consentRevoked: "Rozilik bekor qilindi",
   },
 } as const;
 
@@ -88,15 +108,45 @@ export default async function MyApplicationsPage() {
                 </p>
               </div>
               <div className="flex shrink-0 flex-col items-end gap-2">
-                <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeCls[a.status]}`}>
-                  {t.st[a.status]}
-                </span>
+                {a.state === "withdrawn" ? (
+                  <span className="rounded-full bg-slate-200 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+                    {t.withdrawn}
+                  </span>
+                ) : (
+                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${badgeCls[a.status]}`}>
+                    {t.st[a.status]}
+                  </span>
+                )}
+                {a.consent_revoked_at && (
+                  <span className="text-xs text-amber-600">{t.consentRevoked}</span>
+                )}
                 <Link
                   href={`/applications/status/${a.access_token}`}
                   className="text-xs text-brand-600 hover:underline"
                 >
                   {t.open}
                 </Link>
+                <div className="flex gap-2">
+                  {/* Отзыв согласия — право на защиту данных, доступно и
+                      после отказа/найма (пока согласие не отозвано). */}
+                  {a.state !== "withdrawn" && !a.consent_revoked_at && (
+                    <form action={revokeApplicationConsent}>
+                      <input type="hidden" name="token" value={a.access_token} />
+                      <button className="text-xs text-slate-400 hover:underline">
+                        {t.revokeConsent}
+                      </button>
+                    </form>
+                  )}
+                  {/* Отзыв отклика — только пока он в работе. */}
+                  {(a.state === "active" || a.state === null) && (
+                    <form action={withdrawApplication}>
+                      <input type="hidden" name="id" value={a.id} />
+                      <button className="text-xs text-red-500 hover:underline">
+                        {t.withdraw}
+                      </button>
+                    </form>
+                  )}
+                </div>
               </div>
             </li>
           ))}
