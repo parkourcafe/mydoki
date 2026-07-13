@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test:unit": "node --test --experimental-strip-types tests/unit/vault.test.ts tests/unit/reminders.test.ts tests/unit/ai.test.ts tests/unit/employment.test.ts tests/unit/offer.test.ts tests/unit/onboarding.test.ts tests/unit/employmentDocs.test.ts tests/unit/amendments.test.ts tests/unit/legal.test.ts tests/unit/processGuide.test.ts",
+    "test:unit": "node --test --experimental-strip-types tests/unit/vault.test.ts tests/unit/reminders.test.ts tests/unit/ai.test.ts tests/unit/employment.test.ts tests/unit/offer.test.ts tests/unit/onboarding.test.ts tests/unit/employmentDocs.test.ts tests/unit/amendments.test.ts tests/unit/legal.test.ts tests/unit/processGuide.test.ts tests/unit/admin.test.ts",
     "test:lexicon": "node tests/lexicon.mjs",
     "test:e2e": "playwright test"
   },
