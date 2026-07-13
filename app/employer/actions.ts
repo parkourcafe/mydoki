@@ -542,6 +542,55 @@ export async function reviewAiRun(
   revalidatePath(`/employer/candidates/${applicationId}`);
 }
 
+// ── Оффер (P2-2) ─────────────────────────────────────────────────────
+
+export type OfferInput = {
+  applicationId: string;
+  position: string;
+  type: string;
+  compensation?: string | null;
+  startDate?: string | null;
+  terms?: string | null;
+  disclaimer?: string | null;
+};
+
+/** Создать/обновить черновик оффера (работодатель). */
+export async function saveOffer(
+  input: OfferInput
+): Promise<{ id: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("upsert_offer", {
+    p_application_id: input.applicationId,
+    p_position: input.position,
+    p_type: input.type || "full_time",
+    p_compensation: input.compensation || null,
+    p_start_date: input.startDate || null,
+    p_terms: input.terms || null,
+    p_disclaimer: input.disclaimer || null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${input.applicationId}`);
+  return { id: data as string };
+}
+
+/** Отправить оффер кандидату. */
+export async function sendOffer(applicationId: string): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("send_offer", { p_application_id: applicationId });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  return {};
+}
+
+/** Отозвать оффер (работодатель). */
+export async function withdrawOffer(applicationId: string): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("withdraw_offer", { p_application_id: applicationId });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  return {};
+}
+
 // ── Employment (проекция работодателя) ───────────────────────────────
 
 /**

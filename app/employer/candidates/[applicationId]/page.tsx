@@ -4,9 +4,11 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { waLink, type RequiredDocument } from "@/lib/career";
+import type { Offer } from "@/lib/offer";
 import CandidateActions from "./CandidateActions";
 import CandidateAI, { type AiRunView } from "./CandidateAI";
 import EmployeeOnboard from "./EmployeeOnboard";
+import CandidateOffer from "./CandidateOffer";
 
 const M = {
   ru: {
@@ -35,6 +37,7 @@ const M = {
       consent: "Согласие",
       withdraw: "Отклик отозван",
       ai_analysis: "AI-анализ",
+      offer: "Оффер",
     } as Record<string, string>,
     stageNames: {
       new: "Новый", review: "Рассмотрение", interview: "Интервью",
@@ -67,6 +70,7 @@ const M = {
       consent: "Consent",
       withdraw: "Application withdrawn",
       ai_analysis: "AI analysis",
+      offer: "Offer",
     } as Record<string, string>,
     stageNames: {
       new: "New", review: "Review", interview: "Interview",
@@ -99,6 +103,7 @@ const M = {
       consent: "Rozilik",
       withdraw: "Ariza qaytarib olindi",
       ai_analysis: "AI tahlil",
+      offer: "Taklif",
     } as Record<string, string>,
     stageNames: {
       new: "Yangi", review: "Koʻrib chiqish", interview: "Suhbat",
@@ -131,6 +136,7 @@ const M = {
       consent: "Persetujuan",
       withdraw: "Lamaran ditarik",
       ai_analysis: "Analisis AI",
+      offer: "Penawaran",
     } as Record<string, string>,
     stageNames: {
       new: "Baru", review: "Ditinjau", interview: "Wawancara",
@@ -267,6 +273,18 @@ export default async function CandidatePage({
     existingEmploymentId = (empRow?.id as string) ?? null;
   }
 
+  // Оффер (P2-2) — показываем блок, пока отклик активен (до найма/отказа).
+  const offerActive = app.state === "active" || app.state === null;
+  let offer: Offer | null = null;
+  if (offerActive) {
+    const { data: offerRow } = await supabase
+      .from("offers")
+      .select("*")
+      .eq("application_id", app.id)
+      .maybeSingle();
+    offer = (offerRow as Offer) ?? null;
+  }
+
   const stages = vacancy.stages ?? ["new", "review", "interview", "assignment", "decision"];
   const stateLabel =
     app.state === "hired" ? t.stHired
@@ -282,7 +300,7 @@ export default async function CandidatePage({
       const reason = p.reason ? ` · ${p.reason}` : "";
       return `${p.old_status ?? "—"} → ${p.new_status ?? "—"}${reason}`;
     }
-    if (e.type === "consent") return String(p.action ?? "");
+    if (e.type === "consent" || e.type === "offer") return String(p.action ?? "");
     return "";
   }
 
@@ -311,6 +329,15 @@ export default async function CandidatePage({
           </p>
         )}
       </div>
+
+      {offerActive && (
+        <CandidateOffer
+          locale={locale}
+          applicationId={app.id}
+          defaultPosition={vacancy.title}
+          offer={offer}
+        />
+      )}
 
       {isHired && (
         <EmployeeOnboard

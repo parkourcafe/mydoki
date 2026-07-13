@@ -2,6 +2,8 @@ import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getLocale, type Locale } from "@/lib/i18n";
 import { waLink, type ApplicationStatus } from "@/lib/career";
+import type { CandidateOffer } from "@/lib/offer";
+import OfferResponse from "./OfferResponse";
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -13,6 +15,7 @@ type StatusData = {
   created_at: string;
   vacancy: { title: string; company_name: string; location: string | null; slug: string };
   employer_contact: { whatsapp: string | null; email: string | null } | null;
+  offer: CandidateOffer | null;
   timeline: { old_status: string | null; new_status: string; created_at: string }[];
 };
 
@@ -144,6 +147,10 @@ export default async function StatusPage({
             {statusLabel(app.status)}
           </span>
         </div>
+
+        {app.offer && (
+          <OfferResponse locale={locale} token={token} offer={app.offer} />
+        )}
 
         {app.status === "shortlisted" && app.employer_contact && (
           <div className="rounded-lg bg-green-50 p-3 text-sm">
