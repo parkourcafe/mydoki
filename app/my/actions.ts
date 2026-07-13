@@ -17,6 +17,7 @@ import {
 } from "@/lib/documentChecks";
 import { parseOffsets } from "@/lib/reminders";
 import { hashSharePassword } from "@/lib/shareAccess";
+import { normalizeEmploymentType } from "@/lib/employment";
 
 export async function signOut() {
   const supabase = await getSupabaseServer();
@@ -608,4 +609,94 @@ export async function acceptInvitation(formData: FormData) {
   const { error } = await supabase.rpc("accept_invitation", { p_token: token });
   if (error) throw error;
   redirect("/my");
+}
+
+// ── Трудовые отношения (Employment, проекция человека) ───────────────
+// Ручной режим: человек ведёт свою трудовую историю сам (работодателя может
+// не быть в Doki). RLS разрешает такие записи только владельцу и только с
+// manual=true / company_id=null (см. миграцию employments).
+
+/** Добавить своё место работы (ручной режим). */
+export async function addManualEmployment(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const company_name = String(formData.get("company_name") ?? "").trim();
+  const position = String(formData.get("position") ?? "").trim();
+  if (!company_name || !position) return;
+
+  const employment_type = normalizeEmploymentType(formData.get("employment_type"));
+  const start_date = String(formData.get("start_date") ?? "").trim() || null;
+  const end_date = String(formData.get("end_date") ?? "").trim() || null;
+  const status = end_date ? "ended" : "active";
+
+  const { error } = await supabase.from("employments").insert({
+    company_name,
+    position,
+    employment_type,
+    start_date,
+    end_date,
+    status,
+    manual: true,
+    employee_user_id: user.id,
+    created_by: user.id,
+  });
+  if (error) throw error;
+  revalidatePath("/my/employment");
+}
+
+/** Изменить своё ручное место работы. */
+export async function updateManualEmployment(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const id = String(formData.get("id") ?? "");
+  const company_name = String(formData.get("company_name") ?? "").trim();
+  const position = String(formData.get("position") ?? "").trim();
+  if (!id || !company_name || !position) return;
+
+  const employment_type = normalizeEmploymentType(formData.get("employment_type"));
+  const start_date = String(formData.get("start_date") ?? "").trim() || null;
+  const end_date = String(formData.get("end_date") ?? "").trim() || null;
+  const status = end_date ? "ended" : "active";
+
+  // RLS гейтит: обновится только своя ручная запись (manual=true, company_id=null).
+  const { error } = await supabase
+    .from("employments")
+    .update({
+      company_name,
+      position,
+      employment_type,
+      start_date,
+      end_date,
+      status,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .eq("manual", true);
+  if (error) throw error;
+  revalidatePath("/my/employment");
+  revalidatePath(`/my/employment/${id}`);
+}
+
+/** Удалить своё ручное место работы. */
+export async function deleteManualEmployment(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  // RLS не даст удалить запись «от работодателя» (manual=false, company_id≠null).
+  const { error } = await supabase
+    .from("employments")
+    .delete()
+    .eq("id", id)
+    .eq("manual", true);
+  if (error) throw error;
+  revalidatePath("/my/employment");
+  redirect("/my/employment");
 }

@@ -6,6 +6,7 @@ import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { normalizeWhatsapp } from "@/lib/career";
 import { checkCompleteness } from "@/lib/ai/completeness";
+import { normalizeEmploymentType } from "@/lib/employment";
 import { runAgent, aiTextConfigured } from "@/lib/ai";
 import type {
   RequiredDocument,
@@ -539,6 +540,248 @@ export async function reviewAiRun(
     .eq("id", runId);
   if (error) throw error;
   revalidatePath(`/employer/candidates/${applicationId}`);
+}
+
+// ── Оффер (P2-2) ─────────────────────────────────────────────────────
+
+export type OfferInput = {
+  applicationId: string;
+  position: string;
+  type: string;
+  compensation?: string | null;
+  startDate?: string | null;
+  terms?: string | null;
+  disclaimer?: string | null;
+};
+
+/** Создать/обновить черновик оффера (работодатель). */
+export async function saveOffer(
+  input: OfferInput
+): Promise<{ id: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("upsert_offer", {
+    p_application_id: input.applicationId,
+    p_position: input.position,
+    p_type: input.type || "full_time",
+    p_compensation: input.compensation || null,
+    p_start_date: input.startDate || null,
+    p_terms: input.terms || null,
+    p_disclaimer: input.disclaimer || null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${input.applicationId}`);
+  return { id: data as string };
+}
+
+/** Отправить оффер кандидату. */
+export async function sendOffer(applicationId: string): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("send_offer", { p_application_id: applicationId });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  return {};
+}
+
+/** Отозвать оффер (работодатель). */
+export async function withdrawOffer(applicationId: string): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("withdraw_offer", { p_application_id: applicationId });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  return {};
+}
+
+// ── Employment (проекция работодателя) ───────────────────────────────
+
+/**
+ * Оформить сотрудника из hired-отклика. RPC create_employment_from_application
+ * (SECURITY DEFINER) проверяет владение вакансией и state='hired', создаёт
+ * ОДНУ каноническую запись employment (идемпотентно). Возвращает id записи.
+ */
+export async function createEmploymentFromApplication(
+  applicationId: string,
+  position: string,
+  type: string,
+  startDate: string | null
+): Promise<{ id: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("create_employment_from_application", {
+    p_application_id: applicationId,
+    p_position: position,
+    p_type: type || "full_time",
+    p_start_date: startDate || null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/candidates/${applicationId}`);
+  revalidatePath("/employer/employees");
+  return { id: data as string };
+}
+
+/**
+ * Правка карточки сотрудника работодателем (должность/тип/даты/статус). RLS
+ * (employments company update) пускает только владельца/рекрутёра компании.
+ */
+export async function updateEmployment(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const id = String(formData.get("id") ?? "");
+  const position = String(formData.get("position") ?? "").trim();
+  if (!id || !position) return;
+  const employment_type = normalizeEmploymentType(formData.get("employment_type"));
+  const start_date = String(formData.get("start_date") ?? "").trim() || null;
+  const end_date = String(formData.get("end_date") ?? "").trim() || null;
+  const status = String(formData.get("status") ?? "active") === "ended" ? "ended" : "active";
+
+  const { error } = await supabase
+    .from("employments")
+    .update({
+      position,
+      employment_type,
+      start_date,
+      end_date,
+      status,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .eq("manual", false); // работодатель правит только записи «от работодателя»
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${id}`);
+  revalidatePath("/employer/employees");
+}
+
+// ── Документы сотрудника (P2-4) ──────────────────────────────────────
+
+/** Записать загруженный документ сотрудника (файл уже в bucket employment-docs). */
+export async function attachEmploymentDocument(input: {
+  employmentId: string;
+  docType: string;
+  label: string;
+  storagePath: string;
+  fileName: string;
+  sizeBytes: number | null;
+  expiresAt: string | null;
+}) {
+  const supabase = await getSupabaseServer();
+  const label = input.label.trim() || input.fileName;
+  const { error } = await supabase.from("employment_documents").insert({
+    employment_id: input.employmentId,
+    doc_type: input.docType,
+    label,
+    file_path: input.storagePath,
+    file_name: input.fileName,
+    file_size: input.sizeBytes,
+    expires_at: input.expiresAt || null,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${input.employmentId}`);
+}
+
+/** Удалить документ сотрудника (строку + файл из bucket). */
+export async function deleteEmploymentDocument(
+  docId: string,
+  employmentId: string,
+  storagePath: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("employment_documents")
+    .delete()
+    .eq("id", docId);
+  if (error) throw error;
+  // Удаление файла — best-effort (RLS storage пускает только компанию).
+  await supabase.storage.from("employment-docs").remove([storagePath]).catch(() => {});
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Свежий signed URL (5 мин) на документ сотрудника. RLS: компания и сам сотрудник. */
+export async function signEmploymentDoc(path: string): Promise<string | null> {
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase.storage
+    .from("employment-docs")
+    .createSignedUrl(path, 300);
+  return data?.signedUrl ?? null;
+}
+
+// ── Онбординг (P2-3) ─────────────────────────────────────────────────
+
+/** Старт онбординга: сид чек-листа (локализованные шаблоны) + точек 7/30/60/90. */
+export async function startOnboarding(
+  employmentId: string,
+  titles: string[]
+): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("start_onboarding", {
+    p_employment_id: employmentId,
+    p_task_titles: titles && titles.length ? titles : null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/employees/${employmentId}`);
+  return {};
+}
+
+/** Сменить статус задачи/точки онбординга (RLS: только компания). */
+export async function setOnboardingTaskStatus(
+  taskId: string,
+  employmentId: string,
+  status: "pending" | "done" | "skipped"
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("onboarding_tasks")
+    .update({
+      status,
+      done_at: status === "done" ? new Date().toISOString() : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Добавить свою задачу в чек-лист. */
+export async function addOnboardingTask(
+  employmentId: string,
+  title: string,
+  sort: number
+) {
+  const clean = title.trim();
+  if (!clean) return;
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.from("onboarding_tasks").insert({
+    employment_id: employmentId,
+    title: clean,
+    kind: "task",
+    sort,
+  });
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Заметка к контрольной точке (например, итог 30-дневного чек-ина). */
+export async function setOnboardingNote(
+  taskId: string,
+  employmentId: string,
+  note: string
+) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase
+    .from("onboarding_tasks")
+    .update({ note: note.trim() || null, updated_at: new Date().toISOString() })
+    .eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
+}
+
+/** Удалить задачу онбординга. */
+export async function deleteOnboardingTask(taskId: string, employmentId: string) {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.from("onboarding_tasks").delete().eq("id", taskId);
+  if (error) throw error;
+  revalidatePath(`/employer/employees/${employmentId}`);
 }
 
 /** Автопометка «просмотрено» при открытии дашборда (new→viewed). */
