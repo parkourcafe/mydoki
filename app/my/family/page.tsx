@@ -5,7 +5,19 @@ import { relations } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
 import CopyButton from "@/components/CopyButton";
 import SubmitButton from "@/components/SubmitButton";
-import { createInvitation, deleteInvitation } from "../actions";
+import {
+  type HouseholdMember,
+  HOUSEHOLD_ROLES,
+  roleLabel,
+  isLastOwner,
+} from "@/lib/family";
+import {
+  createInvitation,
+  deleteInvitation,
+  setMemberRole,
+  removeMember,
+  leaveHousehold,
+} from "../actions";
 
 const ROLE_LABEL: Record<"ru" | "en" | "id" | "uz", Record<string, string>> = {
   ru: {
@@ -52,6 +64,11 @@ const M = {
     footerLink: "Семья",
     footerRelations: "Доступные связи:",
     dateLocale: "ru-RU",
+    manageRoles: "Роль участника меняет только владелец. В семье всегда остаётся хотя бы один владелец.",
+    save: "Сохранить",
+    remove: "Убрать",
+    leave: "Выйти из семьи",
+    leaveHint: "Вы единственный владелец. Чтобы выйти, сначала назначьте владельцем другого участника.",
   },
   en: {
     title: "Family access",
@@ -74,6 +91,11 @@ const M = {
     footerLink: "Family",
     footerRelations: "Available relations:",
     dateLocale: "en-US",
+    manageRoles: "Only the owner can change a member's role. The family always keeps at least one owner.",
+    save: "Save",
+    remove: "Remove",
+    leave: "Leave family",
+    leaveHint: "You are the only owner. To leave, first make another member the owner.",
   },
   uz: {
     title: "Oilaga kirish huquqi",
@@ -96,6 +118,11 @@ const M = {
     footerLink: "Oila",
     footerRelations: "Mavjud qarindoshlik turlari:",
     dateLocale: "uz-UZ",
+    manageRoles: "Ishtirokchi rolini faqat egasi o‘zgartira oladi. Oilada doim kamida bitta egasi qoladi.",
+    save: "Saqlash",
+    remove: "Chiqarish",
+    leave: "Oiladan chiqish",
+    leaveHint: "Siz yagona egasisiz. Chiqish uchun avval boshqa ishtirokchini egasi qilib tayinlang.",
   },
   id: {
     title: "Akses keluarga",
@@ -118,6 +145,11 @@ const M = {
     footerLink: "Keluarga",
     footerRelations: "Hubungan yang tersedia:",
     dateLocale: "id-ID",
+    manageRoles: "Hanya pemilik yang dapat mengubah peran anggota. Keluarga selalu memiliki setidaknya satu pemilik.",
+    save: "Simpan",
+    remove: "Keluarkan",
+    leave: "Keluar dari keluarga",
+    leaveHint: "Anda satu-satunya pemilik. Untuk keluar, jadikan anggota lain sebagai pemilik terlebih dahulu.",
   },
 } as const;
 
@@ -148,6 +180,9 @@ export default async function FamilyAccessPage() {
   const h = await headers();
   const origin = `https://${h.get("host") ?? ""}`;
 
+  const members = (hmembers ?? []) as HouseholdMember[];
+  const meLastOwner = user ? isLastOwner(members, user.id) : false;
+
   return (
     <div className="space-y-8">
       <div>
@@ -162,26 +197,70 @@ export default async function FamilyAccessPage() {
           {t.members}
         </h2>
         <ul className="divide-y divide-slate-100">
-          {(hmembers ?? []).map((m) => (
-            <li
-              key={m.user_id}
-              className="flex items-center justify-between py-2 text-sm"
-            >
-              <span>
-                {m.user_id === user?.id ? (
-                  <span className="font-medium">{t.you}</span>
+          {members.map((m) => {
+            const isMe = m.user_id === user?.id;
+            const lastOwner = isLastOwner(members, m.user_id);
+            return (
+              <li
+                key={m.user_id}
+                className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm"
+              >
+                <span>
+                  {isMe ? (
+                    <span className="font-medium">{t.you}</span>
+                  ) : (
+                    <span className="text-slate-500">
+                      {String(m.user_id).slice(0, 8)}…
+                    </span>
+                  )}
+                </span>
+                {isOwner ? (
+                  <span className="flex items-center gap-2">
+                    <form action={setMemberRole} className="flex items-center gap-1">
+                      <input type="hidden" name="user_id" value={m.user_id} />
+                      <select
+                        name="role"
+                        defaultValue={m.role}
+                        className="input py-1 text-xs"
+                      >
+                        {HOUSEHOLD_ROLES.map((r) => (
+                          <option key={r} value={r}>
+                            {roleLabel(locale, r)}
+                          </option>
+                        ))}
+                      </select>
+                      <SubmitButton className="btn text-xs">{t.save}</SubmitButton>
+                    </form>
+                    {!lastOwner && (
+                      <form action={removeMember}>
+                        <input type="hidden" name="user_id" value={m.user_id} />
+                        <button className="btn-danger text-xs">{t.remove}</button>
+                      </form>
+                    )}
+                  </span>
                 ) : (
-                  <span className="text-slate-500">
-                    {String(m.user_id).slice(0, 8)}…
+                  <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs">
+                    {roleLabel(locale, m.role)}
                   </span>
                 )}
-              </span>
-              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs">
-                {ROLE_LABEL[locale][m.role] ?? m.role}
-              </span>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
+        {isOwner && (
+          <p className="mt-3 text-xs text-slate-400">{t.manageRoles}</p>
+        )}
+
+        {/* Выход из семьи — доступен текущему участнику (кроме последнего владельца). */}
+        <div className="mt-4 border-t border-slate-100 pt-3">
+          {meLastOwner ? (
+            <p className="text-xs text-slate-400">{t.leaveHint}</p>
+          ) : (
+            <form action={leaveHousehold}>
+              <button className="btn-danger text-xs">{t.leave}</button>
+            </form>
+          )}
+        </div>
       </section>
 
       {!isOwner ? (

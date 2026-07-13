@@ -9,6 +9,7 @@ import {
   getDocument,
   getOrCreateHouseholdId,
   getStorageInfo,
+  getUser,
 } from "@/lib/queries";
 import {
   evalDateConsistency,
@@ -608,6 +609,56 @@ export async function acceptInvitation(formData: FormData) {
   const token = String(formData.get("token") ?? "");
   const { error } = await supabase.rpc("accept_invitation", { p_token: token });
   if (error) throw error;
+  redirect("/my");
+}
+
+// ── Семейные роли и доступ (F-1) ─────────────────────────────────────
+// Изменения идут через SECURITY DEFINER RPC с гардом инварианта «хотя бы
+// один owner» (см. миграцию 20260713170000). UI-проверки — только подсказка;
+// авторитетный гейт — в БД.
+
+export async function setMemberRole(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const userId = String(formData.get("user_id") ?? "");
+  const role = String(formData.get("role") ?? "");
+  if (!userId || !role) return;
+  const { error } = await supabase.rpc("set_household_member_role", {
+    p_household: householdId,
+    p_user: userId,
+    p_role: role,
+  });
+  if (error) throw error;
+  revalidatePath("/my/family");
+}
+
+export async function removeMember(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const userId = String(formData.get("user_id") ?? "");
+  if (!userId) return;
+  const { error } = await supabase.rpc("remove_household_member", {
+    p_household: householdId,
+    p_user: userId,
+  });
+  if (error) throw error;
+  revalidatePath("/my/family");
+}
+
+export async function leaveHousehold() {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const user = await getUser();
+  if (!user) return;
+  // Выход = удаление себя. Гард последнего owner — в RPC.
+  const { error } = await supabase.rpc("remove_household_member", {
+    p_household: householdId,
+    p_user: user.id,
+  });
+  if (error) throw error;
+  // Сбрасываем активное пространство — getOrCreateHouseholdId переизберёт другое.
+  const cookieStore = await cookies();
+  cookieStore.delete(SPACE_COOKIE);
   redirect("/my");
 }
 
