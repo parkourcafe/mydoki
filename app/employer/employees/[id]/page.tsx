@@ -10,10 +10,13 @@ import {
   formatPeriod,
 } from "@/lib/employment";
 import type { OnboardingTask } from "@/lib/onboarding";
-import type { EmploymentDocument } from "@/lib/employmentDocs";
+import { type EmploymentDocument, expiryStatus } from "@/lib/employmentDocs";
+import type { Amendment } from "@/lib/amendments";
 import EmployeeEditForm from "./EmployeeEditForm";
 import OnboardingManager from "./OnboardingManager";
 import EmploymentDocs from "./EmploymentDocs";
+import AmendmentsManager from "./AmendmentsManager";
+import ProcessGuideHint from "@/components/ProcessGuideHint";
 
 const M = {
   ru: {
@@ -25,6 +28,9 @@ const M = {
     fromApplication: "Из отклика",
     openApplication: "Открыть отклик →",
     manual: "Добавлено человеком",
+    compensation: "Оплата",
+    review: "Плановый пересмотр",
+    reviewSoon: "скоро",
   },
   en: {
     back: "← Back to employees",
@@ -35,6 +41,9 @@ const M = {
     fromApplication: "From application",
     openApplication: "Open application →",
     manual: "Added by the person",
+    compensation: "Compensation",
+    review: "Next review",
+    reviewSoon: "soon",
   },
   id: {
     back: "← Kembali ke karyawan",
@@ -45,6 +54,9 @@ const M = {
     fromApplication: "Dari lamaran",
     openApplication: "Buka lamaran →",
     manual: "Ditambahkan oleh orangnya",
+    compensation: "Kompensasi",
+    review: "Tinjauan berikutnya",
+    reviewSoon: "segera",
   },
   uz: {
     back: "← Xodimlarga",
@@ -55,6 +67,9 @@ const M = {
     fromApplication: "Arizadan",
     openApplication: "Arizani ochish →",
     manual: "Shaxs qoʻshgan",
+    compensation: "To‘lov",
+    review: "Keyingi ko‘rib chiqish",
+    reviewSoon: "tez orada",
   },
 } as const;
 
@@ -96,7 +111,7 @@ export default async function EmployeeDetailPage({
     name = (appRow?.full_name as string) ?? "";
   }
 
-  const [{ data: onbData }, { data: edData }] = await Promise.all([
+  const [{ data: onbData }, { data: edData }, { data: amData }] = await Promise.all([
     supabase
       .from("onboarding_tasks")
       .select("*")
@@ -107,9 +122,15 @@ export default async function EmployeeDetailPage({
       .select("*")
       .eq("employment_id", emp.id)
       .order("uploaded_at", { ascending: false }),
+    supabase
+      .from("employment_amendments")
+      .select("*")
+      .eq("employment_id", emp.id)
+      .order("created_at", { ascending: false }),
   ]);
   const onboardingTasks = (onbData ?? []) as OnboardingTask[];
   const employmentDocs = (edData ?? []) as EmploymentDocument[];
+  const amendments = (amData ?? []) as Amendment[];
   const today = new Date().toISOString().slice(0, 10);
 
   return (
@@ -132,6 +153,28 @@ export default async function EmployeeDetailPage({
             <dt className="text-slate-400">{t.period}</dt>
             <dd>{formatPeriod(locale, emp.start_date, emp.end_date)}</dd>
           </div>
+          {emp.compensation && (
+            <div className="flex justify-between gap-3">
+              <dt className="text-slate-400">{t.compensation}</dt>
+              <dd>{emp.compensation}</dd>
+            </div>
+          )}
+          {emp.next_review_date && (
+            <div className="flex justify-between gap-3">
+              <dt className="text-slate-400">{t.review}</dt>
+              <dd className="flex items-center gap-2">
+                {emp.next_review_date}
+                {(() => {
+                  const st = expiryStatus(emp.next_review_date, today);
+                  return st === "soon" || st === "expired" ? (
+                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">
+                      {t.reviewSoon}
+                    </span>
+                  ) : null;
+                })()}
+              </dd>
+            </div>
+          )}
           <div className="flex justify-between gap-3">
             <dt className="text-slate-400">{t.status}</dt>
             <dd>{employmentStatusLabel(locale, emp.status)}</dd>
@@ -160,6 +203,15 @@ export default async function EmployeeDetailPage({
         today={today}
         tasks={onboardingTasks}
       />
+
+      <AmendmentsManager
+        locale={locale}
+        employmentId={emp.id}
+        amendments={amendments}
+      />
+
+      <ProcessGuideHint locale={locale} context="amendment" />
+
 
       <EmploymentDocs
         locale={locale}

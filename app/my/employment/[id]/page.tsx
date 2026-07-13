@@ -11,9 +11,12 @@ import {
 } from "@/lib/employment";
 import type { OnboardingTask } from "@/lib/onboarding";
 import type { EmploymentDocument } from "@/lib/employmentDocs";
+import type { Amendment } from "@/lib/amendments";
 import EditEmploymentForm from "./EditEmploymentForm";
 import OnboardingProgress from "./OnboardingProgress";
 import EmploymentDocs from "@/app/employer/employees/[id]/EmploymentDocs";
+import AmendmentsPanel from "./AmendmentsPanel";
+import ProcessGuideHint from "@/components/ProcessGuideHint";
 
 const M = {
   ru: {
@@ -90,8 +93,9 @@ export default async function EmploymentDetailPage({
   // записей от работодателя (у ручных их нет).
   let onboardingTasks: OnboardingTask[] = [];
   let employmentDocs: EmploymentDocument[] = [];
+  let amendments: Amendment[] = [];
   if (!emp.manual) {
-    const [{ data: onbData }, { data: edData }] = await Promise.all([
+    const [{ data: onbData }, { data: edData }, { data: amData }] = await Promise.all([
       supabase
         .from("onboarding_tasks")
         .select("*")
@@ -102,9 +106,15 @@ export default async function EmploymentDetailPage({
         .select("*")
         .eq("employment_id", emp.id)
         .order("uploaded_at", { ascending: false }),
+      supabase
+        .from("employment_amendments")
+        .select("*")
+        .eq("employment_id", emp.id)
+        .order("created_at", { ascending: false }),
     ]);
     onboardingTasks = (onbData ?? []) as OnboardingTask[];
     employmentDocs = (edData ?? []) as EmploymentDocument[];
+    amendments = (amData ?? []) as Amendment[];
   }
   const today = new Date().toISOString().slice(0, 10);
 
@@ -145,6 +155,17 @@ export default async function EmploymentDetailPage({
         <p className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-500">
           {t.readonly}
         </p>
+      )}
+
+      {!emp.manual && (
+        <ProcessGuideHint
+          locale={locale}
+          context={amendments.some((a) => a.status === "proposed") ? "amendment" : "employment"}
+        />
+      )}
+
+      {!emp.manual && (
+        <AmendmentsPanel locale={locale} employmentId={emp.id} amendments={amendments} />
       )}
 
       {!emp.manual && (

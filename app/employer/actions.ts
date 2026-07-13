@@ -634,6 +634,7 @@ export async function updateEmployment(formData: FormData) {
   const employment_type = normalizeEmploymentType(formData.get("employment_type"));
   const start_date = String(formData.get("start_date") ?? "").trim() || null;
   const end_date = String(formData.get("end_date") ?? "").trim() || null;
+  const next_review_date = String(formData.get("next_review_date") ?? "").trim() || null;
   const status = String(formData.get("status") ?? "active") === "ended" ? "ended" : "active";
 
   const { error } = await supabase
@@ -643,6 +644,7 @@ export async function updateEmployment(formData: FormData) {
       employment_type,
       start_date,
       end_date,
+      next_review_date,
       status,
       updated_at: new Date().toISOString(),
     })
@@ -651,6 +653,67 @@ export async function updateEmployment(formData: FormData) {
   if (error) throw error;
   revalidatePath(`/employer/employees/${id}`);
   revalidatePath("/employer/employees");
+}
+
+// ── Изменения условий / допсоглашения (P3-1) ─────────────────────────
+
+export type AmendmentInput = {
+  employmentId: string;
+  id?: string | null;
+  kind: string;
+  effectiveDate?: string | null;
+  newPosition?: string | null;
+  newType?: string | null;
+  newCompensation?: string | null;
+  terms?: string | null;
+  note?: string | null;
+  disclaimer?: string | null;
+};
+
+/** Создать/обновить черновик допсоглашения (работодатель). */
+export async function saveAmendment(
+  input: AmendmentInput
+): Promise<{ id: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("upsert_employment_amendment", {
+    p_employment_id: input.employmentId,
+    p_kind: input.kind,
+    p_effective_date: input.effectiveDate || null,
+    p_new_position: input.newPosition || null,
+    p_new_type: input.newType || null,
+    p_new_compensation: input.newCompensation || null,
+    p_terms: input.terms || null,
+    p_note: input.note || null,
+    p_disclaimer: input.disclaimer || null,
+    p_id: input.id || null,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/employees/${input.employmentId}`);
+  return { id: data as string };
+}
+
+/** Предложить допсоглашение сотруднику. */
+export async function proposeAmendment(
+  amendmentId: string,
+  employmentId: string
+): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("propose_employment_amendment", { p_id: amendmentId });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/employees/${employmentId}`);
+  return {};
+}
+
+/** Отозвать допсоглашение (работодатель). */
+export async function withdrawAmendment(
+  amendmentId: string,
+  employmentId: string
+): Promise<{ error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("withdraw_employment_amendment", { p_id: amendmentId });
+  if (error) return { error: error.message };
+  revalidatePath(`/employer/employees/${employmentId}`);
+  return {};
 }
 
 // ── Документы сотрудника (P2-4) ──────────────────────────────────────
