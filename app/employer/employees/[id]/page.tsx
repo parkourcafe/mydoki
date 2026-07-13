@@ -11,9 +11,11 @@ import {
 } from "@/lib/employment";
 import type { OnboardingTask } from "@/lib/onboarding";
 import type { EmploymentDocument } from "@/lib/employmentDocs";
+import type { Amendment } from "@/lib/amendments";
 import EmployeeEditForm from "./EmployeeEditForm";
 import OnboardingManager from "./OnboardingManager";
 import EmploymentDocs from "./EmploymentDocs";
+import AmendmentsManager from "./AmendmentsManager";
 
 const M = {
   ru: {
@@ -96,7 +98,7 @@ export default async function EmployeeDetailPage({
     name = (appRow?.full_name as string) ?? "";
   }
 
-  const [{ data: onbData }, { data: edData }] = await Promise.all([
+  const [{ data: onbData }, { data: edData }, { data: amData }] = await Promise.all([
     supabase
       .from("onboarding_tasks")
       .select("*")
@@ -107,9 +109,15 @@ export default async function EmployeeDetailPage({
       .select("*")
       .eq("employment_id", emp.id)
       .order("uploaded_at", { ascending: false }),
+    supabase
+      .from("employment_amendments")
+      .select("*")
+      .eq("employment_id", emp.id)
+      .order("created_at", { ascending: false }),
   ]);
   const onboardingTasks = (onbData ?? []) as OnboardingTask[];
   const employmentDocs = (edData ?? []) as EmploymentDocument[];
+  const amendments = (amData ?? []) as Amendment[];
   const today = new Date().toISOString().slice(0, 10);
 
   return (
@@ -159,6 +167,12 @@ export default async function EmployeeDetailPage({
         startDate={emp.start_date}
         today={today}
         tasks={onboardingTasks}
+      />
+
+      <AmendmentsManager
+        locale={locale}
+        employmentId={emp.id}
+        amendments={amendments}
       />
 
       <EmploymentDocs

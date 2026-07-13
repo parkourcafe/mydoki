@@ -685,6 +685,29 @@ export async function updateManualEmployment(formData: FormData) {
   revalidatePath(`/my/employment/${id}`);
 }
 
+/**
+ * Ответ сотрудника на допсоглашение (P3-1). Принятие требует согласия; RPC
+ * respond_to_amendment проверяет, что вызывающий — сотрудник этой записи,
+ * фиксирует дисклеймер/время/actor и применяет изменения к employment.
+ */
+export async function respondToAmendment(
+  amendmentId: string,
+  employmentId: string,
+  accept: boolean,
+  consent: boolean
+): Promise<{ ok: boolean; status?: string; error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("respond_to_amendment", {
+    p_id: amendmentId,
+    p_accept: accept,
+    p_consent: consent,
+  });
+  if (error) return { ok: false, error: error.message };
+  const res = (data ?? {}) as { ok?: boolean; status?: string; error?: string };
+  revalidatePath(`/my/employment/${employmentId}`);
+  return { ok: res.ok === true, status: res.status, error: res.error };
+}
+
 /** Удалить своё ручное место работы. */
 export async function deleteManualEmployment(formData: FormData) {
   const supabase = await getSupabaseServer();
