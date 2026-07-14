@@ -52,3 +52,34 @@ export function pageview() {
     /* noop */
   }
 }
+
+// Связываем анонимную сессию со стабильным ID пользователя (auth.users.id).
+// Это разблокирует ретеншн/воронки/когорты «по пользователю» в PostHog.
+// В свойства персоны НЕ кладём PII — только безопасные метки (та же страховка,
+// что и в track): ключи вроде name/email/phone/token вырезаются.
+export function identify(userId: string, props?: Props) {
+  if (typeof window === "undefined" || !started || !userId) return;
+  const clean: Props = {};
+  if (props) {
+    for (const [k, v] of Object.entries(props)) {
+      if (PII_KEY.test(k)) continue;
+      if (v !== undefined) clean[k] = v;
+    }
+  }
+  try {
+    posthog.identify(userId, clean);
+  } catch {
+    /* аналитика не должна ломать основной поток */
+  }
+}
+
+// Сброс идентификации при выходе — следующая сессия снова анонимна и не
+// «склеивается» с предыдущим пользователем на общем устройстве.
+export function resetIdentity() {
+  if (typeof window === "undefined" || !started) return;
+  try {
+    posthog.reset();
+  } catch {
+    /* noop */
+  }
+}

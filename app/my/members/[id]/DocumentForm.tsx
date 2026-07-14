@@ -6,6 +6,7 @@ import { categories, docSubtypes, type DocCategory } from "@/lib/categories";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { attachDocumentFile, createDocumentMeta } from "@/app/my/actions";
+import { trackEvent } from "@/lib/events";
 
 const M = {
   ru: {
@@ -386,6 +387,9 @@ export default function DocumentForm({
           });
         }
       }
+
+      // UBA: ключевое событие активации сейфа — документ добавлен.
+      trackEvent("document_added", { category: f.category, via: "manual" });
 
       router.push(`/my/documents/${id}`);
     } catch (err) {

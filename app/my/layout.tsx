@@ -2,7 +2,9 @@ import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
+import { isNativeRequest } from "@/lib/isNativeRequest";
 import AppNav from "@/components/AppNav";
+import IdentifyUser from "@/components/IdentifyUser";
 
 const M = {
   ru: {
@@ -125,6 +127,7 @@ export default async function MyLayout({
 
   const user = await getUser();
   if (!user) redirect("/login");
+  const native = await isNativeRequest();
 
   // Статус 2FA: есть ли подтверждённый TOTP-фактор
   const supabase = await getSupabaseServer();
@@ -186,7 +189,9 @@ export default async function MyLayout({
   ];
 
   return (
-    <AppNav
+    <>
+      {!native && <IdentifyUser userId={user.id} locale={locale} />}
+      <AppNav
       locale={locale}
       brand={t.brand}
       menuLabel={t.menu}
@@ -206,6 +211,7 @@ export default async function MyLayout({
       }
     >
       {children}
-    </AppNav>
+      </AppNav>
+    </>
   );
 }
