@@ -30,3 +30,9 @@ next-env.d.ts
 /test-results
 /playwright-report
 /playwright/.cache
+
+# capacitor — генерируемые нативные проекты (пересоздаются `npx cap add ios`)
+/ios
+/android
+# сгенерированные @capacitor/assets наборы (генерятся на Mac из assets/*.svg)
+/ios/App/App/Assets.xcassets

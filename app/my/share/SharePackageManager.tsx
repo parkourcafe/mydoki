@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import { createSharePackage } from "./actions";
+import { trackEvent } from "@/lib/events";
 
 const M = {
   ru: {
@@ -72,6 +73,8 @@ export default function SharePackageManager({
     const res = await createSharePackage({ documentIds: ids, days, allowDownload: download, title });
     setBusy(false);
     if ("error" in res) return setError(t.failed);
+    // UBA: пакет документов расшарен по истекающей ссылке.
+    trackEvent("document_shared", { kind: "package", expires_days: days });
     setLink(`${window.location.origin}/pkg/${res.token}`);
   }
 

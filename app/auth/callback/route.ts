@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { recordLogin } from "@/lib/loginEvents";
-import { safeNextPath } from "@/lib/nextPath";
+import { safeNextPath, withEv } from "@/lib/nextPath";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +34,11 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${base}/login?error=google`);
   }
 
-  const response = NextResponse.redirect(`${base}${next}`);
+  // Флаг события входа: клиент прочитает его на целевой странице, отправит
+  // logged_in и уберёт из URL (см. components/AnalyticsEvents.tsx).
+  const response = NextResponse.redirect(
+    `${base}${withEv(next, "logged_in", "google")}`
+  );
   const cookieStore = await cookies();
 
   const supabase = createServerClient(

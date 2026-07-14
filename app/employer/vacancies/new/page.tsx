@@ -3,7 +3,7 @@ import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import SubmitButton from "@/components/SubmitButton";
 import { saveEmployerProfile } from "@/app/employer/actions";
-import NewVacancyFlow from "./NewVacancyFlow";
+import VacancyForm from "./VacancyForm";
 import EmployerVerification from "@/app/employer/EmployerVerification";
 import VacancyLimitReached from "./VacancyLimitReached";
 import { aiTextConfigured } from "@/lib/vacancyAI";
@@ -111,11 +111,17 @@ export default async function NewVacancyPage() {
     return <VacancyLimitReached locale={locale} limit={limit} />;
   }
 
+  // AI-freeform (Vacancy Composer Layer 2, §8) включён, если модель настроена
+  // И env-переключатель VACANCY_AI_COMPOSER не выставлен в "off". Manual/template
+  // пути от него не зависят.
+  const aiEnabled =
+    aiTextConfigured() && process.env.VACANCY_AI_COMPOSER !== "off";
+
   return (
-    <NewVacancyFlow
+    <VacancyForm
       locale={locale}
       defaultCompany={profile.company_name}
-      aiEnabled={aiTextConfigured()}
+      aiEnabled={aiEnabled}
     />
   );
 }

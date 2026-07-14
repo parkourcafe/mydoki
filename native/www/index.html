@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>doki.help</title>
+    <style>
+      :root { color-scheme: light; }
+      html, body { height: 100%; margin: 0; }
+      body {
+        display: flex; align-items: center; justify-content: center;
+        background: #f9f5f0; color: #2c2522;
+        font-family: -apple-system, system-ui, sans-serif;
+        padding: env(safe-area-inset-top) 24px env(safe-area-inset-bottom);
+        text-align: center;
+      }
+      .badge {
+        width: 72px; height: 72px; border-radius: 20px; margin: 0 auto 20px;
+        display: flex; align-items: center; justify-content: center; background: #b85c38;
+      }
+      h1 { font-size: 20px; margin: 0 0 8px; }
+      p { color: #8a7c6d; font-size: 15px; margin: 0 0 20px; max-width: 320px; }
+      button {
+        appearance: none; border: 0; border-radius: 999px; padding: 12px 24px;
+        background: #b85c38; color: #fff; font-size: 15px; font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Оффлайн-fallback нативной обёртки Capacitor: показывается только если
+         не удалось загрузить https://www.doki.help (server.url). Обычно
+         WebView сразу открывает живой сайт и этот экран не виден. -->
+    <div>
+      <div class="badge" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="#fff">
+          <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+        </svg>
+      </div>
+      <h1>No connection</h1>
+      <p>doki.help needs the internet to open your documents. Check your connection and try again.</p>
+      <button onclick="location.reload()">Retry</button>
+    </div>
+  </body>
+</html>

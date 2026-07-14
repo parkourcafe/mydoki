@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { clearAll } from "@/lib/offlineDb";
+import { resetIdentity } from "@/lib/analytics";
 
 /**
  * Кнопка выхода: перед отправкой формы (серверный action signOut /
@@ -30,6 +31,8 @@ export default function SignOutButton({
         } catch {
           // даже если очистка не удалась — всё равно выходим
         }
+        // Разрываем связь сессии аналитики с этим пользователем.
+        resetIdentity();
         form?.requestSubmit();
       }}
     >

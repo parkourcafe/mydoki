@@ -10,6 +10,7 @@ import {
   createDocumentMeta,
   runDocumentChecks,
 } from "@/app/my/actions";
+import { trackEvent } from "@/lib/events";
 
 /** sha256 файла (hex) средствами браузера. Пусто, если Web Crypto недоступен. */
 async function sha256Hex(file: File): Promise<string> {
@@ -427,6 +428,10 @@ export default function DocumentForm({
       } catch {
         /* проверки можно перезапустить кнопкой в карточке */
       }
+      // UBA: ключевое событие активации сейфа — документ добавлен.
+      trackEvent("document_added", { category: f.category, via: "manual" });
+      // Указан срок действия → это и есть «поставил напоминание».
+      if (f.expires_at) trackEvent("reminder_set", { doc_category: f.category });
       router.push(`/my/documents/${id}`);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";

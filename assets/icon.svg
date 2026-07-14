@@ -1,0 +1,8 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- App-иконка iOS: сплошной бренд-фон (без прозрачности, углы скругляет сама
+       iOS), белый глиф папки по центру. Источник для @capacitor/assets. -->
+  <rect width="1024" height="1024" fill="#b85c38"/>
+  <g transform="translate(282,341) scale(19)" fill="#ffffff">
+    <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+  </g>
+</svg>

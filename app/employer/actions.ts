@@ -12,6 +12,8 @@ import type {
   RequiredDocument,
   ScreeningQuestion,
   ApplicationStatus,
+  CreatedVia,
+  ScorecardCriterion,
 } from "@/lib/career";
 
 // ── Верификация работодателя (код на email) ──────────────────────────
@@ -201,13 +203,19 @@ export type CreateVacancyInput = {
   screening_questions: ScreeningQuestion[];
   video_screening?: "off" | "optional" | "required";
   video_question?: string | null;
-  // Структурированные блоки (§8 v1.1) — необязательны.
+  // Структурированные блоки (§8 v1.1) — необязательны. Их читает AI-слой
+  // (lib/ai/prompts.ts). Захват через UI — задел (Composer их пока не заполняет).
   problem_statement?: string | null;
   must_have?: string[];
   trainable?: string[];
-  scorecard?: string[];
   stages?: string[];
   success_criteria_probation?: string | null;
+  // T11 Vacancy Composer — как создана вакансия и сопутствующие метаданные.
+  created_via?: CreatedVia;
+  role_template?: string | null;
+  clarity_score?: number | null;
+  /** Спящие критерии найма ДЛЯ РОЛИ (§8) — не оценка кандидата. */
+  scorecard?: ScorecardCriterion[];
 };
 
 /** Поля структуры вакансии для прямого RLS-обновления (владелец). */
@@ -295,18 +303,24 @@ export async function createVacancy(
   if (error) throw error;
   const res = data as { id: string; slug: string };
 
-  // Видео-скрининг и структурные поля не входят в RPC create_vacancy —
-  // дописываем прямым RLS-обновлением (владелец) сразу после создания.
+  // Видео-скрининг + §8-структура + метаданные Vacancy Composer не входят в RPC
+  // create_vacancy — дописываем прямым RLS-обновлением (владелец) сразу после
+  // создания. §8-поля (включая scorecard — спящие критерии ДЛЯ РОЛИ) читает
+  // AI-слой; ни один кандидат-фейсинг экран scorecard не читает.
   const mode = input.video_screening ?? "off";
-  const extra: Record<string, unknown> = { ...structuredFields(input) };
+  const patch: Record<string, unknown> = {
+    ...structuredFields(input),
+    created_via: input.created_via ?? "manual",
+    role_template: input.role_template ?? null,
+    clarity_score:
+      typeof input.clarity_score === "number" ? input.clarity_score : null,
+    published_at: new Date().toISOString(),
+  };
   if (mode !== "off") {
-    extra.video_screening = mode;
-    extra.video_question = input.video_question?.trim() || null;
+    patch.video_screening = mode;
+    patch.video_question = input.video_question?.trim() || null;
   }
-  extra.published_at = new Date().toISOString();
-  if (Object.keys(extra).length) {
-    await supabase.from("vacancies").update(extra).eq("id", res.id);
-  }
+  await supabase.from("vacancies").update(patch).eq("id", res.id);
 
   await snapshotVacancy(supabase, res.id);
   revalidatePath("/employer");
