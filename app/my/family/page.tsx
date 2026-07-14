@@ -12,11 +12,22 @@ import {
   isLastOwner,
 } from "@/lib/family";
 import {
+  type Delegation,
+  DELEGATION_SCOPES,
+  VAULT_CATEGORIES,
+  effectiveStatus,
+  statusLabel,
+  scopeSummary,
+  categoryLabel,
+} from "@/lib/delegation";
+import {
   createInvitation,
   deleteInvitation,
   setMemberRole,
   removeMember,
   leaveHousehold,
+  createDelegation,
+  revokeDelegation,
 } from "../actions";
 
 const ROLE_LABEL: Record<"ru" | "en" | "id" | "uz", Record<string, string>> = {
@@ -69,6 +80,12 @@ const M = {
     remove: "Убрать",
     leave: "Выйти из семьи",
     leaveHint: "Вы единственный владелец. Чтобы выйти, сначала назначьте владельцем другого участника.",
+    delegTitle: "Делегированный доступ",
+    delegHint: "Выдайте близкому или специалисту доступ к документам на время и с целью. Доступ автоматически истечёт; можно отозвать в любой момент. Пока — просмотр сведений о документах (без скачивания файлов).",
+    delegScope: "Область", delegScopeAll: "Весь сейф", delegScopeCategory: "Одна категория",
+    delegCategory: "Категория", delegPurpose: "Цель", delegPurposePh: "Напр.: налоговая декларация",
+    delegExpires: "Действует до", delegCreate: "Выдать доступ", delegNone: "Активных делегаций нет.",
+    delegRevoke: "Отозвать", delegLink: "Ссылка",
   },
   en: {
     title: "Family access",
@@ -96,6 +113,12 @@ const M = {
     remove: "Remove",
     leave: "Leave family",
     leaveHint: "You are the only owner. To leave, first make another member the owner.",
+    delegTitle: "Delegated access",
+    delegHint: "Grant a loved one or specialist access to documents for a purpose and a limited time. Access expires automatically and can be revoked anytime. For now — viewing document details (no file downloads).",
+    delegScope: "Scope", delegScopeAll: "Entire vault", delegScopeCategory: "One category",
+    delegCategory: "Category", delegPurpose: "Purpose", delegPurposePh: "e.g. tax filing",
+    delegExpires: "Valid until", delegCreate: "Grant access", delegNone: "No active delegations.",
+    delegRevoke: "Revoke", delegLink: "Link",
   },
   uz: {
     title: "Oilaga kirish huquqi",
@@ -123,6 +146,12 @@ const M = {
     remove: "Chiqarish",
     leave: "Oiladan chiqish",
     leaveHint: "Siz yagona egasisiz. Chiqish uchun avval boshqa ishtirokchini egasi qilib tayinlang.",
+    delegTitle: "Delegatsiya qilingan kirish",
+    delegHint: "Yaqiningiz yoki mutaxassisga hujjatlarga maqsad va muddat bilan kirish bering. Kirish avtomatik tugaydi va istalgan vaqtda bekor qilinadi. Hozircha — hujjat ma'lumotlarini ko‘rish (fayllarni yuklamasdan).",
+    delegScope: "Soha", delegScopeAll: "Butun seyf", delegScopeCategory: "Bitta turkum",
+    delegCategory: "Turkum", delegPurpose: "Maqsad", delegPurposePh: "Masalan: soliq deklaratsiyasi",
+    delegExpires: "Amal qiladi", delegCreate: "Kirish berish", delegNone: "Faol delegatsiyalar yo‘q.",
+    delegRevoke: "Bekor qilish", delegLink: "Havola",
   },
   id: {
     title: "Akses keluarga",
@@ -150,6 +179,12 @@ const M = {
     remove: "Keluarkan",
     leave: "Keluar dari keluarga",
     leaveHint: "Anda satu-satunya pemilik. Untuk keluar, jadikan anggota lain sebagai pemilik terlebih dahulu.",
+    delegTitle: "Akses delegasi",
+    delegHint: "Beri orang terkasih atau spesialis akses ke dokumen untuk tujuan dan waktu terbatas. Akses kedaluwarsa otomatis dan bisa dicabut kapan saja. Untuk saat ini — melihat detail dokumen (tanpa unduh berkas).",
+    delegScope: "Cakupan", delegScopeAll: "Seluruh brankas", delegScopeCategory: "Satu kategori",
+    delegCategory: "Kategori", delegPurpose: "Tujuan", delegPurposePh: "mis. pelaporan pajak",
+    delegExpires: "Berlaku hingga", delegCreate: "Beri akses", delegNone: "Tidak ada delegasi aktif.",
+    delegRevoke: "Cabut", delegLink: "Tautan",
   },
 } as const;
 
@@ -177,8 +212,16 @@ export default async function FamilyAccessPage() {
       .order("created_at", { ascending: false }),
   ]);
 
+  const { data: delegs } = await supabase
+    .from("vault_delegations")
+    .select("*")
+    .eq("household_id", householdId)
+    .order("created_at", { ascending: false });
+  const delegations = (delegs ?? []) as Delegation[];
+
   const h = await headers();
   const origin = `https://${h.get("host") ?? ""}`;
+  const now = new Date();
 
   const members = (hmembers ?? []) as HouseholdMember[];
   const meLastOwner = user ? isLastOwner(members, user.id) : false;
@@ -314,6 +357,87 @@ export default async function FamilyAccessPage() {
             <p className="mt-2 text-xs text-slate-400">
               {t.inviteHint}
             </p>
+          </section>
+
+          <section className="card">
+            <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-slate-500">
+              {t.delegTitle}
+            </h2>
+            <p className="mb-3 text-xs text-slate-400">{t.delegHint}</p>
+
+            {delegations.length === 0 ? (
+              <p className="text-sm text-slate-400">{t.delegNone}</p>
+            ) : (
+              <ul className="space-y-2">
+                {delegations.map((d) => {
+                  const st = effectiveStatus(d, now);
+                  const url = `${origin}/delegate/${d.token}`;
+                  return (
+                    <li
+                      key={d.id}
+                      className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm"
+                    >
+                      <span className="min-w-0">
+                        <span className="font-medium">{scopeSummary(locale, d)}</span>
+                        <span className="text-slate-500"> · {d.purpose}</span>
+                        <span className="block text-xs text-slate-400">
+                          {statusLabel(locale, st)} · {t.until}{" "}
+                          {new Date(d.expires_at).toLocaleDateString(t.dateLocale)}
+                        </span>
+                      </span>
+                      <span className="flex gap-2">
+                        {st === "pending" && <CopyButton text={url} locale={locale} />}
+                        {(st === "pending" || st === "active") && (
+                          <form action={revokeDelegation}>
+                            <input type="hidden" name="id" value={d.id} />
+                            <button className="btn-danger text-xs">{t.delegRevoke}</button>
+                          </form>
+                        )}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+
+            <form action={createDelegation} className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="label">{t.delegScope}</label>
+                <select name="scope" defaultValue="all" className="input">
+                  {DELEGATION_SCOPES.map((s) => (
+                    <option key={s} value={s}>
+                      {s === "all" ? t.delegScopeAll : t.delegScopeCategory}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="label">{t.delegCategory}</label>
+                <select name="category" defaultValue="financial" className="input">
+                  {VAULT_CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {categoryLabel(locale, c)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="label">{t.delegPurpose}</label>
+                <input
+                  name="purpose"
+                  required
+                  placeholder={t.delegPurposePh}
+                  className="input"
+                />
+              </div>
+              <div>
+                <label className="label">{t.delegExpires}</label>
+                <input name="expires_on" type="date" required className="input" />
+              </div>
+              <div className="sm:col-span-2">
+                <SubmitButton>{t.delegCreate}</SubmitButton>
+              </div>
+            </form>
           </section>
         </>
       )}

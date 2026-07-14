@@ -662,6 +662,49 @@ export async function leaveHousehold() {
   redirect("/my");
 }
 
+// ── Делегированный доступ по цели и сроку (F-2, §7.2) ────────────────
+// Выдача/отзыв/принятие идут через SECURITY DEFINER RPC с гардами (см.
+// миграцию 20260714100000). Срок трактуем как конец выбранного дня.
+
+export async function createDelegation(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const scope = String(formData.get("scope") ?? "all");
+  const category = String(formData.get("category") ?? "").trim();
+  const purpose = String(formData.get("purpose") ?? "").trim();
+  const expiresDate = String(formData.get("expires_on") ?? "").trim();
+  if (!purpose || !expiresDate) return;
+  // Конец выбранного дня, чтобы «сегодня» ещё считалось будущим.
+  const expiresAt = `${expiresDate}T23:59:59Z`;
+  const { error } = await supabase.rpc("create_vault_delegation", {
+    p_household: householdId,
+    p_scope: scope,
+    p_category: scope === "category" ? category : null,
+    p_purpose: purpose,
+    p_expires_at: expiresAt,
+  });
+  if (error) throw error;
+  revalidatePath("/my/family");
+}
+
+export async function revokeDelegation(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  const { error } = await supabase.rpc("revoke_vault_delegation", { p_id: id });
+  if (error) throw error;
+  revalidatePath("/my/family");
+  revalidatePath("/my/delegated");
+}
+
+export async function acceptDelegation(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const token = String(formData.get("token") ?? "");
+  const { error } = await supabase.rpc("accept_vault_delegation", { p_token: token });
+  if (error) throw error;
+  redirect("/my/delegated");
+}
+
 // ── Трудовые отношения (Employment, проекция человека) ───────────────
 // Ручной режим: человек ведёт свою трудовую историю сам (работодателя может
 // не быть в Doki). RLS разрешает такие записи только владельцу и только с
