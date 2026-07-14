@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import SwRegister from "@/components/SwRegister";
+import NativeGate from "@/components/NativeGate";
 import YandexMetrika from "@/components/YandexMetrika";
 import PostHogProvider from "@/components/PostHogProvider";
 import { getLocale } from "@/lib/i18n";
@@ -115,17 +116,28 @@ export async function generateMetadata(): Promise<Metadata> {
       google: "WjIJcU6oZE269vmJf6pKuQb5nJLExIUEClLb6IPgCBg",
       yandex: ["782bfe115bbb718d", "7410d439c2d113a4"],
     },
-    formatDetection: { telephone: false },
+    formatDetection: { telephone: false, date: false, address: false, email: false },
     appleWebApp: {
       capable: true,
       title: "doki.help",
+      // Установленная из Safari PWA: обычный статус-бар (без ухода контента под
+      // него). В нативной обёртке статус-бар отдельно ведёт Capacitor-плагин.
       statusBarStyle: "default",
+    },
+    icons: {
+      icon: [
+        { url: "/icon-192", sizes: "192x192", type: "image/png" },
+        { url: "/icon-512", sizes: "512x512", type: "image/png" },
+      ],
+      apple: [{ url: "/apple-icon", sizes: "180x180", type: "image/png" }],
     },
   };
 }
 
 export const viewport: Viewport = {
   themeColor: "#b85c38",
+  // Контент под вырез/динамический остров; отступы даёт env(safe-area-inset-*).
+  viewportFit: "cover",
 };
 
 export default async function RootLayout({
@@ -138,6 +150,7 @@ export default async function RootLayout({
     <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body>
         {children}
+        <NativeGate />
         <SwRegister />
         <Analytics />
         <YandexMetrika />
