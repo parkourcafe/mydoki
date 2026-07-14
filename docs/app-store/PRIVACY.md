@@ -18,35 +18,26 @@ Privacy Policy URL (обязателен): **https://www.doki.help/privacy**
 | **Photos / User content (документы, файлы)** | Да | Да | Нет | App Functionality (хранение документов) | Storage bucket + `documents`/`document_files` |
 | **Other user content** (заметки, метаданные документов) | Да | Да | Нет | App Functionality | `documents.notes/title/...` |
 | **User ID** | Да | Да | Нет | App Functionality | `auth.users.id` |
-| **Product interaction / Usage data** | Да | ⚠️ РЕШИТЬ | ⚠️ РЕШИТЬ | Analytics | PostHog, Yandex Metrika, Vercel Analytics |
+| **Product interaction / Usage data** | Да (ограниченно) | Нет | Нет | Analytics | Vercel Analytics (first-party). Яндекс.Метрика и PostHog в нативе ОТКЛЮЧЕНЫ |
 | **Diagnostics / Performance** | Возможно | Нет | Нет | Analytics | Vercel Analytics |
 | **Coarse/precise location** | Нет | — | — | — | не собирается |
 | **Payment info** | Нет | — | — | — | приложение бесплатное, оплат нет |
 | **Contacts (адресная книга)** | Нет | — | — | — | не читаем |
 
-### ⚠️ РЕШИТЬ #1 — аналитика и «Tracking» / ATT
-В приложении три аналитики: **PostHog** (autocapture), **Yandex Metrika**,
-**Vercel Analytics**.
-- `lib/analytics.ts` уже **вырезает PII** из свойств событий (имя/телефон/
-  email/токены) — это хорошо, но поведение всё равно собирается и связывается
-  с анонимным distinct-id.
-- «Used to Track You» в терминах Apple = связывание данных с данными **третьих
-  сторон для рекламы** или передача **дата-брокерам**. Рекламы у вас нет,
-  данные не продаются (заявлено на `/security`). При такой конфигурации
-  корректный ответ — **Not Used to Track**, и ATT-промпт не нужен.
-- **НО** Yandex Metrika и PostHog — сторонние SDK, которые технически могут
-  строить профили. Решение:
-  - **Рекомендация:** в нативном приложении **отключить Yandex Metrika**
-    (и, по возможности, autocapture PostHog), оставив только продуктовые
-    события без кросс-сайтового профилирования → уверенно «Not tracking».
-  - Если аналитику оставляете «как есть» и юрист классифицирует её как
-    tracking → нужно добавить **ATT**: `NSUserTrackingUsageDescription` в
-    Info.plist + `AppTrackingTransparency`-промпт, а в App Privacy отметить
-    «Used to Track You».
-- Как отключить Yandex в WebView-обёртке: можно гейтить `YandexMetrika`/
-  `PostHogProvider` по `Capacitor.isNativePlatform()` (флаг из `lib/native.ts`)
-  или по query-параметру, который добавляет обёртка. Это отдельная небольшая
-  задача — согласуйте объём.
+### ✅ Аналитика и «Tracking» / ATT — решено в коде
+Сторонние аналитики **Яндекс.Метрика** и **PostHog** внутри нативной обёртки
+**отключены**. Реализация: обёртка добавляет метку `dokiNativeApp` в User-Agent
+(`appendUserAgent` в `capacitor.config.ts`), а сервер по ней не рендерит эти
+трекеры (`lib/isNativeRequest.ts` → `app/layout.tsx`). Гейтинг **серверный**,
+поэтому скрипты не попадают даже в SSR-разметку приложения.
+- Остаётся только **Vercel Web Analytics** — first-party, без cookies, без
+  кросс-сайтового профилирования и рекламы.
+- Итог: корректный ответ в App Privacy — **Not Used to Track**, и **ATT-промпт
+  не нужен** (`NSUserTrackingUsageDescription` не требуется).
+- Проверка после сборки: открыть приложение → в сетевых запросах WebView НЕ
+  должно быть обращений к `mc.yandex.ru` и `*.posthog.com`.
+- Примечание: гейтинг живёт в `app/layout.tsx` этой ветки. Прод-`layout.tsx`
+  сейчас новее — при мёрже перенесите туда `isNativeRequest()`-проверку.
 
 ### ⚠️ РЕШИТЬ #2 — AI-распознавание документов (передача третьей стороне)
 Опциональная функция распознавания отправляет **изображение документа**
@@ -69,7 +60,9 @@ Privacy Policy URL (обязателен): **https://www.doki.help/privacy**
 | `NSPhotoLibraryUsageDescription` | doki.help lets you attach documents from your photo library. |
 | `NSPhotoLibraryAddUsageDescription` | doki.help can save documents to your photo library. |
 | `NSFaceIDUsageDescription` | doki.help uses Face ID to lock your documents. |
-| `NSUserTrackingUsageDescription` | *только если* аналитику классифицировали как tracking (см. РЕШИТЬ #1). |
+
+`NSUserTrackingUsageDescription` **не нужен** — сторонний трекинг в нативе
+отключён (см. раздел выше).
 
 ## Что НЕ используется (для чистых ответов Apple)
 - Нет рекламных SDK, нет IDFA, нет покупок в приложении.

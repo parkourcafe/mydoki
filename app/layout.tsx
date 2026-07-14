@@ -7,6 +7,7 @@ import YandexMetrika from "@/components/YandexMetrika";
 import PostHogProvider from "@/components/PostHogProvider";
 import { getLocale } from "@/lib/i18n";
 import { altLangs } from "@/lib/seo";
+import { isNativeRequest } from "@/lib/isNativeRequest";
 import "./globals.css";
 
 const inter = Inter({
@@ -146,6 +147,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const locale = await getLocale();
+  // Внутри нативной обёртки НЕ грузим сторонние аналитики (Яндекс.Метрика,
+  // PostHog) — так в App Privacy честно «not used to track». Vercel Analytics
+  // (first-party, без cookies) оставляем. В браузере/PWA — всё как раньше.
+  const native = await isNativeRequest();
   return (
     <html lang={locale} className={`${inter.variable} ${playfair.variable}`}>
       <body>
@@ -153,8 +158,8 @@ export default async function RootLayout({
         <NativeGate />
         <SwRegister />
         <Analytics />
-        <YandexMetrika />
-        <PostHogProvider />
+        {!native && <YandexMetrika />}
+        {!native && <PostHogProvider />}
       </body>
     </html>
   );

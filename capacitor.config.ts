@@ -18,6 +18,10 @@ const PROD_URL = process.env.CAP_SERVER_URL || "https://www.doki.help";
 const config: CapacitorConfig = {
   appId: "help.doki.app",
   appName: "doki.help",
+  // Метка в User-Agent: сервер по ней узнаёт нативную обёртку и НЕ отдаёт ей
+  // сторонние аналитики (Яндекс.Метрика/PostHog) — чтобы в App Privacy честно
+  // отвечать «Not used to track». См. lib/isNativeRequest.ts.
+  appendUserAgent: "dokiNativeApp",
   // Оффлайн-fallback (native/www/index.html). Живой контент грузится с server.url.
   webDir: "native/www",
   ios: {
