@@ -9,6 +9,7 @@ import {
   getDocument,
   getOrCreateHouseholdId,
   getStorageInfo,
+  getUser,
 } from "@/lib/queries";
 import {
   evalDateConsistency,
@@ -611,6 +612,56 @@ export async function acceptInvitation(formData: FormData) {
   redirect("/my");
 }
 
+// ── Семейные роли и доступ (F-1) ─────────────────────────────────────
+// Изменения идут через SECURITY DEFINER RPC с гардом инварианта «хотя бы
+// один owner» (см. миграцию 20260713170000). UI-проверки — только подсказка;
+// авторитетный гейт — в БД.
+
+export async function setMemberRole(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const userId = String(formData.get("user_id") ?? "");
+  const role = String(formData.get("role") ?? "");
+  if (!userId || !role) return;
+  const { error } = await supabase.rpc("set_household_member_role", {
+    p_household: householdId,
+    p_user: userId,
+    p_role: role,
+  });
+  if (error) throw error;
+  revalidatePath("/my/family");
+}
+
+export async function removeMember(formData: FormData) {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const userId = String(formData.get("user_id") ?? "");
+  if (!userId) return;
+  const { error } = await supabase.rpc("remove_household_member", {
+    p_household: householdId,
+    p_user: userId,
+  });
+  if (error) throw error;
+  revalidatePath("/my/family");
+}
+
+export async function leaveHousehold() {
+  const supabase = await getSupabaseServer();
+  const householdId = await getOrCreateHouseholdId();
+  const user = await getUser();
+  if (!user) return;
+  // Выход = удаление себя. Гард последнего owner — в RPC.
+  const { error } = await supabase.rpc("remove_household_member", {
+    p_household: householdId,
+    p_user: user.id,
+  });
+  if (error) throw error;
+  // Сбрасываем активное пространство — getOrCreateHouseholdId переизберёт другое.
+  const cookieStore = await cookies();
+  cookieStore.delete(SPACE_COOKIE);
+  redirect("/my");
+}
+
 // ── Трудовые отношения (Employment, проекция человека) ───────────────
 // Ручной режим: человек ведёт свою трудовую историю сам (работодателя может
 // не быть в Doki). RLS разрешает такие записи только владельцу и только с
@@ -683,6 +734,77 @@ export async function updateManualEmployment(formData: FormData) {
   if (error) throw error;
   revalidatePath("/my/employment");
   revalidatePath(`/my/employment/${id}`);
+}
+
+/**
+ * Ответ сотрудника на допсоглашение (P3-1). Принятие требует согласия; RPC
+ * respond_to_amendment проверяет, что вызывающий — сотрудник этой записи,
+ * фиксирует дисклеймер/время/actor и применяет изменения к employment.
+ */
+export async function respondToAmendment(
+  amendmentId: string,
+  employmentId: string,
+  accept: boolean,
+  consent: boolean
+): Promise<{ ok: boolean; status?: string; error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("respond_to_amendment", {
+    p_id: amendmentId,
+    p_accept: accept,
+    p_consent: consent,
+  });
+  if (error) return { ok: false, error: error.message };
+  const res = (data ?? {}) as { ok?: boolean; status?: string; error?: string };
+  revalidatePath(`/my/employment/${employmentId}`);
+  return { ok: res.ok === true, status: res.status, error: res.error };
+}
+
+/**
+ * Сотрудник подтверждает получение документа (расчёт/рекомендация и др., P4-2).
+ * RPC acknowledge_employment_document проверяет, что вызывающий — сотрудник
+ * этой записи, и идемпотентно фиксирует время/actor получения.
+ */
+export async function acknowledgeEmploymentDocument(
+  docId: string,
+  employmentId: string
+): Promise<{ ok: boolean; error?: string }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("acknowledge_employment_document", {
+    p_id: docId,
+  });
+  if (error) return { ok: false, error: error.message };
+  revalidatePath(`/my/employment/${employmentId}`);
+  return { ok: true };
+}
+
+/**
+ * Внешнее подтверждение занятости (P4-4). Человек создаёт секретную ссылку
+ * для своей записи ОТ РАБОТОДАТЕЛЯ (RPC проверяет employee=auth.uid() и
+ * manual=false). Возвращает токен (один активный на запись).
+ */
+export async function createEmploymentVerification(
+  employmentId: string
+): Promise<{ token: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("create_employment_verification", {
+    p_employment_id: employmentId,
+  });
+  if (error) return { error: error.message };
+  revalidatePath(`/my/employment/${employmentId}`);
+  return { token: data as string };
+}
+
+/** Отозвать ссылку-подтверждение занятости. */
+export async function revokeEmploymentVerification(
+  employmentId: string
+): Promise<{ ok: boolean }> {
+  const supabase = await getSupabaseServer();
+  const { error } = await supabase.rpc("revoke_employment_verification", {
+    p_employment_id: employmentId,
+  });
+  if (error) return { ok: false };
+  revalidatePath(`/my/employment/${employmentId}`);
+  return { ok: true };
 }
 
 /** Удалить своё ручное место работы. */

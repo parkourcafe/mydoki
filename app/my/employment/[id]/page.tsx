@@ -11,9 +11,15 @@ import {
 } from "@/lib/employment";
 import type { OnboardingTask } from "@/lib/onboarding";
 import type { EmploymentDocument } from "@/lib/employmentDocs";
+import type { Amendment } from "@/lib/amendments";
+import type { OffboardingTask } from "@/lib/offboarding";
 import EditEmploymentForm from "./EditEmploymentForm";
 import OnboardingProgress from "./OnboardingProgress";
 import EmploymentDocs from "@/app/employer/employees/[id]/EmploymentDocs";
+import AmendmentsPanel from "./AmendmentsPanel";
+import OffboardingProgress from "./OffboardingProgress";
+import VerificationBox from "./VerificationBox";
+import ProcessGuideHint from "@/components/ProcessGuideHint";
 
 const M = {
   ru: {
@@ -90,8 +96,11 @@ export default async function EmploymentDetailPage({
   // записей от работодателя (у ручных их нет).
   let onboardingTasks: OnboardingTask[] = [];
   let employmentDocs: EmploymentDocument[] = [];
+  let amendments: Amendment[] = [];
+  let offboardingTasks: OffboardingTask[] = [];
+  let verifToken: string | null = null;
   if (!emp.manual) {
-    const [{ data: onbData }, { data: edData }] = await Promise.all([
+    const [{ data: onbData }, { data: edData }, { data: amData }, { data: obData }, { data: verifData }] = await Promise.all([
       supabase
         .from("onboarding_tasks")
         .select("*")
@@ -102,9 +111,28 @@ export default async function EmploymentDetailPage({
         .select("*")
         .eq("employment_id", emp.id)
         .order("uploaded_at", { ascending: false }),
+      supabase
+        .from("employment_amendments")
+        .select("*")
+        .eq("employment_id", emp.id)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("offboarding_tasks")
+        .select("*")
+        .eq("employment_id", emp.id)
+        .order("sort", { ascending: true }),
+      supabase
+        .from("employment_verifications")
+        .select("token")
+        .eq("employment_id", emp.id)
+        .is("revoked_at", null)
+        .maybeSingle(),
     ]);
     onboardingTasks = (onbData ?? []) as OnboardingTask[];
     employmentDocs = (edData ?? []) as EmploymentDocument[];
+    amendments = (amData ?? []) as Amendment[];
+    offboardingTasks = (obData ?? []) as OffboardingTask[];
+    verifToken = (verifData?.token as string) ?? null;
   }
   const today = new Date().toISOString().slice(0, 10);
 
@@ -148,6 +176,17 @@ export default async function EmploymentDetailPage({
       )}
 
       {!emp.manual && (
+        <ProcessGuideHint
+          locale={locale}
+          context={amendments.some((a) => a.status === "proposed") ? "amendment" : "employment"}
+        />
+      )}
+
+      {!emp.manual && (
+        <AmendmentsPanel locale={locale} employmentId={emp.id} amendments={amendments} />
+      )}
+
+      {!emp.manual && (
         <OnboardingProgress
           locale={locale}
           startDate={emp.start_date}
@@ -164,6 +203,18 @@ export default async function EmploymentDetailPage({
           docs={employmentDocs}
           canManage={false}
         />
+      )}
+
+      {!emp.manual && (
+        <OffboardingProgress
+          locale={locale}
+          lastWorkingDay={emp.last_working_day}
+          tasks={offboardingTasks}
+        />
+      )}
+
+      {!emp.manual && (
+        <VerificationBox locale={locale} employmentId={emp.id} activeToken={verifToken} />
       )}
     </div>
   );
