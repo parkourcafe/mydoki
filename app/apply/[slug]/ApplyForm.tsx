@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
-import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { compressImage, formatBytes } from "@/lib/compressImage";
 import {
   ACCEPT_ATTR,
   ACCEPTED_MIME,
@@ -11,8 +11,96 @@ import {
   isValidWhatsapp,
   type RequiredDocument,
   type ScreeningQuestion,
+  type Source,
 } from "@/lib/career";
-import { submitApplication } from "../actions";
+import {
+  submitApplication,
+  precheckApplication,
+  incrementVacancyView,
+} from "../actions";
+
+// Минимальный виджет Cloudflare Turnstile (explicit render). Если site key не
+// задан — ничего не рисуем, токен остаётся null, сервер пропускает проверку.
+type TurnstileAPI = {
+  render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+  remove: (id: string) => void;
+};
+declare global {
+  interface Window {
+    turnstile?: TurnstileAPI;
+  }
+}
+
+// T7: контейнер резервирует высоту виджета (~65px) СРАЗУ — виджет монтируется
+// лениво (после первого взаимодействия с формой), поэтому его появление не
+// сдвигает layout (CLS ≈ 0). Скрипт Cloudflare тоже грузится лениво: не
+// участвует в критическом пути и LCP apply-страницы.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
+function Turnstile({
+  armed,
+  onToken,
+}: {
+  armed: boolean;
+  onToken: (t: string | null) => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const siteKey = TURNSTILE_SITE_KEY;
+
+  useEffect(() => {
+    // Грузим CF-скрипт и рендерим виджет только после «взвода» (interaction).
+    if (!armed || !siteKey || !ref.current) return;
+    let widgetId: string | undefined;
+    const el = ref.current;
+
+    function render() {
+      const ts = window.turnstile;
+      if (!ts || !el) return;
+      widgetId = ts.render(el, {
+        sitekey: siteKey,
+        callback: (token: string) => onToken(token),
+        "expired-callback": () => onToken(null),
+        "error-callback": () => onToken(null),
+      });
+    }
+
+    if (window.turnstile) {
+      render();
+    } else {
+      const id = "cf-turnstile-script";
+      let s = document.getElementById(id) as HTMLScriptElement | null;
+      if (!s) {
+        s = document.createElement("script");
+        s.id = id;
+        s.src =
+          "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+        s.async = true;
+        document.head.appendChild(s);
+      }
+      s.addEventListener("load", render);
+    }
+
+    return () => {
+      const ts = window.turnstile;
+      if (ts && widgetId) {
+        try {
+          ts.remove(widgetId);
+        } catch {
+          /* noop */
+        }
+      }
+    };
+  }, [armed, siteKey, onToken]);
+
+  if (!siteKey) return null;
+  // Высота зарезервирована всегда (min-h), чтобы ленивое монтирование виджета
+  // не сдвигало кнопку submit вниз — защита от CLS.
+  return (
+    <div className="mt-1 min-h-[65px]">
+      <div ref={ref} />
+    </div>
+  );
+}
 
 const M = {
   en: {
@@ -31,9 +119,11 @@ const M = {
     replace: "Replace",
     pending: "Not uploaded",
     uploading: "Uploading…",
+    compressing: "Optimizing…",
     uploaded: "Uploaded",
     errored: "Upload failed — try again",
     questions: "Questions",
+    choosePlaceholder: "Choose…",
     yes: "Yes",
     no: "No",
     consentTpl: (c: string) =>
@@ -48,6 +138,8 @@ const M = {
     errFileType: "Only PDF, JPG or PNG files are allowed.",
     errFileSize: "File is too large (max 10MB).",
     errGeneric: "Something went wrong. Please try again.",
+    errRateLimited: "Too many applications from your network. Please try again later.",
+    errTurnstile: "Anti-bot check failed. Please try again.",
     doneTitle: "Application submitted!",
     doneText: "You'll receive updates via WhatsApp.",
     statusLink: "Track your application status",
@@ -70,9 +162,11 @@ const M = {
     replace: "Ganti",
     pending: "Belum diunggah",
     uploading: "Mengunggah…",
+    compressing: "Mengoptimalkan…",
     uploaded: "Terunggah",
     errored: "Gagal unggah — coba lagi",
     questions: "Pertanyaan",
+    choosePlaceholder: "Pilih…",
     yes: "Ya",
     no: "Tidak",
     consentTpl: (c: string) =>
@@ -87,6 +181,8 @@ const M = {
     errFileType: "Hanya berkas PDF, JPG, atau PNG.",
     errFileSize: "Berkas terlalu besar (maks 10MB).",
     errGeneric: "Terjadi kesalahan. Coba lagi.",
+    errRateLimited: "Terlalu banyak lamaran dari jaringan Anda. Coba lagi nanti.",
+    errTurnstile: "Pemeriksaan anti-bot gagal. Coba lagi.",
     doneTitle: "Lamaran terkirim!",
     doneText: "Anda akan menerima kabar via WhatsApp.",
     statusLink: "Lacak status lamaran Anda",
@@ -109,9 +205,11 @@ const M = {
     replace: "Заменить",
     pending: "Не загружен",
     uploading: "Загрузка…",
+    compressing: "Оптимизация…",
     uploaded: "Загружен",
     errored: "Ошибка загрузки — повторите",
     questions: "Вопросы",
+    choosePlaceholder: "Выберите…",
     yes: "Да",
     no: "Нет",
     consentTpl: (c: string) =>
@@ -126,6 +224,8 @@ const M = {
     errFileType: "Только PDF, JPG или PNG.",
     errFileSize: "Файл слишком большой (макс. 10 МБ).",
     errGeneric: "Что-то пошло не так. Попробуйте ещё раз.",
+    errRateLimited: "Слишком много откликов с вашей сети. Попробуйте позже.",
+    errTurnstile: "Проверка на бота не пройдена. Попробуйте ещё раз.",
     doneTitle: "Отклик отправлен!",
     doneText: "Обновления придут в WhatsApp.",
     statusLink: "Отслеживать статус отклика",
@@ -148,9 +248,11 @@ const M = {
     replace: "Almashtirish",
     pending: "Yuklanmagan",
     uploading: "Yuklanmoqda…",
+    compressing: "Optimallashtirilmoqda…",
     uploaded: "Yuklandi",
     errored: "Yuklashda xato — qayta urining",
     questions: "Savollar",
+    choosePlaceholder: "Tanlang…",
     yes: "Ha",
     no: "Yo‘q",
     consentTpl: (c: string) =>
@@ -165,6 +267,8 @@ const M = {
     errFileType: "Faqat PDF, JPG yoki PNG.",
     errFileSize: "Fayl juda katta (maks 10MB).",
     errGeneric: "Xatolik yuz berdi. Qayta urining.",
+    errRateLimited: "Tarmog‘ingizdan juda ko‘p ariza. Keyinroq urining.",
+    errTurnstile: "Antibot tekshiruvi o‘tmadi. Qayta urining.",
     doneTitle: "Ariza yuborildi!",
     doneText: "Yangiliklarni WhatsApp orqali olasiz.",
     statusLink: "Ariza holatini kuzatish",
@@ -173,10 +277,21 @@ const M = {
   },
 } as const;
 
-type UploadState = "pending" | "uploading" | "uploaded" | "error";
+type UploadState = "pending" | "compressing" | "uploading" | "uploaded" | "error";
 
 function safeName(name: string): string {
   return name.replace(/[^\w.\-]+/g, "_") || "file";
+}
+
+// Метрика: сжатие упало (грузим исходник). Best-effort, без падений.
+function fireCompressFail() {
+  try {
+    const id = process.env.NEXT_PUBLIC_YM_ID;
+    const ym = (window as unknown as { ym?: (...a: unknown[]) => void }).ym;
+    if (id && ym) ym(Number(id), "reachGoal", "compress_fail");
+  } catch {
+    /* noop */
+  }
 }
 
 export default function ApplyForm({
@@ -184,6 +299,7 @@ export default function ApplyForm({
   vacancyId,
   slug,
   companyName,
+  source,
   requiredDocuments,
   screeningQuestions,
 }: {
@@ -191,6 +307,7 @@ export default function ApplyForm({
   vacancyId: string;
   slug: string;
   companyName: string;
+  source: Source;
   requiredDocuments: RequiredDocument[];
   screeningQuestions: ScreeningQuestion[];
 }) {
@@ -202,11 +319,30 @@ export default function ApplyForm({
   const [email, setEmail] = useState("");
   const [files, setFiles] = useState<Record<number, File>>({});
   const [docStatus, setDocStatus] = useState<Record<number, UploadState>>({});
+  const [sizeInfo, setSizeInfo] = useState<Record<number, string>>({});
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [consent, setConsent] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [doneToken, setDoneToken] = useState<string | null>(null);
+  // T7: Turnstile «взводится» только после первого касания формы, чтобы
+  // тяжёлый скрипт Cloudflare не грузился на первом рендере (LCP/TBT).
+  const [armed, setArmed] = useState(false);
+  const arm = () => setArmed(true);
+
+  // Один просмотр на сессию браузера (дедуп по sessionStorage, чтобы reload
+  // не удваивал views_count).
+  useEffect(() => {
+    const key = `viewed:${slug}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      /* приватный режим — просто инкрементим */
+    }
+    void incrementVacancyView(slug);
+  }, [slug]);
 
   function pickFile(i: number, file: File | null) {
     if (!file) return;
@@ -214,12 +350,18 @@ export default function ApplyForm({
       setError(t.errFileType);
       return;
     }
-    if (file.size > MAX_FILE_BYTES) {
+    // Для изображений лимит проверяем ПОСЛЕ сжатия; PDF — сразу.
+    if (!file.type.startsWith("image/") && file.size > MAX_FILE_BYTES) {
       setError(t.errFileSize);
       return;
     }
     setError(null);
     setFiles((p) => ({ ...p, [i]: file }));
+    setSizeInfo((p) => {
+      const n = { ...p };
+      delete n[i];
+      return n;
+    });
     setDocStatus((p) => ({ ...p, [i]: "pending" }));
   }
 
@@ -235,15 +377,32 @@ export default function ApplyForm({
       }
     }
     for (let i = 0; i < screeningQuestions.length; i++) {
-      if (!(answers[i] ?? "").trim()) return setError(t.errAns);
+      const required = screeningQuestions[i].required !== false;
+      if (required && !(answers[i] ?? "").trim()) return setError(t.errAns);
     }
     if (!consent) return setError(t.errConsent);
 
     setBusy(true);
     const applicationId = crypto.randomUUID();
+    // T7: @supabase/supabase-js (~50 КБ gzip) грузим ЛЕНИВО — только при
+    // реальной отправке. Форма рендерится и интерактивна без него, поэтому
+    // клиент не тянет вес в First Load apply-страницы (бюджет ≤150 КБ gzip).
+    const { getSupabaseBrowser } = await import("@/lib/supabase/client");
     const supabase = getSupabaseBrowser();
 
     try {
+      // Precheck ДО загрузки файлов: дубликат/лимит — не заливаем впустую.
+      const pre = await precheckApplication({ slug, whatsapp });
+      if (pre.rateLimited) {
+        setError(t.errRateLimited);
+        setBusy(false);
+        return;
+      }
+      if (pre.duplicate && pre.accessToken) {
+        setDoneToken(pre.accessToken);
+        return;
+      }
+
       const uploaded: {
         type: string;
         label: string;
@@ -253,9 +412,28 @@ export default function ApplyForm({
       }[] = [];
 
       for (let i = 0; i < requiredDocuments.length; i++) {
-        const file = files[i];
-        if (!file) continue;
+        const raw = files[i];
+        if (!raw) continue;
         const doc = requiredDocuments[i];
+
+        // Сжатие изображений / конверсия HEIC — до загрузки (lazy-import).
+        setDocStatus((p) => ({ ...p, [i]: "compressing" }));
+        const outcome = await compressImage(raw);
+        if (outcome.failed) fireCompressFail();
+        if (outcome.tooLarge) {
+          setDocStatus((p) => ({ ...p, [i]: "error" }));
+          setError(t.errFileSize);
+          setBusy(false);
+          return;
+        }
+        if (outcome.changed) {
+          setSizeInfo((p) => ({
+            ...p,
+            [i]: `${formatBytes(outcome.originalSize)} → ${formatBytes(outcome.finalSize)}`,
+          }));
+        }
+        const file = outcome.file;
+
         setDocStatus((p) => ({ ...p, [i]: "uploading" }));
         const path = `${vacancyId}/${applicationId}/${doc.type}_${Date.now()}-${safeName(
           file.name
@@ -275,8 +453,8 @@ export default function ApplyForm({
           type: doc.type,
           label: doc.label,
           path,
-          name: file.name,
-          size: file.size,
+          name: raw.name, // исходное имя пользователю
+          size: file.size, // сжатый размер
         });
       }
 
@@ -286,18 +464,33 @@ export default function ApplyForm({
         answer: (answers[i] ?? "").trim(),
       }));
 
-      const { accessToken } = await submitApplication({
+      const result = await submitApplication({
         applicationId,
         slug,
         fullName: fullName.trim(),
         whatsapp,
         email: email.trim() || undefined,
         consentText,
+        source,
+        turnstileToken,
         answers: answerPayload,
         documents: uploaded,
+        docsComplete: uploaded.length,
+        docsTotal: requiredDocuments.length,
       });
 
-      setDoneToken(accessToken);
+      if (!result.ok) {
+        setError(
+          result.error === "turnstile"
+            ? t.errTurnstile
+            : result.error === "rate_limited"
+              ? t.errRateLimited
+              : t.errGeneric
+        );
+        setBusy(false);
+        return;
+      }
+      setDoneToken(result.accessToken);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
       setError(m || t.errGeneric);
@@ -329,7 +522,12 @@ export default function ApplyForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card space-y-5">
+    <form
+      onSubmit={handleSubmit}
+      onFocusCapture={arm}
+      onPointerDown={arm}
+      className="card space-y-5"
+    >
       <h2 className="text-base font-semibold">{t.yourApplication}</h2>
 
       <div>
@@ -402,7 +600,7 @@ export default function ApplyForm({
                     </label>
                   </div>
                   {chosen && (
-                    <p className="mt-2 flex items-center gap-2 text-xs">
+                    <p className="mt-2 flex flex-wrap items-center gap-2 text-xs">
                       <span className="truncate text-slate-500">{chosen.name}</span>
                       <span
                         className={
@@ -410,7 +608,7 @@ export default function ApplyForm({
                             ? "text-green-600"
                             : st === "error"
                               ? "text-red-600"
-                              : st === "uploading"
+                              : st === "uploading" || st === "compressing"
                                 ? "text-brand-600"
                                 : "text-slate-400"
                         }
@@ -419,10 +617,15 @@ export default function ApplyForm({
                           ? `✓ ${t.uploaded}`
                           : st === "error"
                             ? t.errored
-                            : st === "uploading"
-                              ? t.uploading
-                              : t.pending}
+                            : st === "compressing"
+                              ? t.compressing
+                              : st === "uploading"
+                                ? t.uploading
+                                : t.pending}
                       </span>
+                      {sizeInfo[i] && (
+                        <span className="text-slate-400">· {sizeInfo[i]}</span>
+                      )}
                     </p>
                   )}
                 </li>
@@ -435,10 +638,13 @@ export default function ApplyForm({
       {screeningQuestions.length > 0 && (
         <div className="space-y-3">
           <p className="label">{t.questions}</p>
-          {screeningQuestions.map((q, i) => (
+          {screeningQuestions.map((q, i) => {
+            const required = q.required !== false;
+            return (
             <div key={i}>
               <label className="mb-1 block text-sm text-slate-700">
-                {q.question} *
+                {q.question}
+                {required ? " *" : ` (${t.optional})`}
               </label>
               {q.type === "yes_no" ? (
                 <div className="flex gap-2">
@@ -458,6 +664,21 @@ export default function ApplyForm({
                     </button>
                   ))}
                 </div>
+              ) : q.type === "choice" && (q.options ?? []).length > 0 ? (
+                <select
+                  className="input"
+                  value={answers[i] ?? ""}
+                  onChange={(e) =>
+                    setAnswers((p) => ({ ...p, [i]: e.target.value }))
+                  }
+                >
+                  <option value="">{t.choosePlaceholder}</option>
+                  {(q.options ?? []).map((opt, oi) => (
+                    <option key={oi} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
               ) : (
                 <input
                   className="input"
@@ -468,7 +689,8 @@ export default function ApplyForm({
                 />
               )}
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -481,6 +703,8 @@ export default function ApplyForm({
         />
         <span>{consentText}</span>
       </label>
+
+      <Turnstile armed={armed} onToken={setTurnstileToken} />
 
       {error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">

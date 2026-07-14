@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getLocale } from "@/lib/i18n";
-import type { Vacancy } from "@/lib/career";
+import { parseSource, type Vacancy } from "@/lib/career";
 import ApplyForm from "./ApplyForm";
+import ReportModal from "./ReportModal";
 
 // Apply-страница раздаётся прямой ссылкой (WhatsApp/QR), не через поиск.
 export const metadata = {
@@ -18,6 +19,9 @@ const M = {
     salary: "Salary",
     poweredBy: "Powered by",
     home: "doki.help",
+    verified: "Verified",
+    pausedTitle: "Vacancy under review",
+    pausedText: "This vacancy is temporarily under review. Please check back later.",
   },
   id: {
     notFoundTitle: "Lowongan tidak tersedia",
@@ -27,6 +31,9 @@ const M = {
     salary: "Gaji",
     poweredBy: "Didukung oleh",
     home: "doki.help",
+    verified: "Terverifikasi",
+    pausedTitle: "Lowongan sedang ditinjau",
+    pausedText: "Lowongan ini sementara sedang ditinjau. Silakan cek kembali nanti.",
   },
   ru: {
     notFoundTitle: "Вакансия недоступна",
@@ -36,6 +43,9 @@ const M = {
     salary: "Зарплата",
     poweredBy: "Работает на",
     home: "doki.help",
+    verified: "Проверен",
+    pausedTitle: "Вакансия на проверке",
+    pausedText: "Эта вакансия временно на проверке. Загляните позже.",
   },
   uz: {
     notFoundTitle: "Vakansiya mavjud emas",
@@ -45,6 +55,9 @@ const M = {
     salary: "Maosh",
     poweredBy: "Ishlaydi",
     home: "doki.help",
+    verified: "Tasdiqlangan",
+    pausedTitle: "Vakansiya tekshiruvda",
+    pausedText: "Bu vakansiya vaqtincha tekshiruvda. Keyinroq qaytib keling.",
   },
 } as const;
 
@@ -67,12 +80,16 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 export default async function ApplyPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ src?: string }>;
 }) {
   const locale = await getLocale();
   const t = M[locale];
   const { slug } = await params;
+  const { src } = await searchParams;
+  const source = parseSource(src);
 
   const supabase = await getSupabaseServer();
   const { data } = await supabase
@@ -84,7 +101,23 @@ export default async function ApplyPage({
 
   const vacancy = data as Vacancy | null;
 
+  // Публичная мета: статус (виден и для paused) + verified-бейдж.
+  const { data: metaRaw } = await supabase.rpc("apply_vacancy_meta", { p_slug: slug });
+  const meta = metaRaw as { status?: string; verified?: boolean } | null;
+
   if (!vacancy) {
+    // Вакансия на автопаузе по жалобам — нейтральная страница, без обвинений.
+    if (meta?.status === "paused") {
+      return (
+        <Shell>
+          <div className="card text-center">
+            <div className="mb-2 text-3xl">🕒</div>
+            <h1 className="text-lg font-semibold">{t.pausedTitle}</h1>
+            <p className="mt-1 text-sm text-slate-500">{t.pausedText}</p>
+          </div>
+        </Shell>
+      );
+    }
     return (
       <Shell>
         <div className="card text-center">
@@ -108,7 +141,14 @@ export default async function ApplyPage({
             {initials(vacancy.company_name)}
           </div>
           <div className="min-w-0">
-            <p className="text-sm text-slate-500">{vacancy.company_name}</p>
+            <p className="flex flex-wrap items-center gap-1.5 text-sm text-slate-500">
+              {vacancy.company_name}
+              {meta?.verified && (
+                <span className="rounded-full bg-green-100 px-1.5 py-0.5 text-[10px] font-medium text-green-700">
+                  ✓ {t.verified}
+                </span>
+              )}
+            </p>
             <h1 className="text-xl font-semibold leading-tight">{vacancy.title}</h1>
             {vacancy.location && (
               <p className="mt-0.5 text-sm text-slate-500">📍 {vacancy.location}</p>
@@ -153,16 +193,26 @@ export default async function ApplyPage({
           vacancyId={vacancy.id}
           slug={vacancy.slug}
           companyName={vacancy.company_name}
+          source={source}
           requiredDocuments={vacancy.required_documents ?? []}
           screeningQuestions={vacancy.screening_questions ?? []}
         />
       </div>
 
-      <footer className="mt-6 text-center text-xs text-slate-400">
-        {t.poweredBy}{" "}
-        <Link href="/" className="font-medium text-brand-600 hover:underline">
-          {t.home}
-        </Link>
+      <footer className="mt-6 flex flex-col items-center gap-2 text-center text-xs text-slate-400">
+        <ReportModal
+          locale={locale}
+          slug={vacancy.slug}
+          vacancyId={vacancy.id}
+          vacancyTitle={vacancy.title}
+          company={vacancy.company_name}
+        />
+        <div>
+          {t.poweredBy}{" "}
+          <Link href="/" className="font-medium text-brand-600 hover:underline">
+            {t.home}
+          </Link>
+        </div>
       </footer>
     </Shell>
   );

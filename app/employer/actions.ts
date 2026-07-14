@@ -2,13 +2,69 @@
 
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { sendPushToUser } from "@/lib/push";
+import { getLocale } from "@/lib/i18n";
+import { sendVerificationCode } from "@/lib/email";
 import { normalizeWhatsapp } from "@/lib/career";
 import type {
   RequiredDocument,
   ScreeningQuestion,
   ApplicationStatus,
 } from "@/lib/career";
+
+// ---------------------- Employer verification -------------------------
+
+/** Сгенерировать 6-значный код, сохранить его хэш, отправить письмом. */
+export async function requestEmployerVerification(): Promise<{ ok: boolean }> {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false };
+
+  const { data: profile } = await supabase
+    .from("employer_profiles")
+    .select("contact_email")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  const email = (profile as { contact_email?: string | null } | null)?.contact_email || user.email;
+  if (!email) return { ok: false };
+
+  const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+  const hash = createHash("sha256").update(code).digest("hex");
+  const expires = new Date(Date.now() + 15 * 60 * 1000).toISOString();
+
+  const { error } = await supabase.rpc("set_employer_verification", {
+    p_code_hash: hash,
+    p_expires_at: expires,
+  });
+  if (error) return { ok: false };
+
+  const locale = await getLocale();
+  await sendVerificationCode("email", email, code, locale);
+  return { ok: true };
+}
+
+/** Подтвердить код. Возвращает ok или код ошибки (expired/too_many/wrong). */
+export async function confirmEmployerVerification(
+  code: string
+): Promise<{ ok: boolean; error?: "expired" | "too_many" | "wrong" }> {
+  const supabase = await getSupabaseServer();
+  const hash = createHash("sha256").update(code.trim()).digest("hex");
+  const { data, error } = await supabase.rpc("confirm_employer_verification", {
+    p_code_hash: hash,
+  });
+  if (error) {
+    const m = error.message || "";
+    return {
+      ok: false,
+      error: /CODE_EXPIRED/.test(m) ? "expired" : /TOO_MANY/.test(m) ? "too_many" : undefined,
+    };
+  }
+  return data === true ? { ok: true } : { ok: false, error: "wrong" };
+}
 
 /** Создать/обновить профиль работодателя для текущего пользователя. */
 export async function saveEmployerProfile(formData: FormData) {
@@ -79,6 +135,45 @@ export async function createVacancy(
   return res;
 }
 
+export type UpdateVacancyInput = CreateVacancyInput & { id: string };
+
+/**
+ * Обновить существующую вакансию. Slug не трогаем — ссылка остаётся рабочей.
+ * Правки применяются к вакансии (для будущих откликов); уже полученные
+ * отклики и их ответы не изменяются (ответы хранятся снимком). Доступ
+ * ограничен владельцем на уровне RLS.
+ */
+export async function updateVacancy(
+  input: UpdateVacancyInput
+): Promise<{ id: string }> {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  const { error } = await supabase
+    .from("vacancies")
+    .update({
+      title: input.title,
+      company_name: input.company_name,
+      location: input.location || null,
+      salary_range: input.salary_range || null,
+      schedule: input.schedule || null,
+      description: input.description || null,
+      urgency: input.urgency || "normal",
+      closes_at: input.closes_at || null,
+      required_documents: input.required_documents ?? [],
+      screening_questions: input.screening_questions ?? [],
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", input.id);
+  if (error) throw error;
+  revalidatePath(`/employer/vacancies/${input.id}`);
+  revalidatePath("/employer");
+  return { id: input.id };
+}
+
 /** Работодатель меняет статус отклика (shortlist/reject/…). */
 export async function setApplicationStatus(
   applicationId: string,
@@ -91,16 +186,63 @@ export async function setApplicationStatus(
     p_new_status: status,
   });
   if (error) throw error;
+
+  // Пуш кандидату только на shortlist (D8: на reject не шлём).
+  if (status === "shortlisted") {
+    const { data: appRow } = await supabase
+      .from("applications")
+      .select("user_id, access_token, vacancy_id")
+      .eq("id", applicationId)
+      .maybeSingle();
+    const a = appRow as
+      | { user_id?: string | null; access_token?: string; vacancy_id?: string }
+      | null;
+    if (a?.user_id && a.vacancy_id) {
+      const { data: vac } = await supabase
+        .from("vacancies")
+        .select("title")
+        .eq("id", a.vacancy_id)
+        .maybeSingle();
+      const title = (vac as { title?: string } | null)?.title ?? "";
+      await sendPushToUser(a.user_id, {
+        type: "shortlisted",
+        vars: { vacancy: title },
+        url: a.access_token ? `/applications/status/${a.access_token}` : "/",
+      });
+    }
+  }
+
   revalidatePath(`/employer/vacancies/${vacancyId}`);
 }
 
-/** Свежий signed URL (2 мин) на файл отклика. RLS пускает только владельца. */
-export async function signApplicationDoc(path: string): Promise<string | null> {
+/**
+ * Откат ПОСЛЕДНЕГО отклонения (окно 10 мин). Возвращает восстановленный
+ * статус либо код ошибки (expired/not_rejected/not_owner/generic).
+ */
+export async function revertRejection(
+  applicationId: string,
+  vacancyId: string
+): Promise<
+  | { ok: true; status: ApplicationStatus }
+  | { ok: false; error: "expired" | "not_rejected" | "not_owner" | "generic" }
+> {
   const supabase = await getSupabaseServer();
-  const { data } = await supabase.storage
-    .from("applications")
-    .createSignedUrl(path, 120);
-  return data?.signedUrl ?? null;
+  const { data, error } = await supabase.rpc("revert_last_rejection", {
+    p_application_id: applicationId,
+  });
+  if (error) {
+    const msg = error.message || "";
+    const code = /UNDO_EXPIRED/.test(msg)
+      ? "expired"
+      : /NOT_REJECTED/.test(msg)
+        ? "not_rejected"
+        : /NOT_OWNER/.test(msg)
+          ? "not_owner"
+          : "generic";
+    return { ok: false, error: code };
+  }
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+  return { ok: true, status: (data as ApplicationStatus) ?? "new" };
 }
 
 /** Автопометка «просмотрено» при открытии дашборда (new→viewed). */

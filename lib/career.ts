@@ -18,12 +18,25 @@ export type RequiredDocument = {
 
 export type ScreeningQuestion = {
   question: string;
-  type: "text" | "yes_no";
+  type: "text" | "yes_no" | "choice";
+  /** Варианты для типа "choice". */
+  options?: string[];
+  /** По умолчанию (поле отсутствует) вопрос считается обязательным. */
+  required?: boolean;
 };
 
 export type Urgency = "normal" | "hiring_now";
 export type VacancyStatus = "active" | "paused" | "closed";
 export type ApplicationStatus = "new" | "viewed" | "shortlisted" | "rejected";
+export type Source = "wa" | "ig" | "qr" | "direct" | "other";
+
+export const SOURCES: Source[] = ["wa", "ig", "qr", "direct", "other"];
+
+/** Нормализуем ?src= в допустимое значение (по умолчанию 'direct'). */
+export function parseSource(raw: string | null | undefined): Source {
+  const s = (raw ?? "").toLowerCase();
+  return (SOURCES as string[]).includes(s) ? (s as Source) : "direct";
+}
 
 export type EmployerProfile = {
   id: string;
@@ -49,6 +62,7 @@ export type Vacancy = {
   required_documents: RequiredDocument[];
   screening_questions: ScreeningQuestion[];
   status: VacancyStatus;
+  views_count: number;
   closes_at: string | null;
   created_at: string;
 };
@@ -191,5 +205,5 @@ export function timeAgo(iso: string, locale: Locale): string {
 
 /** Публичный адрес приложения (для apply-ссылок и QR). */
 export function appBaseUrl(): string {
-  return (process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_APP_URL || "https://doki.help").replace(/\/$/, "");
 }

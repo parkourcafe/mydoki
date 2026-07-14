@@ -3,6 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import type { Vacancy } from "@/lib/career";
+import PushOptIn from "@/components/PushOptIn";
 
 const M = {
   en: {
@@ -17,6 +18,8 @@ const M = {
     statusPaused: "Paused",
     statusClosed: "Closed",
     open: "Open dashboard →",
+    notify: "🔔 Notify me",
+    notifyText: "Get a push when a new application arrives.",
   },
   id: {
     title: "Lowongan Anda",
@@ -30,6 +33,8 @@ const M = {
     statusPaused: "Dijeda",
     statusClosed: "Ditutup",
     open: "Buka dasbor →",
+    notify: "🔔 Beri tahu saya",
+    notifyText: "Dapatkan push saat lamaran baru masuk.",
   },
   ru: {
     title: "Ваши вакансии",
@@ -43,6 +48,8 @@ const M = {
     statusPaused: "На паузе",
     statusClosed: "Закрыта",
     open: "Открыть дашборд →",
+    notify: "🔔 Уведомлять меня",
+    notifyText: "Получайте пуш, когда приходит новый отклик.",
   },
   uz: {
     title: "Vakansiyalaringiz",
@@ -56,6 +63,8 @@ const M = {
     statusPaused: "To‘xtatilgan",
     statusClosed: "Yopilgan",
     open: "Boshqaruvni ochish →",
+    notify: "🔔 Xabar bering",
+    notifyText: "Yangi ariza kelganda push oling.",
   },
 } as const;
 
@@ -112,6 +121,13 @@ export default async function EmployerHome() {
         <h1 className="text-2xl font-semibold">{t.title}</h1>
         <p className="mt-1 text-sm text-slate-500">{t.subtitle}</p>
       </div>
+
+      {vacancies.length > 0 && (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-[#e8e0d5] bg-[#fdfaf5] px-4 py-3">
+          <p className="text-sm text-slate-600">{t.notifyText}</p>
+          <PushOptIn locale={locale} label={t.notify} />
+        </div>
+      )}
 
       {vacancies.length === 0 ? (
         <div className="card text-center">

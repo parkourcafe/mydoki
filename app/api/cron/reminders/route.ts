@@ -41,7 +41,7 @@ async function sendDigest(to: string, rows: DueRow[]): Promise<boolean> {
   const key = process.env.RESEND_API_KEY;
   if (!key) return false;
   const from =
-    process.env.ALERT_EMAIL_FROM || "Семейный сейф <onboarding@resend.dev>";
+    process.env.ALERT_EMAIL_FROM || "Семейный сейф <noreply@doki.help>";
   const items = rows
     .slice()
     .sort((a, b) => a.expires_on.localeCompare(b.expires_on))

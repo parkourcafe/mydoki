@@ -3,6 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import AppNav from "@/components/AppNav";
+import VerifyEmailBanner from "@/components/VerifyEmailBanner";
 
 const M = {
   ru: {
@@ -15,13 +16,12 @@ const M = {
     search: "Поиск",
     reminders: "Сроки",
     access: "Доступ",
+    accessLinks: "Доступ и ссылки",
     security: "Безопасность",
     offline: "Офлайн",
-    hiring: "Нанимаю",
-    myApplications: "Мои отклики",
-    sharePackage: "Поделиться",
-    grpPersonal: "Личное",
-    grpWork: "Работа",
+    hiring: "Найм",
+    resume: "Моё резюме",
+    freelance: "Портфолио",
     mfaWarning: "🔒 Хотите усилить защиту?",
     enable2fa: "Включить 2FA",
     mfaRecommend: "— дополнительная защита для ваших документов.",
@@ -36,13 +36,12 @@ const M = {
     search: "Search",
     reminders: "Deadlines",
     access: "Access",
+    accessLinks: "Access & links",
     security: "Security",
     offline: "Offline",
-    hiring: "Hire",
-    myApplications: "My applications",
-    sharePackage: "Share",
-    grpPersonal: "Personal",
-    grpWork: "Work",
+    hiring: "Hiring",
+    resume: "My resume",
+    freelance: "Portfolio",
     mfaWarning: "🔒 Want extra protection?",
     enable2fa: "Enable 2FA",
     mfaRecommend: "— an extra layer of security for your documents.",
@@ -57,13 +56,12 @@ const M = {
     search: "Qidiruv",
     reminders: "Muddatlar",
     access: "Kirish huquqi",
+    accessLinks: "Kirish va havolalar",
     security: "Xavfsizlik",
     offline: "Oflayn",
     hiring: "Yollash",
-    myApplications: "Mening arizalarim",
-    sharePackage: "Ulashish",
-    grpPersonal: "Shaxsiy",
-    grpWork: "Ish",
+    resume: "Rezyumem",
+    freelance: "Portfolio",
     mfaWarning: "🔒 Himoyani kuchaytirasizmi?",
     enable2fa: "2FA ni yoqish",
     mfaRecommend: "— hujjatlaringiz uchun qoʻshimcha himoya.",
@@ -78,13 +76,12 @@ const M = {
     search: "Cari",
     reminders: "Tenggat waktu",
     access: "Akses",
+    accessLinks: "Akses & tautan",
     security: "Keamanan",
     offline: "Offline",
-    hiring: "Merekrut",
-    myApplications: "Lamaran saya",
-    sharePackage: "Bagikan",
-    grpPersonal: "Pribadi",
-    grpWork: "Kerja",
+    hiring: "Rekrutmen",
+    resume: "Resume saya",
+    freelance: "Portofolio",
     mfaWarning: "🔒 Mau proteksi ekstra?",
     enable2fa: "Aktifkan 2FA",
     mfaRecommend: "— lapisan keamanan tambahan untuk dokumen Anda.",
@@ -120,28 +117,20 @@ export default async function MyLayout({
     .eq("household_id", activeId);
   const showMfaNudge = !hasMfa && (docCount ?? 0) > 0;
 
+  // ЛИЧНОЕ — ровно 5 пунктов (T8). Поиск/Офлайн/Безопасность вынесены в шапку
+  // и подвал; все прежние URL сохранены и открываются напрямую.
   const nav = [
-    {
-      title: t.grpPersonal,
-      items: [
-        { href: "/my", emoji: "👪", label: t.family },
-        { href: "/my/documents", emoji: "📄", label: t.documents },
-        { href: "/my/assets", emoji: "🚗", label: t.assets },
-        { href: "/my/reminders", emoji: "⏰", label: t.reminders },
-        { href: "/my/search", emoji: "🔍", label: t.search },
-        { href: "/my/share", emoji: "📤", label: t.sharePackage },
-        { href: "/my/family", emoji: "🔑", label: t.access },
-        { href: "/my/security", emoji: "🛡️", label: t.security },
-        { href: "/saved", emoji: "📥", label: t.offline },
-      ],
-    },
-    {
-      title: t.grpWork,
-      items: [
-        { href: "/my/applications", emoji: "🔎", label: t.myApplications },
-        { href: "/employer", emoji: "💼", label: t.hiring },
-      ],
-    },
+    { href: "/my", emoji: "👪", label: t.family },
+    { href: "/my/documents", emoji: "📄", label: t.documents },
+    { href: "/my/assets", emoji: "🚗", label: t.assets },
+    { href: "/my/reminders", emoji: "⏰", label: t.reminders },
+    { href: "/my/family", emoji: "🔑", label: t.accessLinks },
+  ];
+  // РАБОТА — отдельная секция. Найм (работодатель) + Моё резюме (кандидат).
+  const work = [
+    { href: "/employer", emoji: "💼", label: t.hiring },
+    { href: "/my/resume", emoji: "🙋", label: t.resume },
+    { href: "/my/freelance", emoji: "🎨", label: t.freelance },
   ];
 
   return (
@@ -154,6 +143,10 @@ export default async function MyLayout({
       spaces={spaces}
       activeId={activeId}
       nav={nav}
+      work={work}
+      search={{ href: "/my/search", label: t.search }}
+      saved={{ href: "/saved", label: t.offline }}
+      settings={{ href: "/my/security", label: t.security }}
       mfa={
         showMfaNudge
           ? {
@@ -164,6 +157,9 @@ export default async function MyLayout({
           : null
       }
     >
+      {!user.email_confirmed_at && (
+        <VerifyEmailBanner locale={locale} email={user.email ?? ""} />
+      )}
       {children}
     </AppNav>
   );
