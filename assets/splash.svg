@@ -1,0 +1,9 @@
+<svg width="2732" height="2732" viewBox="0 0 2732 2732" xmlns="http://www.w3.org/2000/svg">
+  <!-- Launch screen: кремовый фон бренда, бейдж с папкой по центру. Источник
+       для @capacitor/assets (генерит light+dark сплэши). -->
+  <rect width="2732" height="2732" fill="#f9f5f0"/>
+  <rect x="1106" y="1106" width="520" height="520" rx="120" fill="#b85c38"/>
+  <g transform="translate(1198,1240) scale(14)" fill="#ffffff">
+    <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+  </g>
+</svg>

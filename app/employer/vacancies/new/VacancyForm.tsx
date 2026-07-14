@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import {
@@ -9,17 +9,24 @@ import {
   type DocType,
   type RequiredDocument,
   type ScreeningQuestion,
+  type ScorecardCriterion,
+  type CreatedVia,
 } from "@/lib/career";
 import { createVacancy, updateVacancy } from "@/app/employer/actions";
 import { track } from "@/lib/analytics";
-import RolePicker from "./RolePicker";
-import type { RoleTemplate } from "@/lib/roleTemplates";
-import { WIZARD_STORAGE_KEY } from "@/lib/vacancyWizard";
+import { runQualityCheck } from "@/lib/vacancyQuality";
+import { templatePrefill, type VacancyTemplate } from "@/lib/vacancyTemplates";
+import type { VacancyDraft } from "@/lib/vacancyDraft";
+import TemplateChips from "./TemplateChips";
+import QualityPanel from "./QualityPanel";
+import AiComposer from "./AiComposer";
+
+// Источник создания для аналитики §10 (event source enum).
+type CreateSource = "manual" | "template" | "ai_freeform";
 
 const M = {
   en: {
     title: "New vacancy",
-    previewNote: "✅ Draft ready — check it, fix anything missing, then publish.",
     jobTitle: "Job title",
     jobTitlePh: "e.g. Barista",
     company: "Company name",
@@ -30,17 +37,6 @@ const M = {
     schedule: "Schedule",
     schedulePh: "e.g. Full-time, shifts",
     description: "Description",
-    descSection: "Job description",
-    descPlace: "About the place & you",
-    descPlacePh: "e.g. Cozy 30-seat cafe in Canggu, family vibe. I'm the owner — I value honesty and initiative.",
-    descWho: "Who we're looking for",
-    descWhoPh: "e.g. A cook for a small cafe kitchen",
-    descPurpose: "Why / what for",
-    descPurposePh: "e.g. We can't keep up at rush hour — need a second cook",
-    descExpect: "What we expect",
-    descExpectPh: "e.g. Cook from the menu, keep things clean, work as a team",
-    descSkills: "Skills needed",
-    descSkillsPh: "e.g. 1+ year kitchen experience, knows local cuisine",
     urgency: "Urgency",
     normal: "Normal",
     hiringNow: "Hiring now",
@@ -80,10 +76,13 @@ const M = {
     errCompany: "Please enter a company name.",
     errLocation: "Please enter a location.",
     errGeneric: "Could not create the vacancy. Please try again.",
+    aiButton: "✨ Help me write this vacancy",
+    scorecardTitle: "Hiring scorecard (planning only)",
+    scorecardHint:
+      "Criteria for the role — visible only to you here. Not shown to candidates and not used to score anyone.",
   },
   id: {
     title: "Lowongan baru",
-    previewNote: "✅ Draf siap — periksa, perbaiki yang kurang, lalu terbitkan.",
     jobTitle: "Nama posisi",
     jobTitlePh: "mis. Barista",
     company: "Nama perusahaan",
@@ -94,17 +93,6 @@ const M = {
     schedule: "Jadwal",
     schedulePh: "mis. Penuh waktu, shift",
     description: "Deskripsi",
-    descSection: "Deskripsi lowongan",
-    descPlace: "Tentang tempat & Anda",
-    descPlacePh: "mis. Kafe nyaman 30 kursi di Canggu, suasana kekeluargaan. Saya pemiliknya — menghargai kejujuran dan inisiatif.",
-    descWho: "Siapa yang dicari",
-    descWhoPh: "mis. Juru masak untuk dapur kafe kecil",
-    descPurpose: "Untuk apa",
-    descPurposePh: "mis. Kewalahan saat jam sibuk — butuh juru masak kedua",
-    descExpect: "Yang diharapkan",
-    descExpectPh: "mis. Masak sesuai menu, jaga kebersihan, kerja tim",
-    descSkills: "Keterampilan",
-    descSkillsPh: "mis. Pengalaman dapur 1+ tahun, tahu masakan lokal",
     urgency: "Urgensi",
     normal: "Normal",
     hiringNow: "Butuh cepat",
@@ -144,10 +132,13 @@ const M = {
     errCompany: "Masukkan nama perusahaan.",
     errLocation: "Masukkan lokasi.",
     errGeneric: "Gagal membuat lowongan. Coba lagi.",
+    aiButton: "✨ Bantu saya menulis lowongan ini",
+    scorecardTitle: "Kartu skor perekrutan (perencanaan saja)",
+    scorecardHint:
+      "Kriteria untuk peran — hanya terlihat oleh Anda di sini. Tidak ditampilkan ke kandidat dan tidak dipakai menilai siapa pun.",
   },
   ru: {
     title: "Новая вакансия",
-    previewNote: "✅ Черновик собран — проверь, поправь что нужно и опубликуй.",
     jobTitle: "Должность",
     jobTitlePh: "напр. Бариста",
     company: "Название компании",
@@ -158,17 +149,6 @@ const M = {
     schedule: "График",
     schedulePh: "напр. Полный день, смены",
     description: "Описание",
-    descSection: "Описание вакансии",
-    descPlace: "О месте и о вас",
-    descPlacePh: "напр. Уютное кафе на 30 мест в Чангу, семейная атмосфера. Я — владелец, ценю честность и инициативу.",
-    descWho: "Кого ищем",
-    descWhoPh: "напр. Повар на кухню небольшого кафе",
-    descPurpose: "Для чего / зачем",
-    descPurposePh: "напр. Не успеваем в часы пик — нужен второй повар",
-    descExpect: "Что ожидаем",
-    descExpectPh: "напр. Готовить по меню, держать чистоту, работать в команде",
-    descSkills: "Какие навыки",
-    descSkillsPh: "напр. Опыт на кухне от 1 года, знание местной кухни",
     urgency: "Срочность",
     normal: "Обычная",
     hiringNow: "Срочный набор",
@@ -208,10 +188,13 @@ const M = {
     errCompany: "Введите название компании.",
     errLocation: "Введите локацию.",
     errGeneric: "Не удалось создать вакансию. Попробуйте ещё раз.",
+    aiButton: "✨ Помочь составить вакансию",
+    scorecardTitle: "Карта критериев найма (только планирование)",
+    scorecardHint:
+      "Критерии для роли — видны только вам здесь. Кандидатам не показываются и никого не оценивают.",
   },
   uz: {
     title: "Yangi vakansiya",
-    previewNote: "✅ Qoralama tayyor — tekshiring, kerakli joyni tuzating va e'lon qiling.",
     jobTitle: "Lavozim",
     jobTitlePh: "mas. Barista",
     company: "Kompaniya nomi",
@@ -222,17 +205,6 @@ const M = {
     schedule: "Jadval",
     schedulePh: "mas. To‘liq kun, smenalar",
     description: "Tavsif",
-    descSection: "Vakansiya tavsifi",
-    descPlace: "Joy va o‘zingiz haqida",
-    descPlacePh: "mas. Changuda 30 o‘rinli qulay kafe, oilaviy muhit. Men egasiman — halollik va tashabbusni qadrlayman.",
-    descWho: "Kim kerak",
-    descWhoPh: "mas. Kichik kafe oshxonasiga oshpaz",
-    descPurpose: "Nima uchun",
-    descPurposePh: "mas. Gavjum vaqtda ulgurmayapmiz — ikkinchi oshpaz kerak",
-    descExpect: "Nima kutamiz",
-    descExpectPh: "mas. Menyu bo‘yicha pishirish, tozalik, jamoada ishlash",
-    descSkills: "Qanday ko‘nikmalar",
-    descSkillsPh: "mas. Oshxonada 1+ yil tajriba, mahalliy taomlarni bilish",
     urgency: "Shoshilinchlik",
     normal: "Oddiy",
     hiringNow: "Shoshilinch",
@@ -272,61 +244,12 @@ const M = {
     errCompany: "Kompaniya nomini kiriting.",
     errLocation: "Manzilni kiriting.",
     errGeneric: "Vakansiya yaratilmadi. Qayta urining.",
+    aiButton: "✨ Vakansiya tuzishga yordam bering",
+    scorecardTitle: "Yollash mezonlari (faqat rejalashtirish)",
+    scorecardHint:
+      "Rol uchun mezonlar — bu yerda faqat sizga ko‘rinadi. Nomzodlarga ko‘rsatilmaydi va hech kimni baholashda ishlatilmaydi.",
   },
 } as const;
-
-// Описание вакансии храним ОДНИМ полем `description` (кандидат видит цельный
-// текст), но в форме делим на 4 части. Маркеры-эмодзи в заголовках не зависят
-// от языка — по ним разбираем текст обратно на части при редактировании.
-const DESC_SECTIONS = [
-  { emoji: "🏠", key: "place" },
-  { emoji: "👤", key: "who" },
-  { emoji: "🎯", key: "purpose" },
-  { emoji: "✅", key: "expect" },
-  { emoji: "🧩", key: "skills" },
-] as const;
-
-type DescParts = {
-  place: string;
-  who: string;
-  purpose: string;
-  expect: string;
-  skills: string;
-};
-
-function combineDescription(parts: DescParts, labels: DescParts): string {
-  return DESC_SECTIONS.map(({ emoji, key }) => {
-    const text = parts[key].trim();
-    return text ? `${emoji} ${labels[key]}\n${text}` : "";
-  })
-    .filter(Boolean)
-    .join("\n\n");
-}
-
-function parseDescription(desc: string | null | undefined): DescParts {
-  const out: DescParts = { place: "", who: "", purpose: "", expect: "", skills: "" };
-  if (!desc) return out;
-  const hasMarkers = DESC_SECTIONS.some(({ emoji }) => desc.includes(emoji));
-  if (!hasMarkers) return { ...out, who: desc.trim() }; // старый цельный текст
-  const buf: Record<keyof DescParts, string[]> = {
-    place: [],
-    who: [],
-    purpose: [],
-    expect: [],
-    skills: [],
-  };
-  let current: keyof DescParts | null = null;
-  for (const line of desc.split("\n")) {
-    const hit = DESC_SECTIONS.find(({ emoji }) => line.trimStart().startsWith(emoji));
-    if (hit) {
-      current = hit.key;
-      continue;
-    }
-    if (current) buf[current].push(line);
-  }
-  for (const { key } of DESC_SECTIONS) out[key] = buf[key].join("\n").trim();
-  return out;
-}
 
 export type VacancyInitial = {
   title: string;
@@ -349,14 +272,15 @@ export default function VacancyForm({
   mode = "create",
   vacancyId,
   initial,
-  fromWizard = false,
+  aiEnabled = false,
 }: {
   locale: Locale;
   defaultCompany: string;
   mode?: "create" | "edit";
   vacancyId?: string;
   initial?: VacancyInitial;
-  fromWizard?: boolean;
+  /** Env-гейт AI-freeform (Layer 2). Вычисляется на сервере и приходит пропом. */
+  aiEnabled?: boolean;
 }) {
   const t = M[locale];
   const router = useRouter();
@@ -367,12 +291,7 @@ export default function VacancyForm({
   const [location, setLocation] = useState(initial?.location ?? "");
   const [salary, setSalary] = useState(initial?.salary_range ?? "");
   const [schedule, setSchedule] = useState(initial?.schedule ?? "");
-  const initDesc = parseDescription(initial?.description);
-  const [descPlace, setDescPlace] = useState(initDesc.place);
-  const [descWho, setDescWho] = useState(initDesc.who);
-  const [descPurpose, setDescPurpose] = useState(initDesc.purpose);
-  const [descExpect, setDescExpect] = useState(initDesc.expect);
-  const [descSkills, setDescSkills] = useState(initDesc.skills);
+  const [description, setDescription] = useState(initial?.description ?? "");
   const [urgency, setUrgency] = useState<"normal" | "hiring_now">(
     initial?.urgency ?? "normal"
   );
@@ -395,25 +314,121 @@ export default function VacancyForm({
   );
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pickerOpen, setPickerOpen] = useState(!isEdit && !fromWizard);
 
-  // Выбор роли из библиотеки → заполняем название, 4 блока и документы.
-  function applyRole(r: RoleTemplate) {
-    setTitle(r.title);
-    setDescWho(r.blocks.who);
-    setDescPurpose(r.blocks.purpose);
-    setDescExpect(r.blocks.expect);
-    setDescSkills(r.blocks.skills);
-    setDocs(
-      r.docs.map((d) => ({
-        type: d.type,
-        label: d.label ?? docTypeLabel(locale, d.type),
-        required: d.required,
-      }))
-    );
-    setPickerOpen(false);
-    track("role_template_picked", { role: r.key });
+  // ── T11 Vacancy Composer state ──────────────────────────────────
+  const [createdVia, setCreatedVia] = useState<CreatedVia>("manual");
+  const [roleTemplate, setRoleTemplate] = useState<string | null>(null);
+  const [scorecard, setScorecard] = useState<ScorecardCriterion[]>([]);
+  const [showAi, setShowAi] = useState(false);
+
+  // Аналитика §10: событие started фиксируем один раз с первым источником;
+  // время до публикации — от монтирования формы.
+  const startedRef = useRef(false);
+  const publishedRef = useRef(false);
+  const sourceRef = useRef<CreateSource>("manual");
+  const stepRef = useRef<string>("open");
+  const startTimeRef = useRef<number>(Date.now());
+
+  function markStarted(source: CreateSource) {
+    if (isEdit || startedRef.current) return;
+    startedRef.current = true;
+    sourceRef.current = source;
+    track("vacancy_create_started", { source });
   }
+
+  // Проверка качества (Layer 3) — чистая, только по состоянию формы (§7).
+  const quality = useMemo(
+    () =>
+      runQualityCheck({
+        salary_range: salary,
+        description,
+        required_documents: docs,
+        screening_questions: questions,
+      }),
+    [salary, description, docs, questions]
+  );
+
+  function selectTemplate(tpl: VacancyTemplate) {
+    const pre = templatePrefill(tpl, locale);
+    setTitle(pre.title);
+    setDocs(pre.required_documents);
+    setQuestions(pre.screening_questions);
+    setRoleTemplate(pre.role_template);
+    setScorecard([]);
+    setCreatedVia("template");
+    stepRef.current = "template";
+    markStarted("template");
+    track("vacancy_template_selected", {
+      template_id: tpl.id,
+      category: pre.category,
+    });
+  }
+
+  function applyDraft(draft: VacancyDraft, _fieldsGenerated: number) {
+    let applied = 0;
+    if (draft.title) {
+      setTitle(draft.title);
+      applied++;
+    }
+    if (draft.company_name) {
+      setCompany(draft.company_name);
+      applied++;
+    }
+    if (draft.location) {
+      setLocation(draft.location);
+      applied++;
+    }
+    if (draft.salary_range) {
+      setSalary(draft.salary_range);
+      applied++;
+    }
+    if (draft.schedule) {
+      setSchedule(draft.schedule);
+      applied++;
+    }
+    if (draft.description) {
+      setDescription(draft.description);
+      applied++;
+    }
+    if (draft.urgency) setUrgency(draft.urgency);
+    if (draft.required_documents?.length) {
+      setDocs(draft.required_documents);
+      applied++;
+    }
+    if (draft.screening_questions?.length) {
+      setQuestions(draft.screening_questions);
+      applied++;
+    }
+    // scorecard хранится ТОЛЬКО как метаданные вакансии (§8) — здесь для
+    // планирования работодателя, не показывается кандидатам и никого не оценивает.
+    if (draft.scorecard?.length) setScorecard(draft.scorecard);
+
+    setCreatedVia("ai");
+    setRoleTemplate(null);
+    stepRef.current = "ai_applied";
+    markStarted("ai_freeform");
+    setShowAi(false);
+    track("vacancy_ai_draft_applied", { fields_applied_count: applied });
+  }
+
+  // Аналитика §10: событие abandoned, если работодатель ушёл, начав, но не
+  // опубликовав. Только режим создания.
+  useEffect(() => {
+    if (isEdit) return;
+    const report = () => {
+      if (publishedRef.current || !startedRef.current) return;
+      track("vacancy_creation_abandoned", {
+        last_step: stepRef.current,
+        source: sourceRef.current,
+      });
+    };
+    window.addEventListener("beforeunload", report);
+    return () => {
+      window.removeEventListener("beforeunload", report);
+      report();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function addDoc() {
     setDocs((p) => [...p, { type: "other", label: docTypeLabel(locale, "other"), required: false }]);
@@ -473,11 +488,7 @@ export default function VacancyForm({
         location: location.trim(),
         salary_range: salary.trim() || undefined,
         schedule: schedule.trim() || undefined,
-        description:
-          combineDescription(
-            { place: descPlace, who: descWho, purpose: descPurpose, expect: descExpect, skills: descSkills },
-            { place: t.descPlace, who: t.descWho, purpose: t.descPurpose, expect: t.descExpect, skills: t.descSkills }
-          ) || undefined,
+        description: description.trim() || undefined,
         urgency,
         closes_at: closesAt || null,
         required_documents: cleanDocs,
@@ -485,19 +496,48 @@ export default function VacancyForm({
         video_screening: videoScreening,
         video_question:
           videoScreening !== "off" ? videoQuestion.trim() || null : null,
+        created_via: createdVia,
+        role_template: roleTemplate,
+        clarity_score: quality.clarityScore,
+        scorecard,
       };
 
       if (isEdit && vacancyId) {
         await updateVacancy({ id: vacancyId, ...payload });
         router.push(`/employer/vacancies/${vacancyId}?updated=1`);
       } else {
+        // §10: финальный прогон проверки качества (аналитика) — данные кандидатов
+        // не используются (§7).
+        track("vacancy_quality_check_run", {
+          clarity_score: quality.clarityScore,
+          missing_fields_count: quality.missingFieldsCount,
+          warnings_count: quality.warnings.length,
+        });
+
         const { id } = await createVacancy(payload);
+        publishedRef.current = true;
+
+        const fieldsCompleted =
+          [
+            title.trim(),
+            company.trim(),
+            location.trim(),
+            salary.trim(),
+            schedule.trim(),
+            description.trim(),
+          ].filter(Boolean).length +
+          (cleanDocs.length ? 1 : 0) +
+          (cleanQuestions.length ? 1 : 0);
+
         track("vacancy_created", { vacancy_id: id });
-        try {
-          sessionStorage.removeItem(WIZARD_STORAGE_KEY);
-        } catch {
-          /* ignore */
-        }
+        track("vacancy_published", {
+          source: sourceRef.current,
+          time_to_publish_seconds: Math.round(
+            (Date.now() - startTimeRef.current) / 1000
+          ),
+          fields_completed_count: fieldsCompleted,
+          clarity_score: quality.clarityScore,
+        });
         router.push(`/employer/vacancies/${id}?created=1`);
       }
     } catch {
@@ -507,24 +547,44 @@ export default function VacancyForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-5">
+    <div className="mx-auto max-w-2xl space-y-5">
       <h1 className="text-2xl font-semibold">{isEdit ? t.editTitle : t.title}</h1>
 
-      {fromWizard && (
-        <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
-          {t.previewNote}
-        </p>
-      )}
-
+      {/* Layer 1 — role-шаблоны (первичная поверхность) и Layer 2 — AI-freeform
+          (вторичная кнопка за env-гейтом). Только при создании. */}
       {!isEdit && (
-        <RolePicker
+        <TemplateChips
           locale={locale}
-          open={pickerOpen}
-          onToggle={() => setPickerOpen((o) => !o)}
-          onPick={applyRole}
+          activeId={roleTemplate}
+          onSelect={selectTemplate}
+        />
+      )}
+      {!isEdit && aiEnabled && !showAi && (
+        <button
+          type="button"
+          onClick={() => {
+            setShowAi(true);
+            stepRef.current = "ai_open";
+            markStarted("ai_freeform");
+          }}
+          className="btn-ghost w-full"
+        >
+          {t.aiButton}
+        </button>
+      )}
+      {!isEdit && aiEnabled && showAi && (
+        <AiComposer
+          locale={locale}
+          onApply={applyDraft}
+          onClose={() => setShowAi(false)}
         />
       )}
 
+    <form
+      onSubmit={handleSubmit}
+      onChangeCapture={() => markStarted("manual")}
+      className="space-y-5"
+    >
       <div className="card grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label className="label">{t.jobTitle} *</label>
@@ -563,30 +623,11 @@ export default function VacancyForm({
           </label>
           <input type="date" className="input" value={closesAt} onChange={(e) => setClosesAt(e.target.value)} />
         </div>
-        <div className="sm:col-span-2 space-y-3">
-          <p className="label">
-            {t.descSection} <span className="font-normal text-slate-400">({t.optional})</span>
-          </p>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">🏠 {t.descPlace}</label>
-            <textarea rows={3} className="input" value={descPlace} onChange={(e) => setDescPlace(e.target.value)} placeholder={t.descPlacePh} />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">👤 {t.descWho}</label>
-            <textarea rows={3} className="input" value={descWho} onChange={(e) => setDescWho(e.target.value)} placeholder={t.descWhoPh} />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">🎯 {t.descPurpose}</label>
-            <textarea rows={3} className="input" value={descPurpose} onChange={(e) => setDescPurpose(e.target.value)} placeholder={t.descPurposePh} />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">✅ {t.descExpect}</label>
-            <textarea rows={4} className="input" value={descExpect} onChange={(e) => setDescExpect(e.target.value)} placeholder={t.descExpectPh} />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-slate-600">🧩 {t.descSkills}</label>
-            <textarea rows={3} className="input" value={descSkills} onChange={(e) => setDescSkills(e.target.value)} placeholder={t.descSkillsPh} />
-          </div>
+        <div className="sm:col-span-2">
+          <label className="label">
+            {t.description} <span className="font-normal text-slate-400">({t.optional})</span>
+          </label>
+          <textarea rows={4} className="input" value={description} onChange={(e) => setDescription(e.target.value)} />
         </div>
       </div>
 
@@ -752,11 +793,40 @@ export default function VacancyForm({
         </div>
       </div>
 
+      {/* Layer 3 — детерминированная проверка качества (только по форме, §7). */}
+      <QualityPanel locale={locale} result={quality} />
+
+      {/* §8: scorecard — спящие метаданные ДЛЯ РОЛИ. Показываем ТОЛЬКО здесь, в
+          редакторе вакансии, как планирование работодателя. Read-only. Никогда
+          не попадает на кандидат-фейсинг экраны и никого не оценивает. */}
+      {scorecard.length > 0 && (
+        <div className="card space-y-3">
+          <div>
+            <p className="label">🗂️ {t.scorecardTitle}</p>
+            <p className="text-xs text-slate-500">{t.scorecardHint}</p>
+          </div>
+          <ul className="space-y-2">
+            {scorecard.map((c, i) => (
+              <li
+                key={i}
+                className="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm"
+              >
+                <span className="text-slate-700">{c.criterion}</span>
+                <span className="shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
+                  {c.weight}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
 
       <button type="submit" disabled={busy} className="btn-primary w-full">
         {busy ? (isEdit ? t.saving : t.creating) : isEdit ? t.save : t.create}
       </button>
     </form>
+    </div>
   );
 }

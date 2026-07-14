@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { recordLogin } from "@/lib/loginEvents";
 import { getLocale } from "@/lib/i18n";
-import { safeNextPath } from "@/lib/nextPath";
+import { safeNextPath, withEv } from "@/lib/nextPath";
 
 export type AuthState = {
   error?: string;
@@ -121,7 +121,7 @@ export async function login(
     };
   }
   await recordLogin(supabase);
-  redirect(safeNextPath(formData.get("next")));
+  redirect(withEv(safeNextPath(formData.get("next")), "logged_in", "email"));
 }
 
 /** Повторно отправить письмо подтверждения email (кнопка на входе). */
@@ -158,5 +158,5 @@ export async function signup(
     return { message: t.confirmEmail, needsConfirm: true, email };
   }
   await recordLogin(supabase);
-  redirect(safeNextPath(formData.get("next")));
+  redirect(withEv(safeNextPath(formData.get("next")), "signed_up", "email"));
 }

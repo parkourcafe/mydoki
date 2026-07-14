@@ -52,7 +52,7 @@ const DATA: Record<TrustKey, TrustPage> = {
           },
           {
             h2: "What is processed",
-            body: "To suggest those fields, the uploaded image or scan is processed by a third-party AI provider. (TODO: confirm with the team which provider, what is retained and for how long, before stating specifics publicly.)",
+            body: "To suggest those fields, the uploaded image or scan is processed by a third-party AI provider.",
           },
           {
             h2: "AI is not professional advice",
@@ -79,7 +79,7 @@ const DATA: Record<TrustKey, TrustPage> = {
           },
           {
             h2: "Что обрабатывается",
-            body: "Чтобы подсказать эти поля, загруженное фото или скан обрабатывается сторонним ИИ-провайдером. (TODO: уточнить с командой, какой провайдер, что и на какой срок сохраняется, прежде чем публиковать детали.)",
+            body: "Чтобы подсказать эти поля, загруженное фото или скан обрабатывается сторонним ИИ-провайдером.",
           },
           {
             h2: "ИИ — не профессиональная консультация",
@@ -106,7 +106,7 @@ const DATA: Record<TrustKey, TrustPage> = {
           },
           {
             h2: "Apa yang diproses",
-            body: "Untuk menyarankan kolom itu, gambar atau pindaian yang diunggah diproses oleh penyedia AI pihak ketiga. (TODO: konfirmasi dengan tim penyedia mana, apa yang disimpan dan berapa lama, sebelum menyebut detail secara publik.)",
+            body: "Untuk menyarankan kolom itu, gambar atau pindaian yang diunggah diproses oleh penyedia AI pihak ketiga.",
           },
           {
             h2: "AI bukan nasihat profesional",
@@ -133,7 +133,7 @@ const DATA: Record<TrustKey, TrustPage> = {
           },
           {
             h2: "Nima ishlanadi",
-            body: "Bu maydonlarni taklif qilish uchun yuklangan surat yoki skan uchinchi tomon AI provayderi tomonidan ishlanadi. (TODO: ommaga eʼlon qilishdan oldin qaysi provayder, nima va qancha muddat saqlanishini jamoa bilan tasdiqlash.)",
+            body: "Bu maydonlarni taklif qilish uchun yuklangan surat yoki skan uchinchi tomon AI provayderi tomonidan ishlanadi.",
           },
           {
             h2: "AI — professional maslahat emas",

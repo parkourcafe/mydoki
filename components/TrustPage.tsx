@@ -6,11 +6,11 @@ import { getTrustPage } from "@/lib/trust";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
 
-const UI: Record<Locale, { start: string; home: string; privacy: string; terms: string }> = {
-  ru: { start: "Начать бесплатно", home: "← На главную", privacy: "Конфиденциальность", terms: "Условия" },
-  en: { start: "Start for free", home: "← Home", privacy: "Privacy", terms: "Terms" },
-  id: { start: "Mulai gratis", home: "← Beranda", privacy: "Privasi", terms: "Ketentuan" },
-  uz: { start: "Bepul boshlash", home: "← Bosh sahifa", privacy: "Maxfiylik", terms: "Shartlar" },
+const UI: Record<Locale, { start: string; startShort: string; home: string; privacy: string; terms: string }> = {
+  ru: { start: "Начать бесплатно", startShort: "Начать", home: "← На главную", privacy: "Конфиденциальность", terms: "Условия" },
+  en: { start: "Start for free", startShort: "Start", home: "← Home", privacy: "Privacy", terms: "Terms" },
+  id: { start: "Mulai gratis", startShort: "Mulai", home: "← Beranda", privacy: "Privasi", terms: "Ketentuan" },
+  uz: { start: "Bepul boshlash", startShort: "Boshlash", home: "← Bosh sahifa", privacy: "Maxfiylik", terms: "Shartlar" },
 };
 
 export default async function TrustPage({ slug }: { slug: string }) {
@@ -50,10 +50,11 @@ export default async function TrustPage({ slug }: { slug: string }) {
                 <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
               </div>
             </Link>
-            <div className="flex items-center gap-x-4">
+            <div className="flex shrink-0 items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale={locale} />
-              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
-                {t.start}
+              <Link href="/login" className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
+                <span className="sm:hidden">{t.startShort}</span>
+                <span className="hidden sm:inline">{t.start}</span>
               </Link>
             </div>
           </div>
