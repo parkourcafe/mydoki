@@ -390,6 +390,8 @@ export default function DocumentForm({
 
       // UBA: ключевое событие активации сейфа — документ добавлен.
       trackEvent("document_added", { category: f.category, via: "manual" });
+      // Указан срок действия → это и есть «поставил напоминание».
+      if (f.expires_at) trackEvent("reminder_set", { doc_category: f.category });
 
       router.push(`/my/documents/${id}`);
     } catch (err) {

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { recordLogin } from "@/lib/loginEvents";
 import { getLocale } from "@/lib/i18n";
-import { safeNextPath } from "@/lib/nextPath";
+import { safeNextPath, withEv } from "@/lib/nextPath";
 
 export type AuthState = { error?: string; message?: string };
 
@@ -98,7 +98,7 @@ export async function login(
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return { error: mapAuthError(error.message, t, t.loginFailed) };
   await recordLogin(supabase);
-  redirect(safeNextPath(formData.get("next")));
+  redirect(withEv(safeNextPath(formData.get("next")), "logged_in", "email"));
 }
 
 export async function signup(
@@ -121,5 +121,5 @@ export async function signup(
     };
   }
   await recordLogin(supabase);
-  redirect(safeNextPath(formData.get("next")));
+  redirect(withEv(safeNextPath(formData.get("next")), "signed_up", "email"));
 }

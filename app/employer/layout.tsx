@@ -5,6 +5,7 @@ import { getLocale } from "@/lib/i18n";
 import { signOut } from "@/app/my/actions";
 import SignOutButton from "@/components/SignOutButton";
 import IdentifyUser from "@/components/IdentifyUser";
+import AnalyticsEvents from "@/components/AnalyticsEvents";
 import { isNativeRequest } from "@/lib/isNativeRequest";
 
 const M = {
@@ -28,6 +29,7 @@ export default async function EmployerLayout({
   return (
     <div className="min-h-screen">
       {!native && <IdentifyUser userId={user.id} locale={locale} />}
+      {!native && <AnalyticsEvents />}
       <header className="border-b border-[#e8e0d5] bg-[#fdfaf5]">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-3 px-4 py-3">
           <Link href="/employer" className="font-semibold text-brand-700">

@@ -110,6 +110,8 @@ export async function createMember(formData: FormData) {
   });
   if (error) throw error;
   revalidatePath("/my");
+  // Флаг события member_added: клиент прочитает его на /my и отправит событие.
+  redirect("/my?ev=member_added");
 }
 
 export async function createAsset(formData: FormData) {

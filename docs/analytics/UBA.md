@@ -27,11 +27,11 @@
 
 | Домен | Событие | Ключевые свойства | Статус в коде |
 |---|---|---|---|
-| Аккаунт | `signed_up`, `logged_in` | `method` | ⬜ добавить (см. Шаг 5) |
+| Аккаунт | `signed_up`, `logged_in` | `method` | ✅ есть |
 | Сейф | `document_added` | `category`, `via` | ✅ есть |
-| Сейф | `member_added` | — | ⬜ |
-| Сейф | `reminder_set` | `doc_category` | ⬜ |
-| Сейф | `document_shared` | `kind`, `expires_days` | ⬜ |
+| Сейф | `member_added` | — | ✅ есть |
+| Сейф | `reminder_set` | `doc_category` | ✅ есть |
+| Сейф | `document_shared` | `kind`, `expires_days` | ✅ пакет (link — ⬜) |
 | Сейф | `document_exported` | — | ⬜ |
 | Вакансии | `vacancy_create_started`→`vacancy_published` | см. `EventMap` | ✅ есть (T11) |
 | Отклик | `vacancy_viewed`→`application_submitted` | `vacancy_id` | ✅ есть |
@@ -72,12 +72,16 @@
 
 Добавляйте только через `trackEvent(...)` из `lib/events.ts`.
 
-- [ ] `signed_up` / `logged_in` — после успешного входа. Точка: клиентский
-  колбэк OAuth/логина (`app/login/…`, `lib/loginEvents.ts`). `method` из провайдера.
-- [ ] `member_added` — после создания члена семьи (форма профиля в `/my/family`).
-- [ ] `reminder_set` — при создании напоминания о сроке (форма reminders).
-- [ ] `document_shared` — в потоке шаринга (`ShareBox`/share-package), `kind`
-  = link | package, `expires_days` из выбранного срока.
+- [x] `signed_up` / `logged_in` — success-based, через одноразовый флаг `?ev=`
+  (login/signup actions + OAuth callback → `components/AnalyticsEvents.tsx`).
+  `method` = email | google.
+- [x] `member_added` — `createMember` редиректит на `/my?ev=member_added`,
+  флаг читает `AnalyticsEvents`.
+- [x] `reminder_set` — в `DocumentForm`, когда указан срок действия (`expires_at`).
+- [x] `document_shared` — в `SharePackageManager` после успешного создания
+  пакета (`kind: "package"`, `expires_days`).
+- [ ] `document_shared` для одиночного документа (`kind: "link"`) — поток в
+  `app/my/documents/[id]` (одиночный share ещё не инструментирован).
 - [ ] `document_exported` — в экспорте (`/my/export`).
 - [ ] (нативный) `document_added.via = "camera"` — когда добавление шло через
   `captureDocument()` (`lib/native.ts`).

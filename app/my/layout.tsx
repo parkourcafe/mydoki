@@ -5,6 +5,7 @@ import { getLocale } from "@/lib/i18n";
 import { isNativeRequest } from "@/lib/isNativeRequest";
 import AppNav from "@/components/AppNav";
 import IdentifyUser from "@/components/IdentifyUser";
+import AnalyticsEvents from "@/components/AnalyticsEvents";
 
 const M = {
   ru: {
@@ -191,6 +192,7 @@ export default async function MyLayout({
   return (
     <>
       {!native && <IdentifyUser userId={user.id} locale={locale} />}
+      {!native && <AnalyticsEvents />}
       <AppNav
       locale={locale}
       brand={t.brand}
