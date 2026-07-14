@@ -551,7 +551,7 @@ export default async function Home({
   if (await getUser()) redirect("/my");
   const locale = await getLocale();
   const t = M[locale];
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
   const jsonLd = buildJsonLd(t, locale, appUrl);
 
   return (

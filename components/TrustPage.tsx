@@ -4,7 +4,7 @@ import { getLocale, type Locale } from "@/lib/i18n";
 import LangSwitcher from "@/components/LangSwitcher";
 import { getTrustPage } from "@/lib/trust";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 const UI: Record<Locale, { start: string; home: string; privacy: string; terms: string }> = {
   ru: { start: "Начать бесплатно", home: "← На главную", privacy: "Конфиденциальность", terms: "Условия" },

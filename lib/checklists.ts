@@ -4,7 +4,7 @@ import type { Locale } from "./i18n";
 import { getLocale } from "./i18n";
 import { altLangs } from "./seo";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 /**
  * Чеклист-страницы (/checklists/*). Контент-лид-магниты: практичный список

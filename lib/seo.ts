@@ -1,7 +1,7 @@
 import "server-only";
 import { headers } from "next/headers";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 const LOCALES = ["ru", "en", "id", "uz"] as const;
 
 /**

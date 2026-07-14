@@ -3,7 +3,7 @@
 // выводить директиву Content-Signal и группы под конкретных ИИ-ботов,
 // поэтому отдаём текст вручную.
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 // Приватные и служебные маршруты — вне индекса для всех. Должны совпадать с
 // реальными путями приложения: расшаренный документ — /s/ (не /share/),

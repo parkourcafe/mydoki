@@ -7,7 +7,7 @@ import { TRUST_KEYS } from "@/lib/trust";
 import { CHECKLIST_KEYS } from "@/lib/checklists";
 import { GUIDE_KEYS } from "@/lib/guides";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 const LOCALES = ["ru", "en", "id", "uz"] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

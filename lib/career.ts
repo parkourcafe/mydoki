@@ -191,5 +191,5 @@ export function timeAgo(iso: string, locale: Locale): string {
 
 /** Публичный адрес приложения (для apply-ссылок и QR). */
 export function appBaseUrl(): string {
-  return (process.env.NEXT_PUBLIC_APP_URL || "https://doki.help").replace(/\/$/, "");
+  return (process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help").replace(/\/$/, "");
 }

@@ -46,7 +46,7 @@ const M = {
   },
 } as const;
 
-const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://doki.help").replace(/\/$/, "");
+const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help").replace(/\/$/, "");
 
 export default async function SharePackagePage() {
   const locale = await getLocale();
