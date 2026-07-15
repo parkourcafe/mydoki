@@ -1,7 +1,7 @@
 // agents.md — служебное описание сайта для ИИ-агентов (service-doc).
 // Отдаём как text/markdown, ссылку на него кладём в Link-заголовок главной.
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 const DOC = `# doki — Family Vault
 

@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale } from "@/lib/i18n";
 
-export const metadata = {
-  title: "Пользовательское соглашение — doki.help",
-};
+const META_DESC = {
+  ru: "Условия использования Doki.help — beta-сейфа семейных документов с напоминаниями и безопасным обменом. Не юридическая консультация.",
+  en: "The terms for using Doki.help — a beta family document vault with reminders and secure sharing. Not legal advice.",
+  id: "Ketentuan penggunaan Doki.help — brankas dokumen keluarga (beta) dengan pengingat dan berbagi aman. Bukan nasihat hukum.",
+  uz: "Doki.help’dan foydalanish shartlari — eslatmalar va xavfsiz ulashishli oilaviy hujjatlar seyfi (beta). Yuridik maslahat emas.",
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: M[locale].title, description: META_DESC[locale] };
+}
 
 function P({ children }: { children: React.ReactNode }) {
   return <p className="mt-2 text-[15px] leading-relaxed text-slate-600">{children}</p>;

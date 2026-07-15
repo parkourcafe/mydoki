@@ -7,7 +7,7 @@ import LangSwitcher from "@/components/LangSwitcher";
 import { getComparison } from "@/lib/comparisons";
 import { segmentLinks } from "@/lib/segments";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 const UI = {
   ru: {

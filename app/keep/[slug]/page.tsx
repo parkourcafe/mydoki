@@ -6,7 +6,7 @@ import { getUsecase } from "@/lib/usecases";
 import { comparisonLinks } from "@/lib/comparisons";
 import { segmentLinks } from "@/lib/segments";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 // Контент use-case страниц — только на русском (российские документы),
 // поэтому интерфейс тоже фиксированно русский.

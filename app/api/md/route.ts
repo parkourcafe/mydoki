@@ -2,7 +2,7 @@
 // Сюда переписывает middleware, когда агент запрашивает Accept: text/markdown.
 import { getLocale } from "@/lib/i18n";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 const HOME = {
   ru: `# doki — Семейный сейф

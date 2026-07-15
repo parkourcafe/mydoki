@@ -1,9 +1,18 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale } from "@/lib/i18n";
 
-export const metadata = {
-  title: "Политика конфиденциальности — doki.help",
-};
+const META_DESC = {
+  ru: "Как Doki.help обрабатывает документы и данные вашей семьи: хранение, доступ, обмен, ИИ и ваши права.",
+  en: "How Doki.help handles your family's documents and data: storage, access, sharing, AI and your rights.",
+  id: "Bagaimana Doki.help menangani dokumen dan data keluarga Anda: penyimpanan, akses, berbagi, AI, dan hak Anda.",
+  uz: "Doki.help oila hujjatlari va maʼlumotlarini qanday boshqaradi: saqlash, kirish, ulashish, AI va huquqlaringiz.",
+} as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  return { title: M[locale].title, description: META_DESC[locale] };
+}
 
 function P({ children }: { children: React.ReactNode }) {
   return <p className="mt-2 text-[15px] leading-relaxed text-slate-600">{children}</p>;

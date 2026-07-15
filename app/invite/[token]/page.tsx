@@ -4,6 +4,11 @@ import { getUser } from "@/lib/queries";
 import { getLocale, type Locale } from "@/lib/i18n";
 import { acceptInvitation } from "@/app/my/actions";
 
+// Страница приёма приглашения в семью: токен даёт доступ, поэтому вне индекса.
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 const ROLE_LABEL: Record<Locale, Record<string, string>> = {
   ru: {
     owner: "Владелец",

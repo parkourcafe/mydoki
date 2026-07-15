@@ -3,6 +3,12 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { categoryLabel, type DocCategory } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
 
+// Приватная страница расшаренного документа: никогда не индексируем и не
+// переходим по ссылкам — токен-URL не должен попадать в поиск.
+export const metadata = {
+  robots: { index: false, follow: false },
+};
+
 type SharedFile = {
   storage_path: string;
   file_name: string | null;
