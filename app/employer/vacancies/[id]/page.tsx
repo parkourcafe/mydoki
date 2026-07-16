@@ -3,7 +3,11 @@ import { notFound, redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
-import { appBaseUrl, type Vacancy } from "@/lib/career";
+import {
+  appBaseUrl,
+  filterApplicationStageDocuments,
+  type Vacancy,
+} from "@/lib/career";
 import { markApplicationsViewed } from "@/app/employer/actions";
 import ShareBox from "./ShareBox";
 import ApplicationsBoard, { type BoardApp } from "./ApplicationsBoard";
@@ -116,7 +120,8 @@ export default async function VacancyDashboard({
     answers: answersByApp[r.id] ?? [],
   }));
 
-  const applyUrl = `${appBaseUrl()}/apply/${vacancy.slug}`;
+  const publicLocale = locale === "id" ? "id" : "en";
+  const applyUrl = `${appBaseUrl()}/${publicLocale}/apply/${vacancy.slug}`;
 
   return (
     <div>
@@ -170,7 +175,7 @@ export default async function VacancyDashboard({
       <ApplicationsBoard
         locale={locale}
         vacancyId={vacancy.id}
-        requiredDocs={vacancy.required_documents ?? []}
+        requiredDocs={filterApplicationStageDocuments(vacancy.required_documents)}
         initialApplications={applications}
       />
     </div>

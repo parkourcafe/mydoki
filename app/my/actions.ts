@@ -509,6 +509,44 @@ export async function createShare(formData: FormData) {
   revalidatePath(`/my/documents/${document_id}`);
 }
 
+export type CreateDocumentShareInput = {
+  documentId: string;
+  days: number;
+  maxViews: number;
+  watermark: boolean;
+  allowDownload: boolean;
+  password?: string;
+};
+
+/** Create a single-document link and return its token for immediate feedback. */
+export async function createDocumentShare(
+  input: CreateDocumentShareInput,
+): Promise<{ token: string } | { error: string }> {
+  const supabase = await getSupabaseServer();
+  const doc = await getDocument(input.documentId);
+  if (!doc) return { error: "not_found" };
+
+  const days = Math.max(1, Math.min(90, Number(input.days) || 7));
+  const maxViewsRaw = Number(input.maxViews) || 0;
+  const { data, error } = await supabase
+    .from("shares")
+    .insert({
+      household_id: doc.household_id,
+      document_id: doc.id,
+      expires_at: new Date(Date.now() + days * 86400_000).toISOString(),
+      max_views: maxViewsRaw > 0 ? Math.round(maxViewsRaw) : null,
+      watermark: input.watermark,
+      allow_download: input.allowDownload,
+      password_hash: hashSharePassword(input.password || ""),
+    })
+    .select("token")
+    .single();
+
+  if (error || !data?.token) return { error: error?.message || "failed" };
+  revalidatePath(`/my/documents/${doc.id}`);
+  return { token: data.token as string };
+}
+
 export async function revokeShare(formData: FormData) {
   const supabase = await getSupabaseServer();
   const id = String(formData.get("id") ?? "");

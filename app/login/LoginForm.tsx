@@ -271,7 +271,7 @@ export default function LoginForm({
         <span className="h-px flex-1 bg-slate-200" />
       </div>
 
-      <form action={formAction} className="space-y-4">
+      <form action={formAction} aria-busy={pending} className="space-y-4">
         <input type="hidden" name="next" value={next} />
         <div>
           <label className="label" htmlFor="email">
@@ -338,13 +338,19 @@ export default function LoginForm({
         )}
 
         {state.error && (
-          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
             {state.error}
           </p>
         )}
         {state.message && (
-          <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <p role="status" className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
             {state.message}
+          </p>
+        )}
+
+        {pending && (
+          <p role="status" aria-live="polite" className="rounded-lg bg-brand-50 px-3 py-2 text-center text-sm text-brand-700">
+            {t.submitting}
           </p>
         )}
 
@@ -371,7 +377,12 @@ export default function LoginForm({
           </div>
         )}
 
-        <button type="submit" disabled={pending} className="btn-primary w-full">
+        <button
+          type="submit"
+          formAction={formAction}
+          disabled={pending}
+          className="btn-primary w-full"
+        >
           {pending
             ? t.submitting
             : mode === "login"

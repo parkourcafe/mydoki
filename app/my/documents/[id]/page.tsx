@@ -21,12 +21,12 @@ import OfflineSave from "@/components/OfflineSave";
 import VersionUpload from "./VersionUpload";
 import {
   archiveDocument,
-  createShare,
   deleteDocument,
   revokeShare,
   runChecks,
   unarchiveDocument,
 } from "@/app/my/actions";
+import DocumentShareForm from "./DocumentShareForm";
 
 const M = {
   ru: {
@@ -575,44 +575,7 @@ export default async function DocumentPage({
           </ul>
         )}
 
-        <form action={createShare} className="grid gap-3 sm:grid-cols-4">
-          <input type="hidden" name="document_id" value={doc.id} />
-          <div>
-            <label className="label">{t.days}</label>
-            <input
-              name="days"
-              type="number"
-              min={1}
-              max={90}
-              defaultValue={7}
-              className="input"
-            />
-          </div>
-          <div>
-            <label className="label">{t.viewsLimit}</label>
-            <input
-              name="max_views"
-              type="number"
-              min={0}
-              defaultValue={0}
-              className="input"
-              placeholder={t.noLimit}
-            />
-          </div>
-          <label className="flex items-end gap-2 pb-2 text-sm">
-            <input type="checkbox" name="watermark" defaultChecked /> {t.watermark}
-          </label>
-          <label className="flex items-end gap-2 pb-2 text-sm">
-            <input type="checkbox" name="allow_download" /> {t.downloadLabel}
-          </label>
-          <div className="sm:col-span-2">
-            <label className="label">{t.sharePw}</label>
-            <input name="password" type="text" className="input" autoComplete="off" />
-          </div>
-          <div className="sm:col-span-4">
-            <button className="btn-primary">{t.createLink}</button>
-          </div>
-        </form>
+        <DocumentShareForm documentId={doc.id} locale={locale} />
       </section>
 
       <section className="card">

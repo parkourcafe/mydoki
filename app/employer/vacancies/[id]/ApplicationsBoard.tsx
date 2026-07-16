@@ -37,7 +37,8 @@ const M = {
     fAll: "All", fNew: "New", fComplete: "All docs complete", fMissing: "Missing docs",
     empty: "No applications match this filter yet.",
     shortlist: "Shortlist", reject: "Reject", whatsapp: "WhatsApp", markHired: "Mark as hired",
-    requestDoc: "Request doc", soon: "Coming soon",
+    requestDoc: "Request missing docs via WhatsApp", soon: "Coming soon",
+    confirmHire: "Mark this candidate as hired?",
     reqDocMsg: (list: string) =>
       list
         ? `Hello! Your application is missing some documents: ${list}. Could you please send them in reply to this message?`
@@ -50,7 +51,8 @@ const M = {
     fAll: "Semua", fNew: "Baru", fComplete: "Dokumen lengkap", fMissing: "Dokumen kurang",
     empty: "Belum ada lamaran yang cocok dengan filter ini.",
     shortlist: "Pilih", reject: "Tolak", whatsapp: "WhatsApp", markHired: "Tandai diterima",
-    requestDoc: "Minta dokumen", soon: "Segera hadir",
+    requestDoc: "Minta dokumen via WhatsApp", soon: "Segera hadir",
+    confirmHire: "Tandai kandidat ini sebagai diterima?",
     reqDocMsg: (list: string) =>
       list
         ? `Halo! Lamaran Anda kurang beberapa dokumen: ${list}. Boleh dikirim sebagai balasan pesan ini?`
@@ -63,7 +65,8 @@ const M = {
     fAll: "Все", fNew: "Новые", fComplete: "Все документы", fMissing: "Не хватает",
     empty: "Пока нет откликов под этот фильтр.",
     shortlist: "В шортлист", reject: "Отклонить", whatsapp: "WhatsApp", markHired: "Принят на работу",
-    requestDoc: "Запросить док.", soon: "Скоро",
+    requestDoc: "Запросить документы в WhatsApp", soon: "Скоро",
+    confirmHire: "Отметить кандидата как принятого на работу?",
     reqDocMsg: (list: string) =>
       list
         ? `Здравствуйте! По вашему отклику не хватает документов: ${list}. Пришлите их, пожалуйста, в ответ на это сообщение.`
@@ -76,7 +79,8 @@ const M = {
     fAll: "Barchasi", fNew: "Yangi", fComplete: "Hujjatlar to‘liq", fMissing: "Hujjat yetishmaydi",
     empty: "Bu filtrga mos ariza yo‘q.",
     shortlist: "Tanlash", reject: "Rad etish", whatsapp: "WhatsApp", markHired: "Ishga qabul qilindi",
-    requestDoc: "Hujjat so‘rash", soon: "Tez orada",
+    requestDoc: "WhatsApp orqali hujjat so‘rash", soon: "Tez orada",
+    confirmHire: "Nomzodni ishga qabul qilingan deb belgilaysizmi?",
     reqDocMsg: (list: string) =>
       list
         ? `Assalomu alaykum! Arizangizda ba'zi hujjatlar yetishmaydi: ${list}. Iltimos, shu xabarga javoban yuboring.`
@@ -329,7 +333,11 @@ export default function ApplicationsBoard({
                   <button
                     type="button"
                     disabled={pending[a.id]}
-                    onClick={() => changeStatus(a.id, "hired")}
+                    onClick={() => {
+                      if (window.confirm(t.confirmHire)) {
+                        void changeStatus(a.id, "hired");
+                      }
+                    }}
                     className="btn border border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
                   >
                     ✅ {t.markHired}

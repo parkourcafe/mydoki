@@ -2,13 +2,18 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "doki.help — семейный архив документов",
-    short_name: "doki.help",
+    id: "/",
+    name: "DOKI HELP: Employee Documents",
+    short_name: "DOKI HELP",
     description:
-      "Все важные документы вашей семьи — в одном защищённом месте.",
+      "Store and manage employee and candidate documents, expiry dates, requests, and controlled access.",
     start_url: "/my",
     scope: "/",
+    lang: "en",
+    dir: "ltr",
     display: "standalone",
+    orientation: "portrait-primary",
+    categories: ["business", "productivity"],
     background_color: "#f9f5f0",
     theme_color: "#b85c38",
     icons: [

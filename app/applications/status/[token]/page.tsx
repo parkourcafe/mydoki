@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { getLocale, type Locale } from "@/lib/i18n";
+import { getPublicHiringLocale, type Locale } from "@/lib/i18n";
 import { waLink, type ApplicationStatus } from "@/lib/career";
 import type { CandidateOffer } from "@/lib/offer";
 import OfferResponse from "./OfferResponse";
@@ -94,7 +94,7 @@ export default async function StatusPage({
 }: {
   params: Promise<{ token: string }>;
 }) {
-  const locale = await getLocale();
+  const locale = await getPublicHiringLocale();
   const t = M[locale];
   const { token } = await params;
 

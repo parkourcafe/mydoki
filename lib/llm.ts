@@ -173,7 +173,8 @@ The JSON MUST have exactly these keys and nothing else:
 }
 
 Rules:
-- required_documents: 2–5 items. For Indonesian roles always include KTP.
+- required_documents: 1–4 role-relevant application documents such as CV, diploma, certificate or portfolio.
+- Never request KTP, passport, another government ID, health records or bank/tax documents at the application stage. Those belong to post-offer onboarding.
 - screening_questions: 1–4 short items; "type" is only "text" or "yes_no".
 - scorecard: 3–5 hiring criteria FOR THE ROLE (skills/traits the ideal hire needs), NOT an evaluation of any specific candidate; integer weights that sum to ~100.
 - Do NOT invent interview questions, test tasks, or any candidate profile/description. Do NOT add keys beyond the schema above.
