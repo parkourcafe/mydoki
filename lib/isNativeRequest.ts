@@ -1,9 +1,12 @@
 import "server-only";
 import { headers } from "next/headers";
+import { isNativeUserAgent } from "./nativeUserAgent";
 
-// Метка, которую нативная обёртка Capacitor добавляет в User-Agent
-// (см. appendUserAgent в capacitor.config.ts).
-export const NATIVE_UA_MARKER = "dokiNativeApp";
+export {
+  NATIVE_UA_MARKER,
+  NATIVE_UA_MARKERS,
+  isNativeUserAgent,
+} from "./nativeUserAgent";
 
 /**
  * Пришёл ли запрос из нативной iOS/Android-обёртки. Используется на сервере,
@@ -12,5 +15,5 @@ export const NATIVE_UA_MARKER = "dokiNativeApp";
  */
 export async function isNativeRequest(): Promise<boolean> {
   const ua = (await headers()).get("user-agent") || "";
-  return ua.includes(NATIVE_UA_MARKER);
+  return isNativeUserAgent(ua);
 }
