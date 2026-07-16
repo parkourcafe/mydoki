@@ -1,12 +1,11 @@
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
-import SubmitButton from "@/components/SubmitButton";
-import { saveEmployerProfile } from "@/app/employer/actions";
 import VacancyForm from "./VacancyForm";
 import EmployerVerification from "@/app/employer/EmployerVerification";
 import VacancyLimitReached from "./VacancyLimitReached";
 import { aiTextConfigured } from "@/lib/vacancyAI";
+import EmployerSetupForm from "./EmployerSetupForm";
 
 const M = {
   en: {
@@ -18,6 +17,10 @@ const M = {
     email: "Contact email",
     optional: "optional",
     save: "Continue",
+    companyRequired: "Enter your company name.",
+    saveError: "We couldn't save your company. Please try again.",
+    loadErrorTitle: "Company setup is temporarily unavailable",
+    loadErrorText: "Refresh the page and try again in a moment.",
   },
   id: {
     setupTitle: "Siapkan perusahaan Anda",
@@ -28,6 +31,10 @@ const M = {
     email: "Email kontak",
     optional: "opsional",
     save: "Lanjut",
+    companyRequired: "Masukkan nama perusahaan Anda.",
+    saveError: "Perusahaan tidak dapat disimpan. Silakan coba lagi.",
+    loadErrorTitle: "Pengaturan perusahaan sementara tidak tersedia",
+    loadErrorText: "Muat ulang halaman dan coba lagi sebentar lagi.",
   },
   ru: {
     setupTitle: "Настройте компанию",
@@ -38,6 +45,10 @@ const M = {
     email: "Email для связи",
     optional: "необязательно",
     save: "Продолжить",
+    companyRequired: "Введите название компании.",
+    saveError: "Не удалось сохранить компанию. Попробуйте ещё раз.",
+    loadErrorTitle: "Настройка компании временно недоступна",
+    loadErrorText: "Обновите страницу и попробуйте ещё раз через минуту.",
   },
   uz: {
     setupTitle: "Kompaniyangizni sozlang",
@@ -48,6 +59,10 @@ const M = {
     email: "Aloqa email",
     optional: "ixtiyoriy",
     save: "Davom etish",
+    companyRequired: "Kompaniya nomini kiriting.",
+    saveError: "Kompaniyani saqlab bo‘lmadi. Qayta urinib ko‘ring.",
+    loadErrorTitle: "Kompaniyani sozlash vaqtincha mavjud emas",
+    loadErrorText: "Sahifani yangilang va birozdan keyin qayta urinib ko‘ring.",
   },
 } as const;
 
@@ -57,38 +72,31 @@ export default async function NewVacancyPage() {
   const user = await getUser();
   const supabase = await getSupabaseServer();
 
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("employer_profiles")
     .select("*")
     .eq("user_id", user!.id)
     .maybeSingle();
 
+  if (profileError) {
+    console.error("loadEmployerProfile failed", {
+      code: profileError.code,
+      message: profileError.message,
+    });
+    return (
+      <div className="mx-auto max-w-lg">
+        <div className="card">
+          <h1 className="text-xl font-semibold">{t.loadErrorTitle}</h1>
+          <p className="mt-2 text-sm text-slate-500">{t.loadErrorText}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!profile) {
     return (
       <div className="mx-auto max-w-lg">
-        <form action={saveEmployerProfile} className="card space-y-4">
-          <div>
-            <h1 className="text-xl font-semibold">{t.setupTitle}</h1>
-            <p className="mt-1 text-sm text-slate-500">{t.setupText}</p>
-          </div>
-          <div>
-            <label className="label">{t.company} *</label>
-            <input name="company_name" required className="input" placeholder={t.companyPh} />
-          </div>
-          <div>
-            <label className="label">
-              {t.whatsapp} <span className="font-normal text-slate-400">({t.optional})</span>
-            </label>
-            <input name="contact_whatsapp" className="input" inputMode="tel" placeholder="08123456789" />
-          </div>
-          <div>
-            <label className="label">
-              {t.email} <span className="font-normal text-slate-400">({t.optional})</span>
-            </label>
-            <input name="contact_email" type="email" className="input" />
-          </div>
-          <SubmitButton className="btn-primary w-full">{t.save}</SubmitButton>
-        </form>
+        <EmployerSetupForm copy={t} />
       </div>
     );
   }

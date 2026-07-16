@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { safeNextPath } from "@/lib/nextPath";
+import { isNativeRequest } from "@/lib/isNativeRequest";
 import LoginForm from "./LoginForm";
 
 const M = {
@@ -60,7 +61,7 @@ export default async function LoginPage({
   const next = safeNextPath(sp.next);
   if (await getUser()) redirect(next);
 
-  const locale = await getLocale();
+  const [locale, native] = await Promise.all([getLocale(), isNativeRequest()]);
   const t = M[locale];
   const oauthFailed = sp.error === "google";
 
@@ -89,7 +90,7 @@ export default async function LoginPage({
         )}
 
         <div className="card shadow-md">
-          <LoginForm locale={locale} next={next} />
+          <LoginForm locale={locale} next={next} showGoogle={!native} />
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">
