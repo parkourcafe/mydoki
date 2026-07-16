@@ -6,6 +6,10 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { recordLogin } from "@/lib/loginEvents";
 import { getLocale, isAppReviewAccountEmail } from "@/lib/i18n";
 import { safeNextPath, withEv } from "@/lib/nextPath";
+import {
+  isExistingSignupResponse,
+  validateSignupInput,
+} from "@/lib/authSignup";
 
 export type AuthState = {
   error?: string;
@@ -18,11 +22,14 @@ const M = {
   ru: {
     missingCredentials: "Введите email и пароль.",
     signupRequirements: "Email и пароль (от 8 символов) обязательны.",
+    acceptTermsRequired:
+      "Примите Условия и Политику конфиденциальности, чтобы создать аккаунт.",
     confirmEmail:
       "Аккаунт создан. Подтвердите email по ссылке из письма, затем войдите.",
     invalidCredentials: "Неверный email или пароль.",
     emailNotConfirmed: "Сначала подтвердите email по ссылке из письма.",
-    alreadyRegistered: "Аккаунт с таким email уже существует — войдите.",
+    alreadyRegistered:
+      "Аккаунт с таким email уже существует. Войдите или используйте «Забыли пароль?».",
     rateLimit: "Слишком много попыток. Подождите немного и попробуйте снова.",
     weakPassword: "Пароль слишком простой — минимум 8 символов.",
     loginFailed: "Не удалось войти. Проверьте данные и попробуйте снова.",
@@ -33,11 +40,14 @@ const M = {
   en: {
     missingCredentials: "Enter your email and password.",
     signupRequirements: "Email and password (at least 8 characters) are required.",
+    acceptTermsRequired:
+      "Accept the Terms and Privacy Policy to create an account.",
     confirmEmail:
       "Account created. Confirm your email via the link we sent, then sign in.",
     invalidCredentials: "Wrong email or password.",
     emailNotConfirmed: "Please confirm your email via the link we sent first.",
-    alreadyRegistered: "An account with this email already exists — sign in.",
+    alreadyRegistered:
+      "An account with this email already exists. Sign in or use “Forgot password?”.",
     rateLimit: "Too many attempts. Please wait a moment and try again.",
     weakPassword: "Password is too weak — at least 8 characters.",
     loginFailed: "Could not sign in. Check your details and try again.",
@@ -48,11 +58,14 @@ const M = {
   id: {
     missingCredentials: "Masukkan email dan kata sandi Anda.",
     signupRequirements: "Email dan kata sandi (minimal 8 karakter) wajib diisi.",
+    acceptTermsRequired:
+      "Setujui Ketentuan dan Kebijakan Privasi untuk membuat akun.",
     confirmEmail:
       "Akun berhasil dibuat. Konfirmasikan email Anda melalui tautan yang kami kirim, lalu masuk.",
     invalidCredentials: "Email atau kata sandi salah.",
     emailNotConfirmed: "Konfirmasikan email Anda lewat tautan yang kami kirim dulu.",
-    alreadyRegistered: "Akun dengan email ini sudah ada — silakan masuk.",
+    alreadyRegistered:
+      "Akun dengan email ini sudah ada. Masuk atau gunakan “Lupa kata sandi?”.",
     rateLimit: "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
     weakPassword: "Kata sandi terlalu lemah — minimal 8 karakter.",
     loginFailed: "Gagal masuk. Periksa data Anda lalu coba lagi.",
@@ -63,11 +76,14 @@ const M = {
   uz: {
     missingCredentials: "Email va parolni kiriting.",
     signupRequirements: "Email va parol (kamida 8 ta belgi) talab qilinadi.",
+    acceptTermsRequired:
+      "Hisob yaratish uchun Shartlar va Maxfiylik siyosatini qabul qiling.",
     confirmEmail:
       "Hisob yaratildi. Biz yuborgan havola orqali emailingizni tasdiqlang, soʻngra kiring.",
     invalidCredentials: "Email yoki parol notoʻgʻri.",
     emailNotConfirmed: "Avval biz yuborgan havola orqali emailingizni tasdiqlang.",
-    alreadyRegistered: "Bu email bilan hisob allaqachon mavjud — kiring.",
+    alreadyRegistered:
+      "Bu email bilan hisob allaqachon mavjud. Kiring yoki “Parolni unutdingizmi?”dan foydalaning.",
     rateLimit: "Juda koʻp urinish. Biroz kuting va qayta urinib koʻring.",
     weakPassword: "Parol juda oddiy — kamida 8 ta belgi.",
     loginFailed: "Kirib boʻlmadi. Maʼlumotlarni tekshirib, qayta urinib koʻring.",
@@ -155,12 +171,22 @@ export async function signup(
   const t = M[await getLocale()];
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  if (!email || password.length < 8)
+  const validationIssue = validateSignupInput(
+    email,
+    password,
+    formData.get("accept_terms") === "yes"
+  );
+  if (validationIssue === "credentials")
     return { error: t.signupRequirements };
+  if (validationIssue === "terms")
+    return { error: t.acceptTermsRequired };
 
   const supabase = await getSupabaseServer();
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) return { error: mapAuthError(error.message, t, t.signupFailed) };
+  if (isExistingSignupResponse(data.user)) {
+    return { error: t.alreadyRegistered, email };
+  }
 
   if (!data.session) {
     return { message: t.confirmEmail, needsConfirm: true, email };

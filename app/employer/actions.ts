@@ -124,16 +124,23 @@ export async function confirmEmployerVerification(
   return { ok: data === true };
 }
 
+export type EmployerProfileState = {
+  error?: "company_required" | "save_failed";
+};
+
 /** Создать/обновить профиль работодателя для текущего пользователя. */
-export async function saveEmployerProfile(formData: FormData) {
+export async function saveEmployerProfile(
+  _prev: EmployerProfileState,
+  formData: FormData
+): Promise<EmployerProfileState> {
   const supabase = await getSupabaseServer();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
+  if (!user) redirect("/login?next=/employer/vacancies/new");
 
   const company_name = String(formData.get("company_name") ?? "").trim();
-  if (!company_name) return;
+  if (!company_name) return { error: "company_required" };
   const contact_whatsapp = String(formData.get("contact_whatsapp") ?? "").trim();
   const contact_email = String(formData.get("contact_email") ?? "").trim();
 
@@ -147,7 +154,13 @@ export async function saveEmployerProfile(formData: FormData) {
     },
     { onConflict: "user_id" }
   );
-  if (error) throw error;
+  if (error) {
+    console.error("saveEmployerProfile failed", {
+      code: error.code,
+      message: error.message,
+    });
+    return { error: "save_failed" };
+  }
   revalidatePath("/employer/vacancies/new");
   redirect("/employer/vacancies/new");
 }

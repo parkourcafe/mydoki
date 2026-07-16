@@ -24,6 +24,30 @@ test.describe("public pages", () => {
     await expect(
       page.getByRole("button", { name: "Sign in", exact: true })
     ).toBeVisible();
+
+    await page.getByRole("button", { name: "Sign up" }).click();
+    await expect(page.locator('input[name="accept_terms"]')).toBeVisible();
+    await expect(page.locator('input[type="checkbox"]')).toHaveCount(1);
+  });
+
+  test("native iOS login uses first-party email auth only", async ({
+    browser,
+    baseURL,
+  }) => {
+    const context = await browser.newContext({
+      userAgent:
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) dokiNativeApp",
+    });
+    const page = await context.newPage();
+    await page.goto(`${baseURL ?? "http://localhost:3000"}/login`);
+
+    await expect(
+      page.getByRole("button", { name: "Sign in with Google" })
+    ).toHaveCount(0);
+    await expect(
+      page.getByRole("button", { name: "Sign in", exact: true })
+    ).toBeVisible();
+    await context.close();
   });
 
   test("unauthenticated /my redirects to /login", async ({ page }) => {

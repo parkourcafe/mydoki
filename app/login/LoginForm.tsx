@@ -25,8 +25,7 @@ const M = {
     consentAnd: "и",
     consentPrivacy: "Политику конфиденциальности",
     consentTrail: "и даю согласие на обработку персональных данных.",
-    consentHealth:
-      "Отдельно даю согласие на обработку специальных категорий ПДн — сведений о здоровье — если я загружаю медицинские документы.",
+    googleFailed: "Не удалось начать вход через Google. Попробуйте ещё раз.",
     submitting: "Минутку…",
     signIn: "Войти",
     createAccount: "Создать аккаунт",
@@ -54,8 +53,7 @@ const M = {
     consentAnd: "and",
     consentPrivacy: "Privacy Policy",
     consentTrail: "and consent to the processing of my personal data.",
-    consentHealth:
-      "I separately consent to the processing of special categories of personal data — health information — if I upload medical documents.",
+    googleFailed: "Couldn't start Google sign-in. Please try again.",
     submitting: "Just a moment…",
     signIn: "Sign in",
     createAccount: "Create account",
@@ -83,8 +81,7 @@ const M = {
     consentAnd: "dan",
     consentPrivacy: "Kebijakan Privasi",
     consentTrail: "serta menyetujui pemrosesan data pribadi saya.",
-    consentHealth:
-      "Saya secara terpisah menyetujui pemrosesan kategori khusus data pribadi — informasi kesehatan — jika saya mengunggah dokumen medis.",
+    googleFailed: "Gagal memulai login Google. Silakan coba lagi.",
     submitting: "Sebentar…",
     signIn: "Masuk",
     createAccount: "Buat akun",
@@ -112,8 +109,7 @@ const M = {
     consentAnd: "va",
     consentPrivacy: "Maxfiylik siyosati",
     consentTrail: "hamda shaxsiy maʼlumotlarimni qayta ishlashga rozilik beraman.",
-    consentHealth:
-      "Tibbiy hujjatlarni yuklasam, shaxsiy maʼlumotlarning maxsus toifalari — sogʻliq haqidagi maʼlumotlarni qayta ishlashga alohida rozilik beraman.",
+    googleFailed: "Google orqali kirishni boshlab bo‘lmadi. Qayta urinib ko‘ring.",
     submitting: "Bir lahza…",
     signIn: "Kirish",
     createAccount: "Hisob yaratish",
@@ -127,34 +123,57 @@ const M = {
 
 function GoogleButton({ locale, next }: { locale: Locale; next?: string }) {
   const t = M[locale];
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
   async function google() {
-    const supabase = getSupabaseBrowser();
-    // Куда вернуться после OAuth — передаём в query самого callback-URL.
-    // Обмен кода на сессию и редирект делает серверный route-handler
-    // /auth/callback, поэтому sessionStorage здесь не нужен.
-    const callback = new URL("/auth/callback", window.location.origin);
-    if (next) callback.searchParams.set("next", next);
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: callback.toString(),
-      },
-    });
+    setError(null);
+    setBusy(true);
+    try {
+      const supabase = getSupabaseBrowser();
+      // Куда вернуться после OAuth — передаём в query самого callback-URL.
+      // Обмен кода на сессию и редирект делает серверный route-handler
+      // /auth/callback, поэтому sessionStorage здесь не нужен.
+      const callback = new URL("/auth/callback", window.location.origin);
+      if (next) callback.searchParams.set("next", next);
+      const { error: oauthError } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: callback.toString(),
+        },
+      });
+      if (oauthError) {
+        setError(t.googleFailed);
+        setBusy(false);
+      }
+    } catch {
+      setError(t.googleFailed);
+      setBusy(false);
+    }
   }
+
   return (
-    <button
-      type="button"
-      onClick={google}
-      className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-    >
-      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z" />
-        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z" />
-        <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z" />
-        <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
-      </svg>
-      {t.googleSignIn}
-    </button>
+    <div className="space-y-2">
+      <button
+        type="button"
+        onClick={google}
+        disabled={busy}
+        className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+          <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z" />
+          <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z" />
+          <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z" />
+          <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
+        </svg>
+        {t.googleSignIn}
+      </button>
+      {error && (
+        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -243,9 +262,11 @@ function ResetRequest({
 export default function LoginForm({
   locale,
   next = "",
+  showGoogle = true,
 }: {
   locale: Locale;
   next?: string;
+  showGoogle?: boolean;
 }) {
   const t = M[locale];
   const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
@@ -264,12 +285,15 @@ export default function LoginForm({
 
   return (
     <div className="space-y-4">
-      <GoogleButton locale={locale} next={next} />
-
-      <div className="flex items-center gap-3 text-xs text-slate-400">
-        <span className="h-px flex-1 bg-slate-200" /> {t.or}{" "}
-        <span className="h-px flex-1 bg-slate-200" />
-      </div>
+      {showGoogle && (
+        <>
+          <GoogleButton locale={locale} next={next} />
+          <div className="flex items-center gap-3 text-xs text-slate-400">
+            <span className="h-px flex-1 bg-slate-200" /> {t.or}{" "}
+            <span className="h-px flex-1 bg-slate-200" />
+          </div>
+        </>
+      )}
 
       <form action={formAction} aria-busy={pending} className="space-y-4">
         <input type="hidden" name="next" value={next} />
@@ -315,26 +339,26 @@ export default function LoginForm({
         </div>
 
         {mode === "signup" && (
-          <>
-            <label className="flex items-start gap-2 text-xs text-slate-500">
-              <input type="checkbox" required className="mt-0.5" />
-              <span>
-                {t.consentLead}{" "}
-                <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
-                  {t.consentTerms}
-                </a>{" "}
-                {t.consentAnd}{" "}
-                <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
-                  {t.consentPrivacy}
-                </a>{" "}
-                {t.consentTrail}
-              </span>
-            </label>
-            <label className="flex items-start gap-2 text-xs text-slate-500">
-              <input type="checkbox" required className="mt-0.5" />
-              <span>{t.consentHealth}</span>
-            </label>
-          </>
+          <label className="flex items-start gap-2 text-xs text-slate-500">
+            <input
+              type="checkbox"
+              name="accept_terms"
+              value="yes"
+              required
+              className="mt-0.5"
+            />
+            <span>
+              {t.consentLead}{" "}
+              <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
+                {t.consentTerms}
+              </a>{" "}
+              {t.consentAnd}{" "}
+              <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
+                {t.consentPrivacy}
+              </a>{" "}
+              {t.consentTrail}
+            </span>
+          </label>
         )}
 
         {state.error && (
