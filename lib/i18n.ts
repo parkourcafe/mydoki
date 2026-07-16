@@ -1,6 +1,6 @@
 import "server-only";
 import { cookies, headers } from "next/headers";
-import { NATIVE_UA_MARKER } from "./isNativeRequest";
+import { isNativeUserAgent } from "./nativeUserAgent";
 
 export type Locale = "ru" | "en" | "id" | "uz";
 
@@ -28,7 +28,7 @@ export async function getLocale(): Promise<Locale> {
   // The App Store listing and review build are English. Do not let an old web
   // cookie or the reviewer's device language switch the native shell to RU.
   const ua = requestHeaders.get("user-agent") || "";
-  if (ua.includes(NATIVE_UA_MARKER)) return "en";
+  if (isNativeUserAgent(ua)) return "en";
 
   // Языковой префикс в URL (/ru, /en…) — middleware кладёт его в заголовок.
   const fromPath = requestHeaders.get("x-locale") as Locale | undefined;

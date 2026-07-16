@@ -36,7 +36,7 @@ test.describe("public pages", () => {
   }) => {
     const context = await browser.newContext({
       userAgent:
-        "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) dokiNativeApp",
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) DokiHelpIOS/1.0",
     });
     const page = await context.newPage();
     await page.goto(`${baseURL ?? "http://localhost:3000"}/login`);

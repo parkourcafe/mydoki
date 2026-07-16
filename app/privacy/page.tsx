@@ -16,7 +16,7 @@ const M = {
   ru: {
     home: "← На главную",
     title: "Политика конфиденциальности",
-    intro: "Сервис «doki.help» (далее — Сервис). Дата последнего обновления: 23.06.2026.",
+    intro: "Сервис «doki.help» (далее — Сервис). Дата последнего обновления: 17.07.2026.",
     h1: "1. Оператор",
     operatorPre:
       "Оператором обработки персональных данных является владелец Сервиса doki.help, ИНН 780728592634. Контакт для обращений по вопросам данных: ",
@@ -33,7 +33,7 @@ const M = {
       "Мы обрабатываем данные, чтобы предоставлять Сервис: хранить и упорядочивать ваши документы, напоминать о сроках, обеспечивать безопасный доступ и поддержку. Правовое основание — ваше согласие, которое вы даёте при регистрации, и исполнение договора (оказание услуг Сервиса).",
     hSpecial: "3.1. Специальные категории ПДн (сведения о здоровье)",
     special:
-      "Если вы загружаете медицинские документы (анализы, заключения, прививочные сертификаты и т.п.), Сервис обрабатывает специальные категории персональных данных — сведения о здоровье. Такая обработка ведётся только при вашем отдельном явном согласии, которое вы даёте при регистрации, и только в отношении данных, которые вы сами загрузили. Вы можете в любой момент удалить эти документы или аккаунт, что прекращает обработку; согласие можно отозвать, написав на support@doki.help.",
+      "Сервис не требует медицинские данные для создания аккаунта. Обработка сведений о здоровье начинается только тогда, когда вы сами выбираете и загружаете медицинский документ (анализ, заключение, прививочный сертификат и т.п.), и ограничена выбранными вами функциями хранения, организации и передачи. Не загружайте данные другого человека без законного основания или его согласия. Вы можете удалить такой документ или весь аккаунт в любой момент.",
     h4: "4. Обработка с помощью ИИ",
     ai: "При использовании функций распознавания документов и AI-помощника часть данных (изображение документа или текст вашего запроса) передаётся стороннему поставщику ИИ для обработки и формирования ответа. Эти функции включаются по вашему действию. Если вы не хотите такой обработки — не пользуйтесь ИИ-функциями.",
     h5: "5. Где хранятся данные",
@@ -47,7 +47,7 @@ const M = {
       "Данные изолированы по семье на уровне базы (Row Level Security), файлы — в приватном хранилище, передача — по защищённому соединению. Доступны двухфакторная аутентификация и уведомления о входе с нового устройства.",
     h8: "8. Сроки хранения и удаление",
     retentionPre:
-      "Мы храним данные, пока активен ваш аккаунт. Вы можете запросить удаление аккаунта и данных, написав на ",
+      "Мы храним данные, пока активен ваш аккаунт. Вы можете самостоятельно удалить аккаунт и связанные данные в кабинете: «Настройки → Безопасность → Удалить аккаунт». Если вы не можете войти, напишите на ",
     retentionPost: ".",
     h9: "9. Ваши права",
     rights:
@@ -61,7 +61,7 @@ const M = {
   en: {
     home: "← Back to home",
     title: "Privacy Policy",
-    intro: "The “doki.help” service (hereinafter — the Service). Last updated: 23.06.2026.",
+    intro: "The “doki.help” service (hereinafter — the Service). Last updated: 17.07.2026.",
     h1: "1. Operator",
     operatorPre:
       "The operator processing personal data is the owner of the doki.help Service, TIN 780728592634. Contact for data-related inquiries: ",
@@ -78,7 +78,7 @@ const M = {
       "We process data to provide the Service: to store and organize your documents, remind you of deadlines, and ensure secure access and support. The legal basis is your consent, given upon registration, and the performance of the contract (provision of the Service).",
     hSpecial: "3.1. Special categories of personal data (health information)",
     special:
-      "If you upload medical documents (test results, reports, vaccination certificates, etc.), the Service processes special categories of personal data — health information. Such processing is carried out only with your separate explicit consent, given at registration, and only in respect of the data you upload yourself. You can delete these documents or your account at any time, which stops the processing; consent can be withdrawn by writing to support@doki.help.",
+      "The Service does not require health information to create an account. Processing begins only when you choose and upload a medical document, such as a test result, report or vaccination certificate, and is limited to the storage, organization and sharing features you request. Do not upload another person's data unless you have a lawful basis or their consent. You can delete the document or your entire account at any time.",
     h4: "4. AI processing",
     ai: "When using document recognition and AI assistant features, part of your data (the document image or the text of your request) is transferred to a third-party AI provider for processing and generating a response. These features are activated by your action. If you do not want such processing — do not use the AI features.",
     h5: "5. Where data is stored",
@@ -92,7 +92,7 @@ const M = {
       "Data is isolated per family at the database level (Row Level Security), files are kept in private storage, and transmission is over a secure connection. Two-factor authentication and notifications of sign-ins from a new device are available.",
     h8: "8. Retention and deletion",
     retentionPre:
-      "We keep data while your account is active. You can request deletion of your account and data by writing to ",
+      "We keep data while your account is active. You can delete your account and associated data in the app under Settings → Security → Delete account. If you cannot sign in, contact ",
     retentionPost: ".",
     h9: "9. Your rights",
     rights:
@@ -106,7 +106,7 @@ const M = {
   id: {
     home: "← Kembali ke beranda",
     title: "Kebijakan Privasi",
-    intro: "Layanan “doki.help” (selanjutnya disebut — Layanan). Terakhir diperbarui: 23.06.2026.",
+    intro: "Layanan “doki.help” (selanjutnya disebut — Layanan). Terakhir diperbarui: 17.07.2026.",
     h1: "1. Operator",
     operatorPre:
       "Operator yang memproses data pribadi adalah pemilik Layanan doki.help, NPWP 780728592634. Kontak untuk pertanyaan terkait data: ",
@@ -123,7 +123,7 @@ const M = {
       "Kami memproses data untuk menyediakan Layanan: menyimpan dan menata dokumen Anda, mengingatkan tenggat waktu, serta memastikan akses dan dukungan yang aman. Dasar hukumnya adalah persetujuan Anda yang diberikan saat pendaftaran, dan pelaksanaan perjanjian (penyediaan Layanan).",
     hSpecial: "3.1. Kategori khusus data pribadi (informasi kesehatan)",
     special:
-      "Jika Anda mengunggah dokumen medis (hasil tes, laporan, sertifikat vaksinasi, dll.), Layanan memproses kategori khusus data pribadi — informasi kesehatan. Pemrosesan tersebut hanya dilakukan dengan persetujuan eksplisit terpisah dari Anda yang diberikan saat pendaftaran, dan hanya atas data yang Anda unggah sendiri. Anda dapat menghapus dokumen ini atau akun Anda kapan saja, yang menghentikan pemrosesan; persetujuan dapat ditarik dengan menulis ke support@doki.help.",
+      "Layanan tidak meminta informasi kesehatan untuk membuat akun. Pemrosesan baru dimulai ketika Anda sendiri memilih dan mengunggah dokumen medis, seperti hasil tes, laporan, atau sertifikat vaksinasi, dan terbatas pada fungsi penyimpanan, pengelolaan, serta pembagian yang Anda pilih. Jangan mengunggah data orang lain tanpa dasar hukum atau persetujuan mereka. Anda dapat menghapus dokumen tersebut atau seluruh akun kapan saja.",
     h4: "4. Pemrosesan dengan AI",
     ai: "Saat menggunakan fitur pengenalan dokumen dan asisten AI, sebagian data (gambar dokumen atau teks permintaan Anda) dikirim ke penyedia AI pihak ketiga untuk diproses dan menghasilkan tanggapan. Fitur ini diaktifkan oleh tindakan Anda. Jika Anda tidak menginginkan pemrosesan seperti itu — jangan gunakan fitur AI.",
     h5: "5. Di mana data disimpan",
@@ -137,7 +137,7 @@ const M = {
       "Data diisolasi per keluarga pada tingkat basis data (Row Level Security), berkas disimpan dalam penyimpanan pribadi, dan pengirimannya melalui koneksi yang aman. Tersedia autentikasi dua faktor dan pemberitahuan masuk dari perangkat baru.",
     h8: "8. Masa simpan dan penghapusan",
     retentionPre:
-      "Kami menyimpan data selama akun Anda aktif. Anda dapat meminta penghapusan akun dan data dengan menulis ke ",
+      "Kami menyimpan data selama akun Anda aktif. Anda dapat menghapus akun dan data terkait di aplikasi melalui Pengaturan → Keamanan → Hapus akun. Jika Anda tidak dapat masuk, hubungi ",
     retentionPost: ".",
     h9: "9. Hak Anda",
     rights:
@@ -151,7 +151,7 @@ const M = {
   uz: {
     home: "← Bosh sahifaga",
     title: "Maxfiylik siyosati",
-    intro: "“doki.help” xizmati (bundan keyin — Xizmat). Oxirgi yangilangan sana: 23.06.2026.",
+    intro: "“doki.help” xizmati (bundan keyin — Xizmat). Oxirgi yangilangan sana: 17.07.2026.",
     h1: "1. Operator",
     operatorPre:
       "Shaxsiy ma’lumotlarni qayta ishlovchi operator doki.help Xizmati egasi, STIR 780728592634. Ma’lumotlarga oid murojaatlar uchun aloqa: ",
@@ -168,7 +168,7 @@ const M = {
       "Biz ma’lumotlarni Xizmatni taqdim etish uchun qayta ishlaymiz: hujjatlaringizni saqlash va tartibga solish, muddatlar haqida eslatish, xavfsiz kirish va qo‘llab-quvvatlashni ta’minlash. Huquqiy asos — ro‘yxatdan o‘tishda bergan roziligingiz va shartnomani bajarish (Xizmat ko‘rsatish).",
     hSpecial: "3.1. Shaxsiy ma’lumotlarning maxsus toifalari (sog‘liq haqidagi ma’lumotlar)",
     special:
-      "Agar siz tibbiy hujjatlarni (tahlillar, xulosalar, emlash sertifikatlari va h.k.) yuklasangiz, Xizmat shaxsiy ma’lumotlarning maxsus toifalarini — sog‘liq haqidagi ma’lumotlarni qayta ishlaydi. Bunday qayta ishlash faqat ro‘yxatdan o‘tishda bergan alohida aniq roziligingiz bilan va faqat siz yuklagan ma’lumotlarga nisbatan amalga oshiriladi. Siz istalgan vaqtda ushbu hujjatlarni yoki hisobingizni o‘chirishingiz mumkin, bu qayta ishlashni to‘xtatadi; rozilikni support@doki.help manziliga yozib qaytarib olish mumkin.",
+      "Xizmat hisob yaratish uchun sog‘liq haqidagi ma’lumotlarni talab qilmaydi. Qayta ishlash faqat siz tahlil, xulosa yoki emlash sertifikati kabi tibbiy hujjatni o‘zingiz tanlab yuklaganingizda boshlanadi va siz tanlagan saqlash, tartibga solish hamda ulashish funksiyalari bilan cheklanadi. Boshqa shaxsning ma’lumotlarini qonuniy asos yoki uning roziligisiz yuklamang. Hujjatni yoki butun hisobni istalgan vaqtda o‘chirishingiz mumkin.",
     h4: "4. AI yordamida qayta ishlash",
     ai: "Hujjatlarni aniqlash va AI-yordamchi funksiyalaridan foydalanganda ma’lumotlarning bir qismi (hujjat tasviri yoki so‘rovingiz matni) qayta ishlash va javob shakllantirish uchun uchinchi tomon AI-yetkazib beruvchisiga uzatiladi. Bu funksiyalar sizning harakatingiz bilan yoqiladi. Agar bunday qayta ishlashni istamasangiz — AI-funksiyalardan foydalanmang.",
     h5: "5. Ma’lumotlar qayerda saqlanadi",
@@ -182,7 +182,7 @@ const M = {
       "Ma’lumotlar ma’lumotlar bazasi darajasida oila bo‘yicha izolyatsiya qilingan (Row Level Security), fayllar — shaxsiy saqlovda, uzatish — himoyalangan ulanish orqali. Ikki bosqichli autentifikatsiya va yangi qurilmadan kirish haqida bildirishnomalar mavjud.",
     h8: "8. Saqlash muddatlari va o‘chirish",
     retentionPre:
-      "Biz ma’lumotlarni hisobingiz faol bo‘lguncha saqlaymiz. Hisob va ma’lumotlarni o‘chirishni quyidagi manzilga yozib so‘rashingiz mumkin: ",
+      "Biz ma’lumotlarni hisobingiz faol bo‘lguncha saqlaymiz. Hisob va unga bog‘liq ma’lumotlarni ilovadagi Sozlamalar → Xavfsizlik → Hisobni o‘chirish orqali o‘zingiz o‘chirishingiz mumkin. Agar kira olmasangiz, quyidagi manzilga yozing: ",
     retentionPost: ".",
     h9: "9. Sizning huquqlaringiz",
     rights:

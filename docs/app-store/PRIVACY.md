@@ -26,18 +26,19 @@ Privacy Policy URL (обязателен): **https://www.doki.help/privacy**
 
 ### ✅ Аналитика и «Tracking» / ATT — решено в коде
 Сторонние аналитики **Яндекс.Метрика** и **PostHog** внутри нативной обёртки
-**отключены**. Реализация: обёртка добавляет метку `dokiNativeApp` в User-Agent
-(`appendUserAgent` в `capacitor.config.ts`), а сервер по ней не рендерит эти
-трекеры (`lib/isNativeRequest.ts` → `app/layout.tsx`). Гейтинг **серверный**,
-поэтому скрипты не попадают даже в SSR-разметку приложения.
+**отключены**. Реализация: Capacitor-обёртка добавляет метку `dokiNativeApp`
+(`appendUserAgent` в `capacitor.config.ts`), а опубликованная SwiftUI-обёртка —
+`DokiHelpIOS/1.0` (`ios/DokiHelp/DOKI HELP/DokiWebView.swift`). Сервер
+распознаёт обе метки и не рендерит эти трекеры
+(`lib/nativeUserAgent.ts` → `lib/isNativeRequest.ts` → `app/layout.tsx`).
+Гейтинг **серверный**, поэтому скрипты не попадают даже в SSR-разметку
+приложения.
 - Остаётся только **Vercel Web Analytics** — first-party, без cookies, без
   кросс-сайтового профилирования и рекламы.
 - Итог: корректный ответ в App Privacy — **Not Used to Track**, и **ATT-промпт
   не нужен** (`NSUserTrackingUsageDescription` не требуется).
 - Проверка после сборки: открыть приложение → в сетевых запросах WebView НЕ
   должно быть обращений к `mc.yandex.ru` и `*.posthog.com`.
-- Примечание: гейтинг живёт в `app/layout.tsx` этой ветки. Прод-`layout.tsx`
-  сейчас новее — при мёрже перенесите туда `isNativeRequest()`-проверку.
 
 ### ⚠️ РЕШИТЬ #2 — AI-распознавание документов (передача третьей стороне)
 Опциональная функция распознавания отправляет **изображение документа**
