@@ -256,12 +256,19 @@ export default function ApplyForm({
   const [docStatus, setDocStatus] = useState<Record<number, UploadState>>({});
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [consent, setConsent] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [doneToken, setDoneToken] = useState<string | null>(null);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [vaultPicked, setVaultPicked] = useState<Record<string, boolean>>({});
+  const errorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!errors.length) return;
+    errorRef.current?.focus();
+    errorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [errors]);
 
   function onVideo(file: File | null) {
     setVideoFile(file);
@@ -290,14 +297,14 @@ export default function ApplyForm({
   function pickFile(i: number, file: File | null) {
     if (!file) return;
     if (!ACCEPTED_MIME.includes(file.type)) {
-      setError(t.errFileType);
+      setErrors([t.errFileType]);
       return;
     }
     if (file.size > MAX_FILE_BYTES) {
-      setError(t.errFileSize);
+      setErrors([t.errFileSize]);
       return;
     }
-    setError(null);
+    setErrors([]);
     markStarted();
     setFiles((p) => ({ ...p, [i]: file }));
     setDocStatus((p) => ({ ...p, [i]: "pending" }));
@@ -306,24 +313,31 @@ export default function ApplyForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setError(null);
+    setErrors([]);
 
-    if (!fullName.trim()) return setError(t.errName);
-    if (!isValidWhatsapp(whatsapp)) return setError(t.errWa);
+    const validationErrors: string[] = [];
+    if (!fullName.trim()) validationErrors.push(t.errName);
+    if (!isValidWhatsapp(whatsapp)) validationErrors.push(t.errWa);
     for (let i = 0; i < requiredDocuments.length; i++) {
       // Отсутствие поля required у старых записей трактуем как обязательный.
       if (requiredDocuments[i].required !== false && !files[i]) {
-        return setError(t.errDoc(requiredDocuments[i].label));
+        validationErrors.push(t.errDoc(requiredDocuments[i].label));
       }
     }
+    let missingAnswer = false;
     for (let i = 0; i < screeningQuestions.length; i++) {
       const required = screeningQuestions[i].required !== false;
-      if (required && !(answers[i] ?? "").trim()) return setError(t.errAns);
+      if (required && !(answers[i] ?? "").trim()) missingAnswer = true;
     }
+    if (missingAnswer) validationErrors.push(t.errAns);
     if (videoScreening === "required" && !videoFile) {
-      return setError(t.errVideoReq);
+      validationErrors.push(t.errVideoReq);
     }
-    if (!consent) return setError(t.errConsent);
+    if (!consent) validationErrors.push(t.errConsent);
+    if (validationErrors.length) {
+      setErrors(validationErrors);
+      return;
+    }
 
     setBusy(true);
     const applicationId = crypto.randomUUID();
@@ -423,10 +437,10 @@ export default function ApplyForm({
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
       // Понятные сообщения вместо кодов из БД.
-      if (m.includes("rate_limit_phone")) setError(t.errPhoneLimit);
-      else if (m.includes("rate_limited")) setError(t.errRateLimit);
-      else if (m.includes("turnstile_failed")) setError(t.errTurnstile);
-      else setError(m || t.errGeneric);
+      if (m.includes("rate_limit_phone")) setErrors([t.errPhoneLimit]);
+      else if (m.includes("rate_limited")) setErrors([t.errRateLimit]);
+      else if (m.includes("turnstile_failed")) setErrors([t.errTurnstile]);
+      else setErrors([t.errGeneric]);
       setBusy(false);
     }
   }
@@ -438,14 +452,14 @@ export default function ApplyForm({
         <h2 className="text-lg font-semibold">{t.doneTitle}</h2>
         <p className="mt-1 text-sm text-slate-600">{t.doneText}</p>
         <Link
-          href={`/applications/status/${doneToken}`}
+          href={`/${locale}/applications/status/${doneToken}`}
           className="btn-primary mt-4 w-full"
         >
           {t.statusLink}
         </Link>
         <p className="mt-4 text-xs text-slate-500">{t.nudge}</p>
         <Link
-          href="/login"
+          href={`/${locale}/login`}
           className="mt-1 inline-block text-sm text-brand-600 hover:underline"
         >
           {t.createAccount}
@@ -455,8 +469,24 @@ export default function ApplyForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="card space-y-5">
+    <form onSubmit={handleSubmit} noValidate className="card space-y-5">
       <h2 className="text-base font-semibold">{t.yourApplication}</h2>
+
+      {errors.length > 0 && (
+        <div
+          ref={errorRef}
+          tabIndex={-1}
+          role="alert"
+          aria-live="assertive"
+          className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 outline-none"
+        >
+          <ul className="list-disc space-y-1 pl-5">
+            {errors.map((message, index) => (
+              <li key={`${message}-${index}`}>{message}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <div>
         <label className="label">{t.fullName} *</label>
@@ -469,6 +499,7 @@ export default function ApplyForm({
           }}
           placeholder={t.fullNamePh}
           autoComplete="name"
+          required
         />
       </div>
 
@@ -481,6 +512,7 @@ export default function ApplyForm({
           placeholder={t.whatsappPh}
           inputMode="tel"
           autoComplete="tel"
+          required
         />
         <p className="mt-1 text-xs text-slate-400">{t.whatsappHint}</p>
       </div>
@@ -621,6 +653,7 @@ export default function ApplyForm({
                 <select
                   className="input"
                   value={answers[i] ?? ""}
+                  required={required}
                   onChange={(e) =>
                     setAnswers((p) => ({ ...p, [i]: e.target.value }))
                   }
@@ -636,6 +669,7 @@ export default function ApplyForm({
                 <input
                   className="input"
                   value={answers[i] ?? ""}
+                  required={required}
                   onChange={(e) =>
                     setAnswers((p) => ({ ...p, [i]: e.target.value }))
                   }
@@ -668,17 +702,12 @@ export default function ApplyForm({
         <input
           type="checkbox"
           checked={consent}
+          required
           onChange={(e) => setConsent(e.target.checked)}
           className="mt-0.5 h-4 w-4 shrink-0"
         />
         <span>{consentText}</span>
       </label>
-
-      {error && (
-        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
-        </p>
-      )}
 
       <TurnstileWidget onToken={setTurnstileToken} />
 

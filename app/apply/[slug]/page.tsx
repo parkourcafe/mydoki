@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { getLocale } from "@/lib/i18n";
-import type { Vacancy } from "@/lib/career";
+import { getPublicHiringLocale } from "@/lib/i18n";
+import {
+  filterApplicationStageDocuments,
+  type Vacancy,
+} from "@/lib/career";
 import VacancyDescription from "@/components/VacancyDescription";
 import ApplyForm from "./ApplyForm";
 
@@ -71,7 +74,7 @@ export default async function ApplyPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const locale = await getLocale();
+  const locale = await getPublicHiringLocale();
   const t = M[locale];
   const { slug } = await params;
 
@@ -177,7 +180,7 @@ export default async function ApplyPage({
           vacancyId={vacancy.id}
           slug={vacancy.slug}
           companyName={vacancy.company_name}
-          requiredDocuments={vacancy.required_documents ?? []}
+          requiredDocuments={filterApplicationStageDocuments(vacancy.required_documents)}
           screeningQuestions={vacancy.screening_questions ?? []}
           videoScreening={vacancy.video_screening ?? "off"}
           videoQuestion={vacancy.video_question ?? null}

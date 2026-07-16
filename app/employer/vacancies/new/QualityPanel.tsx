@@ -10,7 +10,7 @@ const M = {
     score: "Clarity score",
     allGood: "Looks good. Nothing blocking.",
     warn: {
-      ktp: "Most Indonesian roles need KTP. Add it?",
+      no_application_docs: "Add a role-relevant document such as a CV or certificate.",
       no_questions: "No screening questions — less signal per candidate.",
       no_salary: "Vacancies without a salary attract fewer good candidates.",
       role_conflict: "This may combine too many roles. Consider narrowing.",
@@ -22,7 +22,7 @@ const M = {
     score: "Skor kejelasan",
     allGood: "Sudah bagus. Tidak ada yang menghalangi.",
     warn: {
-      ktp: "Sebagian besar peran di Indonesia butuh KTP. Tambahkan?",
+      no_application_docs: "Tambahkan dokumen yang relevan, seperti CV atau sertifikat.",
       no_questions: "Tidak ada pertanyaan seleksi — sinyal per kandidat lebih sedikit.",
       no_salary: "Lowongan tanpa gaji menarik lebih sedikit kandidat baik.",
       role_conflict: "Ini mungkin menggabungkan terlalu banyak peran. Persempit?",
@@ -34,7 +34,7 @@ const M = {
     score: "Балл ясности",
     allGood: "Всё хорошо. Ничего не мешает.",
     warn: {
-      ktp: "Для большинства ролей в Индонезии нужен KTP. Добавить?",
+      no_application_docs: "Добавьте подходящий документ, например CV или сертификат.",
       no_questions: "Нет скрининг-вопросов — меньше сигнала о кандидате.",
       no_salary: "Вакансии без зарплаты привлекают меньше хороших кандидатов.",
       role_conflict: "Похоже, смешано слишком много ролей. Сузьте.",
@@ -46,7 +46,7 @@ const M = {
     score: "Aniqlik bali",
     allGood: "Yaxshi ko‘rinadi. Hech narsa to‘smaydi.",
     warn: {
-      ktp: "Indoneziyadagi ko‘p rollarga KTP kerak. Qo‘shasizmi?",
+      no_application_docs: "Rezyume yoki sertifikat kabi mos hujjat qo‘shing.",
       no_questions: "Saralash savollari yo‘q — nomzod haqida signal kamroq.",
       no_salary: "Maoshsiz vakansiyalar yaxshi nomzodlarni kamroq jalb qiladi.",
       role_conflict: "Bu juda ko‘p rolni birlashtirishi mumkin. Toraytiring.",

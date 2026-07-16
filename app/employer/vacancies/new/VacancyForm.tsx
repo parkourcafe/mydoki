@@ -4,8 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import {
-  DOC_TYPES,
+  APPLICATION_DOC_TYPES,
   docTypeLabel,
+  filterApplicationStageDocuments,
   type DocType,
   type RequiredDocument,
   type ScreeningQuestion,
@@ -43,7 +44,7 @@ const M = {
     closesAt: "Closes on",
     optional: "optional",
     docs: "Required documents",
-    docsHint: "Documents the candidate must upload.",
+    docsHint: "Ask only for role-relevant files. Request ID and health documents after an offer.",
     addDoc: "+ Add document",
     docType: "Type",
     docLabel: "Label",
@@ -99,7 +100,7 @@ const M = {
     closesAt: "Ditutup pada",
     optional: "opsional",
     docs: "Dokumen wajib",
-    docsHint: "Dokumen yang harus diunggah kandidat.",
+    docsHint: "Minta hanya berkas yang relevan. Minta identitas dan dokumen kesehatan setelah penawaran.",
     addDoc: "+ Tambah dokumen",
     docType: "Jenis",
     docLabel: "Label",
@@ -155,7 +156,7 @@ const M = {
     closesAt: "Закрыть",
     optional: "необязательно",
     docs: "Обязательные документы",
-    docsHint: "Документы, которые кандидат должен загрузить.",
+    docsHint: "Только документы по роли. ID и медицинские документы запрашивайте после оффера.",
     addDoc: "+ Добавить документ",
     docType: "Тип",
     docLabel: "Название",
@@ -211,7 +212,7 @@ const M = {
     closesAt: "Yopilish sanasi",
     optional: "ixtiyoriy",
     docs: "Majburiy hujjatlar",
-    docsHint: "Nomzod yuklashi shart bo‘lgan hujjatlar.",
+    docsHint: "Faqat rolga tegishli fayllar. ID va tibbiy hujjatlarni offerdan keyin so‘rang.",
     addDoc: "+ Hujjat qo‘shish",
     docType: "Turi",
     docLabel: "Nomi",
@@ -459,13 +460,15 @@ export default function VacancyForm({
 
     setBusy(true);
     try {
-      const cleanDocs = docs
-        .map((d) => ({
-          type: d.type,
-          label: (d.label || docTypeLabel(locale, d.type)).trim(),
-          required: d.required,
-        }))
-        .filter((d) => d.label);
+      const cleanDocs = filterApplicationStageDocuments(
+        docs
+          .map((d) => ({
+            type: d.type,
+            label: (d.label || docTypeLabel(locale, d.type)).trim(),
+            required: d.required,
+          }))
+          .filter((d) => d.label),
+      );
       const cleanQuestions: ScreeningQuestion[] = questions
         .map((q) => {
           const out: ScreeningQuestion = {
@@ -655,7 +658,7 @@ export default function VacancyForm({
                     });
                   }}
                 >
-                  {DOC_TYPES.map((dt) => (
+                  {APPLICATION_DOC_TYPES.map((dt) => (
                     <option key={dt} value={dt}>
                       {docTypeLabel(locale, dt)}
                     </option>

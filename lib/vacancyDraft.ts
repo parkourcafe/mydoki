@@ -1,6 +1,7 @@
 import {
   DOC_TYPES,
   docTypeLabel,
+  isSensitiveApplicationDocument,
   type DocType,
   type RequiredDocument,
   type ScreeningQuestion,
@@ -65,7 +66,9 @@ function normDocs(v: unknown, locale: Locale): RequiredDocument[] {
       ? (r.type as DocType)
       : "other") as DocType;
     const label = str(r.label) ?? docTypeLabel(locale, type);
-    out.push({ type, label, required: r.required !== false });
+    const doc = { type, label, required: r.required !== false };
+    if (isSensitiveApplicationDocument(doc)) continue;
+    out.push(doc);
     if (out.length >= MAX_DOCS) break;
   }
   return out;

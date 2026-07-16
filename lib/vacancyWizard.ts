@@ -1,4 +1,9 @@
-import type { DocType, RequiredDocument, ScreeningQuestion } from "./career";
+import {
+  filterApplicationStageDocuments,
+  type DocType,
+  type RequiredDocument,
+  type ScreeningQuestion,
+} from "./career";
 import { ROLE_TEMPLATES } from "./roleTemplates";
 import type { VacancyInitial } from "@/app/employer/vacancies/new/VacancyForm";
 
@@ -151,9 +156,7 @@ export const STEPS: Step[] = [
     hint: "Можно выбрать несколько.",
     allowCustom: true,
     options: [
-      { value: "ktp", label: "KTP" },
       { value: "cv", label: "CV / резюме" },
-      { value: "health", label: "Медсправка" },
       { value: "sim", label: "Права (SIM C)" },
       { value: "intro", label: "Голосовое / видео-интро" },
       { value: "diploma", label: "Диплом / сертификат" },
@@ -199,9 +202,7 @@ export function visibleSteps(a: Answers): Step[] {
 // ── Сборка черновика из ответов ──────────────────────────────────────
 
 const DOC_MAP: Record<string, { type: DocType; label: string; required: boolean }> = {
-  ktp: { type: "ktp", label: "KTP", required: true },
   cv: { type: "cv", label: "CV / резюме", required: true },
-  health: { type: "health_cert", label: "Медсправка", required: true },
   sim: { type: "other", label: "Права (SIM C)", required: true },
   intro: { type: "other", label: "Голосовое / видео-интро", required: false },
   diploma: { type: "diploma", label: "Диплом / сертификат", required: false },
@@ -276,12 +277,13 @@ export function buildDraft(a: Answers, defaultCompany: string): VacancyInitial {
         : DOC_MAP[v] ?? { type: "other" as DocType, label: v, required: true }
     );
   } else {
-    docs = (role?.docs ?? [{ type: "ktp" as DocType, required: true }]).map((d) => ({
+    docs = (role?.docs ?? [{ type: "cv" as DocType, required: true }]).map((d) => ({
       type: d.type,
       label: d.label ?? DOC_MAP[d.type]?.label ?? "Документ",
       required: d.required,
     }));
   }
+  docs = filterApplicationStageDocuments(docs);
 
   // Зарплата: сумма + модель оплаты.
   const salaryModel = str(a, "salaryModel");

@@ -1,9 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { recordLogin } from "@/lib/loginEvents";
-import { getLocale } from "@/lib/i18n";
+import { getLocale, isAppReviewAccountEmail } from "@/lib/i18n";
 import { safeNextPath, withEv } from "@/lib/nextPath";
 
 export type AuthState = {
@@ -121,6 +122,13 @@ export async function login(
     };
   }
   await recordLogin(supabase);
+  if (isAppReviewAccountEmail(email)) {
+    (await cookies()).set("locale", "en", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+  }
   redirect(withEv(safeNextPath(formData.get("next")), "logged_in", "email"));
 }
 
@@ -158,5 +166,12 @@ export async function signup(
     return { message: t.confirmEmail, needsConfirm: true, email };
   }
   await recordLogin(supabase);
+  if (isAppReviewAccountEmail(email)) {
+    (await cookies()).set("locale", "en", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+  }
   redirect(withEv(safeNextPath(formData.get("next")), "signed_up", "email"));
 }

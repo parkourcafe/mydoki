@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { recordLogin } from "@/lib/loginEvents";
 import { safeNextPath, withEv } from "@/lib/nextPath";
+import { isAppReviewAccountEmail } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -58,9 +59,17 @@ export async function GET(request: Request) {
     }
   );
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
     return NextResponse.redirect(`${base}/login?error=google`);
+  }
+
+  if (isAppReviewAccountEmail(data.user?.email)) {
+    response.cookies.set("locale", "en", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
   }
 
   try {

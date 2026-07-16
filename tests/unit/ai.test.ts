@@ -11,6 +11,7 @@ import {
   type EvidenceItem,
 } from "../../lib/ai/guardrails.ts";
 import { canSendDocumentToModel } from "../../lib/ai/redaction.ts";
+import { filterApplicationStageDocuments } from "../../lib/career.ts";
 
 test("containsForbidden ловит балл/ранжирование/подделку/рекомендации", () => {
   assert.ok(containsForbidden("совокупный балл 92"));
@@ -52,6 +53,19 @@ test("redaction: паспорт и медицина заблокированы �
   // прочие категории — можно
   assert.equal(canSendDocumentToModel("education").allowed, true);
   assert.equal(canSendDocumentToModel("career").allowed, true);
+});
+
+test("application stage removes identity and health documents", () => {
+  assert.deepEqual(
+    filterApplicationStageDocuments([
+      { type: "cv", label: "Resume", required: true },
+      { type: "ktp", label: "KTP", required: true },
+      { type: "health_cert", label: "Health certificate", required: true },
+      { type: "other", label: "Identity document", required: true },
+      { type: "certificate", label: "Training certificate", required: false },
+    ]).map((doc) => doc.label),
+    ["Resume", "Training certificate"],
+  );
 });
 
 import { checkCompleteness } from "../../lib/ai/completeness.ts";

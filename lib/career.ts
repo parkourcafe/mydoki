@@ -139,6 +139,34 @@ export const DOC_TYPES: DocType[] = [
   "other",
 ];
 
+/** Documents suitable for the initial application stage. */
+export const APPLICATION_DOC_TYPES: DocType[] = [
+  "cv",
+  "diploma",
+  "certificate",
+  "other",
+];
+
+const SENSITIVE_APPLICATION_LABEL =
+  /\b(ktp|identity|id card|passport|paspor|health|medical|surat sehat)\b|удостовер|паспорт|медсправ|здоров|shaxs/i;
+
+/** Government ID and health records belong to post-offer onboarding. */
+export function isSensitiveApplicationDocument(
+  doc: Pick<RequiredDocument, "type" | "label">,
+): boolean {
+  return (
+    doc.type === "ktp" ||
+    doc.type === "health_cert" ||
+    SENSITIVE_APPLICATION_LABEL.test(doc.label || "")
+  );
+}
+
+export function filterApplicationStageDocuments(
+  documents: RequiredDocument[] | null | undefined,
+): RequiredDocument[] {
+  return (documents ?? []).filter((doc) => !isSensitiveApplicationDocument(doc));
+}
+
 export const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 export const ACCEPTED_MIME = ["application/pdf", "image/jpeg", "image/png"];
 export const ACCEPT_ATTR = "application/pdf,image/jpeg,image/png,.pdf,.jpg,.jpeg,.png";

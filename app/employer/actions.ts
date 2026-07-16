@@ -4,7 +4,10 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createHash, randomInt } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { normalizeWhatsapp } from "@/lib/career";
+import {
+  filterApplicationStageDocuments,
+  normalizeWhatsapp,
+} from "@/lib/career";
 import { checkCompleteness } from "@/lib/ai/completeness";
 import { normalizeEmploymentType } from "@/lib/employment";
 import { runAgent, aiTextConfigured } from "@/lib/ai";
@@ -297,7 +300,7 @@ export async function createVacancy(
     p_description: input.description || null,
     p_urgency: input.urgency || "normal",
     p_closes_at: input.closes_at || null,
-    p_required_documents: input.required_documents ?? [],
+    p_required_documents: filterApplicationStageDocuments(input.required_documents),
     p_screening_questions: input.screening_questions ?? [],
   });
   if (error) throw error;
@@ -355,7 +358,7 @@ export async function updateVacancy(
       description: input.description || null,
       urgency: input.urgency || "normal",
       closes_at: input.closes_at || null,
-      required_documents: input.required_documents ?? [],
+      required_documents: filterApplicationStageDocuments(input.required_documents),
       screening_questions: input.screening_questions ?? [],
       video_screening: input.video_screening ?? "off",
       video_question: input.video_question?.trim() || null,

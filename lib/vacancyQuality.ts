@@ -11,7 +11,7 @@ import type { RequiredDocument, ScreeningQuestion } from "./career";
 // =====================================================================
 
 export type QualityWarningId =
-  | "ktp" // required_documents пусты или нет KTP
+  | "no_application_docs" // нет безопасных документов первичного отклика
   | "no_questions" // нет скрининг-вопросов
   | "no_salary" // пустая зарплата
   | "role_conflict"; // описание смешивает ≥3 ролей
@@ -54,10 +54,6 @@ const ROLE_VERB_BUCKETS: Record<string, string[]> = {
   sales: ["sales", "promot", "penjual", "продав", "прода"],
 };
 
-function hasKtp(docs: RequiredDocument[]): boolean {
-  return docs.some((d) => d.type === "ktp");
-}
-
 function countRoleBuckets(description: string): number {
   const hay = description.toLowerCase();
   let n = 0;
@@ -74,8 +70,8 @@ function countRoleBuckets(description: string): number {
 export function runQualityCheck(input: QualityInput): QualityResult {
   const warnings: QualityWarning[] = [];
 
-  const docsOk = input.required_documents.length > 0 && hasKtp(input.required_documents);
-  if (!docsOk) warnings.push({ id: "ktp", kind: "missing" });
+  const docsOk = input.required_documents.length > 0;
+  if (!docsOk) warnings.push({ id: "no_application_docs", kind: "missing" });
 
   const questionsOk = input.screening_questions.some(
     (q) => q.question.trim().length > 0

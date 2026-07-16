@@ -1,6 +1,7 @@
 import type { Locale } from "./i18n";
 import {
   docTypeLabel,
+  filterApplicationStageDocuments,
   type DocType,
   type RequiredDocument,
   type ScreeningQuestion,
@@ -59,9 +60,7 @@ export const VACANCY_TEMPLATES: readonly VacancyTemplate[] = [
     emoji: "☕",
     label: { en: "Barista", id: "Barista", ru: "Бариста", uz: "Barista" },
     documents: [
-      { type: "ktp", required: true },
       { type: "cv", required: false },
-      { type: "health_cert", required: true },
     ],
     questions: [
       {
@@ -95,7 +94,6 @@ export const VACANCY_TEMPLATES: readonly VacancyTemplate[] = [
       uz: "Xonabop",
     },
     documents: [
-      { type: "ktp", required: true },
       { type: "cv", required: false },
     ],
     questions: [
@@ -116,7 +114,6 @@ export const VACANCY_TEMPLATES: readonly VacancyTemplate[] = [
     emoji: "📚",
     label: { en: "Teacher", id: "Guru", ru: "Учитель", uz: "O‘qituvchi" },
     documents: [
-      { type: "ktp", required: true },
       { type: "cv", required: true },
       { type: "diploma", required: true },
       { type: "certificate", required: false },
@@ -139,7 +136,6 @@ export const VACANCY_TEMPLATES: readonly VacancyTemplate[] = [
     emoji: "🛡️",
     label: { en: "Security", id: "Satpam", ru: "Охранник", uz: "Qorovul" },
     documents: [
-      { type: "ktp", required: true },
       { type: "cv", required: false },
       { type: "certificate", required: false },
     ],
@@ -161,10 +157,10 @@ export const VACANCY_TEMPLATES: readonly VacancyTemplate[] = [
     emoji: "🚗",
     label: { en: "Driver", id: "Sopir", ru: "Водитель", uz: "Haydovchi" },
     documents: [
-      { type: "ktp", required: true },
+      { type: "cv", required: true },
       {
         type: "other",
-        required: true,
+        required: false,
         labelOverride: {
           en: "SIM (driving license)",
           id: "SIM",
@@ -208,11 +204,13 @@ export function templatePrefill(
     role_template: template.id,
     category: template.category,
     title: template.label[locale] ?? template.label.en,
-    required_documents: template.documents.map((d) => ({
-      type: d.type,
-      label: d.labelOverride?.[locale] ?? docTypeLabel(locale, d.type),
-      required: d.required,
-    })),
+    required_documents: filterApplicationStageDocuments(
+      template.documents.map((d) => ({
+        type: d.type,
+        label: d.labelOverride?.[locale] ?? docTypeLabel(locale, d.type),
+        required: d.required,
+      })),
+    ),
     screening_questions: template.questions.map((q) => ({
       question: q.text[locale] ?? q.text.en,
       type: q.type,
