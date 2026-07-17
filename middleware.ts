@@ -1,5 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isRuStoreRestrictedPath } from "@/lib/rustore";
+import { isRuStoreUserAgent } from "@/lib/nativeUserAgent";
 
 // Публичные страницы, у которых есть markdown-версия для ИИ-агентов.
 const MD_PATHS = new Set(["/"]);
@@ -17,8 +19,26 @@ const LOCALE_RE = /^\/(ru|en|id|uz)(\/.*)?$/;
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // RuStore v1 is a personal document vault. Employment, employer and health
+  // modules are intentionally outside this binary's declared product scope.
+  const localeMatch = pathname.match(LOCALE_RE);
+  const effectivePath = localeMatch
+    ? localeMatch[2] && localeMatch[2].length > 0
+      ? localeMatch[2]
+      : "/"
+    : pathname;
+  if (
+    isRuStoreUserAgent(request.headers.get("user-agent") || "") &&
+    isRuStoreRestrictedPath(effectivePath)
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/my";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
   // 1) Языковой префикс — переписываем на без-префиксный путь.
-  const m = pathname.match(LOCALE_RE);
+  const m = localeMatch;
   if (m) {
     const locale = m[1];
     const rest = m[2] && m[2].length > 0 ? m[2] : "/";

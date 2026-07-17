@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">DOKI HELP</string>
+    <string name="title_activity_main">DOKI HELP</string>
+    <string name="package_name">help.doki.twa</string>
+    <string name="custom_url_scheme">help.doki.twa</string>
+</resources>

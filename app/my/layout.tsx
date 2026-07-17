@@ -3,6 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { isNativeRequest } from "@/lib/isNativeRequest";
+import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
 import AppNav from "@/components/AppNav";
 import IdentifyUser from "@/components/IdentifyUser";
 import AnalyticsEvents from "@/components/AnalyticsEvents";
@@ -139,7 +140,10 @@ export default async function MyLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getLocale();
+  const [locale, ruStore] = await Promise.all([
+    getLocale(),
+    isRuStoreRequest(),
+  ]);
   const t = M[locale];
 
   const user = await getUser();
@@ -184,20 +188,24 @@ export default async function MyLayout({
         { href: "/my/search", emoji: "🔍", label: t.search },
       ],
     },
-    {
-      title: t.grpWork,
-      emoji: "💼",
-      items: [
-        { href: "/my/work", emoji: "🧭", label: t.workHub },
-        { href: "/employer", emoji: "📣", label: t.hiring },
-        { href: "/my/applications", emoji: "🔎", label: t.myApplications },
-        { href: "/my/employment", emoji: "🧾", label: t.employment },
-        { href: "/my/career", emoji: "📈", label: t.career },
-        { href: "/my/legal", emoji: "⚖️", label: t.legal },
-        { href: "/my/resume", emoji: "🧑‍💼", label: t.resume },
-        { href: "/my/freelance", emoji: "🎨", label: t.portfolio },
-      ],
-    },
+    ...(!ruStore
+      ? [
+          {
+            title: t.grpWork,
+            emoji: "💼",
+            items: [
+              { href: "/my/work", emoji: "🧭", label: t.workHub },
+              { href: "/employer", emoji: "📣", label: t.hiring },
+              { href: "/my/applications", emoji: "🔎", label: t.myApplications },
+              { href: "/my/employment", emoji: "🧾", label: t.employment },
+              { href: "/my/career", emoji: "📈", label: t.career },
+              { href: "/my/legal", emoji: "⚖️", label: t.legal },
+              { href: "/my/resume", emoji: "🧑‍💼", label: t.resume },
+              { href: "/my/freelance", emoji: "🎨", label: t.portfolio },
+            ],
+          },
+        ]
+      : []),
     {
       title: t.grpSettings,
       emoji: "⚙️",
@@ -215,7 +223,7 @@ export default async function MyLayout({
       {!native && <AnalyticsEvents />}
       <AppNav
       locale={locale}
-      brand={t.brand}
+      brand={ruStore ? "DOKI HELP" : t.brand}
       menuLabel={t.menu}
       signOutLabel={t.signOut}
       userEmail={user.email ?? ""}

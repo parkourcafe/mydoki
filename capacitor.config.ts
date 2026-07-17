@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 // =====================================================================
-// Capacitor — нативная iOS-обёртка для doki.help.
+// Capacitor — нативные iOS/Android-обёртки для doki.help.
 //
 // Приложение серверное (Next.js SSR + Supabase-auth), поэтому статический
 // экспорт невозможно — WebView грузит ЖИВОЙ сайт (server.url). Нативную
@@ -14,14 +14,36 @@ import type { CapacitorConfig } from "@capacitor/cli";
 // =====================================================================
 
 const PROD_URL = process.env.CAP_SERVER_URL || "https://www.doki.help";
+const APP_ID = process.env.CAP_APP_ID || "help.doki.app";
+const APP_NAME = process.env.CAP_APP_NAME || "doki.help";
+const USER_AGENT = process.env.CAP_USER_AGENT || "dokiNativeApp";
+const RUSTORE = process.env.CAP_RUSTORE === "true";
+
+function serverHost(url: string): string {
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return "www.doki.help";
+  }
+}
 
 const config: CapacitorConfig = {
-  appId: "help.doki.app",
-  appName: "doki.help",
+  appId: APP_ID,
+  appName: APP_NAME,
   // Метка в User-Agent: сервер по ней узнаёт нативную обёртку и НЕ отдаёт ей
   // сторонние аналитики (Яндекс.Метрика/PostHog) — чтобы в App Privacy честно
   // отвечать «Not used to track». См. lib/isNativeRequest.ts.
-  appendUserAgent: "dokiNativeApp",
+  appendUserAgent: USER_AGENT,
+  includePlugins: RUSTORE
+    ? [
+        "@aparajita/capacitor-biometric-auth",
+        "@capacitor/app",
+        "@capacitor/camera",
+        "@capacitor/preferences",
+        "@capacitor/splash-screen",
+        "@capacitor/status-bar",
+      ]
+    : undefined,
   // Оффлайн-fallback (native/www/index.html). Живой контент грузится с server.url.
   webDir: "native/www",
   ios: {
@@ -32,20 +54,29 @@ const config: CapacitorConfig = {
     // Разрешаем свайп-назад/вперёд как в Safari.
     allowsLinkPreview: false,
   },
+  android: {
+    backgroundColor: "#f9f5f0",
+    allowMixedContent: false,
+    captureInput: true,
+    webContentsDebuggingEnabled: process.env.CAP_ANDROID_DEBUG === "true",
+  },
   server: {
     // Грузим прод-сайт. Для локальной отладки переопределяется CAP_SERVER_URL.
     url: PROD_URL,
-    // Домены, на которые WebView может уходить, оставаясь в приложении
-    // (OAuth Google, Supabase). Остальные внешние ссылки — в системный браузер.
-    allowNavigation: [
-      "www.doki.help",
-      "doki.help",
-      "*.supabase.co",
-      "accounts.google.com",
-      "*.google.com",
-      "*.gstatic.com",
-    ],
+    // RuStore-сборка использует вход по email и не разрешает навигацию WebView
+    // на OAuth-домены. Сетевые API-запросы этим списком не ограничиваются.
+    allowNavigation: RUSTORE
+      ? [serverHost(PROD_URL)]
+      : [
+          "www.doki.help",
+          "doki.help",
+          "*.supabase.co",
+          "accounts.google.com",
+          "*.google.com",
+          "*.gstatic.com",
+        ],
     iosScheme: "https",
+    androidScheme: "https",
   },
   plugins: {
     SplashScreen: {
@@ -53,9 +84,13 @@ const config: CapacitorConfig = {
       backgroundColor: "#f9f5f0",
       showSpinner: false,
     },
-    PushNotifications: {
-      presentationOptions: ["badge", "sound", "alert"],
-    },
+    ...(RUSTORE
+      ? {}
+      : {
+          PushNotifications: {
+            presentationOptions: ["badge", "sound", "alert"],
+          },
+        }),
   },
 };
 

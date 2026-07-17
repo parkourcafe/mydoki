@@ -19,6 +19,8 @@ import {
 import { parseOffsets } from "@/lib/reminders";
 import { hashSharePassword } from "@/lib/shareAccess";
 import { normalizeEmploymentType } from "@/lib/employment";
+import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
+import { isRuStoreRestrictedDocumentCategory } from "@/lib/rustore";
 
 export async function signOut() {
   const supabase = await getSupabaseServer();
@@ -198,6 +200,13 @@ export async function createDocumentMeta(input: {
   notes?: string;
   tags?: string[];
 }): Promise<{ id: string; householdId: string }> {
+  if (
+    (await isRuStoreRequest()) &&
+    isRuStoreRestrictedDocumentCategory(input.category)
+  ) {
+    throw new Error("Медицинские документы не входят в версию для RuStore.");
+  }
+
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
 
@@ -455,6 +464,9 @@ export async function deleteDocument(formData: FormData) {
 }
 
 export async function createRecord(formData: FormData) {
+  if (await isRuStoreRequest()) {
+    throw new Error("Медицинские записи не входят в версию для RuStore.");
+  }
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
 
@@ -476,6 +488,9 @@ export async function createRecord(formData: FormData) {
 }
 
 export async function deleteRecord(formData: FormData) {
+  if (await isRuStoreRequest()) {
+    throw new Error("Медицинские записи не входят в версию для RuStore.");
+  }
   const supabase = await getSupabaseServer();
   const id = String(formData.get("id") ?? "");
   const member_id = String(formData.get("member_id") ?? "");
@@ -490,6 +505,12 @@ export async function createShare(formData: FormData) {
   const document_id = String(formData.get("document_id") ?? "");
   const doc = await getDocument(document_id);
   if (!doc) throw new Error("Документ не найден");
+  if (
+    (await isRuStoreRequest()) &&
+    isRuStoreRestrictedDocumentCategory(doc.category)
+  ) {
+    throw new Error("Медицинские документы не входят в версию для RuStore.");
+  }
 
   const days = Math.max(1, Math.min(90, Number(formData.get("days") ?? 7)));
   const expires_at = new Date(Date.now() + days * 86400_000).toISOString();
@@ -525,6 +546,12 @@ export async function createDocumentShare(
   const supabase = await getSupabaseServer();
   const doc = await getDocument(input.documentId);
   if (!doc) return { error: "not_found" };
+  if (
+    (await isRuStoreRequest()) &&
+    isRuStoreRestrictedDocumentCategory(doc.category)
+  ) {
+    return { error: "not_available_in_rustore" };
+  }
 
   const days = Math.max(1, Math.min(90, Number(input.days) || 7));
   const maxViewsRaw = Number(input.maxViews) || 0;

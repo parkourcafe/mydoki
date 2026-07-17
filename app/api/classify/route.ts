@@ -3,6 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { classifyDocument, userWantsAi } from "@/lib/classify";
 import { allowAiCall } from "@/lib/ratelimit";
 import { getLocale } from "@/lib/i18n";
+import { isRuStoreUserAgent } from "@/lib/nativeUserAgent";
 
 export const maxDuration = 60;
 
@@ -49,6 +50,13 @@ const M = {
 } as const;
 
 export async function POST(request: Request) {
+  if (isRuStoreUserAgent(request.headers.get("user-agent") || "")) {
+    return NextResponse.json(
+      { error: "ИИ-распознавание не входит в версию DOKI HELP для RuStore." },
+      { status: 403 }
+    );
+  }
+
   // Только авторизованный пользователь может звать классификатор
   const supabase = await getSupabaseServer();
   const {
