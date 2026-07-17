@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
@@ -55,12 +56,15 @@ export default async function NewVacancyPage() {
   const locale = await getLocale();
   const t = M[locale];
   const user = await getUser();
+  // Защита: если сессия не подтвердилась (напр. гонка cookie сразу после OAuth),
+  // не падаем на user!.id, а отправляем на вход.
+  if (!user) redirect("/login");
   const supabase = await getSupabaseServer();
 
   const { data: profile } = await supabase
     .from("employer_profiles")
     .select("*")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .maybeSingle();
 
   if (!profile) {
