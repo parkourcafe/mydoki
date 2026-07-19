@@ -98,6 +98,8 @@ export default async function SegmentPage({
   const locale = await getLocale();
   const c = seg.locales[locale];
   const t = UI[locale];
+  const ctaHref = seg.ctaHref ?? "/login";
+  const ctaLabel = c.ctaLabel ?? t.start;
 
   const breadcrumb = {
     "@context": "https://schema.org",
@@ -153,10 +155,10 @@ export default async function SegmentPage({
         <p className="mt-5 max-w-2xl text-[19px] leading-snug text-[#5c5248]">{c.subtitle}</p>
         <div className="mt-7">
           <Link
-            href="/login"
+            href={ctaHref}
             className="accent-btn inline-flex items-center justify-center rounded-3xl px-8 py-[15px] text-[17px] font-semibold active:scale-[0.985]"
           >
-            {t.start}
+            {ctaLabel}
           </Link>
         </div>
       </section>
@@ -205,10 +207,10 @@ export default async function SegmentPage({
           <h2 className="mb-3 text-3xl font-semibold tracking-tight">{t.ctaHeading}</h2>
           <p className="mx-auto mb-7 max-w-sm text-[#d4c9b8]">{t.ctaSub}</p>
           <Link
-            href="/login"
+            href={ctaHref}
             className="inline-flex items-center justify-center rounded-3xl bg-[#b85c38] px-10 py-4 text-lg font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]"
           >
-            {t.start}
+            {ctaLabel}
           </Link>
         </div>
       </section>
@@ -217,7 +219,13 @@ export default async function SegmentPage({
       <footer className="border-t border-[#e8e0d5] bg-[#fdfaf5] px-5 py-8 text-sm text-[#8a7c6d]">
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
           <Link href="/" className="hover:text-[#2c2522]">{t.back}</Link>
-          <div className="flex gap-x-6">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
+            {segment === "employers" && (
+              <>
+                <Link href="/faq#hr" className="hover:text-[#2c2522]">FAQ</Link>
+                <Link href="/dpa" className="hover:text-[#2c2522]">DPA</Link>
+              </>
+            )}
             <Link href="/privacy" className="hover:text-[#2c2522]">{t.privacy}</Link>
             <Link href="/terms" className="hover:text-[#2c2522]">{t.terms}</Link>
           </div>

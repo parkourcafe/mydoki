@@ -21,8 +21,6 @@ const META: Record<Locale, { title: string; description: string }> = {
   },
 };
 
-export { POLICY_VERSION } from "@/lib/policy";
-
 export async function generateMetadata(): Promise<Metadata> {
   return META[await getLocale()];
 }
