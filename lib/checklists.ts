@@ -1839,6 +1839,214 @@ const DATA: Record<string, Checklist> = {
       ],
     },
   },
+  "hospitality-hiring-checklist": {
+    slug: "hospitality-hiring-checklist",
+    emoji: "🍽️",
+    locales: {
+      en: {
+        navLabel: "Hospitality hiring",
+        title: "Hospitality Hiring Document Checklist | Doki.help",
+        metaDescription:
+          "Documents commonly collected when hiring restaurant, cafe and hotel staff in Indonesia, and how to collect them from one link.",
+        h1: "Hospitality hiring document checklist",
+        intro:
+          "Restaurants, cafes and hotels hire often and shift-based. This checklist covers the documents usually collected for F&B and front-of-house roles and how to gather them without WhatsApp chaos.",
+        ctaPrimary: "Collect these documents via one link",
+        groups: [
+          { h2: "Commonly collected", items: ["CV or work history", "Certificates (food handling, hospitality)", "SKCK (if requested)", "Work references", "Passport-size photo"] },
+          { h2: "Collect it cleanly", items: ["Start from an F&B / receptionist pack template", "One link per candidate — no account", "“Complete / missing” status per person"] },
+        ],
+        faqHeading: "Hospitality hiring — FAQ",
+        faq: [
+          { q: "Do I need a health certificate?", a: "Many F&B roles ask for one; collect it after an offer. Confirm requirements locally." },
+          { q: "Can I hire in batches?", a: "Yes — one checklist link works for many candidates at once." },
+        ],
+      },
+      id: {
+        navLabel: "Rekrutmen hospitality",
+        title: "Ceklis Dokumen Rekrutmen Hospitality | Doki.help",
+        metaDescription:
+          "Dokumen yang umum dikumpulkan saat merekrut staf restoran, kafe, dan hotel di Indonesia, dan cara mengumpulkannya dari satu tautan.",
+        h1: "Ceklis dokumen rekrutmen hospitality",
+        intro:
+          "Restoran, kafe, dan hotel sering merekrut dan berbasis shift. Ceklis ini merangkum dokumen yang biasa dikumpulkan untuk peran F&B dan front-of-house dan cara mengumpulkannya tanpa ribet di WhatsApp.",
+        ctaPrimary: "Kumpulkan dokumen ini lewat satu tautan",
+        groups: [
+          { h2: "Umum dikumpulkan", items: ["CV atau riwayat kerja", "Sertifikat (food handling, perhotelan)", "SKCK (jika diminta)", "Referensi kerja", "Pas foto"] },
+          { h2: "Kumpulkan dengan rapi", items: ["Mulai dari template paket F&B / resepsionis", "Satu tautan per kandidat — tanpa akun", "Status “lengkap / kurang” per orang"] },
+        ],
+        faqHeading: "Rekrutmen hospitality — FAQ",
+        faq: [
+          { q: "Apakah perlu surat sehat?", a: "Banyak peran F&B memintanya; kumpulkan setelah penawaran. Konfirmasikan syaratnya secara lokal." },
+          { q: "Bisakah merekrut secara batch?", a: "Bisa — satu tautan ceklis berlaku untuk banyak kandidat sekaligus." },
+        ],
+      },
+      ru: {
+        navLabel: "Найм в hospitality",
+        title: "Чек-лист документов найма в hospitality | Doki.help",
+        metaDescription:
+          "Документы, которые обычно собирают при найме персонала ресторанов, кафе и отелей в Индонезии, и как собрать по одной ссылке.",
+        h1: "Чек-лист документов найма в hospitality",
+        intro:
+          "Рестораны, кафе и отели нанимают часто и посменно. Чек-лист собирает документы для F&B и front-of-house и как их получить без хаоса в WhatsApp.",
+        ctaPrimary: "Собрать эти документы по одной ссылке",
+        groups: [
+          { h2: "Обычно собирают", items: ["CV или опыт работы", "Сертификаты (food handling, hospitality)", "SKCK (если просят)", "Рекомендации", "Фото на документы"] },
+          { h2: "Соберите аккуратно", items: ["Начните с шаблона пака F&B / ресепшн", "Одна ссылка на кандидата — без аккаунта", "Статус «полный / не хватает»"] },
+        ],
+        faqHeading: "Найм в hospitality — FAQ",
+        faq: [
+          { q: "Нужна ли медсправка?", a: "Многие F&B-роли её просят; собирайте после оффера. Уточните требования на месте." },
+          { q: "Можно нанимать пачками?", a: "Да — одна ссылка-чек-лист работает сразу для многих кандидатов." },
+        ],
+      },
+      uz: {
+        navLabel: "Hospitality yollash",
+        title: "Hospitality yollash hujjatlari ro‘yxati | Doki.help",
+        metaDescription:
+          "Indoneziyada restoran, kafe va mehmonxona xodimlarini yollashda odatda yig‘iladigan hujjatlar va ularni bitta havoladan yig‘ish.",
+        h1: "Hospitality yollash hujjatlari ro‘yxati",
+        intro:
+          "Restoran, kafe va mehmonxonalar tez-tez va smenali yollaydi. Bu ro‘yxatda F&B va front-of-house rollari uchun odatda yig‘iladigan hujjatlar va ularni WhatsAppda tartibsizliksiz yig‘ish keltirilgan.",
+        ctaPrimary: "Bu hujjatlarni bitta havola orqali yig‘ing",
+        groups: [
+          { h2: "Odatda yig‘iladi", items: ["CV yoki ish tarixi", "Sertifikatlar (food handling, mehmondo‘stlik)", "SKCK (so‘ralsa)", "Ish tavsiyalari", "Pas foto"] },
+          { h2: "Tartibli yig‘ing", items: ["F&B / resepsionist paket shablonidan boshlang", "Har bir nomzodga bitta havola — hisobsiz", "Har bir odam bo‘yicha “to‘liq / kam” statusi"] },
+        ],
+        faqHeading: "Hospitality yollash — FAQ",
+        faq: [
+          { q: "Tibbiy ma’lumotnoma kerakmi?", a: "Ko‘p F&B rollari uni so‘raydi; taklifdan keyin yig‘ing. Talablarni joyida tasdiqlang." },
+          { q: "Partiyalab yollasa bo‘ladimi?", a: "Ha — bitta ro‘yxat-havola bir vaqtda ko‘p nomzod uchun ishlaydi." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/hospitality", label: "For hospitality employers" },
+        { href: "/checklists/villa-staff-documents-checklist", label: "Villa staff checklist" },
+        { href: "/candidate-document-collection", label: "Collect candidate documents" },
+      ],
+      id: [
+        { href: "/for/hospitality", label: "Untuk pemberi kerja hospitality" },
+        { href: "/checklists/villa-staff-documents-checklist", label: "Ceklis staf vila" },
+        { href: "/candidate-document-collection", label: "Kumpulkan dokumen kandidat" },
+      ],
+      ru: [
+        { href: "/for/hospitality", label: "Для hospitality-работодателей" },
+        { href: "/checklists/villa-staff-documents-checklist", label: "Чек-лист персонала виллы" },
+        { href: "/candidate-document-collection", label: "Сбор документов кандидатов" },
+      ],
+      uz: [
+        { href: "/for/hospitality", label: "Hospitality ish beruvchilari uchun" },
+        { href: "/checklists/villa-staff-documents-checklist", label: "Villa xodimi ro‘yxati" },
+        { href: "/candidate-document-collection", label: "Nomzod hujjatlarini yig‘ish" },
+      ],
+    },
+  },
+  "domestic-worker-documents-checklist": {
+    slug: "domestic-worker-documents-checklist",
+    emoji: "🏠",
+    locales: {
+      en: {
+        navLabel: "Domestic worker docs",
+        title: "Domestic Worker (ART) Document Checklist | Doki.help",
+        metaDescription:
+          "Documents commonly collected when hiring a domestic worker (ART/PRT) in Indonesia, and how to collect them respectfully from one link.",
+        h1: "Domestic worker (ART) document checklist",
+        intro:
+          "Hiring a domestic worker (ART/PRT) usually involves a few key documents and trust on both sides. This checklist covers what's commonly collected and how to gather it in one place.",
+        ctaPrimary: "Collect these documents via one link",
+        groups: [
+          { h2: "Commonly collected", items: ["CV or work history", "SKCK (police record)", "Health certificate (surat sehat)", "Work references", "Passport-size photo"] },
+          { h2: "Collect it respectfully", items: ["One link — the worker uploads without an account", "ID documents collected after agreement, not upfront", "Files stay in your control (revocable links)"] },
+        ],
+        faqHeading: "Domestic worker documents — FAQ",
+        faq: [
+          { q: "Is SKCK required?", a: "Many households ask for it, but it's not universal. Agree with the worker and confirm current SKCK rules with Polri." },
+          { q: "Where are the documents stored?", a: "In secure cloud infrastructure; servers may be located outside Indonesia — see the Privacy Policy." },
+        ],
+      },
+      id: {
+        navLabel: "Dokumen ART",
+        title: "Ceklis Dokumen ART / PRT | Doki.help",
+        metaDescription:
+          "Dokumen yang umum dikumpulkan saat merekrut asisten rumah tangga (ART/PRT) di Indonesia, dan cara mengumpulkannya dengan sopan dari satu tautan.",
+        h1: "Ceklis dokumen ART / PRT",
+        intro:
+          "Merekrut asisten rumah tangga (ART/PRT) biasanya melibatkan beberapa dokumen penting dan rasa saling percaya. Ceklis ini merangkum yang biasa dikumpulkan dan cara mengumpulkannya di satu tempat.",
+        ctaPrimary: "Kumpulkan dokumen ini lewat satu tautan",
+        groups: [
+          { h2: "Umum dikumpulkan", items: ["CV atau riwayat kerja", "SKCK", "Surat sehat", "Referensi kerja", "Pas foto"] },
+          { h2: "Kumpulkan dengan sopan", items: ["Satu tautan — pekerja unggah tanpa akun", "Dokumen identitas dikumpulkan setelah kesepakatan, bukan di awal", "Berkas tetap terkendali (tautan bisa dicabut)"] },
+        ],
+        faqHeading: "Dokumen ART — FAQ",
+        faq: [
+          { q: "Apakah SKCK wajib?", a: "Banyak keluarga memintanya, tapi tidak universal. Sepakati dengan pekerja dan cek aturan SKCK terbaru di Polri." },
+          { q: "Di mana dokumen disimpan?", a: "Di infrastruktur cloud aman; server dapat berada di luar Indonesia — lihat Kebijakan Privasi." },
+        ],
+      },
+      ru: {
+        navLabel: "Документы ART",
+        title: "Чек-лист документов ART / PRT | Doki.help",
+        metaDescription:
+          "Документы, которые обычно собирают при найме домашнего работника (ART/PRT) в Индонезии, и как собрать по одной ссылке уважительно.",
+        h1: "Чек-лист документов ART / PRT",
+        intro:
+          "Найм домашнего работника (ART/PRT) обычно включает несколько ключевых документов и взаимное доверие. Чек-лист собирает то, что обычно нужно, и как получить в одном месте.",
+        ctaPrimary: "Собрать эти документы по одной ссылке",
+        groups: [
+          { h2: "Обычно собирают", items: ["CV или опыт работы", "SKCK", "Медсправка (surat sehat)", "Рекомендации", "Фото на документы"] },
+          { h2: "Соберите уважительно", items: ["Одна ссылка — работник загружает без аккаунта", "ID собираются после договорённости, не сразу", "Файлы под вашим контролем (отзывные ссылки)"] },
+        ],
+        faqHeading: "Документы ART — FAQ",
+        faq: [
+          { q: "Обязателен ли SKCK?", a: "Многие семьи просят его, но не всегда. Договоритесь с работником и уточните актуальные правила SKCK в Polri." },
+          { q: "Где хранятся документы?", a: "В защищённой облачной инфраструктуре; серверы могут быть за пределами Индонезии — см. Политику конфиденциальности." },
+        ],
+      },
+      uz: {
+        navLabel: "ART hujjatlari",
+        title: "Uy xodimi (ART) hujjatlari ro‘yxati | Doki.help",
+        metaDescription:
+          "Indoneziyada uy xodimini (ART/PRT) yollashda odatda yig‘iladigan hujjatlar va ularni bitta havoladan hurmat bilan yig‘ish.",
+        h1: "Uy xodimi (ART) hujjatlari ro‘yxati",
+        intro:
+          "Uy xodimini (ART/PRT) yollash odatda bir nechta muhim hujjat va o‘zaro ishonchni o‘z ichiga oladi. Bu ro‘yxatda odatda nima yig‘ilishi va uni bir joyda yig‘ish keltirilgan.",
+        ctaPrimary: "Bu hujjatlarni bitta havola orqali yig‘ing",
+        groups: [
+          { h2: "Odatda yig‘iladi", items: ["CV yoki ish tarixi", "SKCK", "Tibbiy ma’lumotnoma", "Ish tavsiyalari", "Pas foto"] },
+          { h2: "Hurmat bilan yig‘ing", items: ["Bitta havola — xodim hisobsiz yuklaydi", "Shaxs hujjatlari kelishuvdan keyin yig‘iladi, boshida emas", "Fayllar nazoratingizda (bekor qilinadigan havolalar)"] },
+        ],
+        faqHeading: "ART hujjatlari — FAQ",
+        faq: [
+          { q: "SKCK majburiymi?", a: "Ko‘p oilalar so‘raydi, lekin universal emas. Xodim bilan kelishing va SKCK qoidalarini Polri da tekshiring." },
+          { q: "Hujjatlar qayerda saqlanadi?", a: "Xavfsiz bulut infratuzilmasida; serverlar Indoneziyadan tashqarida bo‘lishi mumkin — Maxfiylik siyosatiga qarang." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/families", label: "For families" },
+        { href: "/checklists/skck-checklist", label: "SKCK checklist" },
+        { href: "/security", label: "How your documents are protected" },
+      ],
+      id: [
+        { href: "/for/families", label: "Untuk keluarga" },
+        { href: "/checklists/skck-checklist", label: "Ceklis SKCK" },
+        { href: "/security", label: "Cara dokumen Anda dilindungi" },
+      ],
+      ru: [
+        { href: "/for/families", label: "Для семей" },
+        { href: "/checklists/skck-checklist", label: "Чек-лист SKCK" },
+        { href: "/security", label: "Как защищены документы" },
+      ],
+      uz: [
+        { href: "/for/families", label: "Oilalar uchun" },
+        { href: "/checklists/skck-checklist", label: "SKCK ro‘yxati" },
+        { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
+      ],
+    },
+  },
 };
 
 export const CHECKLIST_KEYS = Object.keys(DATA);
