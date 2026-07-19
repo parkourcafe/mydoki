@@ -36,3 +36,10 @@ export function indonesiaRep(): { name: string; contact: string } | null {
   if (!name) return null;
   return { name, contact: (process.env.NEXT_PUBLIC_ID_REP_CONTACT || "").trim() };
 }
+
+// Indonesian PSE (electronic system provider) registration number. Set
+// NEXT_PUBLIC_PSE_ID only AFTER the service is actually registered — the
+// "PSE Terdaftar" badge must never be shown before real registration.
+export function pseId(): string | null {
+  return (process.env.NEXT_PUBLIC_PSE_ID || "").trim() || null;
+}

@@ -10,6 +10,7 @@ import { landingLinks } from "@/lib/landings";
 import { checklistLinks } from "@/lib/checklists";
 import { trustLinks } from "@/lib/trust";
 import { supportWhatsappUrl } from "@/lib/support";
+import PseBadge from "@/components/PseBadge";
 
 // Сгенерированные кинематографичные ассеты (Higgsfield · nano-banana / kling).
 // Хостинг — тот же CDN, что использовался для прежней hero-картинки.
@@ -1444,7 +1445,10 @@ export default async function Home({
       {/* FOOTER */}
       <footer className="border-t border-[#e8e0d5] bg-[#fdfaf5] px-5 py-8 text-sm text-[#8a7c6d]">
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
-          <div>{t.footer.copyright}</div>
+          <div className="flex flex-col items-center gap-2 md:items-start">
+            <div>{t.footer.copyright}</div>
+            <PseBadge />
+          </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
             <Link href="/pricing" className="hover:text-[#2c2522]">{t.footer.pricing}</Link>
             <Link href="/about" className="hover:text-[#2c2522]">{t.footer.about}</Link>
