@@ -671,6 +671,482 @@ const DATA: Record<string, Checklist> = {
       ],
     },
   },
+  "skck-checklist": {
+    slug: "skck-checklist",
+    emoji: "🗂️",
+    locales: {
+      en: {
+        navLabel: "SKCK checklist",
+        title: "SKCK Requirements Checklist for Hiring | Doki.help",
+        metaDescription:
+          "What SKCK is, the documents usually needed to apply, and how HR teams collect it from candidates via one reusable checklist link.",
+        h1: "SKCK document checklist for hiring",
+        intro:
+          "SKCK (Surat Keterangan Catatan Kepolisian) is a police-record certificate many Indonesian employers request during hiring. This checklist covers what candidates usually need to apply and how to collect it cleanly. Always confirm current requirements with the local police (Polri) or the official SKCK portal.",
+        ctaPrimary: "Collect these documents via one link",
+        groups: [
+          {
+            h2: "What candidates usually need to apply",
+            items: [
+              "Valid KTP (national ID)",
+              "Family card (Kartu Keluarga / KK)",
+              "Recent red-background photos",
+              "Birth certificate or ijazah (varies by office)",
+              "Application form at the police office or online",
+            ],
+          },
+          {
+            h2: "What HR usually collects from the candidate",
+            items: [
+              "A copy of the issued SKCK",
+              "Issue and expiry date (SKCK is time-limited)",
+              "KTP for an identity match",
+            ],
+          },
+          {
+            h2: "Collect it without the back-and-forth",
+            items: [
+              "Send one checklist link — the candidate uploads without an account",
+              "See a “complete / missing” status per candidate",
+              "Set a reminder before the SKCK expires",
+            ],
+          },
+        ],
+        faqHeading: "SKCK — frequently asked",
+        faq: [
+          {
+            q: "How long is an SKCK valid?",
+            a: "An SKCK is time-limited and typically needs renewal after a period set by Polri. Check the exact validity on the certificate or the official SKCK portal.",
+          },
+          {
+            q: "Should candidates upload SKCK before an interview?",
+            a: "Sensitive documents are best collected after an offer, not from every applicant. Doki keeps ID and health documents to the post-offer stage by default.",
+          },
+          {
+            q: "Can I collect SKCK from many candidates at once?",
+            a: "Yes — send each candidate the same checklist link; each uploads their own file and you instantly see who is complete.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Ceklis SKCK",
+        title: "Ceklis Dokumen SKCK untuk Rekrutmen | Doki.help",
+        metaDescription:
+          "Apa itu SKCK, dokumen yang biasanya diperlukan untuk mengurusnya, dan cara tim HR mengumpulkannya dari kandidat lewat satu tautan ceklis.",
+        h1: "Ceklis dokumen SKCK untuk rekrutmen",
+        intro:
+          "SKCK (Surat Keterangan Catatan Kepolisian) sering diminta banyak perusahaan saat rekrutmen. Ceklis ini merangkum apa yang biasanya diperlukan kandidat untuk mengurusnya dan cara mengumpulkannya dengan rapi. Selalu cek syarat terbaru di kepolisian (Polri) atau portal SKCK resmi.",
+        ctaPrimary: "Kumpulkan dokumen ini lewat satu tautan",
+        groups: [
+          {
+            h2: "Yang biasanya diperlukan untuk mengurus SKCK",
+            items: [
+              "KTP yang berlaku",
+              "Kartu Keluarga (KK)",
+              "Pas foto latar merah terbaru",
+              "Akta kelahiran atau ijazah (tergantung kantor)",
+              "Formulir permohonan di kantor polisi atau online",
+            ],
+          },
+          {
+            h2: "Yang biasanya dikumpulkan HR dari kandidat",
+            items: [
+              "Salinan SKCK yang sudah terbit",
+              "Tanggal terbit dan masa berlaku",
+              "KTP untuk pencocokan identitas",
+            ],
+          },
+          {
+            h2: "Kumpulkan tanpa bolak-balik",
+            items: [
+              "Kirim satu tautan ceklis — kandidat unggah tanpa akun",
+              "Lihat status “lengkap / kurang” per kandidat",
+              "Pasang pengingat sebelum SKCK kedaluwarsa",
+            ],
+          },
+        ],
+        faqHeading: "SKCK — pertanyaan umum",
+        faq: [
+          {
+            q: "Berapa lama SKCK berlaku?",
+            a: "SKCK memiliki masa berlaku terbatas dan biasanya perlu diperpanjang setelah periode yang ditetapkan Polri. Cek masa berlaku persisnya di sertifikat atau portal SKCK resmi.",
+          },
+          {
+            q: "Apakah kandidat harus mengunggah SKCK sebelum wawancara?",
+            a: "Dokumen sensitif sebaiknya dikumpulkan setelah penawaran, bukan dari setiap pelamar. Doki secara bawaan menunda dokumen identitas dan kesehatan ke tahap pasca-penawaran.",
+          },
+          {
+            q: "Bisakah mengumpulkan SKCK dari banyak kandidat sekaligus?",
+            a: "Bisa — kirim tautan ceklis yang sama ke tiap kandidat; masing-masing mengunggah berkasnya dan Anda langsung melihat siapa yang lengkap.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Чек-лист SKCK",
+        title: "Чек-лист документов SKCK для найма | Doki.help",
+        metaDescription:
+          "Что такое SKCK, какие документы обычно нужны для оформления и как HR собирает его у кандидатов по одной ссылке-чек-листу.",
+        h1: "Чек-лист документов SKCK для найма",
+        intro:
+          "SKCK (справка о несудимости) — документ, который многие индонезийские работодатели запрашивают при найме. Чек-лист собирает то, что обычно нужно кандидату для оформления, и как аккуратно всё получить. Актуальные требования уточняйте в полиции (Polri) или на официальном портале SKCK.",
+        ctaPrimary: "Собрать эти документы по одной ссылке",
+        groups: [
+          {
+            h2: "Что обычно нужно для оформления SKCK",
+            items: [
+              "Действующий KTP",
+              "Семейная карта (KK)",
+              "Свежие фото на красном фоне",
+              "Свидетельство о рождении или диплом (зависит от отделения)",
+              "Заявление в отделении полиции или онлайн",
+            ],
+          },
+          {
+            h2: "Что HR обычно собирает у кандидата",
+            items: [
+              "Копию готового SKCK",
+              "Дату выдачи и срок действия",
+              "KTP для сверки личности",
+            ],
+          },
+          {
+            h2: "Соберите без переписки",
+            items: [
+              "Отправьте одну ссылку-чек-лист — кандидат загружает без регистрации",
+              "Статус «полный / не хватает» по каждому",
+              "Напоминание до истечения срока SKCK",
+            ],
+          },
+        ],
+        faqHeading: "SKCK — частые вопросы",
+        faq: [
+          {
+            q: "Сколько действует SKCK?",
+            a: "У SKCK ограниченный срок действия, обычно требуется продление через период, установленный Polri. Точный срок смотрите на справке или официальном портале SKCK.",
+          },
+          {
+            q: "Должен ли кандидат загружать SKCK до собеседования?",
+            a: "Чувствительные документы лучше собирать после оффера, а не у каждого соискателя. Doki по умолчанию откладывает ID и медицинские документы на пост-офферный этап.",
+          },
+          {
+            q: "Можно собрать SKCK у многих кандидатов сразу?",
+            a: "Да — отправьте каждому одну и ту же ссылку-чек-лист; каждый загружает свой файл, и вы сразу видите, кто укомплектован.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "SKCK ro‘yxati",
+        title: "Yollash uchun SKCK hujjatlari ro‘yxati | Doki.help",
+        metaDescription:
+          "SKCK nima, uni rasmiylashtirish uchun odatda qanday hujjatlar kerak va HR uni nomzodlardan bitta havola orqali qanday yig‘adi.",
+        h1: "Yollash uchun SKCK hujjatlari ro‘yxati",
+        intro:
+          "SKCK (politsiya ma’lumotnomasi) — ko‘plab Indoneziya ish beruvchilari yollashda so‘raydigan hujjat. Bu ro‘yxatda nomzodga uni rasmiylashtirish uchun odatda nima kerakligi va uni qanday tartibli yig‘ish yig‘ilgan. Dolzarb talablarni politsiya (Polri) yoki rasmiy SKCK portalidan tekshiring.",
+        ctaPrimary: "Bu hujjatlarni bitta havola orqali yig‘ing",
+        groups: [
+          {
+            h2: "SKCK olish uchun odatda nima kerak",
+            items: [
+              "Amaldagi KTP",
+              "Oila kartasi (KK)",
+              "Qizil fonli yangi rasmlar",
+              "Tug‘ilganlik guvohnomasi yoki diplom (bo‘limga qarab)",
+              "Politsiya bo‘limida yoki onlayn ariza",
+            ],
+          },
+          {
+            h2: "HR nomzoddan odatda nima yig‘adi",
+            items: [
+              "Tayyor SKCK nusxasi",
+              "Berilgan sana va amal qilish muddati",
+              "Shaxsni solishtirish uchun KTP",
+            ],
+          },
+          {
+            h2: "Yozishmalarsiz yig‘ing",
+            items: [
+              "Bitta ro‘yxat-havola yuboring — nomzod hisobsiz yuklaydi",
+              "Har bir nomzod bo‘yicha “to‘liq / kam” statusi",
+              "SKCK muddati tugashidan oldin eslatma",
+            ],
+          },
+        ],
+        faqHeading: "SKCK — ko‘p beriladigan savollar",
+        faq: [
+          {
+            q: "SKCK qancha amal qiladi?",
+            a: "SKCK cheklangan muddatga ega va odatda Polri belgilagan muddatdan so‘ng yangilanishi kerak. Aniq muddatni guvohnomada yoki rasmiy SKCK portalida tekshiring.",
+          },
+          {
+            q: "Nomzod SKCK ni suhbatdan oldin yuklashi kerakmi?",
+            a: "Sezgir hujjatlarni har bir arizachidan emas, taklifdan keyin yig‘gan ma’qul. Doki sukut bo‘yicha shaxs va sog‘liq hujjatlarini taklifdan keyingi bosqichga qoldiradi.",
+          },
+          {
+            q: "Ko‘p nomzoddan SKCK ni bir vaqtda yig‘sa bo‘ladimi?",
+            a: "Ha — har bir nomzodga bir xil ro‘yxat-havola yuboring; har biri o‘z faylini yuklaydi va siz kim to‘liq ekanini darrov ko‘rasiz.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/recruitment-agencies", label: "For recruiting agencies" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Employee onboarding checklist" },
+        { href: "/security", label: "How your documents are protected" },
+      ],
+      id: [
+        { href: "/for/recruitment-agencies", label: "Untuk agensi rekrutmen" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Ceklis onboarding karyawan" },
+        { href: "/security", label: "Cara dokumen Anda dilindungi" },
+      ],
+      ru: [
+        { href: "/for/recruitment-agencies", label: "Для рекрутинговых агентств" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Чек-лист онбординга сотрудника" },
+        { href: "/security", label: "Как защищены документы" },
+      ],
+      uz: [
+        { href: "/for/recruitment-agencies", label: "Rekruting agentliklari uchun" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Xodim onboarding ro‘yxati" },
+        { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
+      ],
+    },
+  },
+  "kitas-work-permit-checklist": {
+    slug: "kitas-work-permit-checklist",
+    emoji: "🛂",
+    locales: {
+      en: {
+        navLabel: "KITAS checklist",
+        title: "KITAS & Work Permit Document Checklist | Doki.help",
+        metaDescription:
+          "Documents commonly needed for a KITAS / work permit, and how relocation agents collect them from clients via one checklist link.",
+        h1: "KITAS / work permit document checklist",
+        intro:
+          "A KITAS (limited-stay permit) usually requires a set of documents from the applicant and the sponsor. This checklist lists what's commonly needed and how to collect it from a client in one place. Requirements change — always verify with immigration (imigrasi.go.id) or a licensed agent.",
+        ctaPrimary: "Collect these documents via one link",
+        groups: [
+          {
+            h2: "Applicant documents (commonly requested)",
+            items: [
+              "Passport valid well beyond the stay",
+              "Red-background photos",
+              "CV and diploma / certificates",
+              "Health certificate (as required)",
+            ],
+          },
+          {
+            h2: "Sponsor / company documents",
+            items: [
+              "Sponsor letter and company deed",
+              "Company NPWP (tax ID)",
+              "Position and job description",
+            ],
+          },
+          {
+            h2: "Collect from the client cleanly",
+            items: [
+              "Send one checklist link — the client uploads without an account",
+              "Track a “complete / missing” status per client",
+              "Set reminders for KITAS and passport expiry",
+            ],
+          },
+        ],
+        faqHeading: "KITAS — frequently asked",
+        faq: [
+          {
+            q: "Is this the official KITAS requirement list?",
+            a: "No — requirements vary by permit type and change over time. Treat this as a working checklist and confirm with immigration or a licensed agent.",
+          },
+          {
+            q: "Can I reuse the checklist for every client?",
+            a: "Yes — the same checklist link works for each client; everyone uploads their own documents into their own package.",
+          },
+          {
+            q: "Does Doki give immigration advice?",
+            a: "No. Doki organizes and collects documents; it does not provide legal or immigration advice.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Ceklis KITAS",
+        title: "Ceklis Dokumen KITAS & Izin Kerja | Doki.help",
+        metaDescription:
+          "Dokumen yang umum diperlukan untuk KITAS / izin kerja, dan cara agen relokasi mengumpulkannya dari klien lewat satu tautan ceklis.",
+        h1: "Ceklis dokumen KITAS / izin kerja",
+        intro:
+          "KITAS (izin tinggal terbatas) biasanya memerlukan sejumlah dokumen dari pemohon dan penjamin. Ceklis ini merangkum yang umum diperlukan dan cara mengumpulkannya dari klien di satu tempat. Syarat bisa berubah — selalu cek di imigrasi (imigrasi.go.id) atau agen berlisensi.",
+        ctaPrimary: "Kumpulkan dokumen ini lewat satu tautan",
+        groups: [
+          {
+            h2: "Dokumen pemohon (umum diminta)",
+            items: [
+              "Paspor berlaku jauh melebihi masa tinggal",
+              "Pas foto latar merah",
+              "CV dan ijazah / sertifikat",
+              "Surat sehat (sesuai kebutuhan)",
+            ],
+          },
+          {
+            h2: "Dokumen penjamin / perusahaan",
+            items: [
+              "Surat penjamin dan akta perusahaan",
+              "NPWP perusahaan",
+              "Posisi dan uraian pekerjaan",
+            ],
+          },
+          {
+            h2: "Kumpulkan dari klien dengan rapi",
+            items: [
+              "Kirim satu tautan ceklis — klien unggah tanpa akun",
+              "Pantau status “lengkap / kurang” per klien",
+              "Pasang pengingat masa berlaku KITAS dan paspor",
+            ],
+          },
+        ],
+        faqHeading: "KITAS — pertanyaan umum",
+        faq: [
+          {
+            q: "Apakah ini daftar syarat KITAS resmi?",
+            a: "Bukan — syarat berbeda menurut jenis izin dan bisa berubah. Anggap ini ceklis kerja dan konfirmasikan ke imigrasi atau agen berlisensi.",
+          },
+          {
+            q: "Bisakah ceklisnya dipakai ulang untuk tiap klien?",
+            a: "Bisa — tautan ceklis yang sama berlaku untuk tiap klien; masing-masing mengunggah dokumennya ke paketnya sendiri.",
+          },
+          {
+            q: "Apakah Doki memberi saran imigrasi?",
+            a: "Tidak. Doki menata dan mengumpulkan dokumen; Doki tidak memberi nasihat hukum atau imigrasi.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Чек-лист KITAS",
+        title: "Чек-лист документов KITAS и разрешения | Doki.help",
+        metaDescription:
+          "Какие документы обычно нужны для KITAS / разрешения на работу и как релокейт-агенты собирают их у клиентов по одной ссылке.",
+        h1: "Чек-лист документов KITAS / разрешения на работу",
+        intro:
+          "KITAS (разрешение на временное пребывание) обычно требует пакет документов от заявителя и спонсора. Чек-лист собирает то, что чаще всего нужно, и как получить это у клиента в одном месте. Требования меняются — уточняйте в иммиграции (imigrasi.go.id) или у лицензированного агента.",
+        ctaPrimary: "Собрать эти документы по одной ссылке",
+        groups: [
+          {
+            h2: "Документы заявителя (обычно запрашивают)",
+            items: [
+              "Паспорт с запасом срока действия",
+              "Фото на красном фоне",
+              "CV и диплом / сертификаты",
+              "Медсправка (по требованию)",
+            ],
+          },
+          {
+            h2: "Документы спонсора / компании",
+            items: [
+              "Спонсорское письмо и устав компании",
+              "NPWP компании",
+              "Должность и описание работы",
+            ],
+          },
+          {
+            h2: "Соберите у клиента аккуратно",
+            items: [
+              "Отправьте одну ссылку-чек-лист — клиент загружает без регистрации",
+              "Статус «полный / не хватает» по каждому клиенту",
+              "Напоминания о сроках KITAS и паспорта",
+            ],
+          },
+        ],
+        faqHeading: "KITAS — частые вопросы",
+        faq: [
+          {
+            q: "Это официальный список требований KITAS?",
+            a: "Нет — требования зависят от типа разрешения и меняются. Считайте это рабочим чек-листом и уточняйте в иммиграции или у лицензированного агента.",
+          },
+          {
+            q: "Можно использовать чек-лист для каждого клиента?",
+            a: "Да — одна и та же ссылка работает для каждого клиента; каждый загружает свои документы в свой пакет.",
+          },
+          {
+            q: "Даёт ли Doki иммиграционные советы?",
+            a: "Нет. Doki организует и собирает документы; юридических и иммиграционных советов сервис не даёт.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "KITAS ro‘yxati",
+        title: "KITAS va ish ruxsati hujjatlari ro‘yxati | Doki.help",
+        metaDescription:
+          "KITAS / ish ruxsati uchun odatda kerak bo‘ladigan hujjatlar va ko‘chirish agentlari ularni mijozdan bitta havola orqali qanday yig‘adi.",
+        h1: "KITAS / ish ruxsati hujjatlari ro‘yxati",
+        intro:
+          "KITAS (vaqtinchalik yashash ruxsati) odatda arizachi va homiydan bir qator hujjatlarni talab qiladi. Bu ro‘yxatda ko‘pincha nima kerakligi va uni mijozdan bir joyda qanday yig‘ish keltirilgan. Talablar o‘zgaradi — har doim immigratsiya (imigrasi.go.id) yoki litsenziyali agentda tekshiring.",
+        ctaPrimary: "Bu hujjatlarni bitta havola orqali yig‘ing",
+        groups: [
+          {
+            h2: "Arizachi hujjatlari (odatda so‘raladi)",
+            items: [
+              "Yashash muddatidan ancha oshib amal qiladigan pasport",
+              "Qizil fonli rasmlar",
+              "CV va diplom / sertifikatlar",
+              "Tibbiy ma’lumotnoma (talabga ko‘ra)",
+            ],
+          },
+          {
+            h2: "Homiy / kompaniya hujjatlari",
+            items: [
+              "Homiy xati va kompaniya ta’sis hujjati",
+              "Kompaniya NPWP",
+              "Lavozim va ish tavsifi",
+            ],
+          },
+          {
+            h2: "Mijozdan tartibli yig‘ing",
+            items: [
+              "Bitta ro‘yxat-havola yuboring — mijoz hisobsiz yuklaydi",
+              "Har bir mijoz bo‘yicha “to‘liq / kam” statusi",
+              "KITAS va pasport muddati bo‘yicha eslatmalar",
+            ],
+          },
+        ],
+        faqHeading: "KITAS — ko‘p beriladigan savollar",
+        faq: [
+          {
+            q: "Bu rasmiy KITAS talablari ro‘yxatimi?",
+            a: "Yo‘q — talablar ruxsat turiga qarab farq qiladi va o‘zgaradi. Buni ishchi ro‘yxat deb biling va immigratsiya yoki litsenziyali agentda tasdiqlang.",
+          },
+          {
+            q: "Ro‘yxatni har bir mijoz uchun qayta ishlatsa bo‘ladimi?",
+            a: "Ha — bir xil ro‘yxat-havola har bir mijoz uchun ishlaydi; har biri o‘z hujjatlarini o‘z paketiga yuklaydi.",
+          },
+          {
+            q: "Doki immigratsiya bo‘yicha maslahat beradimi?",
+            a: "Yo‘q. Doki hujjatlarni tartibga soladi va yig‘adi; huquqiy yoki immigratsiya maslahatini bermaydi.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/visa-agents", label: "For visa & relocation agents" },
+        { href: "/for/residence", label: "KITAS & stay documents" },
+        { href: "/security", label: "How your documents are protected" },
+      ],
+      id: [
+        { href: "/for/visa-agents", label: "Untuk agen visa & relokasi" },
+        { href: "/for/residence", label: "Dokumen KITAS & izin tinggal" },
+        { href: "/security", label: "Cara dokumen Anda dilindungi" },
+      ],
+      ru: [
+        { href: "/for/visa-agents", label: "Для визовых и релокейт-агентов" },
+        { href: "/for/residence", label: "Документы KITAS и пребывания" },
+        { href: "/security", label: "Как защищены документы" },
+      ],
+      uz: [
+        { href: "/for/visa-agents", label: "Viza va ko‘chirish agentlari uchun" },
+        { href: "/for/residence", label: "KITAS va yashash hujjatlari" },
+        { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
+      ],
+    },
+  },
 };
 
 export const CHECKLIST_KEYS = Object.keys(DATA);
