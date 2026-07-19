@@ -61,6 +61,7 @@ export const LANDING_KEYS = [
   "travel-documents",
   "family-emergency-documents",
   "candidate-document-collection",
+  "hr-document-checklist",
 ] as const;
 export type LandingKey = (typeof LANDING_KEYS)[number];
 
@@ -3326,6 +3327,210 @@ const DATA: Record<LandingKey, Landing> = {
         { href: "/for/recruitment-agencies", label: "Rekruting agentliklari uchun" },
         { href: "/checklists/skck-checklist", label: "SKCK ro‘yxati" },
         { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
+      ],
+    },
+  },
+  "hr-document-checklist": {
+    slug: "hr-document-checklist",
+    emoji: "✅",
+    locales: {
+      en: {
+        navLabel: "HR document checklist",
+        title: "HR Document Checklist Tool for Hiring | Doki.help",
+        metaDescription:
+          "Build a document checklist for any role, send it as one link, and get complete candidate packages with a “what's missing” status and reminders.",
+        h1: "HR document checklist — build it, send it, track it",
+        intro:
+          "Turn “please send your documents” into a structured checklist. Pick the documents a role needs, share one link, and Doki tracks who is complete and who is still missing files.",
+        ctaPrimary: "Create your first checklist",
+        sections: [
+          {
+            h2: "Start from a template or build your own",
+            bullets: [
+              "Ready pack templates: villa staff, F&B, receptionist, driver, general staff",
+              "Or pick documents one by one for the role",
+              "Reuse the same checklist for every candidate",
+            ],
+          },
+          {
+            h2: "Send one link, track completeness",
+            bullets: [
+              "Candidates upload without an account",
+              "See a “complete / missing” status per person",
+              "Reminders for SKCK, KITAS and certificate expiry",
+            ],
+          },
+          {
+            h2: "Privacy by design",
+            body: "Sensitive documents like KTP and health certificates are collected after an offer, not from every applicant — a cleaner, more trustworthy process for candidates.",
+          },
+        ],
+        trustHeading: "How documents are protected",
+        trust: [
+          "Revocable share links with expiry, view limits and watermark",
+          "Files served via short-lived signed links, not public URLs",
+          "Export with no lock-in",
+        ],
+        faqHeading: "Frequently asked",
+        faq: [
+          { q: "Can I reuse one checklist for many candidates?", a: "Yes — the same link works for every candidate; each gets their own package." },
+          { q: "Do candidates need an account?", a: "No. They open the link and upload without registering." },
+          { q: "Can I edit the checklist?", a: "Yes — start from a template and add or remove documents for the role." },
+        ],
+      },
+      id: {
+        navLabel: "Checklist dokumen HR",
+        title: "Alat Ceklis Dokumen HR untuk Rekrutmen | Doki.help",
+        metaDescription:
+          "Buat ceklis dokumen untuk posisi apa pun, kirim sebagai satu tautan, dan terima paket kandidat lengkap dengan status “apa yang kurang” dan pengingat.",
+        h1: "Ceklis dokumen HR — buat, kirim, pantau",
+        intro:
+          "Ubah “tolong kirim dokumennya” jadi ceklis yang terstruktur. Pilih dokumen yang dibutuhkan sebuah posisi, bagikan satu tautan, dan Doki memantau siapa yang lengkap dan siapa yang masih kurang.",
+        ctaPrimary: "Buat checklist pertama",
+        sections: [
+          {
+            h2: "Mulai dari template atau buat sendiri",
+            bullets: [
+              "Template paket siap pakai: staf vila, F&B, resepsionis, sopir, staf umum",
+              "Atau pilih dokumen satu per satu untuk posisinya",
+              "Pakai ulang ceklis yang sama untuk tiap kandidat",
+            ],
+          },
+          {
+            h2: "Kirim satu tautan, pantau kelengkapan",
+            bullets: [
+              "Kandidat mengunggah tanpa akun",
+              "Lihat status “lengkap / kurang” per orang",
+              "Pengingat masa berlaku SKCK, KITAS, dan sertifikat",
+            ],
+          },
+          {
+            h2: "Privasi sejak awal",
+            body: "Dokumen sensitif seperti KTP dan surat sehat dikumpulkan setelah penawaran, bukan dari setiap pelamar — proses yang lebih rapi dan tepercaya bagi kandidat.",
+          },
+        ],
+        trustHeading: "Cara dokumen dilindungi",
+        trust: [
+          "Tautan berbagi bisa dicabut dengan kedaluwarsa, batas tampilan, dan watermark",
+          "Berkas disajikan lewat tautan bertanda tangan berumur pendek, bukan URL publik",
+          "Ekspor tanpa terkunci",
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          { q: "Bisakah pakai satu ceklis untuk banyak kandidat?", a: "Bisa — tautan yang sama berlaku untuk tiap kandidat; masing-masing punya paketnya sendiri." },
+          { q: "Apakah kandidat perlu akun?", a: "Tidak. Mereka membuka tautan dan mengunggah tanpa mendaftar." },
+          { q: "Bisakah mengedit ceklisnya?", a: "Bisa — mulai dari template lalu tambah atau hapus dokumen sesuai posisi." },
+        ],
+      },
+      ru: {
+        navLabel: "Чек-лист документов HR",
+        title: "Инструмент чек-листа документов для HR | Doki.help",
+        metaDescription:
+          "Соберите чек-лист документов под любую роль, отправьте одной ссылкой и получайте полные пакеты кандидатов со статусом «чего не хватает» и напоминаниями.",
+        h1: "Чек-лист документов HR — собрать, отправить, отследить",
+        intro:
+          "Превратите «пришлите документы» в структурированный чек-лист. Выберите документы под роль, отправьте одну ссылку — Doki отследит, кто укомплектован, а у кого чего не хватает.",
+        ctaPrimary: "Создать первый чек-лист",
+        sections: [
+          {
+            h2: "Из шаблона или свой",
+            bullets: [
+              "Готовые шаблоны паков: персонал виллы, F&B, ресепшн, водитель, линейный персонал",
+              "Или выберите документы по одному под роль",
+              "Переиспользуйте один чек-лист для каждого кандидата",
+            ],
+          },
+          {
+            h2: "Одна ссылка, контроль комплектности",
+            bullets: [
+              "Кандидаты загружают без аккаунта",
+              "Статус «полный / не хватает» по каждому",
+              "Напоминания о сроках SKCK, KITAS и сертификатов",
+            ],
+          },
+          {
+            h2: "Приватность по умолчанию",
+            body: "Чувствительные документы вроде KTP и медсправок собираются после оффера, а не у каждого соискателя — это чище и надёжнее для кандидатов.",
+          },
+        ],
+        trustHeading: "Как защищены документы",
+        trust: [
+          "Отзывные ссылки с истечением, лимитом просмотров и watermark",
+          "Файлы отдаются по короткоживущим подписанным ссылкам, без публичных адресов",
+          "Экспорт без привязки",
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          { q: "Можно один чек-лист для многих кандидатов?", a: "Да — одна ссылка работает для каждого; у каждого свой пакет." },
+          { q: "Нужен ли кандидату аккаунт?", a: "Нет. Он открывает ссылку и загружает без регистрации." },
+          { q: "Можно редактировать чек-лист?", a: "Да — начните с шаблона и добавьте/уберите документы под роль." },
+        ],
+      },
+      uz: {
+        navLabel: "HR hujjat ro‘yxati",
+        title: "Yollash uchun HR hujjat ro‘yxati vositasi | Doki.help",
+        metaDescription:
+          "Istalgan lavozim uchun hujjatlar ro‘yxatini tuzing, bitta havola qilib yuboring va to‘liq nomzod paketlarini “nima yetishmayapti” statusi bilan oling.",
+        h1: "HR hujjat ro‘yxati — tuzing, yuboring, kuzating",
+        intro:
+          "“Hujjatlaringizni yuboring” ni tuzilgan ro‘yxatga aylantiring. Lavozimga kerakli hujjatlarni tanlang, bitta havola ulashing — Doki kim to‘liq, kimda nima kamligini kuzatadi.",
+        ctaPrimary: "Birinchi ro‘yxatni yaratish",
+        sections: [
+          {
+            h2: "Shablondan yoki o‘zingiz",
+            bullets: [
+              "Tayyor paket shablonlari: villa xodimi, F&B, resepsionist, haydovchi, umumiy xodim",
+              "Yoki lavozim uchun hujjatlarni birma-bir tanlang",
+              "Bir xil ro‘yxatni har bir nomzod uchun qayta ishlating",
+            ],
+          },
+          {
+            h2: "Bitta havola, to‘liqlikni kuzating",
+            bullets: [
+              "Nomzodlar hisobsiz yuklaydi",
+              "Har bir odam bo‘yicha “to‘liq / kam” statusi",
+              "SKCK, KITAS va sertifikat muddatlari bo‘yicha eslatmalar",
+            ],
+          },
+          {
+            h2: "Boshidan maxfiylik",
+            body: "KTP va tibbiy ma’lumotnoma kabi sezgir hujjatlar har bir arizachidan emas, taklifdan keyin yig‘iladi — nomzodlar uchun tozaroq va ishonchliroq jarayon.",
+          },
+        ],
+        trustHeading: "Hujjatlar qanday himoyalanadi",
+        trust: [
+          "Ulashish havolalari muddati, ko‘rish chegarasi va watermark bilan bekor qilinadi",
+          "Fayllar ommaviy URL emas, qisqa muddatli imzolangan havolalar orqali beriladi",
+          "Bog‘lanishsiz eksport",
+        ],
+        faqHeading: "Ko‘p beriladigan savollar",
+        faq: [
+          { q: "Bitta ro‘yxatni ko‘p nomzod uchun ishlatsa bo‘ladimi?", a: "Ha — bir xil havola har bir nomzod uchun ishlaydi; har birida o‘z paketi bo‘ladi." },
+          { q: "Nomzodga hisob kerakmi?", a: "Yo‘q. Havolani ochib, ro‘yxatdan o‘tmasdan yuklaydi." },
+          { q: "Ro‘yxatni tahrirlash mumkinmi?", a: "Ha — shablondan boshlang va lavozimga qarab hujjat qo‘shing yoki olib tashlang." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/employers", label: "For HR teams & agencies" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Onboarding checklist" },
+        { href: "/candidate-document-collection", label: "Collect candidate documents" },
+      ],
+      id: [
+        { href: "/for/employers", label: "Untuk tim HR & agensi" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Ceklis onboarding" },
+        { href: "/candidate-document-collection", label: "Kumpulkan dokumen kandidat" },
+      ],
+      ru: [
+        { href: "/for/employers", label: "Для HR-команд и агентств" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Чек-лист онбординга" },
+        { href: "/candidate-document-collection", label: "Сбор документов кандидатов" },
+      ],
+      uz: [
+        { href: "/for/employers", label: "HR jamoalari va agentliklar uchun" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Onboarding ro‘yxati" },
+        { href: "/candidate-document-collection", label: "Nomzod hujjatlarini yig‘ish" },
       ],
     },
   },

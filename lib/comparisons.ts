@@ -10,9 +10,11 @@ export type ComparisonKey =
   | "telegram"
   | "whatsapp"
   | "google-form"
-  | "hr-whatsapp";
+  | "hr-whatsapp"
+  | "email-attachments"
+  | "spreadsheet-tracker";
 
-export const COMPARISON_KEYS: ComparisonKey[] = ["paper", "cloud", "gallery", "notary", "gosuslugi", "google-drive", "telegram", "whatsapp", "google-form", "hr-whatsapp"];
+export const COMPARISON_KEYS: ComparisonKey[] = ["paper", "cloud", "gallery", "notary", "gosuslugi", "google-drive", "telegram", "whatsapp", "google-form", "hr-whatsapp", "email-attachments", "spreadsheet-tracker"];
 
 export type ComparisonRow = { aspect: string; alt: string; doki: string };
 export type ComparisonFaq = { q: string; a: string };
@@ -1253,6 +1255,130 @@ const DATA: Record<ComparisonKey, Comparison> = {
         faq: [
           { q: "Bukankah lebih mudah kumpulkan semua di WhatsApp?", a: "Untuk 1–2 kandidat, ya. Dalam jumlah banyak, dokumen hilang dan tidak ada status kelengkapan. Tautan Doki mengatasinya." },
           { q: "Bagaimana kandidat mendapat tautannya?", a: "Anda kirim tautan pendek lewat WhatsApp; kandidat membukanya dan mengunggah tanpa mendaftar." },
+        ],
+      },
+    },
+  },
+  "email-attachments": {
+    emoji: "✉️",
+    locales: {
+      ru: {
+        navLabel: "vs email",
+        altName: "Документы по email",
+        title: "Сбор документов по email vs одна ссылка Doki",
+        subtitle: "Вложения в почте копятся, теряются и не показывают комплектность.",
+        intro:
+          "Собирать документы кандидатов по email — значит искать вложения в цепочках писем и вручную считать, чего не хватает. Doki заменяет это одной ссылкой-чек-листом со статусом пакета.",
+        rows: [
+          { aspect: "Где документы", alt: "Во вложениях разных писем", doki: "Один пакет под задачу" },
+          { aspect: "Комплектность", alt: "Считаете вручную", doki: "Статус «полный / не хватает»" },
+          { aspect: "Сроки", alt: "Никто не следит", doki: "Напоминания (SKCK, KITAS)" },
+          { aspect: "Контроль доступа", alt: "Письмо можно переслать кому угодно", doki: "Отзывные ссылки, watermark" },
+        ],
+        verdict: "Email — чтобы написать. Doki — чтобы собрать пакет документов со статусом.",
+        faq: [
+          { q: "Чем плох сбор по email?", a: "Вложения разрознены, нет статуса комплектности и напоминаний, письмо легко переслать. Ссылка Doki это решает." },
+          { q: "Нужен ли кандидату аккаунт?", a: "Нет — он загружает по ссылке без регистрации." },
+        ],
+      },
+      en: {
+        navLabel: "vs email",
+        altName: "Documents by email",
+        title: "Collecting documents by email vs one Doki link",
+        subtitle: "Email attachments pile up, get lost, and don't show completeness.",
+        intro:
+          "Collecting candidate documents by email means hunting for attachments across threads and counting by hand what's missing. Doki replaces that with one checklist link and a package status.",
+        rows: [
+          { aspect: "Where documents live", alt: "Attachments across emails", doki: "One package for the task" },
+          { aspect: "Completeness", alt: "You count by hand", doki: "“complete / missing” status" },
+          { aspect: "Expiry", alt: "Nobody tracks it", doki: "Reminders (SKCK, KITAS)" },
+          { aspect: "Access control", alt: "Emails can be forwarded to anyone", doki: "Revocable links, watermark" },
+        ],
+        verdict: "Email to write. Doki to collect a document package with a status.",
+        faq: [
+          { q: "What's wrong with collecting by email?", a: "Attachments are scattered, there's no completeness status or reminders, and emails are easily forwarded. A Doki link fixes that." },
+          { q: "Does the candidate need an account?", a: "No — they upload via the link without registering." },
+        ],
+      },
+      id: {
+        navLabel: "vs email",
+        altName: "Dokumen lewat email",
+        title: "Kumpulkan dokumen lewat email vs satu tautan Doki",
+        subtitle: "Lampiran email menumpuk, hilang, dan tidak menunjukkan kelengkapan.",
+        intro:
+          "Mengumpulkan dokumen kandidat lewat email berarti mencari lampiran di banyak thread dan menghitung manual apa yang kurang. Doki menggantinya dengan satu tautan ceklis dan status paket.",
+        rows: [
+          { aspect: "Di mana dokumen", alt: "Lampiran di banyak email", doki: "Satu paket sesuai kebutuhan" },
+          { aspect: "Kelengkapan", alt: "Hitung manual", doki: "Status “lengkap / kurang”" },
+          { aspect: "Masa berlaku", alt: "Tidak ada yang pantau", doki: "Pengingat (SKCK, KITAS)" },
+          { aspect: "Kontrol akses", alt: "Email bisa diteruskan ke siapa saja", doki: "Tautan bisa dicabut, watermark" },
+        ],
+        verdict: "Email untuk menulis. Doki untuk mengumpulkan paket dokumen dengan status.",
+        faq: [
+          { q: "Apa masalahnya kumpulkan lewat email?", a: "Lampiran tercecer, tidak ada status kelengkapan atau pengingat, dan email mudah diteruskan. Tautan Doki mengatasinya." },
+          { q: "Apakah kandidat perlu akun?", a: "Tidak — mereka unggah lewat tautan tanpa mendaftar." },
+        ],
+      },
+    },
+  },
+  "spreadsheet-tracker": {
+    emoji: "📊",
+    locales: {
+      ru: {
+        navLabel: "vs таблица",
+        altName: "Таблица-трекер",
+        title: "Excel-трекер документов vs Doki",
+        subtitle: "Таблица помнит, кто что сдал — но не хранит сами документы.",
+        intro:
+          "Excel/Sheets удобно вести список кандидатов, но документы всё равно лежат где-то ещё, а статус обновляется вручную. Doki объединяет сбор документов и статус комплектности в одном месте.",
+        rows: [
+          { aspect: "Документы", alt: "Не хранит — только отметки", doki: "Хранит пакет под задачу" },
+          { aspect: "Статус", alt: "Обновляете вручную", doki: "Обновляется после загрузки" },
+          { aspect: "Сбор от кандидата", alt: "Отдельно (почта/WA)", doki: "По одной ссылке" },
+          { aspect: "Сроки", alt: "Формулы вручную", doki: "Напоминания" },
+        ],
+        verdict: "Таблица — для обзора. Doki — чтобы и собрать документы, и видеть статус без ручного труда.",
+        faq: [
+          { q: "Можно вести всё в таблице?", a: "Список — да, но документы и статус придётся обновлять вручную. Doki делает это автоматически при загрузке." },
+          { q: "Можно ли экспортировать данные?", a: "Да — пакеты и статусы экспортируются без привязки к сервису." },
+        ],
+      },
+      en: {
+        navLabel: "vs spreadsheet",
+        altName: "Spreadsheet tracker",
+        title: "Spreadsheet document tracker vs Doki",
+        subtitle: "A sheet remembers who submitted what — but doesn't hold the documents.",
+        intro:
+          "Excel/Sheets is handy for a candidate list, but the documents live elsewhere and the status is updated by hand. Doki combines document collection and completeness status in one place.",
+        rows: [
+          { aspect: "Documents", alt: "Not stored — just ticks", doki: "Holds the package for the task" },
+          { aspect: "Status", alt: "You update by hand", doki: "Updates after upload" },
+          { aspect: "Collecting from the candidate", alt: "Separate (email/WA)", doki: "Via one link" },
+          { aspect: "Expiry", alt: "Manual formulas", doki: "Reminders" },
+        ],
+        verdict: "A spreadsheet for overview. Doki to both collect documents and see status without manual work.",
+        faq: [
+          { q: "Can I run it all in a spreadsheet?", a: "The list, yes — but documents and status need manual updates. Doki updates automatically on upload." },
+          { q: "Can I export the data?", a: "Yes — packages and statuses export with no lock-in." },
+        ],
+      },
+      id: {
+        navLabel: "vs spreadsheet",
+        altName: "Pelacak spreadsheet",
+        title: "Pelacak dokumen spreadsheet vs Doki",
+        subtitle: "Spreadsheet mengingat siapa mengirim apa — tapi tidak menyimpan dokumennya.",
+        intro:
+          "Excel/Sheets praktis untuk daftar kandidat, tapi dokumennya ada di tempat lain dan statusnya diperbarui manual. Doki menyatukan pengumpulan dokumen dan status kelengkapan di satu tempat.",
+        rows: [
+          { aspect: "Dokumen", alt: "Tidak disimpan — hanya centang", doki: "Menyimpan paket sesuai kebutuhan" },
+          { aspect: "Status", alt: "Diperbarui manual", doki: "Diperbarui setelah unggah" },
+          { aspect: "Mengumpulkan dari kandidat", alt: "Terpisah (email/WA)", doki: "Lewat satu tautan" },
+          { aspect: "Masa berlaku", alt: "Rumus manual", doki: "Pengingat" },
+        ],
+        verdict: "Spreadsheet untuk ikhtisar. Doki untuk sekaligus mengumpulkan dokumen dan melihat status tanpa kerja manual.",
+        faq: [
+          { q: "Bisakah semuanya di spreadsheet?", a: "Daftarnya bisa — tapi dokumen dan status perlu diperbarui manual. Doki memperbaruinya otomatis saat unggah." },
+          { q: "Bisakah mengekspor datanya?", a: "Bisa — paket dan status diekspor tanpa terkunci." },
         ],
       },
     },
