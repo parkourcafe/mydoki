@@ -982,7 +982,7 @@ const DATA: Record<SegmentKey, Segment> = {
     locales: {
       ru: {
         navLabel: "Hospitality",
-        title: "Наём персонала для вилл, кафе и отелей — без хаоса в документах",
+        title: "Наём персонала вилл, кафе и отелей — документы без хаоса",
         subtitle:
           "Для владельцев вилл, F&B и отелей на Бали: соберите документы линейного персонала по одной ссылке и держите сроки под контролем.",
         pains: [
@@ -1042,7 +1042,7 @@ const DATA: Record<SegmentKey, Segment> = {
       },
       uz: {
         navLabel: "Hospitality",
-        title: "Villa, F&B va mehmonxona xodimlarini hujjatlar tartibsizligisiz yollang",
+        title: "Villa va mehmonxona xodimlarini yollash: hujjatlar tartibda",
         subtitle:
           "Balidagi villa egalari, F&B va mehmonxonalar uchun: xodimlar hujjatlarini bitta havola orqali yig‘ing va muddatlarni nazoratda tuting.",
         pains: [
