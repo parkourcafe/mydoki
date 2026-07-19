@@ -63,7 +63,7 @@ const M = {
       "Данные хранятся в облачной инфраструктуре нашего поставщика (Supabase) и в защищённом файловом хранилище. Серверы поставщика могут находиться за пределами Индонезии. Используя Сервис и загружая документы, вы даёте согласие на такую трансграничную передачу и хранение данных за пределами Индонезии (ст. 55–56 UU PDP). Файлы доступны только по временным подписанным ссылкам.",
     h6: "6. Передача третьим лицам",
     sharing:
-      "Мы не продаём ваши данные. Мы передаём их только: (а) поставщикам инфраструктуры (хостинг, база данных, отправка писем/SMS) в объёме, необходимом для работы Сервиса; (б) поставщику ИИ — при использовании соответствующих функций; (в) по законному требованию уполномоченных органов. Кому и когда вы сами открываете документ по ссылке — решаете вы.",
+      "Мы не продаём ваши данные. Мы передаём их только: (а) поставщикам инфраструктуры (хостинг, база данных, отправка писем/SMS) в объёме, необходимом для работы Сервиса; (б) поставщику ИИ — при использовании соответствующих функций; (в) сервису защиты от автоматических отправок (Cloudflare Turnstile) — при заполнении публичной формы отклика на вакансию; (г) по законному требованию уполномоченных органов. Кому и когда вы сами открываете документ по ссылке — решаете вы.",
     h7: "7. Защита",
     protection:
       "Данные изолированы по семье на уровне базы (Row Level Security), файлы — в приватном хранилище, передача — по защищённому соединению. Доступны двухфакторная аутентификация и уведомления о входе с нового устройства.",
@@ -115,7 +115,7 @@ const M = {
       "Data is stored in the cloud infrastructure of our provider (Supabase) and in secure file storage. The provider's servers may be located outside Indonesia. By using the Service and uploading documents, you consent to this cross-border transfer and storage of your data outside Indonesia (Arts. 55–56 UU PDP). Files are accessible only via temporary signed links.",
     h6: "6. Sharing with third parties",
     sharing:
-      "We do not sell your data. We share it only: (a) with infrastructure providers (hosting, database, sending of emails/SMS) to the extent necessary for the Service to operate; (b) with the AI provider — when the relevant features are used; (c) at the lawful request of authorized bodies. You decide for yourself to whom and when you open a document via a link.",
+      "We do not sell your data. We share it only: (a) with infrastructure providers (hosting, database, sending of emails/SMS) to the extent necessary for the Service to operate; (b) with the AI provider — when the relevant features are used; (c) with an anti-abuse verification service (Cloudflare Turnstile) when you submit the public vacancy application form; (d) at the lawful request of authorized bodies. You decide for yourself to whom and when you open a document via a link.",
     h7: "7. Protection",
     protection:
       "Data is isolated per family at the database level (Row Level Security), files are kept in private storage, and transmission is over a secure connection. Two-factor authentication and notifications of sign-ins from a new device are available.",
@@ -167,7 +167,7 @@ const M = {
       "Data disimpan dalam infrastruktur cloud penyedia kami (Supabase) dan dalam penyimpanan berkas yang aman. Server penyedia dapat berada di luar Indonesia. Dengan menggunakan Layanan dan mengunggah dokumen, Anda menyetujui transfer dan penyimpanan lintas negara atas data Anda di luar Indonesia (Pasal 55–56 UU PDP). Berkas hanya dapat diakses melalui tautan bertanda tangan sementara.",
     h6: "6. Pembagian kepada pihak ketiga",
     sharing:
-      "Kami tidak menjual data Anda. Kami membagikannya hanya: (a) kepada penyedia infrastruktur (hosting, basis data, pengiriman email/SMS) sebatas yang diperlukan untuk pengoperasian Layanan; (b) kepada penyedia AI — saat fitur terkait digunakan; (c) atas permintaan sah dari otoritas yang berwenang. Anda sendiri yang memutuskan kepada siapa dan kapan Anda membuka dokumen melalui tautan.",
+      "Kami tidak menjual data Anda. Kami membagikannya hanya: (a) kepada penyedia infrastruktur (hosting, basis data, pengiriman email/SMS) sebatas yang diperlukan untuk pengoperasian Layanan; (b) kepada penyedia AI — saat fitur terkait digunakan; (c) kepada layanan verifikasi anti-penyalahgunaan (Cloudflare Turnstile) saat Anda mengisi formulir lamaran lowongan publik; (d) atas permintaan sah dari otoritas yang berwenang. Anda sendiri yang memutuskan kepada siapa dan kapan Anda membuka dokumen melalui tautan.",
     h7: "7. Perlindungan",
     protection:
       "Data diisolasi per keluarga pada tingkat basis data (Row Level Security), berkas disimpan dalam penyimpanan pribadi, dan pengirimannya melalui koneksi yang aman. Tersedia autentikasi dua faktor dan pemberitahuan masuk dari perangkat baru.",
@@ -219,7 +219,7 @@ const M = {
       "Ma’lumotlar yetkazib beruvchimizning bulutli infratuzilmasida (Supabase) va himoyalangan fayl saqlovida saqlanadi. Yetkazib beruvchining serverlari Indoneziyadan tashqarida joylashgan bo‘lishi mumkin. Xizmatdan foydalanib va hujjatlarni yuklab, siz ma’lumotlaringizni Indoneziyadan tashqarida chegaralararo uzatish va saqlashga rozilik berasiz (UU PDP 55–56-moddalar). Fayllar faqat vaqtinchalik imzolangan havolalar orqali ochiladi.",
     h6: "6. Uchinchi shaxslarga uzatish",
     sharing:
-      "Biz ma’lumotlaringizni sotmaymiz. Biz ularni faqat: (a) infratuzilma yetkazib beruvchilariga (xosting, ma’lumotlar bazasi, xat/SMS yuborish) Xizmat ishlashi uchun zarur hajmda; (b) AI-yetkazib beruvchiga — tegishli funksiyalardan foydalanganda; (v) vakolatli organlarning qonuniy talabiga binoan uzatamiz. Hujjatni havola orqali kimga va qachon ochishni o‘zingiz hal qilasiz.",
+      "Biz ma’lumotlaringizni sotmaymiz. Biz ularni faqat: (a) infratuzilma yetkazib beruvchilariga (xosting, ma’lumotlar bazasi, xat/SMS yuborish) Xizmat ishlashi uchun zarur hajmda; (b) AI-yetkazib beruvchiga — tegishli funksiyalardan foydalanganda; (v) suiiste’molga qarshi tekshiruv xizmatiga (Cloudflare Turnstile) — ochiq vakansiya arizasi shaklini to‘ldirganingizda; (g) vakolatli organlarning qonuniy talabiga binoan uzatamiz. Hujjatni havola orqali kimga va qachon ochishni o‘zingiz hal qilasiz.",
     h7: "7. Himoya",
     protection:
       "Ma’lumotlar ma’lumotlar bazasi darajasida oila bo‘yicha izolyatsiya qilingan (Row Level Security), fayllar — shaxsiy saqlovda, uzatish — himoyalangan ulanish orqali. Ikki bosqichli autentifikatsiya va yangi qurilmadan kirish haqida bildirishnomalar mavjud.",

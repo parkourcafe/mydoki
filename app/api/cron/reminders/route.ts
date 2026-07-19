@@ -11,6 +11,10 @@ import { serverCapture, anonId } from "@/lib/serverAnalytics";
 // работодателю. Пороги (offsets [30,7,1]) считаются в TS (см. lib/reminders);
 // дедуп — reminder_sent / reminder_sent_manual / employment_reminder_sent /
 // employment_review_reminder_sent.
+//
+// Расписание в vercel.json — "0 23 * * *" (UTC) = 06:00 WIB (Джакарта,
+// UTC+7) — утро для основной индонезийской аудитории. Меняя schedule, не
+// возвращайте его на "0 8 * * *" (это 15:00 WIB — не «утреннее» письмо).
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 

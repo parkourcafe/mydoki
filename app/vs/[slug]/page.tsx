@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLocale, type Locale } from "@/lib/i18n";
+import { altLangs } from "@/lib/seo";
 import LangSwitcher from "@/components/LangSwitcher";
 import { getComparison } from "@/lib/comparisons";
 import { segmentLinks } from "@/lib/segments";
@@ -78,14 +79,12 @@ export async function generateMetadata({
   return {
     title: c.title,
     description: c.subtitle,
-    ...(ruOnly
+    alternates: ruOnly
       ? {
-          alternates: {
-            canonical: `${APP_URL}/ru/vs/${slug}`,
-            languages: { ru: `${APP_URL}/ru/vs/${slug}` },
-          },
+          canonical: `${APP_URL}/ru/vs/${slug}`,
+          languages: { ru: `${APP_URL}/ru/vs/${slug}` },
         }
-      : {}),
+      : await altLangs(),
     openGraph: {
       title: c.title,
       description: c.subtitle,

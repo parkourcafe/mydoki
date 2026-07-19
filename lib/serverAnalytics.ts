@@ -4,9 +4,7 @@ import { createHash } from "crypto";
 // Used for events that only happen off the browser — e.g. reminder emails sent
 // by the cron. Never pass PII in `properties`; hash any user identifier.
 
-const KEY =
-  process.env.NEXT_PUBLIC_POSTHOG_KEY ??
-  "phc_uyScedv5QpdmM4LMj2DoDJJVij63DWqAVaa2GdXbD8UY";
+const KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const HOST =
   process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
 

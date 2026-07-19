@@ -1,10 +1,9 @@
 import posthog from "posthog-js";
 
-// Публичный ключ проекта (phc_) — он и так уходит в браузер, не секрет.
-// Значение можно переопределить переменной окружения в Vercel.
-const KEY =
-  process.env.NEXT_PUBLIC_POSTHOG_KEY ??
-  "phc_uyScedv5QpdmM4LMj2DoDJJVij63DWqAVaa2GdXbD8UY";
+// Ключ проекта — только из окружения. Без него аналитика просто не
+// инициализируется (initPostHog() ниже это учитывает), никакого дефолтного
+// проекта в исходнике не зашито.
+const KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const HOST =
   process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.i.posthog.com";
 
@@ -41,6 +40,20 @@ export function track(event: string, props?: Props) {
     posthog.capture(event, clean);
   } catch {
     /* аналитика не должна ломать основной поток */
+  }
+}
+
+// Toggle PostHog capture (including autocapture) for the current path — the
+// SDK's global click/pageview listeners keep running across SPA navigation,
+// so entering a private route (real document/candidate data in the DOM) must
+// explicitly opt out, not just skip calling track()/pageview() there.
+export function setCaptureEnabled(enabled: boolean) {
+  if (typeof window === "undefined" || !started) return;
+  try {
+    if (enabled) posthog.opt_in_capturing();
+    else posthog.opt_out_capturing();
+  } catch {
+    /* noop */
   }
 }
 

@@ -9,7 +9,7 @@ import { usecaseLinks } from "@/lib/usecases";
 import { landingLinks } from "@/lib/landings";
 import { checklistLinks } from "@/lib/checklists";
 import { trustLinks } from "@/lib/trust";
-import { supportWhatsappUrl } from "@/lib/support";
+import { supportWhatsappUrl, indonesiaRep } from "@/lib/support";
 import PseBadge from "@/components/PseBadge";
 
 // Сгенерированные кинематографичные ассеты (Higgsfield · nano-banana / kling).
@@ -101,7 +101,7 @@ type Dict = {
   faq: { heading: string; items: Faq[] };
   forWhom: { heading: string; items: string[] };
   diff: { heading: string; intro: string; items: { t: string; d: string }[] };
-  operator: { heading: string; line: string; contactLabel: string };
+  operator: { heading: string; line: string; contactLabel: string; repLabel: string };
   footer: { copyright: string; pricing: string; security: string; privacy: string; terms: string; about: string; faq: string; support: string; login: string };
 };
 
@@ -244,8 +244,9 @@ const M: Record<Locale, Dict> = {
     },
     operator: {
       heading: "Кто за сервисом",
-      line: "Оператор: владелец сервиса doki.help, ИНН 780728592634.",
+      line: "Оператор: владелец сервиса doki.help — зарубежный оператор (иностранный налоговый номер 780728592634).",
       contactLabel: "Поддержка:",
+      repLabel: "Представитель в Индонезии:",
     },
     footer: { copyright: "© 2026 doki.help — документы, собранные и готовые к отправке", pricing: "Цены", security: "Безопасность", privacy: "Конфиденциальность", terms: "Условия", about: "О нас", faq: "Вопросы", support: "Поддержка в WhatsApp", login: "Войти" },
   },
@@ -387,8 +388,9 @@ const M: Record<Locale, Dict> = {
     },
     operator: {
       heading: "Who runs the service",
-      line: "Operator: the owner of the doki.help service, TIN 780728592634.",
+      line: "Operator: the owner of the doki.help service — a foreign operator (foreign tax ID 780728592634).",
       contactLabel: "Support:",
+      repLabel: "Representative in Indonesia:",
     },
     footer: { copyright: "© 2026 doki.help — document packs, done right", pricing: "Pricing", security: "Security", privacy: "Privacy", terms: "Terms", about: "About", faq: "FAQ", support: "WhatsApp support", login: "Sign in" },
   },
@@ -530,8 +532,9 @@ const M: Record<Locale, Dict> = {
     },
     operator: {
       heading: "Siapa di balik layanan",
-      line: "Operator: pemilik layanan doki.help, NPWP 780728592634.",
+      line: "Operator: pemilik layanan doki.help — operator dari luar negeri (nomor pajak luar negeri 780728592634).",
       contactLabel: "Dukungan:",
+      repLabel: "Perwakilan di Indonesia:",
     },
     footer: { copyright: "© 2026 doki.help — paket dokumen, rapi dan siap kirim", pricing: "Harga", security: "Keamanan", privacy: "Privasi", terms: "Ketentuan", about: "Tentang kami", faq: "FAQ", support: "Dukungan WhatsApp", login: "Masuk" },
   },
@@ -673,8 +676,9 @@ const M: Record<Locale, Dict> = {
     },
     operator: {
       heading: "Xizmat ortida kim turadi",
-      line: "Operator: doki.help xizmati egasi, STIR 780728592634.",
+      line: "Operator: doki.help xizmati egasi — xorijiy operator (xorijiy soliq raqami 780728592634).",
       contactLabel: "Qoʻllab-quvvatlash:",
+      repLabel: "Indoneziyadagi vakil:",
     },
     footer: { copyright: "© 2026 doki.help — hujjatlar paketi, joʻnatishga tayyor", pricing: "Narxlar", security: "Xavfsizlik", privacy: "Maxfiylik", terms: "Shartlar", about: "Biz haqimizda", faq: "Savollar", support: "WhatsApp qoʻllab-quvvatlash", login: "Kirish" },
   },
@@ -711,7 +715,7 @@ function buildJsonLd(t: Dict, locale: Locale, appUrl: string) {
         operatingSystem: "Web",
         description: t.hero.subtitle,
         url: appUrl,
-        offers: { "@type": "Offer", price: "0", priceCurrency: "RUB" },
+        offers: { "@type": "Offer", price: "0", priceCurrency: locale === "ru" ? "RUB" : "USD" },
       },
       {
         "@type": "FAQPage",
@@ -744,6 +748,7 @@ export default async function Home({
   const t = M[locale];
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
   const jsonLd = buildJsonLd(t, locale, appUrl);
+  const rep = indonesiaRep();
 
   return (
     <div lang={locale} className="min-h-screen bg-[#f9f5f0] text-[#2c2522]">
@@ -1364,6 +1369,12 @@ export default async function Home({
         <div className="mx-auto max-w-3xl rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] px-6 py-5 text-center text-sm text-[#5c5248]">
           <div className="mb-1 font-semibold text-[#2c2522]">{t.operator.heading}</div>
           <div>{t.operator.line}</div>
+          {rep && (
+            <div className="mt-1">
+              {t.operator.repLabel} {rep.name}
+              {rep.contact ? ` — ${rep.contact}` : ""}
+            </div>
+          )}
           <div className="mt-1">
             {t.operator.contactLabel}{" "}
             <a href="mailto:support@doki.help" className="text-[#b85c38] hover:underline">

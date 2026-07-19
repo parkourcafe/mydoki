@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLocale, type Locale } from "@/lib/i18n";
+import { altLangs } from "@/lib/seo";
 import LangSwitcher from "@/components/LangSwitcher";
 import { getSegment } from "@/lib/segments";
 
@@ -70,6 +71,7 @@ export async function generateMetadata({
   return {
     title: c.title,
     description: c.subtitle,
+    alternates: await altLangs(),
     openGraph: {
       title: c.title,
       description: c.subtitle,
