@@ -60,6 +60,7 @@ export const LANDING_KEYS = [
   "medical-document-organizer",
   "travel-documents",
   "family-emergency-documents",
+  "candidate-document-collection",
 ] as const;
 export type LandingKey = (typeof LANDING_KEYS)[number];
 
@@ -3133,6 +3134,198 @@ const DATA: Record<LandingKey, Landing> = {
       uz: [
         { href: "/family-document-vault", label: "Oilaviy hujjatlar sefi" },
         { href: "/medical-document-organizer", label: "Tibbiy hujjatlar tartiblagichi" },
+      ],
+    },
+  },
+  "candidate-document-collection": {
+    slug: "candidate-document-collection",
+    emoji: "📨",
+    locales: {
+      en: {
+        navLabel: "Collect candidate docs",
+        title: "Collect Candidate Documents via One Link | Doki.help",
+        metaDescription:
+          "Send candidates one checklist link and get complete document packages back — with a “what's missing” status and expiry reminders. No account for candidates.",
+        h1: "Collect candidate documents via one link",
+        intro:
+          "Stop chasing candidates for files across WhatsApp and email. Send one checklist link, and each candidate uploads their documents without an account — you see a complete/missing status per person.",
+        ctaPrimary: "Create your first checklist",
+        sections: [
+          {
+            h2: "How it works",
+            bullets: [
+              "Create a checklist of the documents you need (or start from a template)",
+              "Share the link with candidates over WhatsApp",
+              "Candidates upload without registering",
+              "You see who is complete and who is still missing documents",
+            ],
+          },
+          {
+            h2: "Built for hiring at volume",
+            body: "One link works for many candidates at once. Sensitive documents like KTP and health certificates are collected after an offer, not from every applicant.",
+          },
+          {
+            h2: "Nothing expires unnoticed",
+            body: "Add expiry dates for documents like SKCK, KITAS and certificates and get reminders before they lapse.",
+          },
+        ],
+        trustHeading: "How documents are protected",
+        trust: [
+          "Files served via short-lived signed links, not public URLs",
+          "Revocable share links with expiry, view limits and watermark",
+          "Access is isolated at the database level (RLS)",
+        ],
+        faqHeading: "Frequently asked",
+        faq: [
+          { q: "Do candidates need an account?", a: "No. They open the link and upload documents without registering." },
+          { q: "Can I collect from many candidates with one link?", a: "Yes — the same checklist link works for every candidate; each gets their own package." },
+          { q: "Where are documents stored?", a: "In secure cloud infrastructure (Supabase); servers may be located outside Indonesia — see the Privacy Policy." },
+        ],
+      },
+      id: {
+        navLabel: "Kumpulkan dokumen kandidat",
+        title: "Kumpulkan Dokumen Kandidat Lewat Satu Tautan | Doki.help",
+        metaDescription:
+          "Kirim satu tautan ceklis ke kandidat dan terima paket dokumen lengkap — dengan status “apa yang kurang” dan pengingat tenggat. Tanpa akun untuk kandidat.",
+        h1: "Kumpulkan dokumen kandidat lewat satu tautan",
+        intro:
+          "Berhenti mengejar kandidat untuk berkas di WhatsApp dan email. Kirim satu tautan ceklis, dan tiap kandidat mengunggah dokumennya tanpa akun — Anda melihat status lengkap/kurang per orang.",
+        ctaPrimary: "Buat checklist pertama",
+        sections: [
+          {
+            h2: "Cara kerjanya",
+            bullets: [
+              "Buat ceklis dokumen yang dibutuhkan (atau mulai dari template)",
+              "Bagikan tautannya ke kandidat lewat WhatsApp",
+              "Kandidat mengunggah tanpa mendaftar",
+              "Anda melihat siapa yang lengkap dan siapa yang masih kurang",
+            ],
+          },
+          {
+            h2: "Dibuat untuk rekrutmen jumlah banyak",
+            body: "Satu tautan berlaku untuk banyak kandidat sekaligus. Dokumen sensitif seperti KTP dan surat sehat dikumpulkan setelah penawaran, bukan dari setiap pelamar.",
+          },
+          {
+            h2: "Tidak ada yang kedaluwarsa diam-diam",
+            body: "Tambahkan tanggal masa berlaku untuk dokumen seperti SKCK, KITAS, dan sertifikat, lalu dapatkan pengingat sebelum kedaluwarsa.",
+          },
+        ],
+        trustHeading: "Cara dokumen dilindungi",
+        trust: [
+          "Berkas disajikan lewat tautan bertanda tangan berumur pendek, bukan URL publik",
+          "Tautan berbagi bisa dicabut dengan kedaluwarsa, batas tampilan, dan watermark",
+          "Akses diisolasi pada tingkat basis data (RLS)",
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          { q: "Apakah kandidat perlu akun?", a: "Tidak. Mereka membuka tautan dan mengunggah dokumen tanpa mendaftar." },
+          { q: "Bisakah mengumpulkan dari banyak kandidat dengan satu tautan?", a: "Bisa — tautan ceklis yang sama berlaku untuk tiap kandidat; masing-masing punya paketnya sendiri." },
+          { q: "Di mana dokumen disimpan?", a: "Di infrastruktur cloud aman (Supabase); server dapat berada di luar Indonesia — lihat Kebijakan Privasi." },
+        ],
+      },
+      ru: {
+        navLabel: "Сбор документов кандидатов",
+        title: "Сбор документов кандидатов по одной ссылке | Doki.help",
+        metaDescription:
+          "Отправьте кандидатам одну ссылку-чек-лист и получите полные пакеты документов — со статусом «чего не хватает» и напоминаниями о сроках. Без регистрации кандидата.",
+        h1: "Сбор документов кандидатов по одной ссылке",
+        intro:
+          "Хватит гоняться за кандидатами по WhatsApp и почте. Отправьте одну ссылку-чек-лист — каждый кандидат загружает документы без аккаунта, а вы видите статус «полный / не хватает» по каждому.",
+        ctaPrimary: "Создать первый чек-лист",
+        sections: [
+          {
+            h2: "Как это работает",
+            bullets: [
+              "Создайте чек-лист нужных документов (или из шаблона)",
+              "Отправьте ссылку кандидатам в WhatsApp",
+              "Кандидаты загружают без регистрации",
+              "Вы видите, кто укомплектован, а у кого чего не хватает",
+            ],
+          },
+          {
+            h2: "Под наём на объёме",
+            body: "Одна ссылка работает сразу для многих кандидатов. Чувствительные документы вроде KTP и медсправок собираются после оффера, а не у каждого соискателя.",
+          },
+          {
+            h2: "Ничего не просрочено",
+            body: "Добавьте сроки для документов вроде SKCK, KITAS и сертификатов и получайте напоминания заранее.",
+          },
+        ],
+        trustHeading: "Как защищены документы",
+        trust: [
+          "Файлы отдаются по короткоживущим подписанным ссылкам, без публичных адресов",
+          "Отзывные ссылки с истечением, лимитом просмотров и watermark",
+          "Доступ изолирован на уровне базы (RLS)",
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          { q: "Нужен ли кандидату аккаунт?", a: "Нет. Он открывает ссылку и загружает документы без регистрации." },
+          { q: "Можно собрать у многих кандидатов одной ссылкой?", a: "Да — одна ссылка-чек-лист работает для каждого; у каждого свой пакет." },
+          { q: "Где хранятся документы?", a: "В защищённой облачной инфраструктуре (Supabase); серверы могут быть за пределами Индонезии — см. Политику конфиденциальности." },
+        ],
+      },
+      uz: {
+        navLabel: "Nomzod hujjatlarini yig‘ish",
+        title: "Nomzod hujjatlarini bitta havola orqali yig‘ing | Doki.help",
+        metaDescription:
+          "Nomzodlarga bitta ro‘yxat-havola yuboring va to‘liq hujjat paketlarini oling — “nima yetishmayapti” statusi va muddat eslatmalari bilan. Nomzodga hisob kerak emas.",
+        h1: "Nomzod hujjatlarini bitta havola orqali yig‘ing",
+        intro:
+          "Nomzodlarni WhatsApp va emailda fayllar uchun quvishni bas qiling. Bitta ro‘yxat-havola yuboring — har bir nomzod hujjatlarini hisobsiz yuklaydi, siz esa har biri bo‘yicha to‘liq/kam statusini ko‘rasiz.",
+        ctaPrimary: "Birinchi ro‘yxatni yaratish",
+        sections: [
+          {
+            h2: "Qanday ishlaydi",
+            bullets: [
+              "Kerakli hujjatlar ro‘yxatini tuzing (yoki shablondan boshlang)",
+              "Havolani nomzodlarga WhatsApp orqali ulashing",
+              "Nomzodlar ro‘yxatdan o‘tmasdan yuklaydi",
+              "Kim to‘liq, kimda hujjat yetishmayotganini ko‘rasiz",
+            ],
+          },
+          {
+            h2: "Ko‘p sonli yollash uchun",
+            body: "Bitta havola bir vaqtda ko‘p nomzod uchun ishlaydi. KTP va tibbiy ma’lumotnoma kabi sezgir hujjatlar har bir arizachidan emas, taklifdan keyin yig‘iladi.",
+          },
+          {
+            h2: "Hech narsa bilinmay o‘tmaydi",
+            body: "SKCK, KITAS va sertifikatlar kabi hujjatlar uchun muddat qo‘shing va tugashidan oldin eslatma oling.",
+          },
+        ],
+        trustHeading: "Hujjatlar qanday himoyalanadi",
+        trust: [
+          "Fayllar ommaviy URL emas, qisqa muddatli imzolangan havolalar orqali beriladi",
+          "Ulashish havolalari muddati, ko‘rish chegarasi va watermark bilan bekor qilinadi",
+          "Kirish ma’lumotlar bazasi darajasida ajratilgan (RLS)",
+        ],
+        faqHeading: "Ko‘p beriladigan savollar",
+        faq: [
+          { q: "Nomzodga hisob kerakmi?", a: "Yo‘q. U havolani ochib, hujjatlarni ro‘yxatdan o‘tmasdan yuklaydi." },
+          { q: "Bitta havola bilan ko‘p nomzoddan yig‘sa bo‘ladimi?", a: "Ha — bir xil ro‘yxat-havola har bir nomzod uchun ishlaydi; har birida o‘z paketi bo‘ladi." },
+          { q: "Hujjatlar qayerda saqlanadi?", a: "Xavfsiz bulut infratuzilmasida (Supabase); serverlar Indoneziyadan tashqarida bo‘lishi mumkin — Maxfiylik siyosatiga qarang." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/recruitment-agencies", label: "For recruiting agencies" },
+        { href: "/checklists/skck-checklist", label: "SKCK checklist" },
+        { href: "/security", label: "How your documents are protected" },
+      ],
+      id: [
+        { href: "/for/recruitment-agencies", label: "Untuk agensi rekrutmen" },
+        { href: "/checklists/skck-checklist", label: "Ceklis SKCK" },
+        { href: "/security", label: "Cara dokumen Anda dilindungi" },
+      ],
+      ru: [
+        { href: "/for/recruitment-agencies", label: "Для рекрутинговых агентств" },
+        { href: "/checklists/skck-checklist", label: "Чек-лист SKCK" },
+        { href: "/security", label: "Как защищены документы" },
+      ],
+      uz: [
+        { href: "/for/recruitment-agencies", label: "Rekruting agentliklari uchun" },
+        { href: "/checklists/skck-checklist", label: "SKCK ro‘yxati" },
+        { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
       ],
     },
   },
