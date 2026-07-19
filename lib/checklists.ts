@@ -1583,6 +1583,262 @@ const DATA: Record<string, Checklist> = {
       ],
     },
   },
+  "villa-staff-documents-checklist": {
+    slug: "villa-staff-documents-checklist",
+    emoji: "🏝️",
+    locales: {
+      en: {
+        navLabel: "Villa staff docs",
+        title: "Villa Staff Document Checklist (Bali) | Doki.help",
+        metaDescription:
+          "Documents commonly collected when hiring villa staff in Bali — housekeeping, pool, garden, security — and how to collect them from one link.",
+        h1: "Villa staff document checklist",
+        intro:
+          "Hiring villa staff in Bali means frequent turnover and repeated document collection. This checklist covers what employers usually gather and how to collect it cleanly from one link.",
+        ctaPrimary: "Collect these documents via one link",
+        groups: [
+          {
+            h2: "Commonly collected",
+            items: ["CV or work history", "SKCK (police record)", "Health certificate (surat sehat)", "Work references", "Passport-size photo"],
+          },
+          {
+            h2: "Collect it cleanly",
+            items: ["Start from the villa-staff pack template", "Send each candidate one link — no account needed", "See a “complete / missing” status per person"],
+          },
+        ],
+        faqHeading: "Villa staff documents — FAQ",
+        faq: [
+          { q: "Do I collect KTP at the application stage?", a: "ID and health documents are best collected after an offer; Doki defers them to the post-offer stage by default." },
+          { q: "Can I reuse the checklist for seasonal hiring?", a: "Yes — the same checklist link works for each new candidate." },
+        ],
+      },
+      id: {
+        navLabel: "Dokumen staf vila",
+        title: "Ceklis Dokumen Staf Vila (Bali) | Doki.help",
+        metaDescription:
+          "Dokumen yang umum dikumpulkan saat merekrut staf vila di Bali — housekeeping, kolam, taman, keamanan — dan cara mengumpulkannya dari satu tautan.",
+        h1: "Ceklis dokumen staf vila",
+        intro:
+          "Merekrut staf vila di Bali berarti pergantian sering dan pengumpulan dokumen berulang. Ceklis ini merangkum yang biasa dikumpulkan dan cara mengumpulkannya rapi dari satu tautan.",
+        ctaPrimary: "Kumpulkan dokumen ini lewat satu tautan",
+        groups: [
+          {
+            h2: "Umum dikumpulkan",
+            items: ["CV atau riwayat kerja", "SKCK", "Surat sehat", "Referensi kerja", "Pas foto"],
+          },
+          {
+            h2: "Kumpulkan dengan rapi",
+            items: ["Mulai dari template paket staf vila", "Kirim tiap kandidat satu tautan — tanpa akun", "Lihat status “lengkap / kurang” per orang"],
+          },
+        ],
+        faqHeading: "Dokumen staf vila — FAQ",
+        faq: [
+          { q: "Apakah KTP dikumpulkan saat lamaran?", a: "Dokumen identitas dan kesehatan sebaiknya dikumpulkan setelah penawaran; Doki menundanya ke tahap pasca-penawaran secara bawaan." },
+          { q: "Bisakah ceklisnya dipakai ulang untuk rekrutmen musiman?", a: "Bisa — tautan ceklis yang sama berlaku untuk tiap kandidat baru." },
+        ],
+      },
+      ru: {
+        navLabel: "Документы персонала виллы",
+        title: "Чек-лист документов персонала виллы | Doki.help",
+        metaDescription:
+          "Документы, которые обычно собирают при найме персонала виллы на Бали, и как собрать их по одной ссылке.",
+        h1: "Чек-лист документов персонала виллы",
+        intro:
+          "Найм персонала виллы на Бали — это частая текучка и повторный сбор документов. Чек-лист собирает то, что обычно нужно, и как аккуратно собрать по одной ссылке.",
+        ctaPrimary: "Собрать эти документы по одной ссылке",
+        groups: [
+          {
+            h2: "Обычно собирают",
+            items: ["CV или опыт работы", "SKCK", "Медсправка (surat sehat)", "Рекомендации", "Фото на документы"],
+          },
+          {
+            h2: "Соберите аккуратно",
+            items: ["Начните с шаблона пака «персонал виллы»", "Отправьте каждому одну ссылку — без аккаунта", "Статус «полный / не хватает» по каждому"],
+          },
+        ],
+        faqHeading: "Документы персонала виллы — FAQ",
+        faq: [
+          { q: "Собирать ли KTP на этапе отклика?", a: "ID и мед-документы лучше собирать после оффера; Doki по умолчанию откладывает их на пост-оффер." },
+          { q: "Можно использовать чек-лист для сезонного найма?", a: "Да — одна и та же ссылка работает для каждого нового кандидата." },
+        ],
+      },
+      uz: {
+        navLabel: "Villa xodimi hujjatlari",
+        title: "Villa xodimi hujjatlari ro‘yxati | Doki.help",
+        metaDescription:
+          "Balida villa xodimini yollashda odatda yig‘iladigan hujjatlar va ularni bitta havoladan yig‘ish.",
+        h1: "Villa xodimi hujjatlari ro‘yxati",
+        intro:
+          "Balida villa xodimini yollash — tez almashuv va hujjatlarni qayta yig‘ish demakdir. Bu ro‘yxatda odatda nima yig‘ilishi va uni bitta havoladan tartibli yig‘ish keltirilgan.",
+        ctaPrimary: "Bu hujjatlarni bitta havola orqali yig‘ing",
+        groups: [
+          {
+            h2: "Odatda yig‘iladi",
+            items: ["CV yoki ish tarixi", "SKCK", "Tibbiy ma’lumotnoma", "Ish tavsiyalari", "Pas foto"],
+          },
+          {
+            h2: "Tartibli yig‘ing",
+            items: ["Villa xodimi paket shablonidan boshlang", "Har bir nomzodga bitta havola — hisobsiz", "Har bir odam bo‘yicha “to‘liq / kam” statusi"],
+          },
+        ],
+        faqHeading: "Villa xodimi hujjatlari — FAQ",
+        faq: [
+          { q: "KTP ariza bosqichida yig‘iladimi?", a: "Shaxs va sog‘liq hujjatlarini taklifdan keyin yig‘gan ma’qul; Doki ularni sukut bo‘yicha post-offer bosqichiga qoldiradi." },
+          { q: "Ro‘yxatni mavsumiy yollash uchun qayta ishlatsa bo‘ladimi?", a: "Ha — bir xil havola har bir yangi nomzod uchun ishlaydi." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/hospitality", label: "For hospitality employers" },
+        { href: "/checklists/skck-checklist", label: "SKCK checklist" },
+        { href: "/candidate-document-collection", label: "Collect candidate documents" },
+      ],
+      id: [
+        { href: "/for/hospitality", label: "Untuk pemberi kerja hospitality" },
+        { href: "/checklists/skck-checklist", label: "Ceklis SKCK" },
+        { href: "/candidate-document-collection", label: "Kumpulkan dokumen kandidat" },
+      ],
+      ru: [
+        { href: "/for/hospitality", label: "Для hospitality-работодателей" },
+        { href: "/checklists/skck-checklist", label: "Чек-лист SKCK" },
+        { href: "/candidate-document-collection", label: "Сбор документов кандидатов" },
+      ],
+      uz: [
+        { href: "/for/hospitality", label: "Hospitality ish beruvchilari uchun" },
+        { href: "/checklists/skck-checklist", label: "SKCK ro‘yxati" },
+        { href: "/candidate-document-collection", label: "Nomzod hujjatlarini yig‘ish" },
+      ],
+    },
+  },
+  "driver-documents-checklist": {
+    slug: "driver-documents-checklist",
+    emoji: "🚗",
+    locales: {
+      en: {
+        navLabel: "Driver docs",
+        title: "Driver Document Checklist for Hiring | Doki.help",
+        metaDescription:
+          "Documents commonly collected when hiring a driver in Indonesia — SIM, CV, SKCK, references — and how to collect them from one link.",
+        h1: "Driver document checklist for hiring",
+        intro:
+          "Hiring a driver usually starts with the SIM (driving licence) and a few supporting documents. This checklist covers what employers typically collect and how to gather it cleanly.",
+        ctaPrimary: "Collect these documents via one link",
+        groups: [
+          {
+            h2: "Commonly collected",
+            items: ["SIM (driving licence) — the right class", "CV or driving experience", "SKCK (police record)", "Work references", "Passport-size photo"],
+          },
+          {
+            h2: "Collect it cleanly",
+            items: ["Start from the driver pack template", "Send one link — the candidate uploads without an account", "Set a reminder before the SIM expires"],
+          },
+        ],
+        faqHeading: "Driver documents — FAQ",
+        faq: [
+          { q: "Which SIM class do I need?", a: "It depends on the vehicle. Ask the candidate for the class on their SIM and confirm against the role." },
+          { q: "When do I collect KTP?", a: "ID documents are best collected after an offer; Doki defers them to the post-offer stage by default." },
+        ],
+      },
+      id: {
+        navLabel: "Dokumen sopir",
+        title: "Ceklis Dokumen Sopir untuk Rekrutmen | Doki.help",
+        metaDescription:
+          "Dokumen yang umum dikumpulkan saat merekrut sopir di Indonesia — SIM, CV, SKCK, referensi — dan cara mengumpulkannya dari satu tautan.",
+        h1: "Ceklis dokumen sopir untuk rekrutmen",
+        intro:
+          "Merekrut sopir biasanya dimulai dari SIM dan beberapa dokumen pendukung. Ceklis ini merangkum yang biasa dikumpulkan dan cara mengumpulkannya dengan rapi.",
+        ctaPrimary: "Kumpulkan dokumen ini lewat satu tautan",
+        groups: [
+          {
+            h2: "Umum dikumpulkan",
+            items: ["SIM — kelas yang sesuai", "CV atau pengalaman menyetir", "SKCK", "Referensi kerja", "Pas foto"],
+          },
+          {
+            h2: "Kumpulkan dengan rapi",
+            items: ["Mulai dari template paket sopir", "Kirim satu tautan — kandidat unggah tanpa akun", "Pasang pengingat sebelum SIM kedaluwarsa"],
+          },
+        ],
+        faqHeading: "Dokumen sopir — FAQ",
+        faq: [
+          { q: "SIM kelas apa yang dibutuhkan?", a: "Tergantung kendaraannya. Tanyakan kelas SIM kandidat dan cocokkan dengan posisi." },
+          { q: "Kapan mengumpulkan KTP?", a: "Dokumen identitas sebaiknya dikumpulkan setelah penawaran; Doki menundanya ke tahap pasca-penawaran secara bawaan." },
+        ],
+      },
+      ru: {
+        navLabel: "Документы водителя",
+        title: "Чек-лист документов водителя для найма | Doki.help",
+        metaDescription:
+          "Документы, которые обычно собирают при найме водителя в Индонезии — SIM, CV, SKCK, рекомендации — и как собрать по одной ссылке.",
+        h1: "Чек-лист документов водителя для найма",
+        intro:
+          "Найм водителя обычно начинается с SIM (прав) и нескольких сопроводительных документов. Чек-лист собирает то, что обычно нужно, и как аккуратно собрать.",
+        ctaPrimary: "Собрать эти документы по одной ссылке",
+        groups: [
+          {
+            h2: "Обычно собирают",
+            items: ["SIM (права) — нужной категории", "CV или водительский опыт", "SKCK", "Рекомендации", "Фото на документы"],
+          },
+          {
+            h2: "Соберите аккуратно",
+            items: ["Начните с шаблона пака «водитель»", "Отправьте одну ссылку — загрузка без аккаунта", "Напоминание до истечения SIM"],
+          },
+        ],
+        faqHeading: "Документы водителя — FAQ",
+        faq: [
+          { q: "Какая категория SIM нужна?", a: "Зависит от транспорта. Спросите у кандидата категорию в SIM и сверьте с ролью." },
+          { q: "Когда собирать KTP?", a: "ID лучше собирать после оффера; Doki по умолчанию откладывает их на пост-оффер." },
+        ],
+      },
+      uz: {
+        navLabel: "Haydovchi hujjatlari",
+        title: "Yollash uchun haydovchi hujjatlari ro‘yxati | Doki.help",
+        metaDescription:
+          "Indoneziyada haydovchi yollashda odatda yig‘iladigan hujjatlar — SIM, CV, SKCK, tavsiyalar — va ularni bitta havoladan yig‘ish.",
+        h1: "Yollash uchun haydovchi hujjatlari ro‘yxati",
+        intro:
+          "Haydovchi yollash odatda SIM (guvohnoma) va bir nechta yordamchi hujjatdan boshlanadi. Bu ro‘yxatda odatda nima yig‘ilishi va uni tartibli yig‘ish keltirilgan.",
+        ctaPrimary: "Bu hujjatlarni bitta havola orqali yig‘ing",
+        groups: [
+          {
+            h2: "Odatda yig‘iladi",
+            items: ["SIM — mos toifadagi", "CV yoki haydash tajribasi", "SKCK", "Ish tavsiyalari", "Pas foto"],
+          },
+          {
+            h2: "Tartibli yig‘ing",
+            items: ["Haydovchi paket shablonidan boshlang", "Bitta havola yuboring — hisobsiz yuklash", "SIM muddati tugashidan oldin eslatma"],
+          },
+        ],
+        faqHeading: "Haydovchi hujjatlari — FAQ",
+        faq: [
+          { q: "Qaysi toifadagi SIM kerak?", a: "Transportga bog‘liq. Nomzoddan SIM toifasini so‘rang va lavozimga solishtiring." },
+          { q: "KTP ni qachon yig‘aman?", a: "Shaxs hujjatlarini taklifdan keyin yig‘gan ma’qul; Doki ularni sukut bo‘yicha post-offer bosqichiga qoldiradi." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/hospitality", label: "For hospitality employers" },
+        { href: "/for/recruitment-agencies", label: "For recruiting agencies" },
+        { href: "/candidate-document-collection", label: "Collect candidate documents" },
+      ],
+      id: [
+        { href: "/for/hospitality", label: "Untuk pemberi kerja hospitality" },
+        { href: "/for/recruitment-agencies", label: "Untuk agensi rekrutmen" },
+        { href: "/candidate-document-collection", label: "Kumpulkan dokumen kandidat" },
+      ],
+      ru: [
+        { href: "/for/hospitality", label: "Для hospitality-работодателей" },
+        { href: "/for/recruitment-agencies", label: "Для рекрутинговых агентств" },
+        { href: "/candidate-document-collection", label: "Сбор документов кандидатов" },
+      ],
+      uz: [
+        { href: "/for/hospitality", label: "Hospitality ish beruvchilari uchun" },
+        { href: "/for/recruitment-agencies", label: "Rekruting agentliklari uchun" },
+        { href: "/candidate-document-collection", label: "Nomzod hujjatlarini yig‘ish" },
+      ],
+    },
+  },
 };
 
 export const CHECKLIST_KEYS = Object.keys(DATA);
