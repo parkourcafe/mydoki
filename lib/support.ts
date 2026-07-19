@@ -25,3 +25,14 @@ export function supportWhatsappUrl(prefill?: string): string | null {
   const base = `https://wa.me/${num}`;
   return prefill ? `${base}?text=${encodeURIComponent(prefill)}` : base;
 }
+
+// Local representative / point of contact in Indonesia — required for a foreign
+// PSE registration. Configure via env; leave unset to hide the block until the
+// representative details are ready to publish.
+//   NEXT_PUBLIC_ID_REP_NAME=Name (person or company)
+//   NEXT_PUBLIC_ID_REP_CONTACT=email or +62 phone (optional)
+export function indonesiaRep(): { name: string; contact: string } | null {
+  const name = (process.env.NEXT_PUBLIC_ID_REP_NAME || "").trim();
+  if (!name) return null;
+  return { name, contact: (process.env.NEXT_PUBLIC_ID_REP_CONTACT || "").trim() };
+}

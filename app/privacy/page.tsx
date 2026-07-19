@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale, type Locale } from "@/lib/i18n";
+import { indonesiaRep } from "@/lib/support";
 
 const META: Record<Locale, { title: string; description: string }> = {
   ru: {
@@ -39,8 +40,9 @@ const M = {
     intro: "Сервис «doki.help» (далее — Сервис). Дата последнего обновления: 17.07.2026.",
     h1: "1. Оператор",
     operatorPre:
-      "Оператором обработки персональных данных является владелец Сервиса doki.help, ИНН 780728592634. Контакт для обращений по вопросам данных: ",
+      "Оператором обработки персональных данных является владелец Сервиса doki.help — зарубежный оператор (иностранный налоговый номер 780728592634). Контакт для обращений по вопросам данных: ",
     operatorPost: ".",
+    repLabel: "Представитель в Индонезии",
     h2: "2. Какие данные мы обрабатываем",
     data1: "— Данные аккаунта: адрес электронной почты, а при входе через Google — имя и email из вашего профиля Google.",
     data2:
@@ -90,8 +92,9 @@ const M = {
     intro: "The “doki.help” service (hereinafter — the Service). Last updated: 17.07.2026.",
     h1: "1. Operator",
     operatorPre:
-      "The operator processing personal data is the owner of the doki.help Service, TIN 780728592634. Contact for data-related inquiries: ",
+      "The operator processing personal data is the owner of the doki.help Service — a foreign operator (foreign tax ID 780728592634). Contact for data-related inquiries: ",
     operatorPost: ".",
+    repLabel: "Representative in Indonesia",
     h2: "2. What data we process",
     data1: "— Account data: your email address, and when signing in via Google — your name and email from your Google profile.",
     data2:
@@ -141,8 +144,9 @@ const M = {
     intro: "Layanan “doki.help” (selanjutnya disebut — Layanan). Terakhir diperbarui: 17.07.2026.",
     h1: "1. Operator",
     operatorPre:
-      "Operator yang memproses data pribadi adalah pemilik Layanan doki.help, NPWP 780728592634. Kontak untuk pertanyaan terkait data: ",
+      "Operator yang memproses data pribadi adalah pemilik Layanan doki.help — operator dari luar negeri (nomor pajak luar negeri 780728592634). Kontak untuk pertanyaan terkait data: ",
     operatorPost: ".",
+    repLabel: "Perwakilan di Indonesia",
     h2: "2. Data apa yang kami proses",
     data1: "— Data akun: alamat email Anda, dan saat masuk melalui Google — nama dan email dari profil Google Anda.",
     data2:
@@ -192,8 +196,9 @@ const M = {
     intro: "“doki.help” xizmati (bundan keyin — Xizmat). Oxirgi yangilangan sana: 17.07.2026.",
     h1: "1. Operator",
     operatorPre:
-      "Shaxsiy ma’lumotlarni qayta ishlovchi operator doki.help Xizmati egasi, STIR 780728592634. Ma’lumotlarga oid murojaatlar uchun aloqa: ",
+      "Shaxsiy ma’lumotlarni qayta ishlovchi operator doki.help Xizmati egasi — xorijiy operator (xorijiy soliq raqami 780728592634). Ma’lumotlarga oid murojaatlar uchun aloqa: ",
     operatorPost: ".",
+    repLabel: "Indoneziyadagi vakil",
     h2: "2. Biz qanday ma’lumotlarni qayta ishlaymiz",
     data1: "— Hisob ma’lumotlari: elektron pochta manzilingiz, Google orqali kirganda esa — Google profilingizdagi ism va email.",
     data2:
@@ -242,6 +247,7 @@ const M = {
 export default async function PrivacyPage() {
   const locale = await getLocale();
   const t = M[locale];
+  const rep = indonesiaRep();
   return (
     <main className="min-h-screen bg-[#f9f5f0] px-5 py-12 text-slate-800">
       <div className="mx-auto max-w-2xl rounded-3xl border border-[#e8e0d5] bg-white p-7 sm:p-10">
@@ -259,6 +265,12 @@ export default async function PrivacyPage() {
           </a>
           {t.operatorPost}
         </P>
+        {rep && (
+          <P>
+            {t.repLabel}: {rep.name}
+            {rep.contact ? ` — ${rep.contact}` : ""}
+          </P>
+        )}
 
         <H>{t.h2}</H>
         <P>

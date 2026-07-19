@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n";
-import { SUPPORT_EMAIL, supportWhatsappUrl } from "@/lib/support";
+import { SUPPORT_EMAIL, supportWhatsappUrl, indonesiaRep } from "@/lib/support";
 
 const M = {
   ru: {
@@ -20,8 +20,9 @@ const M = {
     ctaEmployers: "Для работодателей",
     operatorTitle: "Оператор",
     operatorLine:
-      "doki.help ведёт независимый оператор (ИП, ИНН 780728592634). За брендом — реальный человек, с которым всегда можно связаться.",
+      "doki.help ведёт независимый зарубежный оператор (иностранный налоговый номер 780728592634). За брендом — реальный человек, с которым всегда можно связаться.",
     founderLabel: "Основатель",
+    repLabel: "Представитель в Индонезии",
     contactTitle: "Контакты",
     emailLabel: "Эл. почта",
     waLabel: "WhatsApp",
@@ -42,8 +43,9 @@ const M = {
     ctaEmployers: "For employers",
     operatorTitle: "Operator",
     operatorLine:
-      "doki.help is run by an independent solo operator (sole proprietor, Tax ID 780728592634). There's no faceless brand here — you can always reach a real person.",
+      "doki.help is run by an independent foreign operator (foreign tax ID 780728592634). There's no faceless brand here — you can always reach a real person.",
     founderLabel: "Founder",
+    repLabel: "Representative in Indonesia",
     contactTitle: "Contact",
     emailLabel: "Email",
     waLabel: "WhatsApp",
@@ -64,8 +66,9 @@ const M = {
     ctaEmployers: "Untuk perusahaan",
     operatorTitle: "Operator",
     operatorLine:
-      "doki.help dijalankan oleh operator independen perorangan (NPWP 780728592634). Tidak ada merek tanpa wajah di sini — Anda selalu bisa menghubungi orang sungguhan.",
+      "doki.help dijalankan oleh operator independen dari luar negeri (nomor pajak luar negeri 780728592634). Tidak ada merek tanpa wajah di sini — Anda selalu bisa menghubungi orang sungguhan.",
     founderLabel: "Pendiri",
+    repLabel: "Perwakilan di Indonesia",
     contactTitle: "Kontak",
     emailLabel: "Email",
     waLabel: "WhatsApp",
@@ -86,8 +89,9 @@ const M = {
     ctaEmployers: "Ish beruvchilar uchun",
     operatorTitle: "Operator",
     operatorLine:
-      "doki.help mustaqil yakka operator tomonidan yuritiladi (STIR 780728592634). Bu yerda yuzsiz brend yoʻq — siz doim haqiqiy inson bilan bogʻlana olasiz.",
+      "doki.help mustaqil xorijiy operator tomonidan yuritiladi (xorijiy soliq raqami 780728592634). Bu yerda yuzsiz brend yoʻq — siz doim haqiqiy inson bilan bogʻlana olasiz.",
     founderLabel: "Asoschi",
+    repLabel: "Indoneziyadagi vakil",
     contactTitle: "Aloqa",
     emailLabel: "Email",
     waLabel: "WhatsApp",
@@ -107,6 +111,7 @@ export default async function AboutPage() {
   const founderName = process.env.NEXT_PUBLIC_FOUNDER_NAME || "";
   const founderPhoto = process.env.NEXT_PUBLIC_FOUNDER_PHOTO || "";
   const waUrl = supportWhatsappUrl();
+  const rep = indonesiaRep();
   return (
     <main className="mx-auto max-w-2xl px-4 py-12">
       <h1 className="text-3xl font-semibold">{t.title}</h1>
@@ -143,6 +148,24 @@ export default async function AboutPage() {
               {founderName}
             </div>
           </div>
+        )}
+        {rep && (
+          <p className="mt-4 text-sm text-slate-700">
+            <span className="text-slate-500">{t.repLabel}: </span>
+            {rep.name}
+            {rep.contact && (
+              <>
+                {" — "}
+                {rep.contact.includes("@") ? (
+                  <a href={`mailto:${rep.contact}`} className="text-[#b85c38] hover:underline">
+                    {rep.contact}
+                  </a>
+                ) : (
+                  <span>{rep.contact}</span>
+                )}
+              </>
+            )}
+          </p>
         )}
         <h3 className="mt-5 text-sm font-semibold uppercase tracking-wide text-slate-500">
           {t.contactTitle}
