@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n";
+import { SUPPORT_EMAIL, supportWhatsappUrl } from "@/lib/support";
 
 const M = {
   ru: {
@@ -17,6 +18,13 @@ const M = {
     ],
     cta: "Начать",
     ctaEmployers: "Для работодателей",
+    operatorTitle: "Оператор",
+    operatorLine:
+      "doki.help ведёт независимый оператор (ИП, ИНН 780728592634). За брендом — реальный человек, с которым всегда можно связаться.",
+    founderLabel: "Основатель",
+    contactTitle: "Контакты",
+    emailLabel: "Эл. почта",
+    waLabel: "WhatsApp",
   },
   en: {
     title: "About doki.help",
@@ -32,6 +40,13 @@ const M = {
     ],
     cta: "Get started",
     ctaEmployers: "For employers",
+    operatorTitle: "Operator",
+    operatorLine:
+      "doki.help is run by an independent solo operator (sole proprietor, Tax ID 780728592634). There's no faceless brand here — you can always reach a real person.",
+    founderLabel: "Founder",
+    contactTitle: "Contact",
+    emailLabel: "Email",
+    waLabel: "WhatsApp",
   },
   id: {
     title: "Tentang doki.help",
@@ -47,6 +62,13 @@ const M = {
     ],
     cta: "Mulai",
     ctaEmployers: "Untuk perusahaan",
+    operatorTitle: "Operator",
+    operatorLine:
+      "doki.help dijalankan oleh operator independen perorangan (NPWP 780728592634). Tidak ada merek tanpa wajah di sini — Anda selalu bisa menghubungi orang sungguhan.",
+    founderLabel: "Pendiri",
+    contactTitle: "Kontak",
+    emailLabel: "Email",
+    waLabel: "WhatsApp",
   },
   uz: {
     title: "doki.help haqida",
@@ -62,6 +84,13 @@ const M = {
     ],
     cta: "Boshlash",
     ctaEmployers: "Ish beruvchilar uchun",
+    operatorTitle: "Operator",
+    operatorLine:
+      "doki.help mustaqil yakka operator tomonidan yuritiladi (STIR 780728592634). Bu yerda yuzsiz brend yoʻq — siz doim haqiqiy inson bilan bogʻlana olasiz.",
+    founderLabel: "Asoschi",
+    contactTitle: "Aloqa",
+    emailLabel: "Email",
+    waLabel: "WhatsApp",
   },
 } as const;
 
@@ -73,6 +102,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function AboutPage() {
   const locale = await getLocale();
   const t = M[locale];
+  // Founder name/photo are optional and env-driven so nothing is fabricated.
+  // Set NEXT_PUBLIC_FOUNDER_NAME (and optionally NEXT_PUBLIC_FOUNDER_PHOTO) to show them.
+  const founderName = process.env.NEXT_PUBLIC_FOUNDER_NAME || "";
+  const founderPhoto = process.env.NEXT_PUBLIC_FOUNDER_PHOTO || "";
+  const waUrl = supportWhatsappUrl();
   return (
     <main className="mx-auto max-w-2xl px-4 py-12">
       <h1 className="text-3xl font-semibold">{t.title}</h1>
@@ -88,6 +122,48 @@ export default async function AboutPage() {
           <li key={i}>{v}</li>
         ))}
       </ul>
+
+      <div className="mt-10 rounded-2xl border border-[#e8e0d5] bg-[#fdfaf5] p-6">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+          {t.operatorTitle}
+        </h2>
+        <p className="mt-2 text-slate-700">{t.operatorLine}</p>
+        {founderName && (
+          <div className="mt-4 flex items-center gap-3">
+            {founderPhoto && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={founderPhoto}
+                alt={founderName}
+                className="h-12 w-12 rounded-full border border-[#e8e0d5] object-cover"
+              />
+            )}
+            <div className="text-sm text-slate-700">
+              <span className="text-slate-500">{t.founderLabel}: </span>
+              {founderName}
+            </div>
+          </div>
+        )}
+        <h3 className="mt-5 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          {t.contactTitle}
+        </h3>
+        <ul className="mt-2 space-y-1 text-sm text-slate-700">
+          <li>
+            {t.emailLabel}:{" "}
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="text-[#b85c38] hover:underline">
+              {SUPPORT_EMAIL}
+            </a>
+          </li>
+          {waUrl && (
+            <li>
+              {t.waLabel}:{" "}
+              <a href={waUrl} target="_blank" rel="noopener noreferrer" className="text-[#b85c38] hover:underline">
+                {waUrl.replace("https://wa.me/", "+")}
+              </a>
+            </li>
+          )}
+        </ul>
+      </div>
 
       <div className="mt-8 flex flex-wrap gap-3">
         <Link href="/login" className="btn-primary">

@@ -101,7 +101,7 @@ type Dict = {
   forWhom: { heading: string; items: string[] };
   diff: { heading: string; intro: string; items: { t: string; d: string }[] };
   operator: { heading: string; line: string; contactLabel: string };
-  footer: { copyright: string; pricing: string; security: string; privacy: string; terms: string; about: string; support: string; login: string };
+  footer: { copyright: string; pricing: string; security: string; privacy: string; terms: string; about: string; faq: string; support: string; login: string };
 };
 
 const M: Record<Locale, Dict> = {
@@ -246,7 +246,7 @@ const M: Record<Locale, Dict> = {
       line: "Оператор: владелец сервиса doki.help, ИНН 780728592634.",
       contactLabel: "Поддержка:",
     },
-    footer: { copyright: "© 2026 doki.help — документы, собранные и готовые к отправке", pricing: "Цены", security: "Безопасность", privacy: "Конфиденциальность", terms: "Условия", about: "О нас", support: "Поддержка в WhatsApp", login: "Войти" },
+    footer: { copyright: "© 2026 doki.help — документы, собранные и готовые к отправке", pricing: "Цены", security: "Безопасность", privacy: "Конфиденциальность", terms: "Условия", about: "О нас", faq: "Вопросы", support: "Поддержка в WhatsApp", login: "Войти" },
   },
   en: {
     nav: { login: "Sign in", start: "Get started free", startShort: "Start" },
@@ -389,7 +389,7 @@ const M: Record<Locale, Dict> = {
       line: "Operator: the owner of the doki.help service, TIN 780728592634.",
       contactLabel: "Support:",
     },
-    footer: { copyright: "© 2026 doki.help — document packs, done right", pricing: "Pricing", security: "Security", privacy: "Privacy", terms: "Terms", about: "About", support: "WhatsApp support", login: "Sign in" },
+    footer: { copyright: "© 2026 doki.help — document packs, done right", pricing: "Pricing", security: "Security", privacy: "Privacy", terms: "Terms", about: "About", faq: "FAQ", support: "WhatsApp support", login: "Sign in" },
   },
   id: {
     nav: { login: "Masuk", start: "Mulai gratis", startShort: "Mulai" },
@@ -532,7 +532,7 @@ const M: Record<Locale, Dict> = {
       line: "Operator: pemilik layanan doki.help, NPWP 780728592634.",
       contactLabel: "Dukungan:",
     },
-    footer: { copyright: "© 2026 doki.help — paket dokumen, rapi dan siap kirim", pricing: "Harga", security: "Keamanan", privacy: "Privasi", terms: "Ketentuan", about: "Tentang kami", support: "Dukungan WhatsApp", login: "Masuk" },
+    footer: { copyright: "© 2026 doki.help — paket dokumen, rapi dan siap kirim", pricing: "Harga", security: "Keamanan", privacy: "Privasi", terms: "Ketentuan", about: "Tentang kami", faq: "FAQ", support: "Dukungan WhatsApp", login: "Masuk" },
   },
   uz: {
     nav: { login: "Kirish", start: "Bepul boshlash", startShort: "Boshlash" },
@@ -675,7 +675,7 @@ const M: Record<Locale, Dict> = {
       line: "Operator: doki.help xizmati egasi, STIR 780728592634.",
       contactLabel: "Qoʻllab-quvvatlash:",
     },
-    footer: { copyright: "© 2026 doki.help — hujjatlar paketi, joʻnatishga tayyor", pricing: "Narxlar", security: "Xavfsizlik", privacy: "Maxfiylik", terms: "Shartlar", about: "Biz haqimizda", support: "WhatsApp qoʻllab-quvvatlash", login: "Kirish" },
+    footer: { copyright: "© 2026 doki.help — hujjatlar paketi, joʻnatishga tayyor", pricing: "Narxlar", security: "Xavfsizlik", privacy: "Maxfiylik", terms: "Shartlar", about: "Biz haqimizda", faq: "Savollar", support: "WhatsApp qoʻllab-quvvatlash", login: "Kirish" },
   },
 };
 
@@ -1452,6 +1452,7 @@ export default async function Home({
             {trustLinks(locale).map((tl) => (
               <Link key={tl.key} href={`/${tl.key}`} className="hover:text-[#2c2522]">{tl.label}</Link>
             ))}
+            <Link href="/faq" className="hover:text-[#2c2522]">{t.footer.faq}</Link>
             <Link href="/privacy" className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
             <Link href="/terms" className="hover:text-[#2c2522]">{t.footer.terms}</Link>
             {supportWhatsappUrl() && (

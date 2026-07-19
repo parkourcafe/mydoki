@@ -48,6 +48,7 @@ const M = {
       "This may include sensitive data (e.g. medical or financial documents); I explicitly agree to share it for this vacancy.",
     consentSee: "See our",
     privacyLabel: "Privacy Policy",
+    faqLink: "Questions about privacy? Read the candidate FAQ",
     submit: "Submit application",
     submitting: "Submitting…",
     errName: "Please enter your full name.",
@@ -101,6 +102,7 @@ const M = {
       "Ini dapat mencakup data sensitif (mis. dokumen medis atau keuangan); saya secara tegas setuju membagikannya untuk lowongan ini.",
     consentSee: "Lihat",
     privacyLabel: "Kebijakan Privasi",
+    faqLink: "Ada pertanyaan soal privasi? Baca FAQ kandidat",
     submit: "Kirim lamaran",
     submitting: "Mengirim…",
     errName: "Silakan masukkan nama lengkap.",
@@ -154,6 +156,7 @@ const M = {
       "Это может включать чувствительные данные (например, медицинские или финансовые документы); я явно соглашаюсь передать их для этой вакансии.",
     consentSee: "См.",
     privacyLabel: "Политику конфиденциальности",
+    faqLink: "Вопросы о приватности? См. FAQ для кандидатов",
     submit: "Отправить отклик",
     submitting: "Отправка…",
     errName: "Введите имя и фамилию.",
@@ -207,6 +210,7 @@ const M = {
       "Bu sezgir ma’lumotlarni (masalan, tibbiy yoki moliyaviy hujjatlar) o‘z ichiga olishi mumkin; ularni shu vakansiya uchun ulashishga aniq roziman.",
     consentSee: "Qarang:",
     privacyLabel: "Maxfiylik siyosati",
+    faqLink: "Maxfiylik haqida savol bormi? Nomzodlar uchun FAQ",
     submit: "Arizani yuborish",
     submitting: "Yuborilmoqda…",
     errName: "To‘liq ismingizni kiriting.",
@@ -742,6 +746,14 @@ export default function ApplyForm({
           .
         </span>
       </label>
+      <Link
+        href="/faq#candidate"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="-mt-1 block text-xs text-brand-700 underline"
+      >
+        {t.faqLink}
+      </Link>
 
       <TurnstileWidget onToken={setTurnstileToken} />
 

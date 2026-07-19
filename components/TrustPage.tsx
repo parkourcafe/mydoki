@@ -3,14 +3,15 @@ import { notFound } from "next/navigation";
 import { getLocale, type Locale } from "@/lib/i18n";
 import LangSwitcher from "@/components/LangSwitcher";
 import { getTrustPage } from "@/lib/trust";
+import { supportWhatsappUrl } from "@/lib/support";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
 
-const UI: Record<Locale, { start: string; startShort: string; home: string; privacy: string; terms: string }> = {
-  ru: { start: "Начать бесплатно", startShort: "Начать", home: "← На главную", privacy: "Конфиденциальность", terms: "Условия" },
-  en: { start: "Start for free", startShort: "Start", home: "← Home", privacy: "Privacy", terms: "Terms" },
-  id: { start: "Mulai gratis", startShort: "Mulai", home: "← Beranda", privacy: "Privasi", terms: "Ketentuan" },
-  uz: { start: "Bepul boshlash", startShort: "Boshlash", home: "← Bosh sahifa", privacy: "Maxfiylik", terms: "Shartlar" },
+const UI: Record<Locale, { start: string; startShort: string; home: string; privacy: string; terms: string; faq: string; support: string }> = {
+  ru: { start: "Начать бесплатно", startShort: "Начать", home: "← На главную", privacy: "Конфиденциальность", terms: "Условия", faq: "Вопросы", support: "Поддержка в WhatsApp" },
+  en: { start: "Start for free", startShort: "Start", home: "← Home", privacy: "Privacy", terms: "Terms", faq: "FAQ", support: "WhatsApp support" },
+  id: { start: "Mulai gratis", startShort: "Mulai", home: "← Beranda", privacy: "Privasi", terms: "Ketentuan", faq: "FAQ", support: "Dukungan WhatsApp" },
+  uz: { start: "Bepul boshlash", startShort: "Boshlash", home: "← Bosh sahifa", privacy: "Maxfiylik", terms: "Shartlar", faq: "Savollar", support: "WhatsApp qoʻllab-quvvatlash" },
 };
 
 export default async function TrustPage({ slug }: { slug: string }) {
@@ -91,8 +92,12 @@ export default async function TrustPage({ slug }: { slug: string }) {
 
         <div className="mt-10 flex flex-wrap gap-x-4 gap-y-1 border-t border-[#e8e0d5] pt-6 text-sm text-[#8a7c6d]">
           <Link href={`/${locale}`} className="hover:text-[#2c2522]">{t.home}</Link>
+          <Link href="/faq" className="hover:text-[#2c2522]">{t.faq}</Link>
           <Link href={`/${locale}/privacy`} className="hover:text-[#2c2522]">{t.privacy}</Link>
           <Link href={`/${locale}/terms`} className="hover:text-[#2c2522]">{t.terms}</Link>
+          {supportWhatsappUrl() && (
+            <a href={supportWhatsappUrl()!} target="_blank" rel="noopener noreferrer" className="hover:text-[#2c2522]">{t.support}</a>
+          )}
         </div>
       </article>
     </div>
