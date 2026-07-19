@@ -15,8 +15,8 @@ const LABELS: Record<Locale, string> = {
 const VISIBLE: Record<Locale, Locale[]> = {
   id: ["en", "id"],
   en: ["en", "id"],
-  ru: ["ru", "en"],
-  uz: ["uz", "ru", "en"],
+  ru: ["ru", "en", "id"],
+  uz: ["uz", "en", "id"],
 };
 
 function set(locale: Locale) {
