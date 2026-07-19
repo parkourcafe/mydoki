@@ -64,6 +64,8 @@ export interface EventMap {
   video_recorded: { vacancy_id: string };
   consent_given: { vacancy_id: string; policy_version: string };
   application_submitted: { vacancy_id: string };
+  /** Candidate tapped "save these documents to my vault" on the success screen (B2B2C save-rate). */
+  vault_save_clicked: { vacancy_id: string };
 
   // ── Работодатель: работа с откликами ──────────────────────────────
   application_status_changed: { to: string; vacancy_id: string };

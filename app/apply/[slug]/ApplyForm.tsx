@@ -72,8 +72,8 @@ const M = {
     doneTitle: "Application submitted!",
     doneText: "You'll receive updates via WhatsApp.",
     statusLink: "Track your application status",
-    nudge: "Save your profile for faster applications next time.",
-    createAccount: "Create a free Doki account",
+    nudge: "Keep these documents for your next application — in your own free vault.",
+    createAccount: "Save to my free Doki vault",
   },
   id: {
     yourApplication: "Lamaran Anda",
@@ -126,8 +126,8 @@ const M = {
     doneTitle: "Lamaran terkirim!",
     doneText: "Anda akan menerima kabar via WhatsApp.",
     statusLink: "Lacak status lamaran Anda",
-    nudge: "Simpan profil agar lamaran berikutnya lebih cepat.",
-    createAccount: "Buat akun Doki gratis",
+    nudge: "Simpan dokumen ini untuk lamaran berikutnya — di brankas Anda sendiri yang gratis.",
+    createAccount: "Simpan ke brankas Doki gratis",
   },
   ru: {
     yourApplication: "Ваш отклик",
@@ -180,8 +180,8 @@ const M = {
     doneTitle: "Отклик отправлен!",
     doneText: "Обновления придут в WhatsApp.",
     statusLink: "Отслеживать статус отклика",
-    nudge: "Сохраните профиль, чтобы откликаться быстрее.",
-    createAccount: "Создать бесплатный аккаунт Doki",
+    nudge: "Сохраните эти документы для следующего отклика — в свой бесплатный сейф.",
+    createAccount: "Сохранить в мой сейф Doki",
   },
   uz: {
     yourApplication: "Arizangiz",
@@ -234,8 +234,8 @@ const M = {
     doneTitle: "Ariza yuborildi!",
     doneText: "Yangiliklarni WhatsApp orqali olasiz.",
     statusLink: "Ariza holatini kuzatish",
-    nudge: "Keyingi safar tezroq ariza berish uchun profilni saqlang.",
-    createAccount: "Bepul Doki akkaunti yaratish",
+    nudge: "Bu hujjatlarni keyingi ariza uchun saqlang — o‘zingizning bepul seyfingizda.",
+    createAccount: "Bepul Doki seyfimga saqlash",
   },
 } as const;
 
@@ -490,7 +490,8 @@ export default function ApplyForm({
         </Link>
         <p className="mt-4 text-xs text-slate-500">{t.nudge}</p>
         <Link
-          href={`/${locale}/login`}
+          href={`/${locale}/login?next=/my`}
+          onClick={() => track("vault_save_clicked", { vacancy_id: vacancyId })}
           className="mt-1 inline-block text-sm text-brand-600 hover:underline"
         >
           {t.createAccount}
