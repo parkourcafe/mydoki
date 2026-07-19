@@ -14,11 +14,11 @@ const M = {
       { icon: "🛡️", title: "Двухфакторный вход и оповещения", text: "Можно включить вход по второму фактору (TOTP). При входе с нового устройства приходит письмо — вы сразу заметите чужой доступ." },
       { icon: "🧾", title: "Журнал доступа", text: "Каждое открытие документа по ссылке записывается в журнал — видно, что и когда смотрели." },
       { icon: "🤖", title: "ИИ-распознавание — по желанию", text: "По умолчанию выключено. Изображение документа уходит ИИ-провайдеру только если вы сами включили распознавание в настройках. Не хотите — документы не покидают сервис ради ИИ." },
-      { icon: "☁️", title: "Где хранятся данные", text: "В защищённом облаке (инфраструктура Supabase), передача — по HTTPS. Серверы могут находиться вне РФ — подробности в Политике конфиденциальности. Мы не продаём и не передаём ваши данные для рекламы." },
-      { icon: "📤", title: "Экспорт и удаление", text: "Свои документы можно выгрузить через экспорт в кабинете в любой момент — без привязки к сервису. Чтобы удалить аккаунт и данные, напишите в поддержку." },
+      { icon: "☁️", title: "Где хранятся данные", text: "В защищённом облаке (инфраструктура Supabase), передача — по HTTPS. Серверы могут находиться за пределами Индонезии — условия трансграничной передачи описаны в Политике конфиденциальности. Мы не продаём и не передаём ваши данные для рекламы." },
+      { icon: "📤", title: "Экспорт и удаление", text: "Свои документы можно выгрузить через экспорт в кабинете в любой момент — без привязки к сервису. Аккаунт и данные вы удаляете сами: «Настройки → Безопасность → Удалить аккаунт»." },
     ],
-    betaTitle: "Честно про beta",
-    beta: "Сервис в активной разработке и предоставляется «как есть». Он удобен для повседневного доступа к документам, но не заменяет вашу собственную резервную копию по-настоящему важных оригиналов.",
+    incidentTitle: "Инциденты безопасности",
+    incidentText: "Если утечка затронет ваши персональные данные, мы обязуемся уведомить затронутых пользователей и уполномоченный орган в течение 3×24 часов — в соответствии с законом Индонезии о защите персональных данных (UU PDP 27/2022). Сообщить о проблеме безопасности: security@doki.help.",
     privacy: "Политика конфиденциальности",
     terms: "Пользовательское соглашение",
     cta: "Создать сейф бесплатно",
@@ -35,11 +35,11 @@ const M = {
       { icon: "🛡️", title: "Two-factor sign-in and alerts", text: "You can enable a second factor (TOTP). A new-device login triggers an email, so you notice unfamiliar access right away." },
       { icon: "🧾", title: "Access log", text: "Every link-based document view is written to a log — you can see what was opened and when." },
       { icon: "🤖", title: "AI recognition is opt-in", text: "Off by default. A document image is sent to an AI provider only if you turn recognition on yourself in settings. Don't want it — your documents never leave for AI." },
-      { icon: "☁️", title: "Where your data lives", text: "In secure cloud (Supabase infrastructure), transferred over HTTPS. Servers may be located outside Russia — details in the Privacy Policy. We never sell or share your data for advertising." },
-      { icon: "📤", title: "Export and deletion", text: "You can export your documents from the cabinet at any time — no lock-in. To delete your account and data, contact support." },
+      { icon: "☁️", title: "Where your data lives", text: "In secure cloud (Supabase infrastructure), transferred over HTTPS. Servers may be located outside Indonesia — the cross-border transfer terms are set out in the Privacy Policy. We never sell or share your data for advertising." },
+      { icon: "📤", title: "Export and deletion", text: "You can export your documents from the cabinet at any time — no lock-in. You delete your account and data yourself: Settings → Security → Delete account." },
     ],
-    betaTitle: "Honest about beta",
-    beta: "The service is in active development and provided “as is.” It's great for day-to-day access to your documents, but it doesn't replace your own backup of the truly important originals.",
+    incidentTitle: "Security incidents",
+    incidentText: "If a breach affects your personal data, we commit to notifying affected users and the relevant authority within 3×24 hours, in line with Indonesia's Personal Data Protection Law (UU PDP 27/2022). Report a suspected security issue to security@doki.help.",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
     cta: "Create your vault for free",
@@ -56,11 +56,11 @@ const M = {
       { icon: "🛡️", title: "Masuk dua faktor dan peringatan", text: "Anda bisa mengaktifkan faktor kedua (TOTP). Login dari perangkat baru memicu email, jadi Anda langsung tahu akses asing." },
       { icon: "🧾", title: "Log akses", text: "Setiap penampilan dokumen lewat tautan dicatat — Anda bisa melihat apa yang dibuka dan kapan." },
       { icon: "🤖", title: "Pengenalan AI bersifat opsional", text: "Nonaktif secara bawaan. Gambar dokumen dikirim ke penyedia AI hanya jika Anda mengaktifkannya sendiri di pengaturan. Tidak mau — dokumen Anda tidak dikirim untuk AI." },
-      { icon: "☁️", title: "Di mana data Anda berada", text: "Di cloud aman (infrastruktur Supabase), ditransfer lewat HTTPS. Server bisa berada di luar Rusia — rincian di Kebijakan Privasi. Kami tidak pernah menjual atau membagikan data Anda untuk iklan." },
-      { icon: "📤", title: "Ekspor dan penghapusan", text: "Anda bisa mengekspor dokumen dari kabinet kapan saja — tanpa terkunci. Untuk menghapus akun dan data, hubungi dukungan." },
+      { icon: "☁️", title: "Di mana data Anda berada", text: "Di cloud aman (infrastruktur Supabase), ditransfer lewat HTTPS. Server dapat berada di luar Indonesia — ketentuan transfer lintas negara dijelaskan di Kebijakan Privasi. Kami tidak pernah menjual atau membagikan data Anda untuk iklan." },
+      { icon: "📤", title: "Ekspor dan penghapusan", text: "Anda bisa mengekspor dokumen dari kabinet kapan saja — tanpa terkunci. Anda menghapus akun dan data sendiri: Pengaturan → Keamanan → Hapus akun." },
     ],
-    betaTitle: "Jujur soal beta",
-    beta: "Layanan ini dalam pengembangan aktif dan disediakan “apa adanya.” Bagus untuk akses harian ke dokumen Anda, tetapi tidak menggantikan cadangan Anda sendiri atas dokumen asli yang benar-benar penting.",
+    incidentTitle: "Insiden keamanan",
+    incidentText: "Jika terjadi kebocoran yang memengaruhi data pribadi Anda, kami berkomitmen memberi tahu pengguna yang terdampak dan otoritas terkait dalam waktu 3×24 jam, sesuai UU Pelindungan Data Pribadi (UU PDP 27/2022). Laporkan dugaan masalah keamanan ke security@doki.help.",
     privacy: "Kebijakan Privasi",
     terms: "Ketentuan Layanan",
     cta: "Buat brankas gratis",
@@ -77,11 +77,11 @@ const M = {
       { icon: "🛡️", title: "Ikki bosqichli kirish va ogohlantirishlar", text: "Ikkinchi omilni (TOTP) yoqishingiz mumkin. Yangi qurilmadan kirishda email keladi — begona kirishni darrov sezasiz." },
       { icon: "🧾", title: "Kirish jurnali", text: "Havola orqali har bir hujjat koʻrilishi jurnalga yoziladi — nima va qachon ochilganini koʻrasiz." },
       { icon: "🤖", title: "AI-aniqlash — ixtiyoriy", text: "Standart holatda oʻchirilgan. Hujjat tasviri AI-provayderga faqat siz sozlamalarda aniqlashni yoqsangiz yuboriladi. Istamasangiz — hujjatlaringiz AI uchun chiqib ketmaydi." },
-      { icon: "☁️", title: "Maʼlumotlaringiz qayerda", text: "Xavfsiz bulutda (Supabase infratuzilmasi), HTTPS orqali uzatiladi. Serverlar Rossiyadan tashqarida boʻlishi mumkin — tafsilotlar Maxfiylik siyosatida. Maʼlumotlaringizni reklama uchun hech qachon sotmaymiz yoki bermaymiz." },
-      { icon: "📤", title: "Eksport va oʻchirish", text: "Hujjatlaringizni kabinetdagi eksport orqali istalgan vaqtda olib chiqishingiz mumkin — bogʻlanmagan holda. Hisob va maʼlumotlarni oʻchirish uchun qoʻllab-quvvatlashga yozing." },
+      { icon: "☁️", title: "Maʼlumotlaringiz qayerda", text: "Xavfsiz bulutda (Supabase infratuzilmasi), HTTPS orqali uzatiladi. Serverlar Indoneziyadan tashqarida boʻlishi mumkin — chegaralararo uzatish shartlari Maxfiylik siyosatida yozilgan. Maʼlumotlaringizni reklama uchun hech qachon sotmaymiz yoki bermaymiz." },
+      { icon: "📤", title: "Eksport va oʻchirish", text: "Hujjatlaringizni kabinetdagi eksport orqali istalgan vaqtda olib chiqishingiz mumkin — bogʻlanmagan holda. Hisob va maʼlumotlarni Sozlamalar → Xavfsizlik → Hisobni oʻchirish orqali oʻzingiz oʻchirasiz." },
     ],
-    betaTitle: "Beta haqida rostini aytganda",
-    beta: "Xizmat faol ishlab chiqilmoqda va “qanday boʻlsa shundayligicha” taqdim etiladi. U hujjatlaringizga kundalik kirish uchun qulay, lekin chinakam muhim asl nusxalaringizning shaxsiy zaxira nusxasini almashtirmaydi.",
+    incidentTitle: "Xavfsizlik hodisalari",
+    incidentText: "Agar maʼlumot sizib chiqishi shaxsiy maʼlumotlaringizga taʼsir qilsa, biz taʼsirlangan foydalanuvchilar va tegishli organni 3×24 soat ichida xabardor qilishga majburmiz — Indoneziyaning shaxsiy maʼlumotlarni himoya qilish qonuni (UU PDP 27/2022) boʻyicha. Xavfsizlik muammosi haqida xabar bering: security@doki.help.",
     privacy: "Maxfiylik siyosati",
     terms: "Foydalanish shartlari",
     cta: "Bepul seyf yaratish",
@@ -130,8 +130,19 @@ export default async function SecurityPage() {
       </div>
 
       <div className="mt-6 rounded-3xl border border-[#e8e0d5] bg-white p-6">
-        <div className="mb-1.5 font-semibold text-[#2c2522]">{t.betaTitle}</div>
-        <p className="text-sm text-[#5c5248]">{t.beta}</p>
+        <div className="mb-1.5 font-semibold text-[#2c2522]">
+          {t.incidentTitle}
+        </div>
+        <p className="text-sm text-[#5c5248]">
+          {t.incidentText.split("security@doki.help")[0]}
+          <a
+            href="mailto:security@doki.help"
+            className="text-[#b85c38] hover:underline"
+          >
+            security@doki.help
+          </a>
+          {t.incidentText.split("security@doki.help")[1] ?? ""}
+        </p>
         <p className="mt-3 text-sm">
           <Link href="/privacy" className="text-[#b85c38] hover:underline">
             {t.privacy}

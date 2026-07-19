@@ -30,9 +30,12 @@ export type SegmentContent = {
   pains: string[];
   solutions: string[];
   docs: string[];
+  /** Optional CTA label override (e.g. "Create your first checklist"). */
+  ctaLabel?: string;
 };
 
-type Segment = { emoji: string; locales: Record<Locale, SegmentContent> };
+// ctaHref: optional CTA destination override for this segment (defaults to /login).
+type Segment = { emoji: string; locales: Record<Locale, SegmentContent>; ctaHref?: string };
 
 const DATA: Record<SegmentKey, Segment> = {
   medical: {
@@ -554,82 +557,87 @@ const DATA: Record<SegmentKey, Segment> = {
   },
   employers: {
     emoji: "💼",
+    ctaHref: "/employer/vacancies/new",
     locales: {
       ru: {
-        navLabel: "Работодателям",
-        title: "Получайте отклики сразу с нужными документами",
+        navLabel: "HR и агентства",
+        title: "Отправьте один чек-лист — получите полный пакет документов",
         subtitle:
-          "Создайте вакансию, укажите документы и вопросы — кандидаты приходят в одно место уже с CV, ID и сертификатами.",
+          "Для HR-команд и рекрутинговых агентств: один список нужных документов → ссылка кандидату → полный пакет, статус «чего не хватает» и напоминания о сроках.",
         pains: [
-          "Кандидаты присылают документы кусками в WhatsApp",
-          "Резюме есть, а нужных справок и ID — нет",
-          "Сложно сравнивать кандидатов между собой",
-          "Непонятно, кого именно нанимать под задачу",
+          "Кандидаты присылают документы кусками в WhatsApp и email",
+          "Резюме есть, а нужных справок, KTP и сертификатов — нет",
+          "Непонятно, у кого чего не хватает и что просрочено",
+          "Документы теряются между чатами и папками",
         ],
         solutions: [
-          "Вакансия со списком обязательных документов — кандидат не отправит пустой отклик",
-          "Все отклики в одном дашборде: статусы, шортлист, отказы",
-          "Вопросы и видео-ответ до собеседования — экономия времени",
-          "Помощник подскажет роль, задачи, документы и вопросы",
+          "Чек-лист-ссылка: кандидат загружает без регистрации, вы получаете полный пакет",
+          "Статус по каждому кандидату: «полный / не хватает» — сразу видно, кого догнать",
+          "Напоминания о сроках (SKCK, KITAS, сертификаты) — ничего не просрочено",
+          "Все пакеты в одном дашборде: шортлист, отказы, экспорт без привязки",
         ],
-        docs: ["CV кандидата", "KTP / ID", "Сертификаты", "Медсправка", "Видео-ответ", "Ответы на вопросы"],
+        docs: ["CV кандидата", "KTP / ID", "Сертификаты", "SKCK", "KITAS", "Медсправка"],
+        ctaLabel: "Создать первый чек-лист",
       },
       en: {
-        navLabel: "Employers",
-        title: "Get applications with the documents already attached",
+        navLabel: "HR & agencies",
+        title: "Send one checklist — get the full document package back",
         subtitle:
-          "Create a vacancy, set the documents and questions — candidates arrive in one place with CV, ID and certificates.",
+          "For HR teams and recruiting agencies: one list of required documents → a link to the candidate → a complete package, a “what's missing” status, and deadline reminders.",
         pains: [
-          "Candidates send documents in pieces over WhatsApp",
-          "There's a resume, but no required certificates or ID",
-          "Hard to compare candidates side by side",
-          "Unclear who exactly to hire for the task",
+          "Candidates send documents in pieces over WhatsApp and email",
+          "There's a resume, but no required certificates, KTP or ID",
+          "No clarity on who is missing what, or what has expired",
+          "Documents get lost between chats and folders",
         ],
         solutions: [
-          "A vacancy with a required-documents list — no empty applications",
-          "All applications in one dashboard: statuses, shortlist, rejections",
-          "Questions and a video answer before the interview — saves hours",
-          "The assistant suggests the role, tasks, documents and questions",
+          "A checklist link: candidates upload without an account, you get the full package",
+          "Per-candidate status: “complete / missing” — you instantly see who to chase",
+          "Deadline reminders (SKCK, KITAS, certificates) — nothing expires unnoticed",
+          "Every package in one dashboard: shortlist, rejections, export with no lock-in",
         ],
-        docs: ["Candidate CV", "KTP / ID", "Certificates", "Health certificate", "Video answer", "Screening answers"],
+        docs: ["Candidate CV", "KTP / ID", "Certificates", "SKCK", "KITAS", "Health certificate"],
+        ctaLabel: "Create your first checklist",
       },
       id: {
-        navLabel: "Perusahaan",
-        title: "Terima lamaran lengkap dengan dokumennya",
+        navLabel: "Tim HR & Agensi",
+        title: "Kirim satu ceklis — terima paket dokumen lengkap",
         subtitle:
-          "Buat lowongan, tentukan dokumen dan pertanyaan — kandidat masuk ke satu tempat dengan CV, KTP, dan sertifikat.",
+          "Untuk tim HR dan agensi rekrutmen: satu daftar dokumen wajib → tautan ke kandidat → paket lengkap, status “apa yang kurang”, dan pengingat tenggat.",
         pains: [
-          "Kandidat mengirim dokumen sepotong-sepotong lewat WhatsApp",
-          "Ada resume, tapi surat dan KTP yang dibutuhkan tidak ada",
-          "Sulit membandingkan kandidat",
-          "Tidak jelas siapa yang harus direkrut untuk tugas itu",
+          "Kandidat mengirim dokumen sepotong-sepotong lewat WhatsApp dan email",
+          "Ada resume, tapi sertifikat, KTP, atau surat yang wajib tidak ada",
+          "Tidak jelas siapa yang kurang apa, atau apa yang sudah kedaluwarsa",
+          "Dokumen tercecer di antara chat dan folder",
         ],
         solutions: [
-          "Lowongan dengan daftar dokumen wajib — tak ada lamaran kosong",
-          "Semua lamaran di satu dasbor: status, shortlist, penolakan",
-          "Pertanyaan dan jawaban video sebelum wawancara — hemat waktu",
-          "Asisten menyarankan peran, tugas, dokumen, dan pertanyaan",
+          "Tautan ceklis: kandidat mengunggah tanpa akun, Anda menerima paket lengkap",
+          "Status per kandidat: “lengkap / kurang” — langsung terlihat siapa yang perlu ditagih",
+          "Pengingat tenggat (SKCK, KITAS, sertifikat) — tidak ada yang kedaluwarsa diam-diam",
+          "Semua paket di satu dasbor: shortlist, penolakan, ekspor tanpa terkunci",
         ],
-        docs: ["CV kandidat", "KTP / ID", "Sertifikat", "Surat sehat", "Jawaban video", "Jawaban seleksi"],
+        docs: ["CV kandidat", "KTP / ID", "Sertifikat", "SKCK", "KITAS", "Surat sehat"],
+        ctaLabel: "Buat checklist pertama",
       },
       uz: {
-        navLabel: "Ish beruvchilarga",
-        title: "Arizalarni kerakli hujjatlari bilan birga oling",
+        navLabel: "HR va agentliklar",
+        title: "Bitta roʻyxat yuboring — toʻliq hujjatlar paketini oling",
         subtitle:
-          "Vakansiya yarating, hujjat va savollarni belgilang — nomzodlar CV, ID va sertifikatlari bilan bitta joyga keladi.",
+          "HR jamoalari va rekruting agentliklari uchun: kerakli hujjatlar roʻyxati → nomzodga havola → toʻliq paket, “nima yetishmayapti” statusi va muddat eslatmalari.",
         pains: [
-          "Nomzodlar hujjatlarni WhatsAppda boʻlak-boʻlak yuboradi",
-          "Rezyume bor, kerakli maʼlumotnoma va ID yoʻq",
-          "Nomzodlarni solishtirish qiyin",
-          "Vazifaga aynan kimni yollash kerakligi noaniq",
+          "Nomzodlar hujjatlarni WhatsApp va emailda boʻlak-boʻlak yuboradi",
+          "Rezyume bor, kerakli sertifikat, KTP yoki maʼlumotnoma yoʻq",
+          "Kimda nima yetishmayotgani yoki nima muddati oʻtgani noaniq",
+          "Hujjatlar chat va papkalar orasida yoʻqoladi",
         ],
         solutions: [
-          "Majburiy hujjatlar roʻyxati bilan vakansiya — boʻsh ariza kelmaydi",
-          "Barcha arizalar bitta dashboardda: statuslar, shortlist, rad etish",
-          "Suhbatdan oldin savollar va video-javob — vaqt tejaladi",
-          "Yordamchi rol, vazifa, hujjat va savollarni taklif qiladi",
+          "Roʻyxat-havola: nomzod hisobsiz yuklaydi, siz toʻliq paketni olasiz",
+          "Har bir nomzod boʻyicha status: “toʻliq / kam” — kimni qoʻshishni darrov koʻrasiz",
+          "Muddat eslatmalari (SKCK, KITAS, sertifikatlar) — hech narsa bilinmay oʻtmaydi",
+          "Barcha paketlar bitta dashboardda: shortlist, rad etish, bogʻlanishsiz eksport",
         ],
-        docs: ["Nomzod CV", "KTP / ID", "Sertifikatlar", "Tibbiy maʼlumotnoma", "Video-javob", "Savollar javobi"],
+        docs: ["Nomzod CV", "KTP / ID", "Sertifikatlar", "SKCK", "KITAS", "Tibbiy maʼlumotnoma"],
+        ctaLabel: "Birinchi roʻyxatni yarating",
       },
     },
   },

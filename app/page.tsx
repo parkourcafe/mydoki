@@ -9,6 +9,7 @@ import { usecaseLinks } from "@/lib/usecases";
 import { landingLinks } from "@/lib/landings";
 import { checklistLinks } from "@/lib/checklists";
 import { trustLinks } from "@/lib/trust";
+import { supportWhatsappUrl } from "@/lib/support";
 
 // Сгенерированные кинематографичные ассеты (Higgsfield · nano-banana / kling).
 // Хостинг — тот же CDN, что использовался для прежней hero-картинки.
@@ -100,7 +101,7 @@ type Dict = {
   forWhom: { heading: string; items: string[] };
   diff: { heading: string; intro: string; items: { t: string; d: string }[] };
   operator: { heading: string; line: string; contactLabel: string };
-  footer: { copyright: string; pricing: string; security: string; privacy: string; login: string };
+  footer: { copyright: string; pricing: string; security: string; privacy: string; terms: string; about: string; faq: string; support: string; login: string };
 };
 
 const M: Record<Locale, Dict> = {
@@ -245,7 +246,7 @@ const M: Record<Locale, Dict> = {
       line: "Оператор: владелец сервиса doki.help, ИНН 780728592634.",
       contactLabel: "Поддержка:",
     },
-    footer: { copyright: "© 2026 doki.help — Семейный архив документов", pricing: "Цены", security: "Безопасность", privacy: "Конфиденциальность", login: "Войти" },
+    footer: { copyright: "© 2026 doki.help — документы, собранные и готовые к отправке", pricing: "Цены", security: "Безопасность", privacy: "Конфиденциальность", terms: "Условия", about: "О нас", faq: "Вопросы", support: "Поддержка в WhatsApp", login: "Войти" },
   },
   en: {
     nav: { login: "Sign in", start: "Get started free", startShort: "Start" },
@@ -388,7 +389,7 @@ const M: Record<Locale, Dict> = {
       line: "Operator: the owner of the doki.help service, TIN 780728592634.",
       contactLabel: "Support:",
     },
-    footer: { copyright: "© 2026 doki.help — Family document vault", pricing: "Pricing", security: "Security", privacy: "Privacy", login: "Sign in" },
+    footer: { copyright: "© 2026 doki.help — document packs, done right", pricing: "Pricing", security: "Security", privacy: "Privacy", terms: "Terms", about: "About", faq: "FAQ", support: "WhatsApp support", login: "Sign in" },
   },
   id: {
     nav: { login: "Masuk", start: "Mulai gratis", startShort: "Mulai" },
@@ -531,7 +532,7 @@ const M: Record<Locale, Dict> = {
       line: "Operator: pemilik layanan doki.help, NPWP 780728592634.",
       contactLabel: "Dukungan:",
     },
-    footer: { copyright: "© 2026 doki.help — Brankas dokumen keluarga", pricing: "Harga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
+    footer: { copyright: "© 2026 doki.help — paket dokumen, rapi dan siap kirim", pricing: "Harga", security: "Keamanan", privacy: "Privasi", terms: "Ketentuan", about: "Tentang kami", faq: "FAQ", support: "Dukungan WhatsApp", login: "Masuk" },
   },
   uz: {
     nav: { login: "Kirish", start: "Bepul boshlash", startShort: "Boshlash" },
@@ -674,7 +675,7 @@ const M: Record<Locale, Dict> = {
       line: "Operator: doki.help xizmati egasi, STIR 780728592634.",
       contactLabel: "Qoʻllab-quvvatlash:",
     },
-    footer: { copyright: "© 2026 doki.help — Oila hujjatlari seyfi", pricing: "Narxlar", security: "Xavfsizlik", privacy: "Maxfiylik", login: "Kirish" },
+    footer: { copyright: "© 2026 doki.help — hujjatlar paketi, joʻnatishga tayyor", pricing: "Narxlar", security: "Xavfsizlik", privacy: "Maxfiylik", terms: "Shartlar", about: "Biz haqimizda", faq: "Savollar", support: "WhatsApp qoʻllab-quvvatlash", login: "Kirish" },
   },
 };
 
@@ -955,6 +956,86 @@ export default async function Home({
             </div>
           </div>
         </div>
+      </section>
+
+      {/* COLLECT FROM OTHERS — второй смысловой слой: собрать документы у других по ссылке (ТЗ A1) */}
+      <section className="mx-auto max-w-screen-xl px-3 pt-6 sm:px-5" aria-label="collect-from-others">
+        {(() => {
+          const C = {
+            ru: {
+              heading: "Отправьте одну ссылку — получите полный пакет",
+              sub: "doki.help — это не только ваш личный архив. Соберите документы у других — кандидатов, подрядчиков, клиентов — по одной ссылке.",
+              aTitle: "Вы отправляете ссылку",
+              aText: "Создаёте чек-лист нужных документов и делитесь ссылкой в WhatsApp.",
+              bTitle: "Они загружают",
+              bText: "Человек открывает ссылку и загружает файлы — без регистрации и без приложения.",
+              result: "Вы сразу видите, что пришло, а чего ещё не хватает.",
+              cta: "Для HR-команд и агентств →",
+            },
+            en: {
+              heading: "Send one link — get the full package",
+              sub: "doki.help isn't only your own vault. Collect documents from others — candidates, contractors, clients — with a single link.",
+              aTitle: "You send a link",
+              aText: "Build a checklist of the documents you need and share the link over WhatsApp.",
+              bTitle: "They upload",
+              bText: "They open the link and upload their files — no account, no app.",
+              result: "You instantly see what arrived and what's still missing.",
+              cta: "For HR teams & agencies →",
+            },
+            id: {
+              heading: "Kirim satu link — terima berkas lengkap",
+              sub: "doki.help bukan sekadar brankas pribadi Anda. Kumpulkan dokumen dari orang lain — kandidat, mitra, klien — cukup dengan satu tautan.",
+              aTitle: "Anda kirim tautan",
+              aText: "Buat ceklis dokumen yang dibutuhkan dan bagikan tautannya lewat WhatsApp.",
+              bTitle: "Mereka unggah",
+              bText: "Mereka membuka tautan dan mengunggah berkasnya — tanpa akun, tanpa aplikasi.",
+              result: "Anda langsung tahu apa yang sudah masuk dan apa yang masih kurang.",
+              cta: "Untuk tim HR & agensi →",
+            },
+            uz: {
+              heading: "Bitta havola yuboring — toʻliq paketni oling",
+              sub: "doki.help faqat sizning shaxsiy seyfingiz emas. Boshqalardan — nomzodlar, pudratchilar, mijozlardan — hujjatlarni bitta havola orqali yigʻing.",
+              aTitle: "Siz havola yuborasiz",
+              aText: "Kerakli hujjatlar roʻyxatini tuzasiz va havolani WhatsApp orqali ulashasiz.",
+              bTitle: "Ular yuklaydi",
+              bText: "Odam havolani ochadi va fayllarini yuklaydi — roʻyxatdan oʻtmasdan, ilovasiz.",
+              result: "Nima kelgani va nima hali yetishmayotganini darrov koʻrasiz.",
+              cta: "HR jamoalari va agentliklar uchun →",
+            },
+          }[locale];
+          return (
+            <div className="rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] px-6 py-10 sm:px-10">
+              <div className="mx-auto max-w-3xl text-center">
+                <h2 className="heading-font text-2xl text-[#2c2522] sm:text-3xl">{C.heading}</h2>
+                <p className="mx-auto mt-3 max-w-2xl text-[#5c5248]">{C.sub}</p>
+              </div>
+              <div className="mx-auto mt-8 grid max-w-3xl items-stretch gap-4 sm:grid-cols-[1fr_auto_1fr]">
+                <div className="rounded-2xl border border-[#e8e0d5] bg-white p-6">
+                  <div className="mb-1.5 flex items-center gap-2 text-lg font-semibold">
+                    <span className="text-2xl">🔗</span> {C.aTitle}
+                  </div>
+                  <p className="text-sm text-[#5c5248]">{C.aText}</p>
+                </div>
+                <div className="hidden items-center justify-center text-2xl text-[#b85c38] sm:flex" aria-hidden="true">→</div>
+                <div className="rounded-2xl border border-[#e8e0d5] bg-white p-6">
+                  <div className="mb-1.5 flex items-center gap-2 text-lg font-semibold">
+                    <span className="text-2xl">📥</span> {C.bTitle}
+                  </div>
+                  <p className="text-sm text-[#5c5248]">{C.bText}</p>
+                </div>
+              </div>
+              <div className="mx-auto mt-6 max-w-3xl text-center">
+                <p className="text-[15px] font-medium text-[#2c2522]">✅ {C.result}</p>
+                <Link
+                  href="/for/employers"
+                  className="mt-5 inline-flex rounded-3xl bg-[#b85c38] px-8 py-3 text-base font-semibold text-white transition-all hover:bg-[#9f4a2e] active:scale-[0.985]"
+                >
+                  {C.cta}
+                </Link>
+              </div>
+            </div>
+          );
+        })()}
       </section>
 
       {/* PAIN */}
@@ -1366,11 +1447,17 @@ export default async function Home({
           <div>{t.footer.copyright}</div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
             <Link href="/pricing" className="hover:text-[#2c2522]">{t.footer.pricing}</Link>
+            <Link href="/about" className="hover:text-[#2c2522]">{t.footer.about}</Link>
             <Link href="/security" className="hover:text-[#2c2522]">{t.footer.security}</Link>
             {trustLinks(locale).map((tl) => (
               <Link key={tl.key} href={`/${tl.key}`} className="hover:text-[#2c2522]">{tl.label}</Link>
             ))}
+            <Link href="/faq" className="hover:text-[#2c2522]">{t.footer.faq}</Link>
             <Link href="/privacy" className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
+            <Link href="/terms" className="hover:text-[#2c2522]">{t.footer.terms}</Link>
+            {supportWhatsappUrl() && (
+              <a href={supportWhatsappUrl()!} target="_blank" rel="noopener noreferrer" className="hover:text-[#2c2522]">{t.footer.support}</a>
+            )}
             <Link href="/login" className="hover:text-[#2c2522]">{t.footer.login}</Link>
           </div>
         </div>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import { track } from "@/lib/analytics";
+import { POLICY_VERSION } from "@/lib/policy";
 import {
   ACCEPT_ATTR,
   ACCEPTED_MIME,
@@ -43,6 +44,11 @@ const M = {
     no: "No",
     consentTpl: (c: string) =>
       `I agree to share my name, contact information, documents, and answers with ${c} for this vacancy only. I can request deletion anytime.`,
+    consentSensitive:
+      "This may include sensitive data (e.g. medical or financial documents); I explicitly agree to share it for this vacancy.",
+    consentSee: "See our",
+    privacyLabel: "Privacy Policy",
+    faqLink: "Questions about privacy? Read the candidate FAQ",
     submit: "Submit application",
     submitting: "Submitting…",
     errName: "Please enter your full name.",
@@ -92,6 +98,11 @@ const M = {
     no: "Tidak",
     consentTpl: (c: string) =>
       `Saya setuju membagikan nama, kontak, dokumen, dan jawaban saya kepada ${c} khusus untuk lowongan ini. Saya dapat meminta penghapusan kapan saja.`,
+    consentSensitive:
+      "Ini dapat mencakup data sensitif (mis. dokumen medis atau keuangan); saya secara tegas setuju membagikannya untuk lowongan ini.",
+    consentSee: "Lihat",
+    privacyLabel: "Kebijakan Privasi",
+    faqLink: "Ada pertanyaan soal privasi? Baca FAQ kandidat",
     submit: "Kirim lamaran",
     submitting: "Mengirim…",
     errName: "Silakan masukkan nama lengkap.",
@@ -141,6 +152,11 @@ const M = {
     no: "Нет",
     consentTpl: (c: string) =>
       `Я согласен(на) поделиться именем, контактами, документами и ответами с ${c} только для этой вакансии. Я могу запросить удаление в любой момент.`,
+    consentSensitive:
+      "Это может включать чувствительные данные (например, медицинские или финансовые документы); я явно соглашаюсь передать их для этой вакансии.",
+    consentSee: "См.",
+    privacyLabel: "Политику конфиденциальности",
+    faqLink: "Вопросы о приватности? См. FAQ для кандидатов",
     submit: "Отправить отклик",
     submitting: "Отправка…",
     errName: "Введите имя и фамилию.",
@@ -190,6 +206,11 @@ const M = {
     no: "Yo‘q",
     consentTpl: (c: string) =>
       `Ismim, kontaktlarim, hujjatlarim va javoblarimni faqat shu vakansiya uchun ${c} bilan ulashishga roziman. Istalgan vaqtda o‘chirishni so‘rashim mumkin.`,
+    consentSensitive:
+      "Bu sezgir ma’lumotlarni (masalan, tibbiy yoki moliyaviy hujjatlar) o‘z ichiga olishi mumkin; ularni shu vakansiya uchun ulashishga aniq roziman.",
+    consentSee: "Qarang:",
+    privacyLabel: "Maxfiylik siyosati",
+    faqLink: "Maxfiylik haqida savol bormi? Nomzodlar uchun FAQ",
     submit: "Arizani yuborish",
     submitting: "Yuborilmoqda…",
     errName: "To‘liq ismingizni kiriting.",
@@ -247,7 +268,10 @@ export default function ApplyForm({
   prefill: { fullName: string; whatsapp: string; email: string } | null;
 }) {
   const t = M[locale];
-  const consentText = t.consentTpl(companyName);
+  // Displayed consent = base agreement + explicit sensitive-data statement.
+  const consentText = `${t.consentTpl(companyName)} ${t.consentSensitive}`;
+  // Stored consent record additionally pins the policy version that was shown.
+  const consentRecord = `${consentText} [${t.privacyLabel} v${POLICY_VERSION}]`;
 
   const [fullName, setFullName] = useState(prefill?.fullName ?? "");
   const [whatsapp, setWhatsapp] = useState(prefill?.whatsapp ?? "");
@@ -425,13 +449,14 @@ export default function ApplyForm({
         fullName: fullName.trim(),
         whatsapp,
         email: email.trim() || undefined,
-        consentText,
+        consentText: consentRecord,
         source: srcRef.current,
         turnstileToken,
         answers: answerPayload,
         documents: uploaded,
       });
 
+      track("consent_given", { vacancy_id: vacancyId, policy_version: POLICY_VERSION });
       track("application_submitted", { vacancy_id: vacancyId });
       setDoneToken(accessToken);
     } catch (err) {
@@ -706,8 +731,29 @@ export default function ApplyForm({
           onChange={(e) => setConsent(e.target.checked)}
           className="mt-0.5 h-4 w-4 shrink-0"
         />
-        <span>{consentText}</span>
+        <span>
+          {consentText}{" "}
+          {t.consentSee}{" "}
+          <Link
+            href="/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-brand-700 underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {t.privacyLabel}
+          </Link>
+          .
+        </span>
       </label>
+      <Link
+        href="/faq#candidate"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="-mt-1 block text-xs text-brand-700 underline"
+      >
+        {t.faqLink}
+      </Link>
 
       <TurnstileWidget onToken={setTurnstileToken} />
 

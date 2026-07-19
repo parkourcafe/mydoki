@@ -3,6 +3,7 @@ import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { categoryLabel, type DocCategory } from "@/lib/categories";
 import { bucketKind, DEFAULT_OFFSETS, todayUTC } from "@/lib/reminders";
 import { docTypeLabel } from "@/lib/employmentDocs";
+import { serverCapture, anonId } from "@/lib/serverAnalytics";
 
 // Ежедневный крон (Vercel Cron): письма о документах с истекающим сроком,
 // ручных напоминаниях, документах сотрудников (визы/договоры/сертификации) и
@@ -416,6 +417,13 @@ export async function GET(req: Request) {
     if (mRows.length) await admin.from("reminder_sent_manual").insert(mRows);
     if (eRows.length) await admin.from("employment_reminder_sent").insert(eRows);
     if (rRows.length) await admin.from("employment_review_reminder_sent").insert(rRows);
+    // Funnel analytics: reminder digest delivered (counts only, no PII).
+    await serverCapture("reminder_sent", anonId(email), {
+      documents: dRows.length,
+      manual: mRows.length,
+      employment_docs: eRows.length,
+      reviews: rRows.length,
+    });
   }
 
   return NextResponse.json({
