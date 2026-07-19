@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getPublicHiringLocale } from "@/lib/i18n";
@@ -8,10 +9,38 @@ import {
 import VacancyDescription from "@/components/VacancyDescription";
 import ApplyForm from "./ApplyForm";
 
-// Apply-страница раздаётся прямой ссылкой (WhatsApp/QR), не через поиск.
-export const metadata = {
-  robots: { index: false, follow: false },
-};
+// Apply-страница раздаётся прямой ссылкой (WhatsApp/QR), не через поиск — но
+// нужен корректный OG-превью, когда ссылку кидают в WhatsApp (ТЗ F1).
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const noindex = { robots: { index: false, follow: false } } as const;
+  const { slug } = await params;
+  const locale = await getPublicHiringLocale();
+  const supabase = await getSupabaseServer();
+  const { data } = await supabase
+    .from("vacancies")
+    .select("title, company_name")
+    .eq("slug", slug)
+    .eq("status", "active")
+    .maybeSingle();
+  const v = data as { title?: string; company_name?: string } | null;
+  if (!v) return noindex;
+  const company = v.company_name || "doki.help";
+  const og = {
+    en: { t: `${v.title} — ${company}`, d: `${company} is hiring. Apply and send your documents in one link.` },
+    id: { t: `${v.title} — ${company}`, d: `${company} sedang merekrut. Lamar dan kirim dokumen Anda dalam satu tautan.` },
+  }[locale];
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+  return {
+    title: og.t,
+    description: og.d,
+    ...noindex,
+    openGraph: { title: og.t, description: og.d, url: `${appUrl}/apply/${slug}` },
+  };
+}
 
 const M = {
   en: {
