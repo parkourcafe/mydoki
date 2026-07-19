@@ -6,7 +6,7 @@ import { getUsecase } from "@/lib/usecases";
 import { comparisonLinks } from "@/lib/comparisons";
 import { segmentLinks } from "@/lib/segments";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 // Контент use-case страниц — только на русском (российские документы),
 // поэтому интерфейс тоже фиксированно русский.
@@ -36,7 +36,11 @@ export async function generateMetadata({
   return {
     title: u.title,
     description: u.subtitle,
-    openGraph: { title: u.title, description: u.subtitle, url: `${APP_URL}/keep/${slug}` },
+    alternates: {
+      canonical: `${APP_URL}/ru/keep/${slug}`,
+      languages: { ru: `${APP_URL}/ru/keep/${slug}` },
+    },
+    openGraph: { title: u.title, description: u.subtitle, url: `${APP_URL}/ru/keep/${slug}` },
   };
 }
 

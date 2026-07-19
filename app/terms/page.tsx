@@ -1,9 +1,29 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { getLocale } from "@/lib/i18n";
+import { getLocale, type Locale } from "@/lib/i18n";
 
-export const metadata = {
-  title: "Пользовательское соглашение — doki.help",
+const META: Record<Locale, { title: string; description: string }> = {
+  ru: {
+    title: "Пользовательское соглашение",
+    description: "Условия использования doki.help: аккаунт, ваши документы, AI-функции, резервные копии, удаление и ответственность.",
+  },
+  en: {
+    title: "Terms of Service",
+    description: "Terms for using doki.help, including accounts, uploaded documents, AI features, backups, deletion, and liability.",
+  },
+  id: {
+    title: "Ketentuan Penggunaan",
+    description: "Ketentuan penggunaan doki.help mengenai akun, dokumen yang diunggah, fitur AI, cadangan, penghapusan, dan tanggung jawab.",
+  },
+  uz: {
+    title: "Foydalanish shartlari",
+    description: "doki.help hisoblari, yuklangan hujjatlar, AI funksiyalari, zaxira, oʻchirish va javobgarlik bo‘yicha foydalanish shartlari.",
+  },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  return META[await getLocale()];
+}
 
 function P({ children }: { children: React.ReactNode }) {
   return <p className="mt-2 text-[15px] leading-relaxed text-slate-600">{children}</p>;

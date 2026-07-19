@@ -7,7 +7,7 @@ import LangSwitcher from "@/components/LangSwitcher";
 import { getComparison } from "@/lib/comparisons";
 import { segmentLinks } from "@/lib/segments";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 const UI = {
   ru: {
@@ -74,13 +74,22 @@ export async function generateMetadata({
   if (!cmp) return {};
   const loc = await getLocale();
   const c = cmp.locales[loc] ?? cmp.locales.ru;
+  const ruOnly = slug === "gosuslugi";
   return {
     title: c.title,
     description: c.subtitle,
+    ...(ruOnly
+      ? {
+          alternates: {
+            canonical: `${APP_URL}/ru/vs/${slug}`,
+            languages: { ru: `${APP_URL}/ru/vs/${slug}` },
+          },
+        }
+      : {}),
     openGraph: {
       title: c.title,
       description: c.subtitle,
-      url: `${APP_URL}/vs/${slug}`,
+      url: ruOnly ? `${APP_URL}/ru/vs/${slug}` : `${APP_URL}/vs/${slug}`,
     },
   };
 }

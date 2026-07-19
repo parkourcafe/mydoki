@@ -17,8 +17,33 @@ const LOCALE_RE = /^\/(ru|en|id|uz)(\/.*)?$/;
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const requestHost = (request.headers.get("host") || "")
+    .split(":")[0]
+    .toLowerCase();
+  if (requestHost === "doki.help") {
+    const url = request.nextUrl.clone();
+    url.hostname = "www.doki.help";
+    url.protocol = "https";
+    return NextResponse.redirect(url, 308);
+  }
+
+  const localeMatch = pathname.match(LOCALE_RE);
+  const effectivePath = localeMatch
+    ? localeMatch[2] && localeMatch[2].length > 0
+      ? localeMatch[2]
+      : "/"
+    : pathname;
+
+  const isRuOnlyPublicPage =
+    effectivePath.startsWith("/keep/") || effectivePath === "/vs/gosuslugi";
+  if (isRuOnlyPublicPage && localeMatch?.[1] !== "ru") {
+    const url = request.nextUrl.clone();
+    url.pathname = `/ru${effectivePath}`;
+    return NextResponse.redirect(url, 308);
+  }
+
   // 1) Языковой префикс — переписываем на без-префиксный путь.
-  const m = pathname.match(LOCALE_RE);
+  const m = localeMatch;
   if (m) {
     const locale = m[1];
     const rest = m[2] && m[2].length > 0 ? m[2] : "/";
