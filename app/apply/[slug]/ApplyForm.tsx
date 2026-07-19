@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { compressImage } from "@/lib/imageCompress";
 import { track } from "@/lib/analytics";
 import { POLICY_VERSION } from "@/lib/policy";
 import {
@@ -71,8 +72,8 @@ const M = {
     doneTitle: "Application submitted!",
     doneText: "You'll receive updates via WhatsApp.",
     statusLink: "Track your application status",
-    nudge: "Save your profile for faster applications next time.",
-    createAccount: "Create a free Doki account",
+    nudge: "Keep these documents for your next application — in your own free vault.",
+    createAccount: "Save to my free Doki vault",
   },
   id: {
     yourApplication: "Lamaran Anda",
@@ -125,8 +126,8 @@ const M = {
     doneTitle: "Lamaran terkirim!",
     doneText: "Anda akan menerima kabar via WhatsApp.",
     statusLink: "Lacak status lamaran Anda",
-    nudge: "Simpan profil agar lamaran berikutnya lebih cepat.",
-    createAccount: "Buat akun Doki gratis",
+    nudge: "Simpan dokumen ini untuk lamaran berikutnya — di brankas Anda sendiri yang gratis.",
+    createAccount: "Simpan ke brankas Doki gratis",
   },
   ru: {
     yourApplication: "Ваш отклик",
@@ -179,8 +180,8 @@ const M = {
     doneTitle: "Отклик отправлен!",
     doneText: "Обновления придут в WhatsApp.",
     statusLink: "Отслеживать статус отклика",
-    nudge: "Сохраните профиль, чтобы откликаться быстрее.",
-    createAccount: "Создать бесплатный аккаунт Doki",
+    nudge: "Сохраните эти документы для следующего отклика — в свой бесплатный сейф.",
+    createAccount: "Сохранить в мой сейф Doki",
   },
   uz: {
     yourApplication: "Arizangiz",
@@ -233,8 +234,8 @@ const M = {
     doneTitle: "Ariza yuborildi!",
     doneText: "Yangiliklarni WhatsApp orqali olasiz.",
     statusLink: "Ariza holatini kuzatish",
-    nudge: "Keyingi safar tezroq ariza berish uchun profilni saqlang.",
-    createAccount: "Bepul Doki akkaunti yaratish",
+    nudge: "Bu hujjatlarni keyingi ariza uchun saqlang — o‘zingizning bepul seyfingizda.",
+    createAccount: "Bepul Doki seyfimga saqlash",
   },
 } as const;
 
@@ -318,19 +319,24 @@ export default function ApplyForm({
     track("application_started", { vacancy_id: vacancyId });
   }
 
-  function pickFile(i: number, file: File | null) {
+  async function pickFile(i: number, file: File | null) {
     if (!file) return;
     if (!ACCEPTED_MIME.includes(file.type)) {
       setErrors([t.errFileType]);
       return;
     }
-    if (file.size > MAX_FILE_BYTES) {
+    setErrors([]);
+    markStarted();
+    // Downscale large camera photos before the size check (budget Androids, ТЗ E1).
+    let f = file;
+    if (file.type.startsWith("image/")) {
+      f = await compressImage(file);
+    }
+    if (f.size > MAX_FILE_BYTES) {
       setErrors([t.errFileSize]);
       return;
     }
-    setErrors([]);
-    markStarted();
-    setFiles((p) => ({ ...p, [i]: file }));
+    setFiles((p) => ({ ...p, [i]: f }));
     setDocStatus((p) => ({ ...p, [i]: "pending" }));
     track("document_uploaded", { vacancy_id: vacancyId, doc_type: requiredDocuments[i]?.type ?? "other" });
   }
@@ -484,7 +490,8 @@ export default function ApplyForm({
         </Link>
         <p className="mt-4 text-xs text-slate-500">{t.nudge}</p>
         <Link
-          href={`/${locale}/login`}
+          href={`/${locale}/login?next=/my`}
+          onClick={() => track("vault_save_clicked", { vacancy_id: vacancyId })}
           className="mt-1 inline-block text-sm text-brand-600 hover:underline"
         >
           {t.createAccount}
