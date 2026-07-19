@@ -7,13 +7,19 @@ export type SegmentKey =
   | "expats"
   | "job-seekers"
   | "employers"
+  | "recruitment-agencies"
+  | "hospitality"
+  | "visa-agents"
   | "freelancers"
   | "visa"
   | "residence";
 
 export const SEGMENT_KEYS: SegmentKey[] = [
-  "job-seekers",
   "employers",
+  "recruitment-agencies",
+  "hospitality",
+  "visa-agents",
+  "job-seekers",
   "freelancers",
   "families",
   "travel",
@@ -881,6 +887,256 @@ const DATA: Record<SegmentKey, Segment> = {
           "Immigratsiya xizmati uchun paket — bir bosishda",
         ],
         docs: ["Yashash ruxsatnomasi", "Pasport", "Homiy xatlari", "Soliq raqamlari", "Sugʻurta", "Ijara shartnomasi"],
+      },
+    },
+  },
+  "recruitment-agencies": {
+    emoji: "🧑‍💼",
+    ctaHref: "/employer/vacancies/new",
+    locales: {
+      ru: {
+        navLabel: "Агентствам",
+        title: "Собирайте документы кандидатов пачками — по одной ссылке",
+        subtitle:
+          "Для рекрутинговых и стаффинговых агентств: один чек-лист → ссылка каждому кандидату → полные пакеты, статус «чего не хватает» и напоминания о сроках, всё в одном дашборде.",
+        pains: [
+          "Десятки кандидатов присылают документы кусками в WhatsApp",
+          "Непонятно, у кого чего не хватает и что просрочено",
+          "Документы теряются между чатами, почтой и папками",
+          "На сбор пакета уходит больше времени, чем на сам подбор",
+        ],
+        solutions: [
+          "Чек-лист-ссылка: кандидат загружает без регистрации, вы получаете полный пакет",
+          "Статус по каждому кандидату: «полный / не хватает» — сразу видно, кого догнать",
+          "Напоминания о сроках (SKCK, KITAS, сертификаты) — ничего не просрочено",
+          "Все пакеты в одном дашборде: шортлист, отказы, экспорт без привязки",
+        ],
+        docs: ["CV кандидата", "KTP / ID", "Сертификаты", "SKCK", "KITAS", "Медсправка"],
+        ctaLabel: "Создать первый чек-лист",
+      },
+      en: {
+        navLabel: "Agencies",
+        title: "Collect candidate documents in batches — from one link",
+        subtitle:
+          "For recruiting and staffing agencies: one checklist → a link to every candidate → complete packages, a “what's missing” status, and deadline reminders, all in one dashboard.",
+        pains: [
+          "Dozens of candidates send documents in pieces over WhatsApp",
+          "No clarity on who is missing what, or what has expired",
+          "Documents get lost between chats, email and folders",
+          "Assembling a package takes longer than the sourcing itself",
+        ],
+        solutions: [
+          "A checklist link: candidates upload without an account, you get the full package",
+          "Per-candidate status “complete / missing” — instantly see who to chase",
+          "Deadline reminders (SKCK, KITAS, certificates) — nothing expires unnoticed",
+          "Every package in one dashboard: shortlist, rejections, export with no lock-in",
+        ],
+        docs: ["Candidate CV", "KTP / ID", "Certificates", "SKCK", "KITAS", "Health certificate"],
+        ctaLabel: "Create your first checklist",
+      },
+      id: {
+        navLabel: "Agensi",
+        title: "Kumpulkan dokumen kandidat sekaligus — dari satu tautan",
+        subtitle:
+          "Untuk agensi rekrutmen dan staffing: satu ceklis → tautan ke setiap kandidat → paket lengkap, status “apa yang kurang”, dan pengingat tenggat, semua di satu dasbor.",
+        pains: [
+          "Puluhan kandidat mengirim dokumen sepotong-sepotong lewat WhatsApp",
+          "Tidak jelas siapa yang kurang apa, atau apa yang sudah kedaluwarsa",
+          "Dokumen tercecer di antara chat, email, dan folder",
+          "Menyusun paket lebih lama daripada mencari kandidatnya",
+        ],
+        solutions: [
+          "Tautan ceklis: kandidat mengunggah tanpa akun, Anda menerima paket lengkap",
+          "Status per kandidat “lengkap / kurang” — langsung terlihat siapa yang perlu ditagih",
+          "Pengingat tenggat (SKCK, KITAS, sertifikat) — tidak ada yang kedaluwarsa diam-diam",
+          "Semua paket di satu dasbor: shortlist, penolakan, ekspor tanpa terkunci",
+        ],
+        docs: ["CV kandidat", "KTP / ID", "Sertifikat", "SKCK", "KITAS", "Surat sehat"],
+        ctaLabel: "Buat checklist pertama",
+      },
+      uz: {
+        navLabel: "Agentliklarga",
+        title: "Nomzod hujjatlarini bitta havola orqali to‘plang",
+        subtitle:
+          "Rekruting va staffing agentliklari uchun: bitta ro‘yxat → har bir nomzodga havola → to‘liq paketlar, “nima yetishmayapti” statusi va muddat eslatmalari, hammasi bitta dashboardda.",
+        pains: [
+          "O‘nlab nomzod hujjatlarni WhatsAppda bo‘lak-bo‘lak yuboradi",
+          "Kimda nima yetishmayotgani yoki nima muddati o‘tgani noaniq",
+          "Hujjatlar chat, email va papkalar orasida yo‘qoladi",
+          "Paketni yig‘ish nomzod izlashdan ko‘ra ko‘proq vaqt oladi",
+        ],
+        solutions: [
+          "Ro‘yxat-havola: nomzod hisobsiz yuklaydi, siz to‘liq paketni olasiz",
+          "Har bir nomzod bo‘yicha status “to‘liq / kam” — kimni qo‘shishni darrov ko‘rasiz",
+          "Muddat eslatmalari (SKCK, KITAS, sertifikatlar) — hech narsa bilinmay o‘tmaydi",
+          "Barcha paketlar bitta dashboardda: shortlist, rad etish, bog‘lanishsiz eksport",
+        ],
+        docs: ["Nomzod CV", "KTP / ID", "Sertifikatlar", "SKCK", "KITAS", "Tibbiy ma’lumotnoma"],
+        ctaLabel: "Birinchi ro‘yxatni yaratish",
+      },
+    },
+  },
+  hospitality: {
+    emoji: "🏝️",
+    ctaHref: "/employer/vacancies/new",
+    locales: {
+      ru: {
+        navLabel: "Hospitality",
+        title: "Наём персонала для вилл, кафе и отелей — без хаоса в документах",
+        subtitle:
+          "Для владельцев вилл, F&B и отелей на Бали: соберите документы линейного персонала по одной ссылке и держите сроки под контролем.",
+        pains: [
+          "Персонал меняется часто, документы каждый раз собираются заново",
+          "SKCK, справки и сертификаты присылают вразнобой",
+          "Легко упустить срок медсправки или разрешения",
+          "Нет единого места, где видно, кто уже укомплектован",
+        ],
+        solutions: [
+          "Готовые шаблоны паков: персонал виллы, F&B, водитель, ресепшн",
+          "Ссылка кандидату — загрузка без регистрации и приложения",
+          "Статус «полный / не хватает» по каждому человеку",
+          "Напоминания о сроках справок и сертификатов",
+        ],
+        docs: ["CV", "KTP / ID", "SKCK", "Медсправка", "Сертификаты", "Референсы"],
+        ctaLabel: "Создать первый чек-лист",
+      },
+      en: {
+        navLabel: "Hospitality",
+        title: "Hire villa, F&B and hotel staff — without document chaos",
+        subtitle:
+          "For villa owners, F&B and hotels in Bali: collect line-staff documents from one link and keep expiry dates under control.",
+        pains: [
+          "Staff turns over often; documents are re-collected every time",
+          "SKCK, health certificates and certificates arrive scattered",
+          "Easy to miss a health-certificate or permit expiry",
+          "No single place showing who is already complete",
+        ],
+        solutions: [
+          "Ready pack templates: villa staff, F&B, driver, receptionist",
+          "A link to the candidate — upload with no account, no app",
+          "“Complete / missing” status for each person",
+          "Reminders for certificate and permit expiry dates",
+        ],
+        docs: ["CV", "KTP / ID", "SKCK", "Health certificate", "Certificates", "References"],
+        ctaLabel: "Create your first checklist",
+      },
+      id: {
+        navLabel: "Hospitality",
+        title: "Rekrut staf vila, F&B, dan hotel — tanpa dokumen berantakan",
+        subtitle:
+          "Untuk pemilik vila, F&B, dan hotel di Bali: kumpulkan dokumen staf dari satu tautan dan pantau tenggatnya.",
+        pains: [
+          "Staf sering berganti; dokumen dikumpulkan ulang setiap kali",
+          "SKCK, surat sehat, dan sertifikat datang tidak beraturan",
+          "Mudah melewatkan masa berlaku surat sehat atau izin",
+          "Tidak ada satu tempat yang menunjukkan siapa yang sudah lengkap",
+        ],
+        solutions: [
+          "Template paket siap pakai: staf vila, F&B, sopir, resepsionis",
+          "Tautan ke kandidat — unggah tanpa akun, tanpa aplikasi",
+          "Status “lengkap / kurang” untuk tiap orang",
+          "Pengingat masa berlaku sertifikat dan izin",
+        ],
+        docs: ["CV", "KTP / ID", "SKCK", "Surat sehat", "Sertifikat", "Referensi"],
+        ctaLabel: "Buat checklist pertama",
+      },
+      uz: {
+        navLabel: "Hospitality",
+        title: "Villa, F&B va mehmonxona xodimlarini hujjatlar tartibsizligisiz yollang",
+        subtitle:
+          "Balidagi villa egalari, F&B va mehmonxonalar uchun: xodimlar hujjatlarini bitta havola orqali yig‘ing va muddatlarni nazoratda tuting.",
+        pains: [
+          "Xodimlar tez almashadi; hujjatlar har safar qaytadan yig‘iladi",
+          "SKCK, tibbiy ma’lumotnoma va sertifikatlar tartibsiz keladi",
+          "Tibbiy ma’lumotnoma yoki ruxsat muddatini o‘tkazib yuborish oson",
+          "Kim to‘liq ekanini ko‘rsatadigan yagona joy yo‘q",
+        ],
+        solutions: [
+          "Tayyor paket shablonlari: villa xodimi, F&B, haydovchi, resepsionist",
+          "Nomzodga havola — hisobsiz, ilovasiz yuklash",
+          "Har bir odam bo‘yicha “to‘liq / kam” statusi",
+          "Sertifikat va ruxsat muddatlari bo‘yicha eslatmalar",
+        ],
+        docs: ["CV", "KTP / ID", "SKCK", "Tibbiy ma’lumotnoma", "Sertifikatlar", "Referenslar"],
+        ctaLabel: "Birinchi ro‘yxatni yaratish",
+      },
+    },
+  },
+  "visa-agents": {
+    emoji: "🛂",
+    ctaHref: "/employer/vacancies/new",
+    locales: {
+      ru: {
+        navLabel: "Визовым агентам",
+        title: "Собирайте документы клиентов для визы — по одной ссылке",
+        subtitle:
+          "Для визовых и релокационных агентов: отправьте клиенту чек-лист документов, получите полный пакет и отслеживайте сроки KITAS и паспортов.",
+        pains: [
+          "Клиенты присылают паспорт и справки частями в мессенджерах",
+          "Сложно отследить, у кого какой пакет и что просрочено",
+          "Сроки KITAS и паспортов легко упустить",
+        ],
+        solutions: [
+          "Чек-лист-ссылка клиенту — загрузка без регистрации",
+          "Статус пакета «полный / не хватает» по каждому клиенту",
+          "Напоминания о сроках KITAS, паспорта, страховки",
+        ],
+        docs: ["Паспорт", "Фото", "KITAS", "Спонсорские документы", "Страховка"],
+        ctaLabel: "Создать первый чек-лист",
+      },
+      en: {
+        navLabel: "Visa agents",
+        title: "Collect client documents for visas — from one link",
+        subtitle:
+          "For visa and relocation agents: send the client a document checklist, get the full package, and track KITAS and passport expiry.",
+        pains: [
+          "Clients send passport and certificates in pieces over chat",
+          "Hard to track who has which package and what has expired",
+          "KITAS and passport expiry dates are easy to miss",
+        ],
+        solutions: [
+          "A checklist link to the client — upload with no account",
+          "“Complete / missing” package status per client",
+          "Reminders for KITAS, passport and insurance expiry",
+        ],
+        docs: ["Passport", "Photo", "KITAS", "Sponsor documents", "Insurance"],
+        ctaLabel: "Create your first checklist",
+      },
+      id: {
+        navLabel: "Agen visa",
+        title: "Kumpulkan dokumen klien untuk visa — dari satu tautan",
+        subtitle:
+          "Untuk agen visa dan relokasi: kirim ceklis dokumen ke klien, terima paket lengkap, dan pantau masa berlaku KITAS serta paspor.",
+        pains: [
+          "Klien mengirim paspor dan surat sepotong-sepotong lewat chat",
+          "Sulit melacak siapa punya paket apa dan apa yang kedaluwarsa",
+          "Masa berlaku KITAS dan paspor mudah terlewat",
+        ],
+        solutions: [
+          "Tautan ceklis ke klien — unggah tanpa akun",
+          "Status paket “lengkap / kurang” per klien",
+          "Pengingat masa berlaku KITAS, paspor, dan asuransi",
+        ],
+        docs: ["Paspor", "Pas foto", "KITAS", "Dokumen penjamin", "Asuransi"],
+        ctaLabel: "Buat checklist pertama",
+      },
+      uz: {
+        navLabel: "Viza agentlari",
+        title: "Mijoz hujjatlarini viza uchun bitta havola orqali yig‘ing",
+        subtitle:
+          "Viza va ko‘chirish agentlari uchun: mijozga hujjatlar ro‘yxatini yuboring, to‘liq paketni oling va KITAS hamda pasport muddatlarini kuzating.",
+        pains: [
+          "Mijozlar pasport va ma’lumotnomalarni chatda bo‘lak-bo‘lak yuboradi",
+          "Kimda qaysi paket borligini va nima muddati o‘tganini kuzatish qiyin",
+          "KITAS va pasport muddatlarini o‘tkazib yuborish oson",
+        ],
+        solutions: [
+          "Mijozga ro‘yxat-havola — hisobsiz yuklash",
+          "Har bir mijoz bo‘yicha “to‘liq / kam” paket statusi",
+          "KITAS, pasport va sug‘urta muddatlari bo‘yicha eslatmalar",
+        ],
+        docs: ["Pasport", "Pas foto", "KITAS", "Homiy hujjatlari", "Sug‘urta"],
+        ctaLabel: "Birinchi ro‘yxatni yaratish",
       },
     },
   },

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale, type Locale } from "@/lib/i18n";
+import PseBadge from "@/components/PseBadge";
 
 const M = {
   ru: {
@@ -152,6 +153,7 @@ export default async function SecurityPage() {
             {t.terms}
           </Link>
         </p>
+        <PseBadge className="mt-4" />
       </div>
 
       <div className="mt-8">
