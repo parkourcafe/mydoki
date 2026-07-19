@@ -1147,6 +1147,442 @@ const DATA: Record<string, Checklist> = {
       ],
     },
   },
+  "employee-onboarding-11-checklist": {
+    slug: "employee-onboarding-11-checklist",
+    emoji: "📋",
+    locales: {
+      en: {
+        navLabel: "Onboarding checklist",
+        title: "Employee Onboarding Document Checklist | Doki.help",
+        metaDescription:
+          "The documents Indonesian employers commonly collect when onboarding a new employee — an 11-item checklist plus how to collect it from one link.",
+        h1: "Employee onboarding document checklist (11 documents)",
+        intro:
+          "When a new hire joins, Indonesian employers usually collect a standard set of documents. This 11-item checklist is a practical starting point — adjust it to your company and always confirm what your payroll/BPJS process requires.",
+        ctaPrimary: "Collect these documents via one link",
+        groups: [
+          {
+            h2: "The 11 documents most employers collect",
+            items: [
+              "KTP (national ID)",
+              "Family card (Kartu Keluarga / KK)",
+              "CV / résumé",
+              "Ijazah (diploma)",
+              "Certificates (as relevant)",
+              "SKCK (police record)",
+              "NPWP (tax ID)",
+              "Passport-size photo",
+              "Health certificate (surat sehat)",
+              "Bank account details (buku rekening)",
+              "BPJS (Kesehatan / Ketenagakerjaan)",
+            ],
+          },
+          {
+            h2: "Good practice",
+            items: [
+              "Collect ID and health documents after the offer, not from every applicant",
+              "Note expiry dates for SKCK, KITAS and certificates",
+              "Keep one package per employee, not scattered chats",
+            ],
+          },
+          {
+            h2: "Collect it cleanly",
+            items: [
+              "Send the new hire one checklist link — they upload without an account",
+              "Track a “complete / missing” status",
+              "Export the package with no lock-in",
+            ],
+          },
+        ],
+        faqHeading: "Onboarding documents — FAQ",
+        faq: [
+          { q: "Is this list mandatory?", a: "No — it's a common baseline. Requirements vary by company, role and payroll/BPJS setup. Confirm your own list." },
+          { q: "Should candidates upload KTP before an offer?", a: "Sensitive ID and health documents are best collected after an offer. Doki defers them to the post-offer stage by default." },
+          { q: "Can I reuse the checklist for every new hire?", a: "Yes — send each new employee the same checklist link." },
+        ],
+      },
+      id: {
+        navLabel: "Ceklis onboarding",
+        title: "Ceklis Dokumen Onboarding Karyawan | Doki.help",
+        metaDescription:
+          "Dokumen yang umum dikumpulkan perusahaan saat onboarding karyawan baru — ceklis 11 dokumen plus cara mengumpulkannya dari satu tautan.",
+        h1: "Ceklis dokumen onboarding karyawan (11 dokumen)",
+        intro:
+          "Saat karyawan baru bergabung, perusahaan biasanya mengumpulkan sejumlah dokumen standar. Ceklis 11 dokumen ini titik awal yang praktis — sesuaikan dengan perusahaan Anda dan selalu cek kebutuhan payroll/BPJS Anda.",
+        ctaPrimary: "Kumpulkan dokumen ini lewat satu tautan",
+        groups: [
+          {
+            h2: "11 dokumen yang umum dikumpulkan",
+            items: [
+              "KTP",
+              "Kartu Keluarga (KK)",
+              "CV / resume",
+              "Ijazah",
+              "Sertifikat (sesuai kebutuhan)",
+              "SKCK",
+              "NPWP",
+              "Pas foto",
+              "Surat sehat",
+              "Buku rekening",
+              "BPJS (Kesehatan / Ketenagakerjaan)",
+            ],
+          },
+          {
+            h2: "Praktik yang baik",
+            items: [
+              "Kumpulkan dokumen identitas dan kesehatan setelah penawaran, bukan dari setiap pelamar",
+              "Catat masa berlaku SKCK, KITAS, dan sertifikat",
+              "Simpan satu paket per karyawan, bukan tersebar di chat",
+            ],
+          },
+          {
+            h2: "Kumpulkan dengan rapi",
+            items: [
+              "Kirim satu tautan ceklis ke karyawan baru — unggah tanpa akun",
+              "Pantau status “lengkap / kurang”",
+              "Ekspor paketnya tanpa terkunci",
+            ],
+          },
+        ],
+        faqHeading: "Dokumen onboarding — FAQ",
+        faq: [
+          { q: "Apakah daftar ini wajib?", a: "Bukan — ini baseline umum. Kebutuhan berbeda menurut perusahaan, peran, dan payroll/BPJS. Konfirmasikan daftar Anda sendiri." },
+          { q: "Apakah kandidat harus unggah KTP sebelum penawaran?", a: "Dokumen identitas dan kesehatan yang sensitif sebaiknya dikumpulkan setelah penawaran. Doki menundanya ke tahap pasca-penawaran secara bawaan." },
+          { q: "Bisakah ceklisnya dipakai ulang untuk tiap karyawan baru?", a: "Bisa — kirim tautan ceklis yang sama ke tiap karyawan baru." },
+        ],
+      },
+      ru: {
+        navLabel: "Чек-лист онбординга",
+        title: "Чек-лист документов онбординга сотрудника | Doki.help",
+        metaDescription:
+          "Документы, которые индонезийские работодатели обычно собирают при онбординге нового сотрудника — 11 пунктов и как собрать по одной ссылке.",
+        h1: "Чек-лист документов онбординга сотрудника (11 документов)",
+        intro:
+          "Когда выходит новый сотрудник, индонезийские работодатели обычно собирают стандартный набор документов. Этот чек-лист из 11 пунктов — практичная отправная точка; адаптируйте под компанию и сверяйтесь с требованиями payroll/BPJS.",
+        ctaPrimary: "Собрать эти документы по одной ссылке",
+        groups: [
+          {
+            h2: "11 документов, которые обычно собирают",
+            items: [
+              "KTP",
+              "Семейная карта (KK)",
+              "CV / резюме",
+              "Диплом (Ijazah)",
+              "Сертификаты (по необходимости)",
+              "SKCK",
+              "NPWP",
+              "Фото на документы",
+              "Медсправка (surat sehat)",
+              "Реквизиты счёта (buku rekening)",
+              "BPJS (Kesehatan / Ketenagakerjaan)",
+            ],
+          },
+          {
+            h2: "Хорошая практика",
+            items: [
+              "ID и медицинские документы собирайте после оффера, а не у каждого соискателя",
+              "Отмечайте сроки SKCK, KITAS и сертификатов",
+              "Держите один пакет на сотрудника, а не в чатах",
+            ],
+          },
+          {
+            h2: "Соберите аккуратно",
+            items: [
+              "Отправьте новому сотруднику одну ссылку-чек-лист — загрузка без аккаунта",
+              "Статус «полный / не хватает»",
+              "Экспорт пакета без привязки",
+            ],
+          },
+        ],
+        faqHeading: "Документы онбординга — FAQ",
+        faq: [
+          { q: "Этот список обязателен?", a: "Нет — это типовая база. Требования зависят от компании, роли и настройки payroll/BPJS. Уточните свой список." },
+          { q: "Загружать ли KTP до оффера?", a: "Чувствительные ID и мед-документы лучше собирать после оффера. Doki по умолчанию откладывает их на пост-офферный этап." },
+          { q: "Можно использовать чек-лист для каждого нового сотрудника?", a: "Да — отправляйте каждому одну и ту же ссылку-чек-лист." },
+        ],
+      },
+      uz: {
+        navLabel: "Onboarding ro‘yxati",
+        title: "Xodim onboardingi hujjatlari ro‘yxati | Doki.help",
+        metaDescription:
+          "Ish beruvchilar yangi xodimni onboarding qilishda odatda yig‘adigan hujjatlar — 11 bandlik ro‘yxat va uni bitta havoladan yig‘ish.",
+        h1: "Xodim onboardingi hujjatlari ro‘yxati (11 hujjat)",
+        intro:
+          "Yangi xodim ishga kirganda ish beruvchilar odatda standart hujjatlar to‘plamini yig‘adi. Bu 11 bandlik ro‘yxat — amaliy boshlang‘ich nuqta; kompaniyangizga moslang va payroll/BPJS talablarini tekshiring.",
+        ctaPrimary: "Bu hujjatlarni bitta havola orqali yig‘ing",
+        groups: [
+          {
+            h2: "Odatda yig‘iladigan 11 hujjat",
+            items: [
+              "KTP",
+              "Oila kartasi (KK)",
+              "CV / rezyume",
+              "Ijazah (diplom)",
+              "Sertifikatlar (kerak bo‘lsa)",
+              "SKCK",
+              "NPWP",
+              "Pas foto",
+              "Tibbiy ma’lumotnoma (surat sehat)",
+              "Bank hisob raqami (buku rekening)",
+              "BPJS (Kesehatan / Ketenagakerjaan)",
+            ],
+          },
+          {
+            h2: "Yaxshi amaliyot",
+            items: [
+              "Shaxs va sog‘liq hujjatlarini har bir arizachidan emas, taklifdan keyin yig‘ing",
+              "SKCK, KITAS va sertifikatlar muddatini belgilang",
+              "Chatlarda emas, har bir xodim uchun bitta paket saqlang",
+            ],
+          },
+          {
+            h2: "Tartibli yig‘ing",
+            items: [
+              "Yangi xodimga bitta ro‘yxat-havola yuboring — hisobsiz yuklaydi",
+              "“to‘liq / kam” statusini kuzating",
+              "Paketni bog‘lanishsiz eksport qiling",
+            ],
+          },
+        ],
+        faqHeading: "Onboarding hujjatlari — FAQ",
+        faq: [
+          { q: "Bu ro‘yxat majburiymi?", a: "Yo‘q — bu umumiy asos. Talablar kompaniya, lavozim va payroll/BPJS ga qarab farq qiladi. O‘z ro‘yxatingizni tasdiqlang." },
+          { q: "Nomzod KTP ni taklifdan oldin yuklashi kerakmi?", a: "Sezgir shaxs va sog‘liq hujjatlarini taklifdan keyin yig‘gan ma’qul. Doki ularni sukut bo‘yicha taklifdan keyingi bosqichga qoldiradi." },
+          { q: "Ro‘yxatni har bir yangi xodim uchun qayta ishlatsa bo‘ladimi?", a: "Ha — har biriga bir xil ro‘yxat-havola yuboring." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/employers", label: "For HR teams & agencies" },
+        { href: "/checklists/skck-checklist", label: "SKCK checklist" },
+        { href: "/candidate-document-collection", label: "Collect candidate documents" },
+      ],
+      id: [
+        { href: "/for/employers", label: "Untuk tim HR & agensi" },
+        { href: "/checklists/skck-checklist", label: "Ceklis SKCK" },
+        { href: "/candidate-document-collection", label: "Kumpulkan dokumen kandidat" },
+      ],
+      ru: [
+        { href: "/for/employers", label: "Для HR-команд и агентств" },
+        { href: "/checklists/skck-checklist", label: "Чек-лист SKCK" },
+        { href: "/candidate-document-collection", label: "Сбор документов кандидатов" },
+      ],
+      uz: [
+        { href: "/for/employers", label: "HR jamoalari va agentliklar uchun" },
+        { href: "/checklists/skck-checklist", label: "SKCK ro‘yxati" },
+        { href: "/candidate-document-collection", label: "Nomzod hujjatlarini yig‘ish" },
+      ],
+    },
+  },
+  "candidate-documents-requested-checklist": {
+    slug: "candidate-documents-requested-checklist",
+    emoji: "🧾",
+    locales: {
+      en: {
+        navLabel: "Candidate docs",
+        title: "Documents HR Requests From Candidates | Doki.help",
+        metaDescription:
+          "The documents Indonesian HR teams commonly request from candidates, when each is usually asked for, and how they collect them via one link.",
+        h1: "Documents HR usually requests from candidates",
+        intro:
+          "Applying for a job in Indonesia? Employers usually ask for a predictable set of documents — and sensitive ones only after an offer. Here's what to prepare and how HR collects it.",
+        ctaPrimary: "Collect these documents via one link",
+        groups: [
+          {
+            h2: "At application (usually enough)",
+            items: [
+              "CV / résumé",
+              "Certificates relevant to the role",
+              "SKCK (if requested)",
+              "Work references or portfolio",
+              "Passport-size photo",
+            ],
+          },
+          {
+            h2: "After an offer (sensitive — post-offer)",
+            items: [
+              "KTP (national ID)",
+              "Family card (KK)",
+              "Health certificate (surat sehat)",
+              "NPWP, bank details, BPJS",
+            ],
+          },
+          {
+            h2: "How HR collects it",
+            items: [
+              "One checklist link — you upload without an account",
+              "You see what's complete and what's missing",
+              "Your files stay in your control (revocable links)",
+            ],
+          },
+        ],
+        faqHeading: "Candidate documents — FAQ",
+        faq: [
+          { q: "Do I need to upload my KTP to apply?", a: "Usually not at the application stage. Sensitive ID and health documents are typically collected after an offer." },
+          { q: "Who sees my documents?", a: "Only the employer you applied to, for that vacancy. Doki does not sell your data." },
+          { q: "Do I need an account?", a: "No — you upload via the employer's link without registering. You can save a personal vault afterwards if you want." },
+        ],
+      },
+      id: {
+        navLabel: "Dokumen kandidat",
+        title: "Dokumen yang Diminta HR dari Kandidat | Doki.help",
+        metaDescription:
+          "Dokumen yang umum diminta HR dari kandidat, kapan biasanya diminta, dan cara mereka mengumpulkannya lewat satu tautan.",
+        h1: "Dokumen yang biasanya diminta HR dari kandidat",
+        intro:
+          "Melamar kerja di Indonesia? Perusahaan biasanya meminta sejumlah dokumen yang bisa ditebak — dan yang sensitif hanya setelah penawaran. Berikut yang perlu disiapkan dan cara HR mengumpulkannya.",
+        ctaPrimary: "Kumpulkan dokumen ini lewat satu tautan",
+        groups: [
+          {
+            h2: "Saat melamar (biasanya cukup)",
+            items: [
+              "CV / resume",
+              "Sertifikat yang relevan dengan posisi",
+              "SKCK (jika diminta)",
+              "Referensi kerja atau portofolio",
+              "Pas foto",
+            ],
+          },
+          {
+            h2: "Setelah penawaran (sensitif — pasca-penawaran)",
+            items: [
+              "KTP",
+              "Kartu Keluarga (KK)",
+              "Surat sehat",
+              "NPWP, rekening bank, BPJS",
+            ],
+          },
+          {
+            h2: "Cara HR mengumpulkannya",
+            items: [
+              "Satu tautan ceklis — Anda unggah tanpa akun",
+              "Anda lihat apa yang lengkap dan apa yang kurang",
+              "Berkas Anda tetap terkendali (tautan bisa dicabut)",
+            ],
+          },
+        ],
+        faqHeading: "Dokumen kandidat — FAQ",
+        faq: [
+          { q: "Apakah saya perlu unggah KTP untuk melamar?", a: "Biasanya tidak pada tahap lamaran. Dokumen identitas dan kesehatan yang sensitif umumnya dikumpulkan setelah penawaran." },
+          { q: "Siapa yang melihat dokumen saya?", a: "Hanya perusahaan tempat Anda melamar, untuk lowongan itu. Doki tidak menjual data Anda." },
+          { q: "Apakah saya perlu akun?", a: "Tidak — Anda unggah lewat tautan perusahaan tanpa mendaftar. Anda bisa menyimpan brankas pribadi setelahnya jika mau." },
+        ],
+      },
+      ru: {
+        navLabel: "Документы кандидата",
+        title: "Какие документы HR запрашивает у кандидата | Doki.help",
+        metaDescription:
+          "Какие документы индонезийские HR обычно запрашивают у кандидатов, когда именно и как их собирают по одной ссылке.",
+        h1: "Какие документы HR обычно запрашивает у кандидата",
+        intro:
+          "Откликаетесь на работу в Индонезии? Работодатели обычно просят предсказуемый набор документов — а чувствительные только после оффера. Вот что подготовить и как HR это собирает.",
+        ctaPrimary: "Собрать эти документы по одной ссылке",
+        groups: [
+          {
+            h2: "На отклике (обычно достаточно)",
+            items: [
+              "CV / резюме",
+              "Сертификаты под роль",
+              "SKCK (если просят)",
+              "Рекомендации или портфолио",
+              "Фото на документы",
+            ],
+          },
+          {
+            h2: "После оффера (чувствительное — пост-оффер)",
+            items: [
+              "KTP",
+              "Семейная карта (KK)",
+              "Медсправка (surat sehat)",
+              "NPWP, реквизиты счёта, BPJS",
+            ],
+          },
+          {
+            h2: "Как HR это собирает",
+            items: [
+              "Одна ссылка-чек-лист — вы загружаете без аккаунта",
+              "Видно, что полное, а чего не хватает",
+              "Файлы под вашим контролем (отзывные ссылки)",
+            ],
+          },
+        ],
+        faqHeading: "Документы кандидата — FAQ",
+        faq: [
+          { q: "Нужно ли загружать KTP, чтобы откликнуться?", a: "Обычно нет на этапе отклика. Чувствительные ID и мед-документы, как правило, собирают после оффера." },
+          { q: "Кто видит мои документы?", a: "Только работодатель, к которому вы откликнулись, и для этой вакансии. Doki не продаёт ваши данные." },
+          { q: "Нужен ли аккаунт?", a: "Нет — вы загружаете по ссылке работодателя без регистрации. При желании потом можно сохранить личный сейф." },
+        ],
+      },
+      uz: {
+        navLabel: "Nomzod hujjatlari",
+        title: "HR nomzoddan qanday hujjatlarni so‘raydi | Doki.help",
+        metaDescription:
+          "HR nomzoddan odatda qanday hujjatlarni so‘raydi, qachon so‘raladi va ularni bitta havola orqali qanday yig‘adi.",
+        h1: "HR nomzoddan odatda qanday hujjatlarni so‘raydi",
+        intro:
+          "Indoneziyada ishga ariza berayapsizmi? Ish beruvchilar odatda oldindan bilinadigan hujjatlarni so‘raydi — sezgirlarini esa faqat taklifdan keyin. Mana nima tayyorlash kerak va HR buni qanday yig‘adi.",
+        ctaPrimary: "Bu hujjatlarni bitta havola orqali yig‘ing",
+        groups: [
+          {
+            h2: "Ariza bosqichida (odatda yetarli)",
+            items: [
+              "CV / rezyume",
+              "Lavozimga oid sertifikatlar",
+              "SKCK (so‘ralsa)",
+              "Ish tavsiyalari yoki portfolio",
+              "Pas foto",
+            ],
+          },
+          {
+            h2: "Taklifdan keyin (sezgir — post-offer)",
+            items: [
+              "KTP",
+              "Oila kartasi (KK)",
+              "Tibbiy ma’lumotnoma (surat sehat)",
+              "NPWP, bank rekvizitlari, BPJS",
+            ],
+          },
+          {
+            h2: "HR buni qanday yig‘adi",
+            items: [
+              "Bitta ro‘yxat-havola — hisobsiz yuklaysiz",
+              "Nima to‘liq, nima kamligi ko‘rinadi",
+              "Fayllaringiz nazoratingizda (bekor qilinadigan havolalar)",
+            ],
+          },
+        ],
+        faqHeading: "Nomzod hujjatlari — FAQ",
+        faq: [
+          { q: "Ariza berish uchun KTP yuklashim kerakmi?", a: "Odatda ariza bosqichida shart emas. Sezgir shaxs va sog‘liq hujjatlari odatda taklifdan keyin yig‘iladi." },
+          { q: "Hujjatlarimni kim ko‘radi?", a: "Faqat siz ariza bergan ish beruvchi, o‘sha vakansiya uchun. Doki ma’lumotlaringizni sotmaydi." },
+          { q: "Menga hisob kerakmi?", a: "Yo‘q — ish beruvchi havolasi orqali ro‘yxatdan o‘tmasdan yuklaysiz. Xohlasangiz, keyin shaxsiy seyf saqlashingiz mumkin." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/job-seekers", label: "For job seekers" },
+        { href: "/checklists/skck-checklist", label: "SKCK checklist" },
+        { href: "/security", label: "How your documents are protected" },
+      ],
+      id: [
+        { href: "/for/job-seekers", label: "Untuk pencari kerja" },
+        { href: "/checklists/skck-checklist", label: "Ceklis SKCK" },
+        { href: "/security", label: "Cara dokumen Anda dilindungi" },
+      ],
+      ru: [
+        { href: "/for/job-seekers", label: "Для соискателей" },
+        { href: "/checklists/skck-checklist", label: "Чек-лист SKCK" },
+        { href: "/security", label: "Как защищены документы" },
+      ],
+      uz: [
+        { href: "/for/job-seekers", label: "Ish izlovchilar uchun" },
+        { href: "/checklists/skck-checklist", label: "SKCK ro‘yxati" },
+        { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
+      ],
+    },
+  },
 };
 
 export const CHECKLIST_KEYS = Object.keys(DATA);
