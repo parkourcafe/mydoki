@@ -181,6 +181,145 @@ export const VACANCY_TEMPLATES: readonly VacancyTemplate[] = [
       },
     ],
   },
+  {
+    // Bali hospitality wedge — общий пак под персонал виллы.
+    // Только документы стадии отклика; KTP/мед-справка собираются после оффера.
+    id: "villa_staff",
+    category: "hospitality",
+    emoji: "🏝️",
+    label: {
+      en: "Villa staff",
+      id: "Staf vila",
+      ru: "Персонал виллы",
+      uz: "Villa xodimi",
+    },
+    documents: [
+      { type: "cv", required: false },
+      {
+        type: "other",
+        required: false,
+        labelOverride: {
+          en: "SKCK (police record)",
+          id: "SKCK",
+          ru: "Справка о несудимости (SKCK)",
+          uz: "SKCK (sudlanmaganlik guvohnomasi)",
+        },
+      },
+      {
+        type: "other",
+        required: false,
+        labelOverride: {
+          en: "Photo",
+          id: "Pas foto",
+          ru: "Фото",
+          uz: "Pas foto",
+        },
+      },
+      {
+        type: "other",
+        required: false,
+        labelOverride: {
+          en: "Work reference",
+          id: "Surat referensi kerja",
+          ru: "Рекомендация с работы",
+          uz: "Ish tavsiyanomasi",
+        },
+      },
+    ],
+    questions: [
+      {
+        type: "text",
+        text: {
+          en: "Previous villa/hospitality experience?",
+          id: "Pengalaman di vila/perhotelan sebelumnya?",
+          ru: "Опыт работы на вилле/в гостеприимстве?",
+          uz: "Villa/mehmondoʻstlikdagi avvalgi tajriba?",
+        },
+      },
+    ],
+  },
+  {
+    id: "receptionist",
+    category: "hospitality",
+    emoji: "🛎️",
+    label: {
+      en: "Receptionist",
+      id: "Resepsionis",
+      ru: "Ресепшн",
+      uz: "Resepsionist",
+    },
+    documents: [
+      { type: "cv", required: true },
+      { type: "certificate", required: false },
+      {
+        type: "other",
+        required: false,
+        labelOverride: {
+          en: "Photo",
+          id: "Pas foto",
+          ru: "Фото",
+          uz: "Pas foto",
+        },
+      },
+    ],
+    questions: [
+      {
+        type: "text",
+        text: {
+          en: "English level (basic/intermediate/fluent)?",
+          id: "Tingkat bahasa Inggris (dasar/menengah/lancar)?",
+          ru: "Уровень английского (базовый/средний/свободный)?",
+          uz: "Ingliz tili darajasi (boshlangʻich/oʻrta/erkin)?",
+        },
+      },
+    ],
+  },
+  {
+    // Универсальный вход для агентств: линейный персонал без узкой роли.
+    id: "staff_general",
+    category: "staffing",
+    emoji: "👥",
+    label: {
+      en: "General staff",
+      id: "Staf umum",
+      ru: "Линейный персонал",
+      uz: "Umumiy xodim",
+    },
+    documents: [
+      { type: "cv", required: false },
+      {
+        type: "other",
+        required: false,
+        labelOverride: {
+          en: "SKCK (police record)",
+          id: "SKCK",
+          ru: "Справка о несудимости (SKCK)",
+          uz: "SKCK (sudlanmaganlik guvohnomasi)",
+        },
+      },
+      {
+        type: "other",
+        required: false,
+        labelOverride: {
+          en: "Photo",
+          id: "Pas foto",
+          ru: "Фото",
+          uz: "Pas foto",
+        },
+      },
+    ],
+    questions: [
+      {
+        type: "text",
+        text: {
+          en: "Which position are you applying for?",
+          id: "Melamar untuk posisi apa?",
+          ru: "На какую позицию откликаетесь?",
+          uz: "Qaysi lavozimga ariza berayapsiz?",
+        },
+      },
+    ],
+  },
 ] as const;
 
 export function getTemplate(id: string): VacancyTemplate | undefined {
