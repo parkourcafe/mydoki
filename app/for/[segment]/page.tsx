@@ -201,6 +201,18 @@ export default async function SegmentPage({
         </div>
       </section>
 
+      {/* CASE STUDY — иллюстративный сценарий (не реальный отзыв клиента) */}
+      {c.caseStudy && (
+        <section className="mx-auto max-w-screen-xl px-5 py-6">
+          <div className="mx-auto max-w-2xl rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-7">
+            <p className="text-[17px] italic leading-relaxed text-[#3d3530]">
+              “{c.caseStudy.quote}”
+            </p>
+            <p className="mt-3 text-sm font-medium text-[#8a7c6d]">{c.caseStudy.role}</p>
+          </div>
+        </section>
+      )}
+
       {/* CTA */}
       <section className="mx-auto max-w-screen-xl px-5 py-12">
         <div className="rounded-3xl bg-[#2c2522] px-8 py-10 text-center text-[#f9f5f0]">
