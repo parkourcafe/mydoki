@@ -23,6 +23,7 @@ const M = {
     current: "Текущие",
     archive: "Архив",
     empty: "Пока нет записей. Они появятся из оформлений и добавленных вами мест работы.",
+    emptyCta: "Добавить место работы →",
     fromEmployer: "От работодателя",
     manual: "Ручная",
     open: "Открыть →",
@@ -35,6 +36,7 @@ const M = {
     current: "Current",
     archive: "Archive",
     empty: "No records yet. They appear from onboarding and workplaces you add.",
+    emptyCta: "Add a workplace →",
     fromEmployer: "From employer",
     manual: "Manual",
     open: "Open →",
@@ -47,6 +49,7 @@ const M = {
     current: "Saat ini",
     archive: "Arsip",
     empty: "Belum ada catatan. Muncul dari proses dan tempat kerja yang Anda tambahkan.",
+    emptyCta: "Tambah tempat kerja →",
     fromEmployer: "Dari perusahaan",
     manual: "Manual",
     open: "Buka →",
@@ -59,6 +62,7 @@ const M = {
     current: "Joriy",
     archive: "Arxiv",
     empty: "Hozircha yozuv yo‘q. Rasmiylashtirish va qo‘shgan ish joylaringizdan paydo bo‘ladi.",
+    emptyCta: "Ish joyi qo‘shish →",
     fromEmployer: "Ish beruvchidan",
     manual: "Qo‘lda",
     open: "Ochish →",
@@ -123,9 +127,15 @@ export default async function CareerTimelinePage() {
       </div>
 
       {items.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-slate-300 bg-white p-6 text-center text-sm text-slate-500">
-          {t.empty}
-        </p>
+        <Link
+          href="/my/employment"
+          className="block rounded-2xl border border-brand-200 bg-brand-50/60 p-6 text-center transition hover:bg-brand-50"
+        >
+          <p className="text-sm text-slate-600">{t.empty}</p>
+          <span className="mt-2 inline-block text-sm font-medium text-brand-700">
+            {t.emptyCta}
+          </span>
+        </Link>
       ) : (
         <>
           <div className="mb-5 rounded-lg bg-[#f0e6d9] px-4 py-3 text-sm text-[#2c2522]">

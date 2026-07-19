@@ -16,6 +16,7 @@ const M = {
     noProfile: "Сначала настроим вашу компанию.",
     setup: "Настроить компанию",
     empty: "Пока нет оформленных сотрудников. Оформите нанятого кандидата на его карточке.",
+    emptyCta: "К моим вакансиям →",
     open: "Открыть →",
   },
   en: {
@@ -24,6 +25,7 @@ const M = {
     noProfile: "Let's set up your company first.",
     setup: "Set up company",
     empty: "No employees yet. Onboard a hired candidate from their card.",
+    emptyCta: "Go to my vacancies →",
     open: "Open →",
   },
   id: {
@@ -32,6 +34,7 @@ const M = {
     noProfile: "Siapkan perusahaan Anda dulu.",
     setup: "Siapkan perusahaan",
     empty: "Belum ada karyawan. Proses kandidat yang diterima dari kartunya.",
+    emptyCta: "Ke lowongan saya →",
     open: "Buka →",
   },
   uz: {
@@ -40,6 +43,7 @@ const M = {
     noProfile: "Avval kompaniyangizni sozlaymiz.",
     setup: "Kompaniyani sozlash",
     empty: "Hozircha xodim yoʻq. Qabul qilingan nomzodni kartasidan rasmiylashtiring.",
+    emptyCta: "Vakansiyalarimga o‘tish →",
     open: "Ochish →",
   },
 } as const;
@@ -84,9 +88,15 @@ export default async function EmployeesPage() {
       </div>
 
       {items.length === 0 ? (
-        <div className="card text-center">
+        <Link
+          href="/employer"
+          className="block rounded-2xl border border-brand-200 bg-brand-50/60 p-6 text-center transition hover:bg-brand-50"
+        >
           <p className="text-sm text-slate-600">{t.empty}</p>
-        </div>
+          <span className="mt-2 inline-block text-sm font-medium text-brand-700">
+            {t.emptyCta}
+          </span>
+        </Link>
       ) : (
         <ul className="space-y-3">
           {items.map((e) => (
