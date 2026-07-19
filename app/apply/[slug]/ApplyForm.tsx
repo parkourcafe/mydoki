@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { compressImage } from "@/lib/imageCompress";
 import { track } from "@/lib/analytics";
 import { POLICY_VERSION } from "@/lib/policy";
 import {
@@ -318,19 +319,24 @@ export default function ApplyForm({
     track("application_started", { vacancy_id: vacancyId });
   }
 
-  function pickFile(i: number, file: File | null) {
+  async function pickFile(i: number, file: File | null) {
     if (!file) return;
     if (!ACCEPTED_MIME.includes(file.type)) {
       setErrors([t.errFileType]);
       return;
     }
-    if (file.size > MAX_FILE_BYTES) {
+    setErrors([]);
+    markStarted();
+    // Downscale large camera photos before the size check (budget Androids, ТЗ E1).
+    let f = file;
+    if (file.type.startsWith("image/")) {
+      f = await compressImage(file);
+    }
+    if (f.size > MAX_FILE_BYTES) {
       setErrors([t.errFileSize]);
       return;
     }
-    setErrors([]);
-    markStarted();
-    setFiles((p) => ({ ...p, [i]: file }));
+    setFiles((p) => ({ ...p, [i]: f }));
     setDocStatus((p) => ({ ...p, [i]: "pending" }));
     track("document_uploaded", { vacancy_id: vacancyId, doc_type: requiredDocuments[i]?.type ?? "other" });
   }
