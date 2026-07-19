@@ -8,9 +8,11 @@ export type ComparisonKey =
   | "gosuslugi"
   | "google-drive"
   | "telegram"
-  | "whatsapp";
+  | "whatsapp"
+  | "google-form"
+  | "hr-whatsapp";
 
-export const COMPARISON_KEYS: ComparisonKey[] = ["paper", "cloud", "gallery", "notary", "gosuslugi", "google-drive", "telegram", "whatsapp"];
+export const COMPARISON_KEYS: ComparisonKey[] = ["paper", "cloud", "gallery", "notary", "gosuslugi", "google-drive", "telegram", "whatsapp", "google-form", "hr-whatsapp"];
 
 export type ComparisonRow = { aspect: string; alt: string; doki: string };
 export type ComparisonFaq = { q: string; a: string };
@@ -1123,6 +1125,134 @@ const DATA: Record<ComparisonKey, Comparison> = {
             q: "Bu bepulmi?",
             a: "Ha. Hozir bepul: 2 GB, eslatmalar, oilaviy kirish va oflayn kirish. Mahsulot betada.",
           },
+        ],
+      },
+    },
+  },
+  "google-form": {
+    emoji: "📝",
+    locales: {
+      ru: {
+        navLabel: "vs Google Form",
+        altName: "Google Form / Sheets",
+        title: "Google Form vs Doki: как собирать документы кандидатов",
+        subtitle: "Форма собирает ответы, но не пакет документов со статусом и сроками.",
+        intro:
+          "Google Form удобен для анкет, но плохо подходит для сбора документов у кандидатов: файлы разрозненны, нет статуса «полный / не хватает», нет напоминаний о сроках и отзывных ссылок. Doki собирает именно пакет документов под задачу.",
+        rows: [
+          { aspect: "Что собирает", alt: "Ответы на вопросы + вложения вперемешку", doki: "Пакет документов по чек-листу" },
+          { aspect: "Статус комплектности", alt: "Нет — считаете вручную", doki: "«полный / не хватает» по каждому" },
+          { aspect: "Напоминания о сроках", alt: "Нет", doki: "SKCK, KITAS, сертификаты" },
+          { aspect: "Контроль доступа", alt: "Ссылка на файл живёт вечно", doki: "Отзывные ссылки, истечение, watermark" },
+          { aspect: "Регистрация кандидата", alt: "Не требуется", doki: "Не требуется" },
+        ],
+        verdict:
+          "Для анкеты — Google Form. Для сбора и контроля пакета документов у многих кандидатов — Doki.",
+        faq: [
+          { q: "Можно ли собирать файлы через Google Form?", a: "Технически да, но вы получите разрозненные вложения без статуса комплектности и напоминаний. Doki даёт пакет под задачу." },
+          { q: "Нужен ли кандидату аккаунт в Doki?", a: "Нет. Кандидат открывает ссылку и загружает документы без регистрации." },
+        ],
+      },
+      en: {
+        navLabel: "vs Google Form",
+        altName: "Google Form / Sheets",
+        title: "Google Form vs Doki for collecting candidate documents",
+        subtitle: "A form collects answers, not a document package with status and expiry.",
+        intro:
+          "Google Form is fine for questionnaires but weak for collecting candidate documents: files are scattered, there's no “complete / missing” status, no expiry reminders, and no revocable links. Doki collects a document package for the task.",
+        rows: [
+          { aspect: "What it collects", alt: "Answers + attachments, mixed", doki: "A document package by checklist" },
+          { aspect: "Completeness status", alt: "None — you count by hand", doki: "“complete / missing” per person" },
+          { aspect: "Expiry reminders", alt: "None", doki: "SKCK, KITAS, certificates" },
+          { aspect: "Access control", alt: "File link lives forever", doki: "Revocable links, expiry, watermark" },
+          { aspect: "Candidate account", alt: "Not required", doki: "Not required" },
+        ],
+        verdict: "For a questionnaire — Google Form. For collecting and tracking a document package from many candidates — Doki.",
+        faq: [
+          { q: "Can I collect files with a Google Form?", a: "Technically yes, but you get scattered attachments with no completeness status or reminders. Doki gives a package for the task." },
+          { q: "Does the candidate need a Doki account?", a: "No. The candidate opens the link and uploads documents without registering." },
+        ],
+      },
+      id: {
+        navLabel: "vs Google Form",
+        altName: "Google Form / Sheets",
+        title: "Google Form vs Doki untuk kumpulkan dokumen kandidat",
+        subtitle: "Formulir mengumpulkan jawaban, bukan paket dokumen dengan status dan tenggat.",
+        intro:
+          "Google Form cocok untuk kuesioner tapi lemah untuk mengumpulkan dokumen kandidat: berkas tercecer, tidak ada status “lengkap / kurang”, tidak ada pengingat tenggat, dan tidak ada tautan yang bisa dicabut. Doki mengumpulkan paket dokumen sesuai kebutuhan.",
+        rows: [
+          { aspect: "Yang dikumpulkan", alt: "Jawaban + lampiran, tercampur", doki: "Paket dokumen sesuai ceklis" },
+          { aspect: "Status kelengkapan", alt: "Tidak ada — hitung manual", doki: "“lengkap / kurang” per orang" },
+          { aspect: "Pengingat tenggat", alt: "Tidak ada", doki: "SKCK, KITAS, sertifikat" },
+          { aspect: "Kontrol akses", alt: "Tautan berkas berlaku selamanya", doki: "Tautan bisa dicabut, kedaluwarsa, watermark" },
+          { aspect: "Akun kandidat", alt: "Tidak perlu", doki: "Tidak perlu" },
+        ],
+        verdict: "Untuk kuesioner — Google Form. Untuk mengumpulkan dan memantau paket dokumen dari banyak kandidat — Doki.",
+        faq: [
+          { q: "Bisakah mengumpulkan berkas lewat Google Form?", a: "Secara teknis bisa, tapi Anda dapat lampiran tercecer tanpa status kelengkapan atau pengingat. Doki memberi paket sesuai kebutuhan." },
+          { q: "Apakah kandidat perlu akun Doki?", a: "Tidak. Kandidat membuka tautan dan mengunggah dokumen tanpa mendaftar." },
+        ],
+      },
+    },
+  },
+  "hr-whatsapp": {
+    emoji: "💬",
+    locales: {
+      ru: {
+        navLabel: "vs WhatsApp",
+        altName: "Сбор в WhatsApp",
+        title: "Сбор документов в WhatsApp vs одна ссылка Doki",
+        subtitle: "Чат удобен для общения, но документы в нём теряются.",
+        intro:
+          "Собирать документы кандидатов в переписке WhatsApp — значит листать чаты, терять файлы и вручную считать, у кого чего не хватает. Doki оставляет WhatsApp для общения, а документы собирает по одной ссылке с готовым статусом.",
+        rows: [
+          { aspect: "Где документы", alt: "Разбросаны по чатам", doki: "Один пакет под задачу" },
+          { aspect: "Кто чего не сдал", alt: "Считаете вручную", doki: "Статус «полный / не хватает»" },
+          { aspect: "Сроки документов", alt: "Никто не следит", doki: "Напоминания (SKCK, KITAS)" },
+          { aspect: "Приватность", alt: "KTP лежит в чате", doki: "Отзывные ссылки, watermark" },
+        ],
+        verdict: "WhatsApp — чтобы позвать. Doki — чтобы собрать документы. Ссылку удобно отправить в том же WhatsApp.",
+        faq: [
+          { q: "Не проще ли собрать всё в WhatsApp?", a: "На 1–2 кандидатах — да. На объёме документы теряются и нет статуса комплектности. Ссылка Doki решает это." },
+          { q: "Как кандидат получит ссылку?", a: "Вы отправляете короткую ссылку в WhatsApp; кандидат открывает и грузит без регистрации." },
+        ],
+      },
+      en: {
+        navLabel: "vs WhatsApp",
+        altName: "Collecting in WhatsApp",
+        title: "Collecting documents in WhatsApp vs one Doki link",
+        subtitle: "Chat is great for talking, but documents get lost in it.",
+        intro:
+          "Collecting candidate documents in WhatsApp threads means scrolling chats, losing files, and counting by hand who is missing what. Doki leaves WhatsApp for talking and collects documents via one link with a ready status.",
+        rows: [
+          { aspect: "Where documents live", alt: "Scattered across chats", doki: "One package for the task" },
+          { aspect: "Who hasn't submitted", alt: "You count by hand", doki: "“complete / missing” status" },
+          { aspect: "Document expiry", alt: "Nobody tracks it", doki: "Reminders (SKCK, KITAS)" },
+          { aspect: "Privacy", alt: "KTP sits in the chat", doki: "Revocable links, watermark" },
+        ],
+        verdict: "WhatsApp to reach out. Doki to collect documents. Send the link in that same WhatsApp.",
+        faq: [
+          { q: "Isn't it easier to collect everything in WhatsApp?", a: "For 1–2 candidates, yes. At volume, documents get lost and there's no completeness status. A Doki link fixes that." },
+          { q: "How does the candidate get the link?", a: "You send a short link over WhatsApp; the candidate opens it and uploads without registering." },
+        ],
+      },
+      id: {
+        navLabel: "vs WhatsApp",
+        altName: "Kumpulkan di WhatsApp",
+        title: "Kumpulkan dokumen di WhatsApp vs satu tautan Doki",
+        subtitle: "Chat bagus untuk ngobrol, tapi dokumen mudah hilang di dalamnya.",
+        intro:
+          "Mengumpulkan dokumen kandidat di chat WhatsApp berarti menggulir chat, kehilangan berkas, dan menghitung manual siapa yang kurang apa. Doki membiarkan WhatsApp untuk ngobrol dan mengumpulkan dokumen lewat satu tautan dengan status siap.",
+        rows: [
+          { aspect: "Di mana dokumen", alt: "Tercecer di chat", doki: "Satu paket sesuai kebutuhan" },
+          { aspect: "Siapa yang belum kirim", alt: "Hitung manual", doki: "Status “lengkap / kurang”" },
+          { aspect: "Masa berlaku dokumen", alt: "Tidak ada yang pantau", doki: "Pengingat (SKCK, KITAS)" },
+          { aspect: "Privasi", alt: "KTP ada di chat", doki: "Tautan bisa dicabut, watermark" },
+        ],
+        verdict: "WhatsApp untuk menghubungi. Doki untuk mengumpulkan dokumen. Kirim tautannya di WhatsApp yang sama.",
+        faq: [
+          { q: "Bukankah lebih mudah kumpulkan semua di WhatsApp?", a: "Untuk 1–2 kandidat, ya. Dalam jumlah banyak, dokumen hilang dan tidak ada status kelengkapan. Tautan Doki mengatasinya." },
+          { q: "Bagaimana kandidat mendapat tautannya?", a: "Anda kirim tautan pendek lewat WhatsApp; kandidat membukanya dan mengunggah tanpa mendaftar." },
         ],
       },
     },
