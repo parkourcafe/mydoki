@@ -21,9 +21,7 @@ const META: Record<Locale, { title: string; description: string }> = {
   },
 };
 
-// Version of this Privacy Policy. Bump on any material change; the value is
-// captured alongside candidate upload consent so we know which text was agreed.
-export const POLICY_VERSION = "2026-07-19";
+export { POLICY_VERSION } from "@/lib/policy";
 
 export async function generateMetadata(): Promise<Metadata> {
   return META[await getLocale()];

@@ -62,6 +62,7 @@ export interface EventMap {
   application_started: { vacancy_id: string };
   document_uploaded: { vacancy_id: string; doc_type: string };
   video_recorded: { vacancy_id: string };
+  consent_given: { vacancy_id: string; policy_version: string };
   application_submitted: { vacancy_id: string };
 
   // ── Работодатель: работа с откликами ──────────────────────────────
