@@ -3146,7 +3146,7 @@ const DATA: Record<LandingKey, Landing> = {
         navLabel: "Collect candidate docs",
         title: "Collect Candidate Documents via One Link | Doki.help",
         metaDescription:
-          "Send candidates one checklist link and get complete document packages back — with a “what's missing” status and expiry reminders. No account for candidates.",
+          "Send candidates one checklist link and get complete document packages — with a “what's missing” status and expiry reminders. No candidate account.",
         h1: "Collect candidate documents via one link",
         intro:
           "Stop chasing candidates for files across WhatsApp and email. Send one checklist link, and each candidate uploads their documents without an account — you see a complete/missing status per person.",
@@ -3228,7 +3228,7 @@ const DATA: Record<LandingKey, Landing> = {
         navLabel: "Сбор документов кандидатов",
         title: "Сбор документов кандидатов по одной ссылке | Doki.help",
         metaDescription:
-          "Отправьте кандидатам одну ссылку-чек-лист и получите полные пакеты документов — со статусом «чего не хватает» и напоминаниями о сроках. Без регистрации кандидата.",
+          "Отправьте кандидатам ссылку-чек-лист и получите полные пакеты документов — со статусом «чего не хватает» и напоминаниями. Без регистрации кандидата.",
         h1: "Сбор документов кандидатов по одной ссылке",
         intro:
           "Хватит гоняться за кандидатами по WhatsApp и почте. Отправьте одну ссылку-чек-лист — каждый кандидат загружает документы без аккаунта, а вы видите статус «полный / не хватает» по каждому.",
@@ -3269,7 +3269,7 @@ const DATA: Record<LandingKey, Landing> = {
         navLabel: "Nomzod hujjatlarini yig‘ish",
         title: "Nomzod hujjatlarini bitta havola orqali yig‘ing | Doki.help",
         metaDescription:
-          "Nomzodlarga bitta ro‘yxat-havola yuboring va to‘liq hujjat paketlarini oling — “nima yetishmayapti” statusi va muddat eslatmalari bilan. Nomzodga hisob kerak emas.",
+          "Nomzodlarga ro‘yxat-havola yuboring va to‘liq hujjat paketlarini oling — “nima yetishmayapti” statusi va eslatmalar bilan. Nomzodga hisob kerak emas.",
         h1: "Nomzod hujjatlarini bitta havola orqali yig‘ing",
         intro:
           "Nomzodlarni WhatsApp va emailda fayllar uchun quvishni bas qiling. Bitta ro‘yxat-havola yuboring — har bir nomzod hujjatlarini hisobsiz yuklaydi, siz esa har biri bo‘yicha to‘liq/kam statusini ko‘rasiz.",

@@ -39,23 +39,23 @@
 |---|---|---|---|
 | SKCK | dokumen skck untuk kerja | `lib/checklists.ts` | `skck-checklist` ✅ |
 | KITAS | dokumen kitas izin kerja | `lib/checklists.ts` | `kitas-work-permit-checklist` ✅ |
-| Онбординг | dokumen onboarding karyawan | `lib/checklists.ts` | `employee-onboarding-11-checklist` |
-| Кандидат | dokumen yang diminta hr | `lib/checklists.ts` | `candidate-documents-requested-checklist` |
-| Villa staff | dokumen staf vila | `lib/checklists.ts` | `villa-staff-documents-checklist` |
-| Driver | dokumen sopir sim | `lib/checklists.ts` | `driver-documents-checklist` |
-| Hospitality | dokumen karyawan restoran | `lib/checklists.ts` | `hospitality-hiring-checklist` |
-| ART/PRT | dokumen art prt | `lib/checklists.ts` | `domestic-worker-documents-checklist` |
+| Онбординг | dokumen onboarding karyawan | `lib/checklists.ts` | `employee-onboarding-11-checklist` ✅ |
+| Кандидат | dokumen yang diminta hr | `lib/checklists.ts` | `candidate-documents-requested-checklist` ✅ |
+| Villa staff | dokumen staf vila | `lib/checklists.ts` | `villa-staff-documents-checklist` ✅ |
+| Driver | dokumen sopir sim | `lib/checklists.ts` | `driver-documents-checklist` ✅ |
+| Hospitality | dokumen karyawan restoran | `lib/checklists.ts` | `hospitality-hiring-checklist` ✅ |
+| ART/PRT | dokumen art prt | `lib/checklists.ts` | `domestic-worker-documents-checklist` ✅ |
 | Agencies | agensi rekrutmen kumpulkan dokumen | `lib/segments.ts` | `/for/recruitment-agencies` ✅ |
 | Hospitality | rekrut staf vila f&b | `lib/segments.ts` | `/for/hospitality` ✅ |
 | Visa agents | agen visa kumpulkan dokumen klien | `lib/segments.ts` | `/for/visa-agents` ✅ |
-| vs Google Form | google form vs kumpulkan dokumen | `lib/comparisons.ts` | `/vs/google-form` |
-| vs WhatsApp (HR) | kumpulkan dokumen lewat whatsapp | `lib/comparisons.ts` | `/vs/hr-whatsapp` |
-| vs Email | kirim dokumen lewat email | `lib/comparisons.ts` | `/vs/email-attachments` |
-| vs Spreadsheet | lacak dokumen kandidat excel | `lib/comparisons.ts` | `/vs/spreadsheet-tracker` |
-| Landing | kumpulkan dokumen kandidat | `lib/landings.ts` | `/candidate-document-collection` |
-| Landing | checklist dokumen hr | `lib/landings.ts` | `/hr-document-checklist` |
+| vs Google Form | google form vs kumpulkan dokumen | `lib/comparisons.ts` | `/vs/google-form` ✅ |
+| vs WhatsApp (HR) | kumpulkan dokumen lewat whatsapp | `lib/comparisons.ts` | `/vs/hr-whatsapp` ✅ |
+| vs Email | kirim dokumen lewat email | `lib/comparisons.ts` | `/vs/email-attachments` ✅ |
+| vs Spreadsheet | lacak dokumen kandidat excel | `lib/comparisons.ts` | `/vs/spreadsheet-tracker` ✅ |
+| Landing | kumpulkan dokumen kandidat | `lib/landings.ts` | `/candidate-document-collection` ✅ |
+| Landing | checklist dokumen hr | `lib/landings.ts` | `/hr-document-checklist` ✅ |
 
-✅ = уже засижено в этом PR. Остальное — бэклог (форма реестров одинаковая, добавление = правка data-файла; для landings ещё 13-строчный `app/<slug>/page.tsx`).
+✅ = засижено и в проде. Все записи календаря §3 (#1–#17) реализованы; #18–20 — кейсы (через `doki-id-casestudy`), #21+ — GSC-driven расширение. title/meta приведены к ≤60/≤155 через `doki-id-seo-optimizer`.
 
 ## 3. Контент-календарь (первые 30 дней, порядок публикации)
 
@@ -153,4 +153,4 @@
 
 ---
 
-*Незасиженные записи из §2/§3 — бэклог: форма реестров одинаковая, добавление механическое. Перед публикацией BI-копия проходит вычитку носителем (B1). Юр/иммиграционные формулировки — под ревью юриста (compliance-gate).*
+*Все evergreen-записи §2/§3 реализованы и в проде. Осталось (вне кода): вычитка BI-копии носителем (B1) и ревью юр/иммиграционных формулировок юристом (compliance-gate) перед активным продвижением; кейсы (#18–20) — через `doki-id-casestudy`; дальнейшее расширение — GSC-driven.*
