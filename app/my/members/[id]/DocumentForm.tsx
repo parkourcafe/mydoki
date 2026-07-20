@@ -2,7 +2,12 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { categories, docSubtypes, type DocCategory } from "@/lib/categories";
+import {
+  categories,
+  categoryLabel,
+  docSubtypes,
+  type DocCategory,
+} from "@/lib/categories";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import {
@@ -30,11 +35,14 @@ const M = {
     pickFile: "📎 Выбрать файл",
     photo: "📷 Сфотографировать",
     recognizing: "Распознаю…",
-    recognize: "✨ Распознать даты (AI)",
+    recognize: "✨ Распознать заново (AI)",
     filesLabel: "Файлы документа",
     remove: "убрать",
     filesHint:
       "На телефоне «Сфотографировать» откроет камеру. Файлы хранятся в приватном хранилище семьи.",
+    autoHint:
+      "ИИ-распознавание включено в настройках: категория и поля определятся автоматически по первому файлу — проверьте перед сохранением.",
+    altLead: "ИИ не уверен в категории — уточните:",
     free: "Свободно",
     gb: "ГБ",
     quotaExceeded:
@@ -75,11 +83,14 @@ const M = {
     pickFile: "📎 Choose file",
     photo: "📷 Take a photo",
     recognizing: "Recognizing…",
-    recognize: "✨ Recognize dates (AI)",
+    recognize: "✨ Recognize again (AI)",
     filesLabel: "Document files",
     remove: "remove",
     filesHint:
       "On a phone, “Take a photo” opens the camera. Files are kept in your family's private storage.",
+    autoHint:
+      "AI recognition is on in your settings: the category and fields will be filled in automatically from the first file — review before saving.",
+    altLead: "AI isn't sure about the category — please confirm:",
     free: "Free",
     gb: "GB",
     quotaExceeded:
@@ -120,11 +131,14 @@ const M = {
     pickFile: "📎 Fayl tanlash",
     photo: "📷 Suratga olish",
     recognizing: "Aniqlanmoqda…",
-    recognize: "✨ Sanalarni aniqlash (AI)",
+    recognize: "✨ Qayta aniqlash (AI)",
     filesLabel: "Hujjat fayllari",
     remove: "olib tashlash",
     filesHint:
       "Telefonda “Suratga olish” kamerani ochadi. Fayllar oilaning shaxsiy xotirasida saqlanadi.",
+    autoHint:
+      "Sozlamalarda AI aniqlash yoqilgan: toifa va maydonlar birinchi fayl asosida avtomatik toʻldiriladi — saqlashdan oldin tekshiring.",
+    altLead: "AI toifada aniq emas — tanlang:",
     free: "Boʻsh",
     gb: "GB",
     quotaExceeded:
@@ -165,11 +179,14 @@ const M = {
     pickFile: "📎 Pilih berkas",
     photo: "📷 Ambil foto",
     recognizing: "Mengenali…",
-    recognize: "✨ Kenali tanggal (AI)",
+    recognize: "✨ Kenali ulang (AI)",
     filesLabel: "Berkas dokumen",
     remove: "hapus",
     filesHint:
       "Di ponsel, “Ambil foto” membuka kamera. Berkas disimpan di penyimpanan pribadi keluarga.",
+    autoHint:
+      "Pengenalan AI aktif di pengaturan Anda: kategori dan kolom akan terisi otomatis dari berkas pertama — periksa sebelum menyimpan.",
+    altLead: "AI belum yakin dengan kategori — silakan pilih:",
     free: "Tersisa",
     gb: "GB",
     quotaExceeded:
@@ -287,6 +304,7 @@ export default function DocumentForm({
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [categoryAlt, setCategoryAlt] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveErr, setSaveErr] = useState<string | null>(null);
   const pickRef = useRef<HTMLInputElement>(null);
@@ -297,12 +315,19 @@ export default function DocumentForm({
   function addFiles(list: FileList | null) {
     if (!list || !list.length) return;
     const incoming = Array.from(list);
+    const isFirstFile = files.length === 0;
     setFiles((prev) => {
       const seen = new Set(prev.map((x) => x.name + x.size));
       return [...prev, ...incoming.filter((x) => !seen.has(x.name + x.size))];
     });
-    // Распознавание — только по явному нажатию кнопки (приватность: фото
-    // документа уходит ИИ-провайдеру лишь когда пользователь сам это попросил).
+    // Пользователь уже разрешил распознавание в настройках профиля — первый
+    // файл нового документа анализируем сразу, чтобы разложить по категории.
+    // Ошибки (лимит, недоступность) при этом не показываем — это не было
+    // явным действием пользователя. Кнопка ниже остаётся для повторного
+    // запуска или дозагруженных файлов.
+    if (aiEnabled && isFirstFile && incoming[0]) {
+      classify(incoming[0], true);
+    }
   }
 
   function removeFile(i: number) {
@@ -339,6 +364,14 @@ export default function DocumentForm({
               ? data.tags.join(", ")
               : p.tags,
         }));
+        // Категория неоднозначна (например «справка» — medical или career) —
+        // не подставляем молча, спрашиваем пользователя.
+        setCategoryAlt(
+          typeof data.category_alt === "string" &&
+            data.category_alt !== data.category
+            ? data.category_alt
+            : null
+        );
         setMsg(t.autofilled);
       }
     } catch {
@@ -515,6 +548,7 @@ export default function DocumentForm({
         )}
 
         <p className="mt-2 text-xs text-slate-500">{t.filesHint}</p>
+        {aiEnabled && <p className="mt-1 text-xs text-slate-500">{t.autoHint}</p>}
         {remaining != null && storageLimit != null && (
           <p className="mt-1 text-xs text-slate-400">
             {t.free}: {fmtSize(remaining, t)} / {fmtSize(storageLimit, t)}
@@ -558,7 +592,10 @@ export default function DocumentForm({
           <label className="label">{t.category}</label>
           <select
             value={f.category}
-            onChange={(e) => set("category", e.target.value)}
+            onChange={(e) => {
+              set("category", e.target.value);
+              setCategoryAlt(null);
+            }}
             className="input"
           >
             {categories(locale).map((c) => (
@@ -567,6 +604,30 @@ export default function DocumentForm({
               </option>
             ))}
           </select>
+          {categoryAlt && (
+            <div className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
+              <p>{t.altLead}</p>
+              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setCategoryAlt(null)}
+                  className="rounded-full border border-amber-300 bg-white px-2.5 py-1 font-medium hover:bg-amber-100"
+                >
+                  {categoryLabel(locale, f.category as DocCategory)}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    set("category", categoryAlt);
+                    setCategoryAlt(null);
+                  }}
+                  className="rounded-full border border-amber-300 bg-white px-2.5 py-1 font-medium hover:bg-amber-100"
+                >
+                  {categoryLabel(locale, categoryAlt as DocCategory)}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
       <div>
