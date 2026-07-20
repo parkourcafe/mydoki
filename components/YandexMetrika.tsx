@@ -3,6 +3,7 @@
 import Script from "next/script";
 import { Suspense, useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import { isPrivatePath } from "@/lib/analyticsPrivatePaths";
 
 const YM_ID = process.env.NEXT_PUBLIC_YM_ID || "110117157";
 
@@ -37,9 +38,15 @@ function MetrikaPageviews() {
  * Яндекс.Метрика. Webvisor (запись сессий) намеренно ВЫКЛЮЧЕН: сервис хранит
  * персональные документы, и запись авторизованной зоны недопустима по 152-ФЗ.
  * Считаются просмотры, клики (clickmap) и внешние ссылки.
+ *
+ * На приватных путях (реальные документы/данные кандидата в DOM — /my,
+ * /employer, /apply, /s/…) счётчик не грузится вовсе, а не просто не шлёт
+ * события: см. lib/analyticsPrivatePaths.ts.
  */
 export default function YandexMetrika() {
+  const pathname = usePathname();
   if (process.env.NODE_ENV !== "production") return null;
+  if (isPrivatePath(pathname ?? "/")) return null;
 
   return (
     <>

@@ -45,7 +45,7 @@ export default async function LandingPage({ slug }: { slug: string }) {
     operatingSystem: "Web",
     description: c.metaDescription,
     url: `${APP_URL}${base}`,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "RUB" },
+    offers: { "@type": "Offer", price: "0", priceCurrency: locale === "ru" ? "RUB" : "USD" },
   };
   // FAQPage — FAQ виден на странице ниже, поэтому разметка допустима.
   const faqSchema = {
