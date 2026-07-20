@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getPublicHiringLocale, type Locale } from "@/lib/i18n";
-import { waLink, type ApplicationStatus } from "@/lib/career";
+import {
+  waLink,
+  filterApplicationStageDocuments,
+  type ApplicationStatus,
+  type RequiredDocument,
+} from "@/lib/career";
 import type { CandidateOffer } from "@/lib/offer";
 import OfferResponse from "./OfferResponse";
 
@@ -17,6 +22,8 @@ type StatusData = {
   employer_contact: { whatsapp: string | null; email: string | null } | null;
   offer: CandidateOffer | null;
   timeline: { old_status: string | null; new_status: string; created_at: string }[];
+  required_documents: RequiredDocument[];
+  documents: { type: string; label: string }[];
 };
 
 const M = {
@@ -30,6 +37,10 @@ const M = {
     contact: "Employer contact",
     contactHint: "You've been shortlisted — reach out to the employer:",
     poweredBy: "Powered by",
+    docsHeading: "Documents",
+    complete: "Complete ✓",
+    missing: (n: number) => `Missing ${n} document${n === 1 ? "" : "s"}`,
+    missingList: "Still needed:",
   },
   id: {
     notFoundTitle: "Lamaran tidak ditemukan",
@@ -41,6 +52,10 @@ const M = {
     contact: "Kontak perusahaan",
     contactHint: "Anda terpilih — hubungi perusahaan:",
     poweredBy: "Didukung oleh",
+    docsHeading: "Dokumen",
+    complete: "Lengkap ✓",
+    missing: (n: number) => `Kurang ${n} dokumen`,
+    missingList: "Masih dibutuhkan:",
   },
   ru: {
     notFoundTitle: "Отклик не найден",
@@ -52,6 +67,10 @@ const M = {
     contact: "Контакт работодателя",
     contactHint: "Вас отобрали — свяжитесь с работодателем:",
     poweredBy: "Работает на",
+    docsHeading: "Документы",
+    complete: "Полный пакет ✓",
+    missing: (n: number) => `Не хватает: ${n} док.`,
+    missingList: "Ещё нужно:",
   },
   uz: {
     notFoundTitle: "Ariza topilmadi",
@@ -63,6 +82,10 @@ const M = {
     contact: "Ish beruvchi aloqasi",
     contactHint: "Siz tanlandingiz — ish beruvchiga murojaat qiling:",
     poweredBy: "Ishlaydi",
+    docsHeading: "Hujjatlar",
+    complete: "To‘liq ✓",
+    missing: (n: number) => `${n} ta hujjat yetishmayapti`,
+    missingList: "Yana kerak:",
   },
 } as const;
 
@@ -125,6 +148,15 @@ export default async function StatusPage({
     hired: "bg-emerald-600 text-white",
   };
 
+  // E2: same completeness check the employer board runs — one required-docs
+  // list (application stage only), one source of truth for "lengkap/kurang".
+  const requiredOnly = filterApplicationStageDocuments(app.required_documents).filter(
+    (d) => d.required !== false,
+  );
+  const uploadedTypes = new Set(app.documents.map((d) => d.type));
+  const missingDocs = requiredOnly.filter((d) => !uploadedTypes.has(d.type));
+  const isComplete = missingDocs.length === 0;
+
   return (
     <Shell>
       <div className="card space-y-5">
@@ -147,6 +179,27 @@ export default async function StatusPage({
             {statusLabel(app.status)}
           </span>
         </div>
+
+        {requiredOnly.length > 0 && (
+          <div className="rounded-lg border border-slate-200 p-3">
+            <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-slate-400">
+              {t.docsHeading}
+            </p>
+            <span
+              className={`rounded-full px-3 py-1 text-sm font-medium ${
+                isComplete ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+              }`}
+            >
+              {isComplete ? t.complete : t.missing(missingDocs.length)}
+            </span>
+            {!isComplete && (
+              <p className="mt-2 text-sm text-slate-600">
+                {t.missingList}{" "}
+                {missingDocs.map((d) => d.label).join(", ")}
+              </p>
+            )}
+          </div>
+        )}
 
         {app.offer && (
           <OfferResponse locale={locale} token={token} offer={app.offer} />
