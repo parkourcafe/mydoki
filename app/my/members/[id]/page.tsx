@@ -45,6 +45,10 @@ const M = {
     showArchived: "Показать архив",
     hideArchived: "Скрыть архив",
     archivedBadge: "в архиве",
+    tipIssuer: "Кем выдан",
+    tipNumber: "Номер",
+    tipHolder: "Владелец",
+    tipTags: "Теги",
   },
   en: {
     back: "← Family",
@@ -69,6 +73,10 @@ const M = {
     showArchived: "Show archive",
     hideArchived: "Hide archive",
     archivedBadge: "archived",
+    tipIssuer: "Issued by",
+    tipNumber: "Number",
+    tipHolder: "Holder",
+    tipTags: "Tags",
   },
   uz: {
     back: "← Oila",
@@ -93,6 +101,10 @@ const M = {
     showArchived: "Arxivni koʻrsatish",
     hideArchived: "Arxivni yashirish",
     archivedBadge: "arxivda",
+    tipIssuer: "Kim tomonidan berilgan",
+    tipNumber: "Raqami",
+    tipHolder: "Egasi",
+    tipTags: "Teglar",
   },
   id: {
     back: "← Keluarga",
@@ -117,6 +129,10 @@ const M = {
     showArchived: "Tampilkan arsip",
     hideArchived: "Sembunyikan arsip",
     archivedBadge: "diarsipkan",
+    tipIssuer: "Diterbitkan oleh",
+    tipNumber: "Nomor",
+    tipHolder: "Pemilik",
+    tipTags: "Tag",
   },
 } as const;
 
@@ -181,26 +197,46 @@ export default async function MemberPage({
                 {c.emoji} {c.label}
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
-                {byCategory.get(c.key)!.map((d) => (
-                  <Link
-                    key={d.id}
-                    href={`/my/documents/${d.id}`}
-                    className="card transition hover:border-brand-300 hover:shadow"
-                  >
-                    <div className="flex items-center gap-2 font-medium">
-                      {d.title}
-                      {d.status === "archived" && (
-                        <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-normal text-slate-600">
-                          {t.archivedBadge}
-                        </span>
+                {byCategory.get(c.key)!.map((d) => {
+                  // Тултип наведения: только уже сохранённые метаданные
+                  // документа — без обращения к ИИ и лишних запросов.
+                  const tip = [
+                    d.issuer ? `${t.tipIssuer}: ${d.issuer}` : null,
+                    d.doc_number ? `${t.tipNumber}: ${d.doc_number}` : null,
+                    d.holder_name ? `${t.tipHolder}: ${d.holder_name}` : null,
+                    d.tags?.length ? `${t.tipTags}: ${d.tags.join(", ")}` : null,
+                    d.notes ? d.notes : null,
+                  ].filter(Boolean) as string[];
+                  return (
+                    <Link
+                      key={d.id}
+                      href={`/my/documents/${d.id}`}
+                      className="group relative card transition hover:border-brand-300 hover:shadow"
+                    >
+                      <div className="flex items-center gap-2 font-medium">
+                        {d.title}
+                        {d.status === "archived" && (
+                          <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-normal text-slate-600">
+                            {t.archivedBadge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-1 text-xs text-slate-500">
+                        {d.subtype ? `${d.subtype} · ` : ""}
+                        {d.expires_at ? t.validUntil(d.expires_at) : t.noExpiry}
+                      </div>
+                      {tip.length > 0 && (
+                        <div className="pointer-events-none absolute left-0 top-full z-10 mt-1 hidden w-64 rounded-lg border border-slate-200 bg-white p-2.5 text-xs leading-snug text-slate-600 shadow-lg group-hover:block">
+                          {tip.map((line, i) => (
+                            <p key={i} className={i > 0 ? "mt-1" : ""}>
+                              {line}
+                            </p>
+                          ))}
+                        </div>
                       )}
-                    </div>
-                    <div className="mt-1 text-xs text-slate-500">
-                      {d.subtype ? `${d.subtype} · ` : ""}
-                      {d.expires_at ? t.validUntil(d.expires_at) : t.noExpiry}
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             </section>
           ))}
