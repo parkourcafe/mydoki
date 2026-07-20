@@ -50,6 +50,7 @@ async function chat(body: Record<string, unknown>): Promise<string> {
 
 export type ClassifyResult = {
   category: string | null;
+  category_alt: string | null;
   subtype: string | null;
   title: string | null;
   issuer: string | null;
@@ -73,6 +74,7 @@ const VALID_CATEGORIES = [
 const CLASSIFY_SYSTEM = `Ты извлекаешь метаданные из фото/скана личного документа человека.
 Верни ТОЛЬКО JSON-объект (без пояснений, без markdown) со строго такими ключами:
 - "category": одно из ["identity","education","career","medical","financial","tax","legal","other"] (career — трудовые/карьерные документы: трудовой договор, трудовая книжка, справка с работы; tax — налоговые: ИНН, 2-НДФЛ, налоговые уведомления, декларации)
+- "category_alt": вторая по вероятности категория из того же списка, ТОЛЬКО если ты реально не уверен между двумя категориями (например справка может быть и medical, и career) — иначе null
 - "subtype": короткий тип документа по-русски (например "паспорт", "диплом", "СНИЛС") или null
 - "title": короткое человекочитаемое название по-русски или null
 - "issuer": кем выдан или null
@@ -120,9 +122,16 @@ export async function classifyDocument(
     typeof raw.category === "string" && VALID_CATEGORIES.includes(raw.category)
       ? raw.category
       : null;
+  const categoryAlt =
+    typeof raw.category_alt === "string" &&
+    VALID_CATEGORIES.includes(raw.category_alt) &&
+    raw.category_alt !== category
+      ? raw.category_alt
+      : null;
 
   return {
     category,
+    category_alt: categoryAlt,
     subtype: str(raw.subtype),
     title: str(raw.title),
     issuer: str(raw.issuer),

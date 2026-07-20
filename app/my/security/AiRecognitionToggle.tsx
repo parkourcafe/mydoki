@@ -8,7 +8,7 @@ const M = {
   ru: {
     label: "Включить распознавание документов (ИИ)",
     disclosure: (p: string) =>
-      `Когда включено, на странице добавления документа появится кнопка «Распознать». По нажатию фото документа однократно отправляется во внешний сервис распознавания (${p}) для извлечения дат и типа. Без нажатия ничего никуда не отправляется.`,
+      `Когда включено: первое фото нового документа сразу отправляется во внешний сервис распознавания (${p}), чтобы определить категорию, тип, даты и разложить документ по нужной папке. Если категория неоднозначна — мы спросим вас, а не выберем сами. Кнопка «Распознать заново» доступна для повторного анализа. Выключите переключатель — и ничего не будет отправляться.`,
     notConfigured:
       "Сейчас провайдер распознавания не подключён — функция недоступна. Настройку можно сохранить заранее.",
     saved: "Сохранено.",
@@ -17,7 +17,7 @@ const M = {
   en: {
     label: "Enable document recognition (AI)",
     disclosure: (p: string) =>
-      `When enabled, a “Recognize” button appears on the add-document screen. On click, the document photo is sent once to an external recognition service (${p}) to extract dates and type. Nothing is sent unless you click it.`,
+      `When enabled: the first photo of a new document is sent right away to an external recognition service (${p}) to detect its category, type, dates, and file it in the right folder. If the category is ambiguous, we'll ask you instead of guessing. The “Recognize again” button lets you re-run it. Turn the toggle off and nothing is sent.`,
     notConfigured:
       "No recognition provider is connected yet — the feature is unavailable. You can save the setting in advance.",
     saved: "Saved.",
@@ -26,7 +26,7 @@ const M = {
   id: {
     label: "Aktifkan pengenalan dokumen (AI)",
     disclosure: (p: string) =>
-      `Saat aktif, tombol “Kenali” muncul di layar tambah dokumen. Saat diklik, foto dokumen dikirim sekali ke layanan pengenalan eksternal (${p}) untuk mengekstrak tanggal dan jenis. Tidak ada yang dikirim kecuali Anda mengkliknya.`,
+      `Saat aktif: foto pertama dari dokumen baru langsung dikirim ke layanan pengenalan eksternal (${p}) untuk mendeteksi kategori, jenis, tanggal, dan menempatkannya di folder yang tepat. Jika kategorinya tidak jelas, kami akan bertanya, bukan menebak. Tombol “Kenali ulang” tersedia untuk menjalankannya lagi. Matikan sakelar dan tidak ada yang akan dikirim.`,
     notConfigured:
       "Belum ada penyedia pengenalan yang terhubung — fitur tidak tersedia. Anda dapat menyimpan pengaturan ini terlebih dahulu.",
     saved: "Tersimpan.",
@@ -35,7 +35,7 @@ const M = {
   uz: {
     label: "Hujjatlarni aniqlashni yoqish (AI)",
     disclosure: (p: string) =>
-      `Yoqilganda, hujjat qoʻshish sahifasida “Aniqlash” tugmasi paydo boʻladi. Bosilganda hujjat fotosi sanalar va turini ajratish uchun tashqi aniqlash xizmatiga (${p}) bir marta yuboriladi. Bosmaguningizcha hech narsa yuborilmaydi.`,
+      `Yoqilganda: yangi hujjatning birinchi fotosi darhol tashqi aniqlash xizmatiga (${p}) yuboriladi — toifa, turi, sanalari aniqlanadi va tegishli papkaga joylashtiriladi. Toifa noaniq boʻlsa — taxmin qilmasdan sizdan soʻraymiz. “Qayta aniqlash” tugmasi qayta ishga tushirish uchun mavjud. Tugmani oʻchiring — hech narsa yuborilmaydi.`,
     notConfigured:
       "Hozircha aniqlash provayderi ulanmagan — funksiya mavjud emas. Sozlamani oldindan saqlashingiz mumkin.",
     saved: "Saqlandi.",
