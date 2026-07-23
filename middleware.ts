@@ -19,6 +19,16 @@ const LOCALE_RE = /^\/(ru|en|id|uz)(\/.*)?$/;
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  const requestHost = (request.headers.get("host") || "")
+    .split(":")[0]
+    .toLowerCase();
+  if (requestHost === "doki.help") {
+    const url = request.nextUrl.clone();
+    url.hostname = "www.doki.help";
+    url.protocol = "https";
+    return NextResponse.redirect(url, 308);
+  }
+
   // RuStore v1 is a personal document vault. Employment, employer and health
   // modules are intentionally outside this binary's declared product scope.
   const localeMatch = pathname.match(LOCALE_RE);
@@ -27,6 +37,14 @@ export async function middleware(request: NextRequest) {
       ? localeMatch[2]
       : "/"
     : pathname;
+
+  const isRuOnlyPublicPage =
+    effectivePath.startsWith("/keep/") || effectivePath === "/vs/gosuslugi";
+  if (isRuOnlyPublicPage && localeMatch?.[1] !== "ru") {
+    const url = request.nextUrl.clone();
+    url.pathname = `/ru${effectivePath}`;
+    return NextResponse.redirect(url, 308);
+  }
   if (
     isRuStoreUserAgent(request.headers.get("user-agent") || "") &&
     isRuStoreRestrictedPath(effectivePath)

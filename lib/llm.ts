@@ -56,6 +56,7 @@ export type ClassifyResult = {
   doc_number: string | null;
   issued_at: string | null;
   expires_at: string | null;
+  holder_name: string | null;
   tags: string[];
 };
 
@@ -79,6 +80,7 @@ const CLASSIFY_SYSTEM = `Ты извлекаешь метаданные из ф�
 - "doc_number": номер документа или null
 - "issued_at": дата выдачи в формате YYYY-MM-DD или null
 - "expires_at": срок действия в формате YYYY-MM-DD или null
+- "holder_name": полное имя человека, которому принадлежит документ, или null
 - "tags": массив коротких русских тегов (может быть [])
 Если поле не удаётся определить — поставь null.`;
 
@@ -129,6 +131,7 @@ export async function classifyDocument(
     doc_number: str(raw.doc_number),
     issued_at: str(raw.issued_at),
     expires_at: str(raw.expires_at),
+    holder_name: str(raw.holder_name),
     tags: Array.isArray(raw.tags)
       ? raw.tags.filter((t): t is string => typeof t === "string").slice(0, 10)
       : [],

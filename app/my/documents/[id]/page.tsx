@@ -7,6 +7,7 @@ import {
   getMember,
   listChecksByVersion,
   listFiles,
+  listMembers,
   listSharesByDocument,
   listVersions,
   signFiles,
@@ -17,6 +18,7 @@ import { logAudit, listDocumentAudit } from "@/lib/audit";
 import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
 import { isRuStoreRestrictedDocumentCategory } from "@/lib/rustore";
 import type { AuditEntry, DocumentCheck } from "@/lib/types";
+import { suggestDocumentOwner } from "@/lib/documentChecks";
 import CopyButton from "@/components/CopyButton";
 import FileActions from "@/components/FileActions";
 import OfflineSave from "@/components/OfflineSave";
@@ -24,6 +26,7 @@ import VersionUpload from "./VersionUpload";
 import {
   archiveDocument,
   deleteDocument,
+  moveDocumentToMember,
   revokeShare,
   runChecks,
   unarchiveDocument,
@@ -85,6 +88,14 @@ const M = {
     aView: "Просмотр",
     aShareView: "Просмотр по ссылке",
     dateLocale: "ru-RU",
+    sortingTitle: "Чей это документ",
+    currentOwner: "Сейчас находится у",
+    detectedHolder: "В документе указано",
+    suggestion: "Похоже, документ относится к",
+    suggestionReason: "Точно совпало имя в документе и семейном профиле.",
+    chooseOwner: "Выберите профиль",
+    move: "Перенести",
+    sortingHint: "Doki только предлагает. Перенос выполняется после вашего подтверждения; автоматического удаления нет.",
   },
   en: {
     data: "Details",
@@ -140,6 +151,14 @@ const M = {
     aView: "View",
     aShareView: "View via link",
     dateLocale: "en-US",
+    sortingTitle: "Whose document is this",
+    currentOwner: "Currently filed under",
+    detectedHolder: "Name in document",
+    suggestion: "This document may belong to",
+    suggestionReason: "The document name exactly matches the family profile.",
+    chooseOwner: "Choose profile",
+    move: "Move",
+    sortingHint: "Doki only suggests. Nothing is moved until you confirm, and documents are never deleted automatically.",
   },
   uz: {
     data: "Maʼlumotlar",
@@ -195,6 +214,14 @@ const M = {
     aView: "Koʻrish",
     aShareView: "Havola orqali koʻrish",
     dateLocale: "uz-UZ",
+    sortingTitle: "Bu kimning hujjati",
+    currentOwner: "Hozirgi profil",
+    detectedHolder: "Hujjatdagi ism",
+    suggestion: "Hujjat quyidagiga tegishli bo‘lishi mumkin",
+    suggestionReason: "Hujjatdagi ism oila profiliga to‘liq mos keldi.",
+    chooseOwner: "Profilni tanlang",
+    move: "Ko‘chirish",
+    sortingHint: "Doki faqat taklif qiladi. Tasdiqlamaguningizcha hujjat ko‘chirilmaydi va avtomatik o‘chirilmaydi.",
   },
   id: {
     data: "Detail",
@@ -250,6 +277,14 @@ const M = {
     aView: "Dilihat",
     aShareView: "Dilihat via tautan",
     dateLocale: "id-ID",
+    sortingTitle: "Dokumen ini milik siapa",
+    currentOwner: "Saat ini tersimpan untuk",
+    detectedHolder: "Nama dalam dokumen",
+    suggestion: "Dokumen ini mungkin milik",
+    suggestionReason: "Nama dokumen sama persis dengan profil keluarga.",
+    chooseOwner: "Pilih profil",
+    move: "Pindahkan",
+    sortingHint: "Doki hanya memberi saran. Dokumen dipindahkan setelah konfirmasi Anda dan tidak pernah dihapus otomatis.",
   },
 } as const;
 
@@ -305,11 +340,12 @@ export default async function DocumentPage({
     notFound();
   }
 
-  const [files, shares, versions, auditLog] = await Promise.all([
+  const [files, shares, versions, auditLog, familyMembers] = await Promise.all([
     listFiles(id),
     listSharesByDocument(id),
     listVersions(id),
     listDocumentAudit(id),
+    listMembers(doc.household_id),
   ]);
   // Фиксируем просмотр документа владельцем/членом семьи (best-effort).
   await logAudit(doc.household_id, "document.view", "document", doc.id);
@@ -331,6 +367,11 @@ export default async function DocumentPage({
   const offlineSigned = await signFiles(files, 600);
 
   const ownerName = member?.full_name ?? asset?.title ?? null;
+  const ownerSuggestion = suggestDocumentOwner(
+    doc.holder_name,
+    doc.member_id,
+    familyMembers
+  );
   const offlineFiles = files
     .filter((f) => offlineSigned[f.id])
     .map((f) => ({
@@ -433,6 +474,57 @@ export default async function DocumentPage({
           </p>
         )}
       </section>
+
+      {doc.member_id && familyMembers.length > 0 && (
+        <section className="card border-amber-200 bg-amber-50/40">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-amber-800">
+            {t.sortingTitle}
+          </h2>
+          <div className="mt-3 space-y-1 text-sm text-slate-700">
+            <p>
+              <span className="text-slate-500">{t.currentOwner}:</span>{" "}
+              <strong>{member?.full_name ?? "—"}</strong>
+            </p>
+            {doc.holder_name && (
+              <p>
+                <span className="text-slate-500">{t.detectedHolder}:</span>{" "}
+                <strong>{doc.holder_name}</strong>
+              </p>
+            )}
+          </div>
+
+          {ownerSuggestion && (
+            <div className="mt-4 rounded-lg border border-amber-200 bg-white p-3 text-sm">
+              <p>
+                {t.suggestion}: <strong>{ownerSuggestion.member_name}</strong>.
+              </p>
+              <p className="mt-1 text-xs text-slate-500">{t.suggestionReason}</p>
+            </div>
+          )}
+
+          <form action={moveDocumentToMember} className="mt-4 flex flex-wrap items-end gap-3">
+            <input type="hidden" name="document_id" value={doc.id} />
+            <div className="min-w-[14rem] flex-1">
+              <label className="label">{t.chooseOwner}</label>
+              <select
+                name="target_member_id"
+                defaultValue={ownerSuggestion?.member_id ?? doc.member_id}
+                className="input"
+              >
+                {familyMembers.map((familyMember) => (
+                  <option key={familyMember.id} value={familyMember.id}>
+                    {familyMember.full_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button className="btn" type="submit">
+              {t.move}
+            </button>
+          </form>
+          <p className="mt-3 text-xs text-slate-500">{t.sortingHint}</p>
+        </section>
+      )}
 
       <section className="card">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">

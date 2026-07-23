@@ -370,6 +370,7 @@ export default function DocumentForm({
           doc_number: data.doc_number ?? p.doc_number,
           issued_at: data.issued_at ?? p.issued_at,
           expires_at: data.expires_at ?? p.expires_at,
+          holder_name: data.holder_name ?? p.holder_name,
           tags:
             Array.isArray(data.tags) && data.tags.length
               ? data.tags.join(", ")

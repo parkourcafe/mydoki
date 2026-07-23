@@ -66,8 +66,13 @@ export async function POST(request: Request) {
 
   const t = M[await getLocale()];
 
-  // Распознавание работает только если пользователь сам включил его в настройках.
-  if (!userWantsAi(user)) {
+  const form = await request.formData();
+  const scopedMedicalShareConsent =
+    form.get("medical_share_consent") === "true";
+
+  // Обычно действует настройка профиля. Для медицинского пакета допустимо
+  // отдельное явное согласие непосредственно перед переносом файла.
+  if (!userWantsAi(user) && !scopedMedicalShareConsent) {
     return NextResponse.json({ error: t.notEnabled }, { status: 403 });
   }
 
@@ -75,7 +80,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: t.limit }, { status: 429 });
   }
 
-  const form = await request.formData();
   const file = form.get("file");
   if (!(file instanceof File) || file.size === 0) {
     return NextResponse.json({ error: t.noFile }, { status: 400 });

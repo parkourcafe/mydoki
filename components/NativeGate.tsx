@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 import { isNativeApp, initNativeShell, unlockWithBiometrics } from "@/lib/native";
 
 // Порог, после которого повторно запрашиваем биометрию при возврате из фона.
@@ -8,15 +9,14 @@ const RELOCK_AFTER_MS = 60_000;
 const REASON = "Unlock doki.help to see your documents";
 
 /**
- * Нативный замок хранилища (только внутри iOS/Android-обёртки). На вебе
- * рендерит null и ничего не делает. На нативе: инициализирует оболочку
- * (статус-бар/сплэш/push) и требует Face ID/Touch ID на холодном старте и
- * при возврате из фона дольше порога. Даёт нативную ценность (Apple 4.2) и
- * реально защищает документы, если телефон попал в чужие руки.
+ * Инициализирует нативную оболочку на iOS и Android. Биометрический замок
+ * пока включён только на iOS: RuStore v1 должен открывать форму входа даже
+ * на устройствах без доступной или настроенной биометрии.
  */
 export default function NativeGate() {
   const native = isNativeApp();
-  const [locked, setLocked] = useState(native);
+  const biometricGateEnabled = native && Capacitor.getPlatform() === "ios";
+  const [locked, setLocked] = useState(biometricGateEnabled);
   const [checking, setChecking] = useState(false);
   const backgroundedAt = useRef<number | null>(null);
 
@@ -31,6 +31,12 @@ export default function NativeGate() {
   useEffect(() => {
     if (!native) return;
     void initNativeShell();
+
+    if (!biometricGateEnabled) {
+      setLocked(false);
+      return;
+    }
+
     void tryUnlock();
 
     let remove: (() => void) | undefined;
@@ -56,9 +62,9 @@ export default function NativeGate() {
 
     return () => remove?.();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [native]);
+  }, [native, biometricGateEnabled]);
 
-  if (!native || !locked) return null;
+  if (!biometricGateEnabled || !locked) return null;
 
   return (
     <div
