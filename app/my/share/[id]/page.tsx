@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import CopyButton from "@/components/CopyButton";
 import SubmitButton from "@/components/SubmitButton";
 import { getLocale } from "@/lib/i18n";
 import { canPublishMedicalSummaries } from "@/lib/medicalSummary";
 import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
-import { getOrCreateHouseholdId } from "@/lib/queries";
+import { getOrCreateHouseholdId, getUser } from "@/lib/queries";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { approveMedicalSummary, publishMedicalPackage } from "../actions";
 
@@ -99,6 +99,8 @@ export default async function MedicalShareReviewPage({
 }) {
   const [locale, ruStore] = await Promise.all([getLocale(), isRuStoreRequest()]);
   if (ruStore) notFound();
+  const user = await getUser();
+  if (!user) redirect("/login");
   const t = M[locale];
   const { id } = await params;
   const supabase = await getSupabaseServer();

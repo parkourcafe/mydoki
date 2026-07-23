@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { getOrCreateHouseholdId } from "@/lib/queries";
+import { getOrCreateHouseholdId, getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
 import { categoryLabel, type DocCategory } from "@/lib/categories";
@@ -56,6 +57,8 @@ const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://doki.help").replace
 
 export default async function SharePackagePage() {
   const [locale, ruStore] = await Promise.all([getLocale(), isRuStoreRequest()]);
+  const user = await getUser();
+  if (!user) redirect("/login");
   const t = M[locale];
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
