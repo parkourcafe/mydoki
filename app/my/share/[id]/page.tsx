@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import CopyButton from "@/components/CopyButton";
 import SubmitButton from "@/components/SubmitButton";
+import { APP_URL } from "@/lib/appUrl";
 import { getLocale } from "@/lib/i18n";
 import { canPublishMedicalSummaries } from "@/lib/medicalSummary";
 import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
@@ -89,8 +90,6 @@ function lines(value: unknown): string {
     ? value.filter((item): item is string => typeof item === "string").join("\n")
     : "";
 }
-
-const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://doki.help").replace(/\/$/, "");
 
 export default async function MedicalShareReviewPage({
   params,
