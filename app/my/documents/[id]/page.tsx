@@ -15,8 +15,8 @@ import {
 import { categoryLabel } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
 import { logAudit, listDocumentAudit } from "@/lib/audit";
-import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
-import { isRuStoreRestrictedDocumentCategory } from "@/lib/rustore";
+import { isMedicalFeaturesDisabledRequest } from "@/lib/isRuStoreRequest";
+import { isMedicalDocumentCategory } from "@/lib/rustore";
 import type { AuditEntry, DocumentCheck } from "@/lib/types";
 import { suggestDocumentOwner } from "@/lib/documentChecks";
 import CopyButton from "@/components/CopyButton";
@@ -334,8 +334,8 @@ export default async function DocumentPage({
   const doc = await getDocument(id);
   if (!doc) notFound();
   if (
-    (await isRuStoreRequest()) &&
-    isRuStoreRestrictedDocumentCategory(doc.category)
+    (await isMedicalFeaturesDisabledRequest()) &&
+    isMedicalDocumentCategory(doc.category)
   ) {
     notFound();
   }

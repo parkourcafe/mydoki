@@ -16,8 +16,11 @@ import type { CapacitorConfig } from "@capacitor/cli";
 const PROD_URL = process.env.CAP_SERVER_URL || "https://www.doki.help";
 const APP_ID = process.env.CAP_APP_ID || "help.doki.app";
 const APP_NAME = process.env.CAP_APP_NAME || "doki.help";
-const USER_AGENT = process.env.CAP_USER_AGENT || "dokiNativeApp";
 const RUSTORE = process.env.CAP_RUSTORE === "true";
+const GOOGLE_PLAY = process.env.CAP_GOOGLE_PLAY === "true";
+const USER_AGENT =
+  process.env.CAP_USER_AGENT ||
+  (GOOGLE_PLAY ? "DokiHelpAndroid/GP/1.0.2" : "dokiNativeApp");
 
 function serverHost(url: string): string {
   try {

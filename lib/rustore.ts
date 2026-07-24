@@ -25,3 +25,7 @@ export function isRuStoreRestrictedPath(pathname: string): boolean {
 export function isRuStoreRestrictedDocumentCategory(category: string): boolean {
   return category === "medical";
 }
+
+export function isMedicalDocumentCategory(category: string): boolean {
+  return category === "medical";
+}

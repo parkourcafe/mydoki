@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getOrCreateHouseholdId, getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
-import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
+import { isMedicalFeaturesDisabledRequest } from "@/lib/isRuStoreRequest";
 import { categoryLabel, type DocCategory } from "@/lib/categories";
 import { APP_URL } from "@/lib/appUrl";
 import CopyButton from "@/components/CopyButton";
@@ -55,7 +55,10 @@ const M = {
 } as const;
 
 export default async function SharePackagePage() {
-  const [locale, ruStore] = await Promise.all([getLocale(), isRuStoreRequest()]);
+  const [locale, medicalDisabled] = await Promise.all([
+    getLocale(),
+    isMedicalFeaturesDisabledRequest(),
+  ]);
   const user = await getUser();
   if (!user) redirect("/login");
   const t = M[locale];
@@ -74,9 +77,9 @@ export default async function SharePackagePage() {
       .eq("household_id", householdId)
       .order("created_at"),
   ]);
-  const documents = ((docsData ?? []) as { id: string; title: string; category: DocCategory }[]).map(
-    (d) => ({ id: d.id, title: d.title, sub: categoryLabel(locale, d.category) })
-  );
+  const documents = ((docsData ?? []) as { id: string; title: string; category: DocCategory }[])
+    .filter((d) => !medicalDisabled || d.category !== "medical")
+    .map((d) => ({ id: d.id, title: d.title, sub: categoryLabel(locale, d.category) }));
   const owners = ((membersData ?? []) as { id: string; full_name: string }[]).map(
     (member) => ({ id: member.id, name: member.full_name })
   );
@@ -88,7 +91,7 @@ export default async function SharePackagePage() {
     .is("revoked_at", null)
     .gt("expires_at", new Date().toISOString())
     .order("created_at", { ascending: false });
-  const packages = (pkgData ?? []) as {
+  const packages = ((pkgData ?? []) as {
     id: string;
     title: string | null;
     token: string;
@@ -96,7 +99,7 @@ export default async function SharePackagePage() {
     package_type: "generic" | "medical_doctor";
     target_locale: string | null;
     published_at: string | null;
-  }[];
+  }[]).filter((pkg) => !medicalDisabled || pkg.package_type !== "medical_doctor");
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
@@ -111,7 +114,7 @@ export default async function SharePackagePage() {
           locale={locale}
           documents={documents}
           owners={owners}
-          medicalEnabled={!ruStore}
+          medicalEnabled={!medicalDisabled}
         />
       </div>
 

@@ -15,6 +15,7 @@ import {
 } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
 import { aiConfigured, userWantsAi } from "@/lib/classify";
+import { isMedicalFeaturesDisabledRequest } from "@/lib/isRuStoreRequest";
 import DocumentForm from "@/app/my/members/[id]/DocumentForm";
 
 const M = {
@@ -73,9 +74,10 @@ export default async function CategoryPage({
   const locale = await getLocale();
   const t = M[locale];
   const { key } = await params;
+  const medicalDisabled = await isMedicalFeaturesDisabledRequest();
 
   const valid = categories(locale).some((c) => c.key === key);
-  if (!valid) notFound();
+  if (!valid || (medicalDisabled && key === "medical")) notFound();
   const cat = key as DocCategory;
 
   const householdId = await getOrCreateHouseholdId();

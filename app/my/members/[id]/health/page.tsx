@@ -7,6 +7,7 @@ import {
 } from "@/lib/queries";
 import { recordKinds, recordKindLabel, type RecordKind } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import { isMedicalFeaturesDisabledRequest } from "@/lib/isRuStoreRequest";
 
 const M = {
   ru: {
@@ -66,6 +67,7 @@ export default async function HealthPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ kind?: string }>;
 }) {
+  if (await isMedicalFeaturesDisabledRequest()) notFound();
   const locale = await getLocale();
   const t = M[locale];
   const { id } = await params;

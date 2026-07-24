@@ -6,7 +6,8 @@ import { getOrCreateHouseholdId } from "@/lib/queries";
 import { hashSharePassword } from "@/lib/shareAccess";
 import { translateMedicalSummary } from "@/lib/medicalTranslation";
 import { canPublishMedicalSummaries } from "@/lib/medicalSummary";
-import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
+import { isMedicalFeaturesDisabledRequest } from "@/lib/isRuStoreRequest";
+import { isMedicalDocumentCategory } from "@/lib/rustore";
 
 /** Создать пакетную ссылку на несколько документов. Возвращает токен. */
 export async function createSharePackage(input: {
@@ -20,6 +21,20 @@ export async function createSharePackage(input: {
   if (!input.documentIds.length) return { error: "empty" };
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
+  if (await isMedicalFeaturesDisabledRequest()) {
+    const { data: selected } = await supabase
+      .from("documents")
+      .select("id, category")
+      .eq("household_id", householdId)
+      .in("id", input.documentIds);
+    if (
+      !selected ||
+      selected.length !== new Set(input.documentIds).size ||
+      selected.some((doc) => isMedicalDocumentCategory(String(doc.category)))
+    ) {
+      return { error: "not_available" };
+    }
+  }
 
   const days = Math.max(1, Math.min(90, Number(input.days) || 7));
   const expires_at = new Date(Date.now() + days * 86400_000).toISOString();
@@ -69,7 +84,7 @@ export async function createMedicalSharePackage(input: {
   maxViews?: number;
   translationConsent: boolean;
 }): Promise<{ reviewId: string } | { error: string }> {
-  if (await isRuStoreRequest()) return { error: "not_available" };
+  if (await isMedicalFeaturesDisabledRequest()) return { error: "not_available" };
   const ids = [...new Set(input.documentIds.filter(Boolean))];
   if (!ids.length) return { error: "empty" };
   if (ids.length > 20) return { error: "too_many_documents" };

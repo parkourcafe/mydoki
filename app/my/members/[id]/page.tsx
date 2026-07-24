@@ -16,7 +16,10 @@ import {
   type RecordKind,
 } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
-import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
+import {
+  isMedicalFeaturesDisabledRequest,
+  isRuStoreRequest,
+} from "@/lib/isRuStoreRequest";
 import { aiConfigured, userWantsAi } from "@/lib/classify";
 import { createRecord, deleteRecord } from "@/app/my/actions";
 import SubmitButton from "@/components/SubmitButton";
@@ -128,9 +131,10 @@ export default async function MemberPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ archived?: string }>;
 }) {
-  const [locale, ruStore] = await Promise.all([
+  const [locale, ruStore, medicalDisabled] = await Promise.all([
     getLocale(),
     isRuStoreRequest(),
+    isMedicalFeaturesDisabledRequest(),
   ]);
   const t = M[locale];
   const { id } = await params;
@@ -140,12 +144,12 @@ export default async function MemberPage({
 
   const [docs, records, storage, user] = await Promise.all([
     listDocumentsByMember(id, showArchived),
-    ruStore ? Promise.resolve([]) : listRecordsByMember(id),
+    medicalDisabled ? Promise.resolve([]) : listRecordsByMember(id),
     getStorageInfo(member.household_id),
     getUser(),
   ]);
   const aiEnabled = !ruStore && aiConfigured() && userWantsAi(user);
-  const visibleDocs = ruStore
+  const visibleDocs = medicalDisabled
     ? docs.filter((document) => document.category !== "medical")
     : docs;
 
@@ -167,7 +171,7 @@ export default async function MemberPage({
           {member.relation ? relationLabel(locale, member.relation) : t.none}
           {member.birth_date ? ` · ${member.birth_date}` : ""}
         </p>
-        {!ruStore && (
+        {!medicalDisabled && (
           <Link
             href={`/my/members/${member.id}/health`}
             className="mt-2 inline-block text-sm font-medium text-brand-600 hover:underline"
@@ -186,7 +190,7 @@ export default async function MemberPage({
         <div className="space-y-6">
           {categories(locale)
             .filter(
-              (c) => (!ruStore || c.key !== "medical") && byCategory.has(c.key)
+              (c) => (!medicalDisabled || c.key !== "medical") && byCategory.has(c.key)
             )
             .map((c) => (
             <section key={c.key}>
@@ -235,12 +239,12 @@ export default async function MemberPage({
           storageUsed={storage.used}
           storageLimit={storage.limit}
           aiEnabled={aiEnabled}
-          excludedCategories={ruStore ? ["medical"] : undefined}
+          excludedCategories={medicalDisabled ? ["medical"] : undefined}
         />
       </details>
 
       {/* Записи (медкарта/заметки без файла) */}
-      {!ruStore && (
+      {!medicalDisabled && (
         <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
           {t.records}
@@ -320,4 +324,3 @@ export default async function MemberPage({
     </div>
   );
 }
-

@@ -2,6 +2,8 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  isGooglePlayUserAgent,
+  isMedicalFeaturesDisabledUserAgent,
   isNativeUserAgent,
   isRuStoreUserAgent,
 } from "../../lib/nativeUserAgent.ts";
@@ -26,6 +28,22 @@ test("recognizes the dedicated RuStore Android wrapper", () => {
   assert.equal(isRuStoreUserAgent(ua), true);
   assert.equal(isNativeUserAgent(ua), true);
   assert.equal(isRuStoreUserAgent("DokiHelpIOS/1.0"), false);
+});
+
+test("recognizes Google Play wrapper and disables medical features only in Android store builds", () => {
+  const googlePlayUa =
+    "Mozilla/5.0 (Linux; Android 15) DokiHelpAndroid/GP/1.0.2";
+  assert.equal(isGooglePlayUserAgent(googlePlayUa), true);
+  assert.equal(isNativeUserAgent(googlePlayUa), true);
+  assert.equal(isMedicalFeaturesDisabledUserAgent(googlePlayUa), true);
+  assert.equal(
+    isMedicalFeaturesDisabledUserAgent(
+      "Mozilla/5.0 (Linux; Android 15) DokiHelpAndroid/RU/1.0"
+    ),
+    true
+  );
+  assert.equal(isMedicalFeaturesDisabledUserAgent("DokiHelpIOS/1.0"), false);
+  assert.equal(isGooglePlayUserAgent("dokiNativeApp"), false);
 });
 
 test("RuStore path gate excludes work and health modules", () => {

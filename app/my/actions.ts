@@ -19,8 +19,11 @@ import {
 import { parseOffsets } from "@/lib/reminders";
 import { hashSharePassword } from "@/lib/shareAccess";
 import { normalizeEmploymentType } from "@/lib/employment";
-import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
-import { isRuStoreRestrictedDocumentCategory } from "@/lib/rustore";
+import {
+  isMedicalFeaturesDisabledRequest,
+  isRuStoreRequest,
+} from "@/lib/isRuStoreRequest";
+import { isMedicalDocumentCategory } from "@/lib/rustore";
 
 export async function signOut() {
   const supabase = await getSupabaseServer();
@@ -201,8 +204,8 @@ export async function createDocumentMeta(input: {
   tags?: string[];
 }): Promise<{ id: string; householdId: string }> {
   if (
-    (await isRuStoreRequest()) &&
-    isRuStoreRestrictedDocumentCategory(input.category)
+    (await isMedicalFeaturesDisabledRequest()) &&
+    isMedicalDocumentCategory(input.category)
   ) {
     throw new Error("Медицинские документы не входят в версию для RuStore.");
   }
@@ -519,7 +522,7 @@ export async function deleteDocument(formData: FormData) {
 }
 
 export async function createRecord(formData: FormData) {
-  if (await isRuStoreRequest()) {
+  if (await isMedicalFeaturesDisabledRequest()) {
     throw new Error("Медицинские записи не входят в версию для RuStore.");
   }
   const supabase = await getSupabaseServer();
@@ -543,7 +546,7 @@ export async function createRecord(formData: FormData) {
 }
 
 export async function deleteRecord(formData: FormData) {
-  if (await isRuStoreRequest()) {
+  if (await isMedicalFeaturesDisabledRequest()) {
     throw new Error("Медицинские записи не входят в версию для RuStore.");
   }
   const supabase = await getSupabaseServer();
@@ -561,8 +564,8 @@ export async function createShare(formData: FormData) {
   const doc = await getDocument(document_id);
   if (!doc) throw new Error("Документ не найден");
   if (
-    (await isRuStoreRequest()) &&
-    isRuStoreRestrictedDocumentCategory(doc.category)
+    (await isMedicalFeaturesDisabledRequest()) &&
+    isMedicalDocumentCategory(doc.category)
   ) {
     throw new Error("Медицинские документы не входят в версию для RuStore.");
   }
@@ -602,8 +605,8 @@ export async function createDocumentShare(
   const doc = await getDocument(input.documentId);
   if (!doc) return { error: "not_found" };
   if (
-    (await isRuStoreRequest()) &&
-    isRuStoreRestrictedDocumentCategory(doc.category)
+    (await isMedicalFeaturesDisabledRequest()) &&
+    isMedicalDocumentCategory(doc.category)
   ) {
     return { error: "not_available_in_rustore" };
   }

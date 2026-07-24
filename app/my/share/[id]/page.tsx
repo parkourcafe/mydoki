@@ -5,7 +5,7 @@ import SubmitButton from "@/components/SubmitButton";
 import { APP_URL } from "@/lib/appUrl";
 import { getLocale } from "@/lib/i18n";
 import { canPublishMedicalSummaries } from "@/lib/medicalSummary";
-import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
+import { isMedicalFeaturesDisabledRequest } from "@/lib/isRuStoreRequest";
 import { getOrCreateHouseholdId, getUser } from "@/lib/queries";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { approveMedicalSummary, publishMedicalPackage } from "../actions";
@@ -96,8 +96,11 @@ export default async function MedicalShareReviewPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const [locale, ruStore] = await Promise.all([getLocale(), isRuStoreRequest()]);
-  if (ruStore) notFound();
+  const [locale, medicalDisabled] = await Promise.all([
+    getLocale(),
+    isMedicalFeaturesDisabledRequest(),
+  ]);
+  if (medicalDisabled) notFound();
   const user = await getUser();
   if (!user) redirect("/login");
   const t = M[locale];
