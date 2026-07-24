@@ -5,6 +5,7 @@ import { getOrCreateHouseholdId, getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
 import { categoryLabel, type DocCategory } from "@/lib/categories";
+import { APP_URL } from "@/lib/appUrl";
 import CopyButton from "@/components/CopyButton";
 import SubmitButton from "@/components/SubmitButton";
 import SharePackageManager from "./SharePackageManager";
@@ -52,8 +53,6 @@ const M = {
     medical: "Tibbiy paket", draft: "qoralama", review: "Tarjimani tekshirish", published: "e’lon qilingan",
   },
 } as const;
-
-const APP_URL = (process.env.NEXT_PUBLIC_APP_URL || "https://doki.help").replace(/\/$/, "");
 
 export default async function SharePackagePage() {
   const [locale, ruStore] = await Promise.all([getLocale(), isRuStoreRequest()]);
