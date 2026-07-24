@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "help.doki.twa",
+      "sha256_cert_fingerprints": [
+        "93:56:52:44:18:2C:F8:B5:A3:84:F9:F4:C5:8D:75:59:89:09:39:65:C4:DF:4B:FC:17:20:E5:82:0F:2C:C8:D2"
+      ]
+    }
+  }
+]
