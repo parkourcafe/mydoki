@@ -54,7 +54,7 @@ const M = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string; error?: string }>;
+  searchParams: Promise<{ next?: string; error?: string; mode?: string }>;
 }) {
   const sp = await searchParams;
   const next = safeNextPath(sp.next);
@@ -63,6 +63,7 @@ export default async function LoginPage({
   const locale = await getLocale();
   const t = M[locale];
   const oauthFailed = sp.error === "google";
+  const initialMode = sp.mode === "signup" ? "signup" : "login";
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-12">
@@ -89,7 +90,7 @@ export default async function LoginPage({
         )}
 
         <div className="card shadow-md">
-          <LoginForm locale={locale} next={next} />
+          <LoginForm locale={locale} next={next} initialMode={initialMode} />
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">

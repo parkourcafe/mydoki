@@ -3,18 +3,17 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "doki.help — семейный архив документов",
+    name: "doki.help — Brankas Dokumen Keluarga",
     short_name: "doki.help",
     description:
-      "Все важные документы вашей семьи — в одном защищённом месте.",
-    lang: "ru",
-    dir: "ltr",
-    start_url: "/my",
+      "Simpan dokumen penting keluarga, kerja, perjalanan, dan tenggat dalam satu tempat aman.",
+    start_url: "/id",
     scope: "/",
+    lang: "id",
+    dir: "ltr",
     display: "standalone",
-    orientation: "portrait",
-    categories: ["productivity", "utilities"],
-    prefer_related_applications: false,
+    orientation: "portrait-primary",
+    categories: ["productivity"],
     background_color: "#f9f5f0",
     theme_color: "#b85c38",
     icons: [
