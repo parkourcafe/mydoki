@@ -52,10 +52,14 @@ const M = {
   },
 } as const;
 
+function localizedPublicPath(locale: keyof typeof M, path: string) {
+  return locale === "en" ? path : `/${locale}${path}`;
+}
+
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string; error?: string }>;
+  searchParams: Promise<{ next?: string; error?: string; mode?: string }>;
 }) {
   const sp = await searchParams;
   const next = safeNextPath(sp.next);
@@ -64,6 +68,7 @@ export default async function LoginPage({
   const [locale, native] = await Promise.all([getLocale(), isNativeRequest()]);
   const t = M[locale];
   const oauthFailed = sp.error === "google";
+  const initialMode = sp.mode === "signup" ? "signup" : "login";
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-12">
@@ -90,16 +95,16 @@ export default async function LoginPage({
         )}
 
         <div className="card shadow-md">
-          <LoginForm locale={locale} next={next} showGoogle={!native} />
+          <LoginForm locale={locale} next={next} showGoogle={!native} initialMode={initialMode} />
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">
           {t.security}
         </p>
         <p className="mt-2 text-center text-xs text-slate-400">
-          <a href="/privacy" className="hover:underline">{t.privacy}</a>
+          <a href={localizedPublicPath(locale, "/privacy")} className="hover:underline">{t.privacy}</a>
           {" · "}
-          <a href="/terms" className="hover:underline">{t.terms}</a>
+          <a href={localizedPublicPath(locale, "/terms")} className="hover:underline">{t.terms}</a>
         </p>
       </div>
     </main>

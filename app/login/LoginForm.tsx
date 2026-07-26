@@ -263,13 +263,15 @@ export default function LoginForm({
   locale,
   next = "",
   showGoogle = true,
+  initialMode = "login",
 }: {
   locale: Locale;
   next?: string;
   showGoogle?: boolean;
+  initialMode?: "login" | "signup";
 }) {
   const t = M[locale];
-  const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "reset">(initialMode);
   const action = mode === "signup" ? signup : login;
   const [state, formAction, pending] = useActionState(action, initial);
   const [resend, setResend] = useState<{ busy?: boolean; msg?: string; err?: string }>({});
@@ -349,11 +351,11 @@ export default function LoginForm({
             />
             <span>
               {t.consentLead}{" "}
-              <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
+              <a href={locale === "en" ? "/terms" : `/${locale}/terms`} target="_blank" className="text-brand-600 hover:underline">
                 {t.consentTerms}
               </a>{" "}
               {t.consentAnd}{" "}
-              <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
+              <a href={locale === "en" ? "/privacy" : `/${locale}/privacy`} target="_blank" className="text-brand-600 hover:underline">
                 {t.consentPrivacy}
               </a>{" "}
               {t.consentTrail}

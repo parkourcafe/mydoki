@@ -185,20 +185,12 @@ body {
   .pkg-card, .pkg-card-back, .hero-kicker-dot { animation: none; }
 }
 
-/* ── Появление карточек при прокрутке ───────────────────────────────
-   Чистый CSS (scroll-driven animations). В браузерах без поддержки и при
-   prefers-reduced-motion карточки просто видны сразу. */
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal-up {
-      animation: revealUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 45%;
-    }
-    .reveal-d1 { animation-delay: 0.06s; }
-    .reveal-d2 { animation-delay: 0.12s; }
-    .reveal-d3 { animation-delay: 0.18s; }
-  }
+/* Карточки всегда видимы. Раньше scroll-driven reveal animation оставляла
+   часть секций невидимой в full-page screenshots / crawler renders, из-за чего
+   на лендинге появлялись большие пустые зоны перед запуском в стор. */
+.reveal-up {
+  opacity: 1;
+  transform: none;
 }
 @keyframes revealUp {
   from { opacity: 0; transform: translateY(26px); }

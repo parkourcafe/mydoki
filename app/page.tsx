@@ -688,6 +688,17 @@ function Check() {
   return <span className="font-semibold text-[#b85c38]">✓</span>;
 }
 
+function localizedPath(locale: Locale, path: string) {
+  if (!path.startsWith("/")) return path;
+  return locale === "en" ? path : `/${locale}${path}`;
+}
+
+function signupPath(locale: Locale, next?: string) {
+  const params = new URLSearchParams({ mode: "signup" });
+  if (next) params.set("next", next);
+  return `${localizedPath(locale, "/login")}?${params.toString()}`;
+}
+
 /** Структурированные данные для поисковиков (без выдуманных рейтингов/отзывов). */
 function buildJsonLd(t: Dict, locale: Locale, appUrl: string) {
   return {
@@ -773,10 +784,10 @@ export default async function Home({
             </div>
             <div className="flex items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale={locale} />
-              <Link href="/login" className="hidden rounded-3xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white md:block">
+              <Link href={localizedPath(locale, "/login")} className="hidden rounded-3xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white md:block">
                 {t.nav.login}
               </Link>
-              <Link href="/login" className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
+              <Link href={signupPath(locale)} className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
                 <span className="sm:hidden">{t.nav.startShort}</span>
                 <span className="hidden sm:inline">{t.nav.start}</span>
               </Link>
@@ -826,7 +837,7 @@ export default async function Home({
                 {cards.map((c) => (
                   <Link
                     key={c.href}
-                    href={c.href}
+                    href={localizedPath(locale, c.href)}
                     className="group rounded-2xl border border-[#e8e0d5] bg-[#fdfaf5] p-5 transition-colors hover:bg-white"
                   >
                     <div className="text-2xl">{c.emoji}</div>
@@ -890,10 +901,10 @@ export default async function Home({
               </p>
 
               <div className="hero-rise hero-rise-4 mb-6 flex max-w-lg flex-col gap-3 sm:flex-row">
-                <Link href="/login" className="hero-cta flex flex-1 items-center justify-center rounded-2xl px-8 py-[16px] text-[17px] font-semibold text-white active:scale-[0.985]">
+                <Link href={signupPath(locale)} className="hero-cta flex flex-1 items-center justify-center rounded-2xl px-8 py-[16px] text-[17px] font-semibold text-white active:scale-[0.985]">
                   {t.hero.cta1}
                 </Link>
-                <Link href="/demo" className="flex flex-1 items-center justify-center rounded-2xl border border-white/20 px-8 py-[16px] text-[17px] font-semibold text-[#f1e7d8] transition-colors hover:bg-white/[0.07]">
+                <Link href={localizedPath(locale, "/demo")} className="flex flex-1 items-center justify-center rounded-2xl border border-white/20 px-8 py-[16px] text-[17px] font-semibold text-[#f1e7d8] transition-colors hover:bg-white/[0.07]">
                   {t.hero.cta2}
                 </Link>
               </div>
@@ -903,7 +914,7 @@ export default async function Home({
                   {t.hero.roles.map((r) => (
                     <Link
                       key={r.href}
-                      href={r.href}
+                      href={localizedPath(locale, r.href)}
                       className="inline-flex items-center gap-1.5 rounded-full border border-white/12 bg-white/[0.05] px-3.5 py-1.5 text-[13px] font-medium text-[#dfd3c1] transition-colors hover:border-[#e8935f]/60 hover:text-white"
                     >
                       <span>{r.emoji}</span> {r.label}
@@ -953,7 +964,7 @@ export default async function Home({
                     ))}
                   </ul>
 
-                  <Link href="/login" className="accent-btn block w-full rounded-2xl py-3 text-center text-[15px] font-semibold text-white">
+                  <Link href={signupPath(locale)} className="accent-btn block w-full rounded-2xl py-3 text-center text-[15px] font-semibold text-white">
                     {t.hero.pkg.send}
                   </Link>
                 </div>
@@ -1033,7 +1044,7 @@ export default async function Home({
               <div className="mx-auto mt-6 max-w-3xl text-center">
                 <p className="text-[15px] font-medium text-[#2c2522]">✅ {C.result}</p>
                 <Link
-                  href="/for/employers"
+                  href={localizedPath(locale, "/for/employers")}
                   className="mt-5 inline-flex rounded-3xl bg-[#b85c38] px-8 py-3 text-base font-semibold text-white transition-all hover:bg-[#9f4a2e] active:scale-[0.985]"
                 >
                   {C.cta}
@@ -1083,7 +1094,7 @@ export default async function Home({
             {segmentLinks(locale).map((s) => (
               <Link
                 key={s.key}
-                href={`/for/${s.key}`}
+                href={localizedPath(locale, `/for/${s.key}`)}
                 className="inline-flex items-center rounded-2xl border border-[#e8e0d5] bg-white px-4 py-2 text-[15px] font-medium text-[#5c5248] transition-colors hover:border-[#b85c38] hover:text-[#b85c38]"
               >
                 {s.label}
@@ -1199,16 +1210,6 @@ export default async function Home({
               </div>
             </div>
           </div>
-          {/* Как приложение выглядит на телефоне — живой кадр продукта */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={MEDIA.phone}
-            alt={MEDIA_ALT[locale].phone}
-            loading="lazy"
-            width={896}
-            height={1200}
-            className="mx-auto h-auto w-64 rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl sm:w-72"
-          />
         </div>
       </section>
 
@@ -1221,7 +1222,7 @@ export default async function Home({
               <div className="mb-2 text-3xl">{s.emoji}</div>
               <div className="mb-1.5 text-xl font-semibold">{s.title}</div>
               <p className="mb-5 flex-1 text-[#5c5248]">{s.text}</p>
-              <Link href={s.href} className="inline-flex w-fit items-center rounded-2xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-semibold transition-colors hover:border-[#b85c38] hover:text-[#b85c38]">
+              <Link href={localizedPath(locale, s.href)} className="inline-flex w-fit items-center rounded-2xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-semibold transition-colors hover:border-[#b85c38] hover:text-[#b85c38]">
                 {s.cta} →
               </Link>
             </div>
@@ -1236,18 +1237,9 @@ export default async function Home({
             <div>
               <h2 className="heading-font mb-4 text-3xl tracking-tight sm:text-4xl">{t.employer.heading}</h2>
               <p className="mb-6 max-w-lg leading-relaxed text-[#cfc2b1]">{t.employer.text}</p>
-              <Link href="/login?next=/employer/vacancies/new" className="hero-cta inline-flex items-center rounded-2xl px-8 py-[15px] text-[16px] font-semibold text-white">
+              <Link href={localizedPath(locale, "/login?next=/employer/vacancies/new")} className="hero-cta inline-flex items-center rounded-2xl px-8 py-[15px] text-[16px] font-semibold text-white">
                 {t.employer.cta}
               </Link>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={MEDIA.employer}
-                alt={MEDIA_ALT[locale].employer}
-                loading="lazy"
-                width={1200}
-                height={896}
-                className="mt-8 hidden h-auto w-full max-w-md rounded-3xl border border-white/10 object-cover shadow-2xl lg:block"
-              />
             </div>
             <div className="rounded-3xl bg-[#fdfaf5] p-6 text-[#2c2522] shadow-2xl sm:p-7">
               <div className="mb-4 text-lg font-semibold">{t.employer.cardTitle}</div>
@@ -1306,7 +1298,7 @@ export default async function Home({
         </div>
         <div className="mt-8 text-center">
           <Link
-            href="/security"
+            href={localizedPath(locale, "/security")}
             className="text-sm font-medium text-[#b85c38] hover:underline"
           >
             {t.footer.security} →
@@ -1389,7 +1381,7 @@ export default async function Home({
         <div className="rounded-3xl bg-[#2c2522] px-8 py-10 text-center text-[#f9f5f0]">
           <h2 className="mb-4 text-3xl font-semibold tracking-tight">{t.cta.heading}</h2>
           <p className="mx-auto mb-7 max-w-sm text-[#d4c9b8]">{t.cta.sub}</p>
-          <Link href="/login" className="inline-flex items-center justify-center rounded-3xl bg-[#b85c38] px-10 py-4 text-lg font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]">
+          <Link href={signupPath(locale)} className="inline-flex items-center justify-center rounded-3xl bg-[#b85c38] px-10 py-4 text-lg font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]">
             {t.cta.button}
           </Link>
         </div>
@@ -1405,7 +1397,7 @@ export default async function Home({
             <ul className="space-y-1.5">
               {comparisonLinks(locale).map((cmp) => (
                 <li key={cmp.key}>
-                  <Link href={`/vs/${cmp.key}`} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
+                  <Link href={localizedPath(locale, `/vs/${cmp.key}`)} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
                     {cmp.label}
                   </Link>
                 </li>
@@ -1417,7 +1409,7 @@ export default async function Home({
             <ul className="space-y-1.5">
               {landingLinks(locale).map((l) => (
                 <li key={l.key}>
-                  <Link href={`/${l.key}`} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
+                  <Link href={localizedPath(locale, `/${l.key}`)} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
                     {l.label}
                   </Link>
                 </li>
@@ -1429,7 +1421,7 @@ export default async function Home({
             <ul className="space-y-1.5">
               {checklistLinks(locale).map((l) => (
                 <li key={l.key}>
-                  <Link href={`/checklists/${l.key}`} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
+                  <Link href={localizedPath(locale, `/checklists/${l.key}`)} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
                     {l.label}
                   </Link>
                 </li>
@@ -1442,7 +1434,7 @@ export default async function Home({
               <ul className="space-y-1.5">
                 {usecaseLinks().map((uc) => (
                   <li key={uc.key}>
-                    <Link href={`/keep/${uc.key}`} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
+                    <Link href={localizedPath(locale, `/keep/${uc.key}`)} className="text-sm text-[#8a7c6d] hover:text-[#b85c38]">
                       {uc.label}
                     </Link>
                   </li>
@@ -1461,19 +1453,19 @@ export default async function Home({
             <PseBadge />
           </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
-            <Link href="/pricing" className="hover:text-[#2c2522]">{t.footer.pricing}</Link>
-            <Link href="/about" className="hover:text-[#2c2522]">{t.footer.about}</Link>
-            <Link href="/security" className="hover:text-[#2c2522]">{t.footer.security}</Link>
+            <Link href={localizedPath(locale, "/pricing")} className="hover:text-[#2c2522]">{t.footer.pricing}</Link>
+            <Link href={localizedPath(locale, "/about")} className="hover:text-[#2c2522]">{t.footer.about}</Link>
+            <Link href={localizedPath(locale, "/security")} className="hover:text-[#2c2522]">{t.footer.security}</Link>
             {trustLinks(locale).map((tl) => (
-              <Link key={tl.key} href={`/${tl.key}`} className="hover:text-[#2c2522]">{tl.label}</Link>
+              <Link key={tl.key} href={localizedPath(locale, `/${tl.key}`)} className="hover:text-[#2c2522]">{tl.label}</Link>
             ))}
-            <Link href="/faq" className="hover:text-[#2c2522]">{t.footer.faq}</Link>
-            <Link href="/privacy" className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
-            <Link href="/terms" className="hover:text-[#2c2522]">{t.footer.terms}</Link>
+            <Link href={localizedPath(locale, "/faq")} className="hover:text-[#2c2522]">{t.footer.faq}</Link>
+            <Link href={localizedPath(locale, "/privacy")} className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
+            <Link href={localizedPath(locale, "/terms")} className="hover:text-[#2c2522]">{t.footer.terms}</Link>
             {supportWhatsappUrl() && (
               <a href={supportWhatsappUrl()!} target="_blank" rel="noopener noreferrer" className="hover:text-[#2c2522]">{t.footer.support}</a>
             )}
-            <Link href="/login" className="hover:text-[#2c2522]">{t.footer.login}</Link>
+            <Link href={localizedPath(locale, "/login")} className="hover:text-[#2c2522]">{t.footer.login}</Link>
           </div>
         </div>
       </footer>
