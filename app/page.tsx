@@ -274,111 +274,111 @@ const M: Record<Locale, Dict> = {
     footer: { copyright: "© 2026 doki.help — Family document vault", pricing: "Pricing", security: "Security", privacy: "Privacy", login: "Sign in" },
   },
   id: {
-    nav: { login: "Masuk", start: "Mulai gratis", startShort: "Mulai" },
+    nav: { login: "Masuk", start: "Buat checklist gratis", startShort: "Mulai" },
     hero: {
-      badge: "Brankas pribadi untuk dokumen seluruh keluarga Anda",
-      title: ["Brankas keluarga", "untuk semua dokumen —", "dan tenggat terkendali"],
+      badge: "Untuk HR, pemilik usaha, kandidat, dan karyawan",
+      title: ["Kumpulkan dokumen", "kandidat dan karyawan —", "lewat satu link"],
       subtitle:
-        "Paspor, hasil medis, visa, ijazah, sertifikat, dan dokumen perjalanan. Akses dari perangkat apa pun. Pengingat berjalan sendiri.",
-      cta1: "Buat brankas — gratis",
+        "Buat checklist dokumen, kirim tautan lewat WhatsApp, dan lihat siapa yang sudah lengkap — tanpa spreadsheet dan chat yang berantakan.",
+      cta1: "Buat checklist gratis",
       cta2: "Cara kerjanya",
-      demo: "Lihat demo — tanpa daftar →",
-      trust: ["Perangkat apa pun", "2 GB gratis", "Masuk dengan Google"],
+      demo: "Lihat demo alur dokumen →",
+      trust: ["Untuk perusahaan Bali", "Kandidat unggah lewat link", "Status dokumen terlihat"],
       security:
-        "Penyimpanan privat · Hanya keluarga Anda yang punya akses · Pengenalan AI opsional",
-      imgAlt: "Dokumen keluarga — tertata rapi dan mudah dijangkau",
+        "Akses terkontrol · Tautan aman · AI/OCR hanya bila diaktifkan",
+      imgAlt: "Dokumen kandidat dan karyawan tertata untuk proses hiring dan onboarding",
     },
     store: {
-      heading: "Apa saja yang bisa disimpan di brankas Anda",
-      sub: "Semua yang penting bagi keluarga Anda — di satu tempat yang aman.",
-      medTitle: "Hasil dan pemeriksaan medis",
-      medBadge: "Pengingat — gratis",
-      medCol1: ["Hasil pemeriksaan laboratorium", "Panel darah, CBC, hormon, urinalisis", "USG, MRI, CT, rontgen"],
-      medCol2: ["Laporan dokter", "Sertifikat vaksinasi", "Surat keterangan medis"],
-      medNote: "Pengingat tenggat — gratis.",
+      heading: "Dokumen kerja yang bisa dikumpulkan",
+      sub: "Semua berkas penting untuk melamar, onboarding, dan verifikasi internal — dalam satu alur yang rapi.",
+      medTitle: "Dokumen kandidat dan karyawan",
+      medBadge: "Checklist — gratis",
+      medCol1: ["KTP atau identitas yang diminta", "CV, ijazah, sertifikat pelatihan", "Portofolio atau referensi kerja"],
+      medCol2: ["Kontrak dan formulir onboarding", "Sertifikat kesehatan bila memang diperlukan", "Izin kerja atau dokumen visa bila relevan"],
+      medNote: "Gunakan hanya dokumen yang benar-benar diperlukan untuk tahap prosesnya.",
       cats: [
-        { icon: "📄", title: "Dokumen pribadi & imigrasi", items: ["Paspor & paspor internasional", "Visa dan berkas visa", "Dokumen kewarganegaraan", "NPWP & nomor jaminan sosial", "Ijazah dan sertifikat"] },
-        { icon: "✈️", title: "Perjalanan & wisata", items: ["Paket tur & voucher", "Tiket dan pemesanan", "Asuransi perjalanan", "Dokumen masuk/keluar", "Surat izin perjalanan anak"] },
-        { icon: "🚗", title: "Kendaraan & properti", items: ["Asuransi mobil", "BPKB & STNK kendaraan", "Sertifikat properti & kontrak"] },
-        { icon: "🧾", title: "Kuitansi & surat keterangan", items: ["Bukti pembayaran", "Surat keterangan kerja / studi", "Surat kuasa"] },
+        { icon: "📄", title: "Identitas & profil", items: ["KTP/paspor sesuai kebutuhan", "CV dan data kontak", "Foto atau dokumen profil kandidat"] },
+        { icon: "🎓", title: "Kualifikasi", items: ["Ijazah dan transkrip", "Sertifikat training", "Lisensi atau izin profesi"] },
+        { icon: "🏨", title: "Hospitality & operasional", items: ["Sertifikat hygiene atau keselamatan", "Referensi kerja", "Dokumen pengalaman kerja"] },
+        { icon: "🧾", title: "Onboarding", items: ["Kontrak", "Formulir internal", "Checklist dokumen yang masih kurang"] },
       ],
     },
     pain: {
-      heading: "Terdengar familier?",
+      heading: "Masalah yang sering terjadi",
       items: [
-        "Pagi ini sekolah minta surat — dan Anda tak bisa menemukannya.",
-        "Bandara minta asuransi, tapi entah di chat yang mana.",
-        "Dokter minta hasil lab lama — adanya di ponsel lama.",
-        "Visa atau asuransi hampir habis, dan Anda baru tahu di menit terakhir.",
+        "KTP, CV, sertifikat, dan kontrak masuk lewat chat berbeda.",
+        "HR harus mengingatkan kandidat satu per satu.",
+        "Pemilik tidak tahu siapa yang dokumennya sudah lengkap.",
+        "Dokumen sensitif tersimpan di WhatsApp tanpa kontrol akses.",
       ],
     },
     how: {
       heading: "Cara kerjanya",
-      sub: "Unggah dokumen — selebihnya aplikasi yang mengurus",
+      sub: "Perusahaan membuat checklist, kandidat mengunggah dokumen, status terlihat jelas.",
       steps: [
-        { n: "1", title: "Unggah foto atau pindaian", text: "Paspor, visa, hasil medis, dokumen perjalanan — dokumen apa pun." },
-        { n: "2", title: "Tambahkan tanggal berlaku", text: "Masukkan tanggal 'berlaku sampai' — aplikasi mengingat dan mengingatkan lebih awal." },
-        { n: "3", title: "Terima pengingat", text: "Anda akan diingatkan sebelum visa, pemeriksaan, atau asuransi kedaluwarsa." },
-        { n: "4", title: "Kendalikan akses", text: "Kirim tautan berbatas waktu ke dokter, bank, atau kerabat." },
+        { n: "1", title: "Buat checklist dokumen", text: "Pilih dokumen yang dibutuhkan untuk posisi, tahap lamaran, atau onboarding." },
+        { n: "2", title: "Kirim tautan ke kandidat", text: "Bagikan lewat WhatsApp, email, atau sistem internal — tanpa spreadsheet tambahan." },
+        { n: "3", title: "Kandidat mengunggah berkas", text: "Mereka melihat apa yang diminta dan apa yang masih kurang." },
+        { n: "4", title: "Pantau status kelengkapan", text: "HR atau owner melihat dokumen yang masuk, yang kurang, dan tautan aksesnya." },
       ],
     },
     security: {
-      heading: "Dokumen Anda aman",
-      sub: "Kami paham betapa pentingnya dokumen-dokumen ini — dan membangun semuanya agar Anda merasa tenang.",
+      heading: "Dokumen kandidat tetap aman",
+      sub: "Dokumen kerja berisi data sensitif. doki.help membantu mengumpulkannya dengan akses yang lebih jelas daripada chat biasa.",
       promise:
-        "Privasi dan keamanan adalah prioritas utama kami. Data Anda disimpan di cloud yang aman dan dikirim melalui HTTPS, dengan akses dibatasi aturan basis data yang ketat. Kami tidak pernah menjual atau memperdagangkan data Anda, dan tidak membagikannya untuk iklan.",
+        "Privasi dan keamanan adalah prioritas utama kami. Data dikirim melalui HTTPS, akses dibatasi aturan basis data, dan tautan dokumen bisa dikontrol. Kami tidak menjual data dan tidak membagikannya untuk iklan.",
       items: [
-        { icon: "👨‍👩‍👧", title: "Hanya keluarga Anda yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS) — pihak luar tidak bisa melihat dokumen Anda." },
-        { icon: "🛡️", title: "Masuk dan penyimpanan aman", text: "Berkas di penyimpanan privat, transfer lewat HTTPS. Masuk dua faktor dan email peringatan saat login dari perangkat baru." },
-        { icon: "🎚️", title: "Anda yang mengendalikan akses", text: "Bagikan dokumen lewat tautan berbatas waktu dan cabut kapan saja." },
-        { icon: "🙅", title: "Kami tidak menjual data Anda", text: "Kami tidak pernah membagikan atau menjual data Anda ke pihak ketiga." },
-        { icon: "📥", title: "Tersedia offline", text: "Simpan dokumen yang Anda butuhkan ke ponsel dan buka meski tanpa koneksi — saat bepergian atau roaming." },
+        { icon: "🏢", title: "Akses hanya untuk tim yang berwenang", text: "Dokumen tidak tercecer di chat pribadi; akses dikelola lewat akun dan tautan." },
+        { icon: "🛡️", title: "Masuk dan penyimpanan aman", text: "Berkas dikirim lewat HTTPS dan dilindungi aturan akses database." },
+        { icon: "🎚️", title: "Status dan akses bisa dikontrol", text: "Lihat dokumen lengkap/kurang dan batasi siapa yang bisa membuka berkas." },
+        { icon: "🙅", title: "Tidak untuk iklan", text: "Data kandidat dan karyawan tidak dijual dan tidak dibagikan untuk periklanan." },
+        { icon: "📥", title: "Lebih rapi daripada WhatsApp", text: "Checklist, unggahan, dan status dokumen berada di satu tempat." },
       ],
     },
     cta: {
-      heading: "Siap mengumpulkan semua dokumen keluarga Anda?",
-      sub: "Kurang dari 15 menit — dan tertata rapi untuk seterusnya.",
-      button: "Buat brankas — gratis",
+      heading: "Siap merapikan dokumen kandidat dan karyawan?",
+      sub: "Buat checklist pertama, kirim tautan, dan lihat status dokumen tanpa mengejar chat satu per satu.",
+      button: "Buat checklist gratis",
     },
     faq: {
       heading: "Pertanyaan umum",
       items: [
-        { q: "Apakah gratis?", a: "Ya. Saat ini gratis: penyimpanan 2 GB, pengingat tenggat, berbagi untuk keluarga, dan akses offline. Paket berbayar dengan ruang lebih besar akan hadir nanti — yang tersedia sekarang tetap ada." },
-        { q: "Siapa yang bisa melihat dokumen saya?", a: "Hanya Anda dan anggota keluarga yang Anda beri akses. Akses diisolasi pada tingkat basis data (RLS), dan berkas disimpan di penyimpanan privat." },
-        { q: "Bagaimana pengingat bekerja?", a: "Anda menetapkan tanggal berlaku dokumen (misalnya paspor atau asuransi), dan layanan mengirim pengingat ke email lebih awal." },
-        { q: "Bisakah saya membagikan dokumen?", a: "Ya — lewat tautan berbatas waktu yang bisa Anda cabut kapan saja." },
-        { q: "Di mana data saya disimpan?", a: "Di penyimpanan awan yang aman, dengan transfer lewat HTTPS. Kami tidak pernah menjual atau membagikan data Anda ke pihak ketiga." },
-        { q: "Bisakah saya mengekspor dokumen saya?", a: "Ya. Di kabinet ada ekspor — ambil berkas dan data Anda kapan saja, tanpa terkunci ke layanan." },
-        { q: "Apakah layanan memakai AI untuk membaca dokumen saya?", a: "Secara bawaan, tidak. Pengenalan AI nonaktif; Anda mengaktifkannya sendiri di pengaturan, dan baru saat itu gambar dokumen dikirim ke penyedia AI." },
-        { q: "Kenapa lebih baik dari Google Drive atau galeri ponsel?", a: "Cloud biasa hanya menyimpan berkas. doki menata dokumen per orang dan kategori, mengingatkan tenggat, dan memungkinkan berbagi satu dokumen lewat tautan berbatas waktu — bukan seluruh folder." },
+        { q: "Apakah ini job board?", a: "Bukan. doki.help bukan marketplace lowongan. Kami membantu perusahaan mengumpulkan dan mengecek dokumen kandidat/karyawan setelah ada proses rekrutmen atau onboarding." },
+        { q: "Siapa yang menggunakan doki.help?", a: "HR, owner, admin, kandidat, dan karyawan baru yang perlu mengirim atau memeriksa paket dokumen kerja." },
+        { q: "Apakah kandidat harus membuat akun?", a: "Alur kandidat bisa lewat tautan dokumen. Untuk mengelola dokumen pribadi atau riwayat berkas, pengguna dapat masuk ke akun sendiri." },
+        { q: "Dokumen apa yang boleh diminta?", a: "Hanya dokumen yang relevan dengan tahap proses: misalnya CV/sertifikat pada tahap lamaran, lalu kontrak atau dokumen onboarding setelah kandidat diterima." },
+        { q: "Bagaimana dengan KTP dan dokumen sensitif?", a: "Minta hanya bila benar-benar diperlukan, jelaskan tujuannya, dan batasi akses ke orang yang berwenang." },
+        { q: "Bisakah status dokumen dipantau?", a: "Ya. Checklist membantu melihat dokumen yang sudah masuk, belum lengkap, atau perlu diperbarui." },
+        { q: "Apakah AI/OCR otomatis membaca dokumen?", a: "Tidak sebagai janji default. Pengenalan AI/OCR hanya digunakan bila fitur tersebut diaktifkan dan sesuai kebijakan yang berlaku." },
+        { q: "Kenapa lebih baik dari WhatsApp atau spreadsheet?", a: "Karena checklist, unggahan, status, dan tautan akses ada di satu tempat — bukan tercecer di banyak chat dan file." },
       ],
     },
     forWhom: {
       heading: "Untuk siapa",
       items: [
-        "Keluarga yang ingin semua dokumen penting di satu tempat",
-        "Orang tua — menyimpan dan tidak kehilangan dokumen anak",
-        "Sering bepergian: paspor, visa, asuransi selalu siap",
-        "Siapa pun yang takut melewatkan tenggat — visa, asuransi, perpanjangan paspor",
-        "Yang berbagi dokumen dengan dokter atau pengacara lewat tautan aman",
+        "Pemilik restoran, villa, spa, sekolah, klinik, dan agensi di Bali",
+        "HR atau admin yang mengumpulkan dokumen kandidat lewat WhatsApp",
+        "Kandidat yang perlu mengirim paket dokumen lengkap ke perusahaan",
+        "Karyawan baru yang harus melengkapi berkas onboarding",
+        "Tim yang butuh status jelas: lengkap, kurang, atau perlu diperbarui",
       ],
     },
     diff: {
-      heading: "Kenapa lebih baik dari cloud biasa",
-      intro: "doki.help bukan sekadar drive berkas — dibuat khusus untuk dokumen:",
+      heading: "Kenapa lebih baik dari WhatsApp atau cloud biasa",
+      intro: "doki.help dibuat untuk alur dokumen kerja — bukan hanya menyimpan file:",
       items: [
-        { t: "Mengingatkan tenggat", d: "Tetapkan tanggal dan pengingat datang lebih awal. Cloud biasa tidak bisa." },
-        { t: "Tertata per orang dan kategori", d: "Dokumen disusun per anggota keluarga dan jenis, bukan ditumpuk di folder." },
-        { t: "Berbagi aman per dokumen", d: "Tautan sementara ke satu berkas yang bisa Anda cabut." },
-        { t: "Berfungsi offline", d: "Buka dokumen yang Anda butuhkan tanpa internet — saat bepergian atau roaming." },
+        { t: "Checklist per posisi", d: "Tentukan dokumen yang dibutuhkan untuk setiap peran atau tahap onboarding." },
+        { t: "Status kelengkapan", d: "Lihat siapa yang sudah lengkap dan siapa yang masih kurang." },
+        { t: "Link untuk kandidat", d: "Kandidat mengunggah lewat tautan; HR tidak perlu mencari file di chat." },
+        { t: "Akses lebih terkontrol", d: "Dokumen sensitif tidak tersebar di folder umum atau percakapan pribadi." },
       ],
     },
     operator: {
       heading: "Siapa di balik layanan",
-      line: "Operator: pemilik layanan doki.help, NPWP 780728592634.",
+      line: "Operator: pemilik layanan doki.help, nomor pajak luar negeri 780728592634.",
       contactLabel: "Dukungan:",
     },
-    footer: { copyright: "© 2026 doki.help — Brankas dokumen keluarga", pricing: "Harga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
+    footer: { copyright: "© 2026 doki.help — Dokumen kandidat dan karyawan", pricing: "Harga", security: "Keamanan", privacy: "Privasi", login: "Masuk" },
   },
   uz: {
     nav: { login: "Kirish", start: "Bepul boshlash", startShort: "Boshlash" },
@@ -686,17 +686,33 @@ export default async function Home({
             ))}
           </ul>
           <div className="mt-6 flex flex-wrap gap-2">
-            {segmentLinks(locale).map((s) => (
-              <Link
-                key={s.key}
-                href={localizedPath(locale, `/for/${s.key}`)}
-                className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
-              >
-                <span>{s.emoji}</span> {s.label}
-              </Link>
-            ))}
+            {locale === "id" ? (
+              [
+                { href: "/for/employers", emoji: "🏢", label: "Untuk perusahaan" },
+                { href: "/for/job-seekers", emoji: "🧑‍💼", label: "Untuk kandidat" },
+                { href: "/hiring", emoji: "📋", label: "Alur hiring & onboarding" },
+              ].map((s) => (
+                <Link
+                  key={s.href}
+                  href={localizedPath(locale, s.href)}
+                  className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+                >
+                  <span>{s.emoji}</span> {s.label}
+                </Link>
+              ))
+            ) : (
+              segmentLinks(locale).map((s) => (
+                <Link
+                  key={s.key}
+                  href={localizedPath(locale, `/for/${s.key}`)}
+                  className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
+                >
+                  <span>{s.emoji}</span> {s.label}
+                </Link>
+              ))
+            )}
           </div>
-          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+          {locale !== "id" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
             <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{comparisonsHeading(locale)}</div>
             <div className="flex flex-wrap gap-2">
               {comparisonLinks(locale).map((cmp) => (
@@ -709,8 +725,8 @@ export default async function Home({
                 </Link>
               ))}
             </div>
-          </div>
-          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+          </div>}
+          {locale !== "id" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
             <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].tools}</div>
             <div className="flex flex-wrap gap-2">
               {landingLinks(locale).map((l) => (
@@ -723,8 +739,8 @@ export default async function Home({
                 </Link>
               ))}
             </div>
-          </div>
-          <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+          </div>}
+          {locale !== "id" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
             <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].checklists}</div>
             <div className="flex flex-wrap gap-2">
               {checklistLinks(locale).map((l) => (
@@ -737,8 +753,8 @@ export default async function Home({
                 </Link>
               ))}
             </div>
-          </div>
-          {guideLinks(locale).length > 0 && (
+          </div>}
+          {locale !== "id" && guideLinks(locale).length > 0 && (
             <div className="mt-5 border-t border-[#e8e0d5] pt-5">
               <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].guides}</div>
               <div className="flex flex-wrap gap-2">

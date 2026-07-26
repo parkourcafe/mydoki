@@ -5,7 +5,7 @@ import { getLocale } from "@/lib/i18n";
 const META_DESC = {
   ru: "Условия использования Doki.help — beta-сейфа семейных документов с напоминаниями и безопасным обменом. Не юридическая консультация.",
   en: "The terms for using Doki.help — a beta family document vault with reminders and secure sharing. Not legal advice.",
-  id: "Ketentuan penggunaan Doki.help — brankas dokumen keluarga (beta) dengan pengingat dan berbagi aman. Bukan nasihat hukum.",
+  id: "Ketentuan penggunaan Doki.help — alur dokumen kandidat dan karyawan (beta) dengan checklist dan berbagi aman. Bukan nasihat hukum.",
   uz: "Doki.help’dan foydalanish shartlari — eslatmalar va xavfsiz ulashishli oilaviy hujjatlar seyfi (beta). Yuridik maslahat emas.",
 } as const;
 
@@ -77,11 +77,11 @@ const M = {
     title: "Ketentuan Penggunaan",
     lastUpdated: "Tanggal pembaruan terakhir: 23.06.2026.",
     h1: "1. Tentang layanan",
-    p1: "doki.help adalah layanan untuk menyimpan dan menata dokumen keluarga: identitas, data medis, properti, perjalanan, dan lainnya, dengan pengingat tenggat waktu dan pengiriman aman melalui tautan. Layanan ini sedang dalam pengembangan aktif (beta) dan disediakan «sebagaimana adanya».",
+    p1: "doki.help adalah layanan untuk mengumpulkan, menyimpan, dan menata dokumen kandidat dan karyawan: identitas, CV, sertifikat, kontrak, formulir onboarding, dan berkas lain yang relevan dengan proses kerja. Layanan ini sedang dalam pengembangan aktif (beta) dan disediakan «sebagaimana adanya».",
     h2: "2. Pendaftaran dan akses",
     p2: "Untuk menggunakan layanan diperlukan akun (email atau masuk melalui Google). Anda bertanggung jawab menjaga keamanan akses ke akun Anda. Kami menyarankan untuk mengaktifkan autentikasi dua faktor.",
     h3: "3. Konten Anda",
-    p3: "Anda mengunggah dokumen dan data atas tanggung jawab Anda sendiri dan menyatakan bahwa Anda berhak menyimpan dan memprosesnya (termasuk data anggota keluarga — dengan sepengetahuan mereka, dan untuk anak-anak — sebagai wali yang sah). Dilarang mengunggah materi ilegal dan data orang lain tanpa dasar yang sah.",
+    p3: "Anda mengunggah dokumen dan data atas tanggung jawab Anda sendiri dan menyatakan bahwa Anda berhak menyimpan, mengirim, atau memprosesnya. Perusahaan wajib meminta hanya dokumen yang relevan dengan proses lamaran, onboarding, atau hubungan kerja, dan membatasi akses kepada pihak yang berwenang. Dilarang mengunggah materi ilegal dan data orang lain tanpa dasar yang sah.",
     h4: "4. Asisten AI dan pengacara AI",
     p4: "Jawaban dari fitur AI, termasuk pengacara AI, bersifat referensi dan informasi saja serta bukan merupakan nasihat hukum, medis, atau nasihat profesional lainnya. Untuk hal-hal penting, hubungi spesialis yang berkualifikasi. Kami tidak menjamin keakuratan dan kelengkapan jawaban AI.",
     h5: "5. Cadangan data",

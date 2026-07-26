@@ -28,12 +28,12 @@ const M = {
     oauthError: "Couldn't sign in with Google. Please try again.",
   },
   id: {
-    badge: "Brankas keluarga",
-    headingLead: "Semua dokumen keluarga Anda —",
-    headingAccent: "di satu tempat yang aman",
+    badge: "Dokumen kerja",
+    headingLead: "Dokumen kandidat dan karyawan —",
+    headingAccent: "lengkap lewat satu link",
     subtitle:
-      "Paspor, ijazah, rekam medis, dan properti — selalu di tangan dan terlindungi.",
-    security: "Privat secara bawaan · RLS · penyimpanan privat",
+      "Masuk untuk membuat checklist, mengirim tautan, atau melengkapi paket dokumen kerja.",
+    security: "Akses terkontrol · tautan aman · status dokumen jelas",
     privacy: "Privasi",
     terms: "Ketentuan",
     oauthError: "Gagal masuk dengan Google. Silakan coba lagi.",
