@@ -5,7 +5,7 @@ import { getLocale } from "@/lib/i18n";
 const META_DESC = {
   ru: "Как Doki.help обрабатывает документы и данные вашей семьи: хранение, доступ, обмен, ИИ и ваши права.",
   en: "How Doki.help handles your family's documents and data: storage, access, sharing, AI and your rights.",
-  id: "Bagaimana Doki.help menangani dokumen dan data keluarga Anda: penyimpanan, akses, berbagi, AI, dan hak Anda.",
+  id: "Bagaimana Doki.help menangani dokumen kandidat dan karyawan: penyimpanan, akses, berbagi, AI, dan hak Anda.",
   uz: "Doki.help oila hujjatlari va maʼlumotlarini qanday boshqaradi: saqlash, kirish, ulashish, AI va huquqlaringiz.",
 } as const;
 
@@ -118,7 +118,7 @@ const M = {
     intro: "Layanan “doki.help” (selanjutnya disebut — Layanan). Terakhir diperbarui: 23.06.2026.",
     h1: "1. Operator",
     operatorPre:
-      "Operator yang memproses data pribadi adalah pemilik Layanan doki.help, NPWP 780728592634. Kontak untuk pertanyaan terkait data: ",
+      "Operator yang memproses data pribadi adalah pemilik Layanan doki.help, nomor pajak luar negeri 780728592634. Kontak untuk pertanyaan terkait data: ",
     operatorPost: ".",
     h2: "2. Data apa yang kami proses",
     data1: "— Data akun: alamat email Anda, dan saat masuk melalui Google — nama dan email dari profil Google Anda.",
@@ -143,7 +143,7 @@ const M = {
       "Kami tidak menjual data Anda. Kami membagikannya hanya: (a) kepada penyedia infrastruktur (hosting, basis data, pengiriman email/SMS) sebatas yang diperlukan untuk pengoperasian Layanan; (b) kepada penyedia AI — saat fitur terkait digunakan; (c) atas permintaan sah dari otoritas yang berwenang. Anda sendiri yang memutuskan kepada siapa dan kapan Anda membuka dokumen melalui tautan.",
     h7: "7. Perlindungan",
     protection:
-      "Data diisolasi per keluarga pada tingkat basis data (Row Level Security), berkas disimpan dalam penyimpanan pribadi, dan pengirimannya melalui koneksi yang aman. Tersedia autentikasi dua faktor dan pemberitahuan masuk dari perangkat baru.",
+      "Data diisolasi per akun dan ruang kerja pada tingkat basis data (Row Level Security), berkas disimpan dalam penyimpanan pribadi, dan pengirimannya melalui koneksi yang aman. Akses dokumen dibatasi sesuai peran dan tautan yang diberikan.",
     h8: "8. Masa simpan dan penghapusan",
     retentionPre:
       "Kami menyimpan data selama akun Anda aktif. Anda dapat meminta penghapusan akun dan data dengan menulis ke ",

@@ -3,17 +3,17 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/",
-    name: "doki.help — Brankas Dokumen Keluarga",
+    name: "doki.help — Dokumen Kandidat & Karyawan",
     short_name: "doki.help",
     description:
-      "Simpan dokumen penting keluarga, kerja, perjalanan, dan tenggat dalam satu tempat aman.",
+      "Kumpulkan dokumen kandidat dan karyawan lewat satu link, pantau kelengkapan, dan kurangi chat berantakan.",
     start_url: "/id",
     scope: "/",
     lang: "id",
     dir: "ltr",
     display: "standalone",
     orientation: "portrait-primary",
-    categories: ["productivity"],
+    categories: ["productivity", "business"],
     background_color: "#f9f5f0",
     theme_color: "#b85c38",
     icons: [
