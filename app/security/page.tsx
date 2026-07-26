@@ -48,9 +48,9 @@ const M = {
   id: {
     title: "Keamanan",
     subtitle:
-      "Kami tahu Anda mempercayakan paspor, rekam medis, dan dokumen anak Anda kepada kami. Begini cara kami melindunginya — tanpa basa-basi.",
+      "Dokumen kandidat dan karyawan berisi data sensitif. Begini cara doki.help membantu mengumpulkannya dengan akses yang lebih terkontrol daripada chat biasa.",
     items: [
-      { icon: "👨‍👩‍👧", title: "Hanya keluarga Anda yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS): orang luar dan keluarga lain tidak bisa melihat dokumen Anda — ini bukan setelan, tapi aturan di dalam basis data itu sendiri." },
+      { icon: "🏢", title: "Hanya pihak berwenang yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS) dan dibatasi sesuai akun, ruang kerja, peran, atau tautan yang diberikan." },
       { icon: "🗄️", title: "Penyimpanan berkas privat", text: "Berkas berada di bucket privat dan hanya disajikan lewat tautan bertanda tangan berumur pendek (sekitar 2 menit). Berkas tidak punya URL publik." },
       { icon: "🔗", title: "Berbagi per dokumen", text: "Bagikan satu dokumen, bukan seluruh arsip — lewat tautan sementara yang bisa dicabut kapan saja, dibatasi jumlah tampilan, dan diberi tanda air." },
       { icon: "🛡️", title: "Masuk dua faktor dan peringatan", text: "Anda bisa mengaktifkan faktor kedua (TOTP). Login dari perangkat baru memicu email, jadi Anda langsung tahu akses asing." },
@@ -60,10 +60,10 @@ const M = {
       { icon: "📤", title: "Ekspor dan penghapusan", text: "Anda bisa mengekspor dokumen dari kabinet kapan saja — tanpa terkunci. Untuk menghapus akun dan data, hubungi dukungan." },
     ],
     betaTitle: "Jujur soal beta",
-    beta: "Layanan ini dalam pengembangan aktif dan disediakan “apa adanya.” Bagus untuk akses harian ke dokumen Anda, tetapi tidak menggantikan cadangan Anda sendiri atas dokumen asli yang benar-benar penting.",
+    beta: "Layanan ini dalam pengembangan aktif dan disediakan “apa adanya.” Gunakan untuk merapikan alur dokumen kerja, tetapi tetap simpan cadangan dokumen asli yang benar-benar penting.",
     privacy: "Kebijakan Privasi",
     terms: "Ketentuan Layanan",
-    cta: "Buat brankas gratis",
+    cta: "Buat checklist gratis",
     back: "← Beranda",
   },
   uz: {
