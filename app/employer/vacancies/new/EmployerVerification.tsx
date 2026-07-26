@@ -21,6 +21,7 @@ const M = {
     resend: "Resend code",
     resendIn: (s: number) => `Resend in ${s}s`,
     errSend: "Couldn't send the code. Please try again.",
+    errEmailConfig: "Email delivery is temporarily unavailable. Please contact support.",
     errCode: "Enter the 6-digit code.",
     errWrong: "Wrong code. Please try again.",
     errExpired: "The code expired. Request a new one.",
@@ -38,6 +39,7 @@ const M = {
     resend: "Kirim ulang",
     resendIn: (s: number) => `Kirim ulang ${s}d`,
     errSend: "Gagal mengirim kode. Coba lagi.",
+    errEmailConfig: "Pengiriman email sedang tidak tersedia. Hubungi dukungan.",
     errCode: "Masukkan kode 6 digit.",
     errWrong: "Kode salah. Coba lagi.",
     errExpired: "Kode kedaluwarsa. Minta yang baru.",
@@ -55,6 +57,7 @@ const M = {
     resend: "Отправить снова",
     resendIn: (s: number) => `Повтор через ${s} с`,
     errSend: "Не удалось отправить код. Попробуйте ещё раз.",
+    errEmailConfig: "Отправка email временно недоступна. Обратитесь в поддержку.",
     errCode: "Введите 6-значный код.",
     errWrong: "Неверный код. Попробуйте ещё раз.",
     errExpired: "Код истёк. Запросите новый.",
@@ -72,6 +75,7 @@ const M = {
     resend: "Qayta yuborish",
     resendIn: (s: number) => `${s} s dan keyin`,
     errSend: "Kodni yuborib bo‘lmadi. Qayta urining.",
+    errEmailConfig: "Email yuborish vaqtincha ishlamayapti. Qo‘llab-quvvatlashga murojaat qiling.",
     errCode: "6 xonali kodni kiriting.",
     errWrong: "Kod noto‘g‘ri. Qayta urining.",
     errExpired: "Kod muddati tugadi. Yangisini so‘rang.",
@@ -103,7 +107,7 @@ export default function EmployerVerification({ locale }: { locale: Locale }) {
       setSent(true);
       setCooldown(60);
     } else {
-      setError(t.errSend);
+      setError(r.error === "not_configured" ? t.errEmailConfig : t.errSend);
     }
   }
 

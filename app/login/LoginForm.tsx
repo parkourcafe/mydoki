@@ -11,6 +11,7 @@ const M = {
   ru: {
     googleSignIn: "Войти через Google",
     enterEmail: "Введите email.",
+    resetFailed: "Не удалось отправить ссылку. Проверьте email и попробуйте ещё раз.",
     resetSent:
       "Если такой email есть — мы отправили ссылку для сброса пароля. Проверьте почту (и папку «Спам»).",
     backToLogin: "← Вернуться ко входу",
@@ -42,6 +43,7 @@ const M = {
   en: {
     googleSignIn: "Sign in with Google",
     enterEmail: "Enter your email.",
+    resetFailed: "We couldn't send the reset link. Check the email and try again.",
     resetSent:
       "If that email exists, we've sent a password reset link. Check your inbox (and the “Spam” folder).",
     backToLogin: "← Back to sign in",
@@ -74,6 +76,7 @@ const M = {
   id: {
     googleSignIn: "Masuk dengan Google",
     enterEmail: "Masukkan email Anda.",
+    resetFailed: "Tautan pengaturan ulang tidak dapat dikirim. Periksa email lalu coba lagi.",
     resetSent:
       "Jika email tersebut ada, kami telah mengirimkan tautan untuk mengatur ulang kata sandi. Periksa kotak masuk Anda (dan folder “Spam”).",
     backToLogin: "← Kembali ke halaman masuk",
@@ -106,6 +109,7 @@ const M = {
   uz: {
     googleSignIn: "Google orqali kirish",
     enterEmail: "Emailingizni kiriting.",
+    resetFailed: "Tiklash havolasini yuborib bo‘lmadi. Emailni tekshirib, qayta urinib ko‘ring.",
     resetSent:
       "Agar bunday email mavjud boʻlsa, biz parolni tiklash havolasini yubordik. Pochtangizni (va “Spam” jildini) tekshiring.",
     backToLogin: "← Kirish sahifasiga qaytish",
@@ -192,11 +196,12 @@ function ResetRequest({
     }
     setBusy(true);
     const supabase = getSupabaseBrowser();
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/$/, "");
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${appUrl}/reset-password`,
     });
     setBusy(false);
-    if (error) setErr(error.message);
+    if (error) setErr(t.resetFailed);
     else setSent(true);
   }
 
@@ -255,12 +260,16 @@ function ResetRequest({
 export default function LoginForm({
   locale,
   next = "",
+  showGoogle = true,
+  initialMode = "login",
 }: {
   locale: Locale;
   next?: string;
+  showGoogle?: boolean;
+  initialMode?: "login" | "signup";
 }) {
   const t = M[locale];
-  const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "reset">(initialMode);
   const action = mode === "signup" ? signup : login;
   const [state, formAction, pending] = useActionState(action, initial);
   // Email контролируем, чтобы повторно отправить письмо подтверждения на тот же
@@ -282,7 +291,7 @@ export default function LoginForm({
 
   return (
     <div className="space-y-4">
-      <GoogleButton locale={locale} next={next} />
+      {showGoogle && <GoogleButton locale={locale} next={next} />}
 
       <div className="flex items-center gap-3 text-xs text-slate-400">
         <span className="h-px flex-1 bg-slate-200" /> {t.or}{" "}
@@ -340,11 +349,11 @@ export default function LoginForm({
               <input type="checkbox" required className="mt-0.5" />
               <span>
                 {t.consentLead}{" "}
-                <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
+                <a href={locale === "en" ? "/terms" : `/${locale}/terms`} target="_blank" className="text-brand-600 hover:underline">
                   {t.consentTerms}
                 </a>{" "}
                 {t.consentAnd}{" "}
-                <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
+                <a href={locale === "en" ? "/privacy" : `/${locale}/privacy`} target="_blank" className="text-brand-600 hover:underline">
                   {t.consentPrivacy}
                 </a>{" "}
                 {t.consentTrail}

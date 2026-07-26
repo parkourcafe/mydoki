@@ -4,16 +4,20 @@ import { appBaseUrl } from "./career";
 
 type EmailLocale = "en" | "id";
 
-/** Базовая отправка через Resend. Ошибка не бросается наружу. */
-async function resendSend(to: string, subject: string, html: string): Promise<void> {
+/** Базовая отправка через Resend. Возвращает причину сбоя вызывающему коду. */
+async function resendSend(
+  to: string,
+  subject: string,
+  html: string
+): Promise<{ ok: true } | { ok: false; reason: "not_configured" | "provider" }> {
   const key = process.env.RESEND_API_KEY;
   const from =
     process.env.NOTIFY_FROM_EMAIL ||
     process.env.ALERT_EMAIL_FROM ||
     "Doki <noreply@doki.help>";
   if (!key) {
-    console.warn(`[email] RESEND_API_KEY not set — skip "${subject}" to ${to} (dev).`);
-    return;
+    console.error(`[email] RESEND_API_KEY not set — cannot send "${subject}" to ${to}.`);
+    return { ok: false, reason: "not_configured" };
   }
   try {
     const res = await fetch("https://api.resend.com/emails", {
@@ -21,9 +25,14 @@ async function resendSend(to: string, subject: string, html: string): Promise<vo
       headers: { Authorization: `Bearer ${key}`, "content-type": "application/json" },
       body: JSON.stringify({ from, to, subject, html }),
     });
-    if (!res.ok) console.error("[email] Resend responded", res.status, await res.text());
+    if (!res.ok) {
+      console.error("[email] Resend responded", res.status, await res.text());
+      return { ok: false, reason: "provider" };
+    }
+    return { ok: true };
   } catch (e) {
     console.error("[email] send failed:", e);
+    return { ok: false, reason: "provider" };
   }
 }
 
@@ -36,10 +45,10 @@ export async function sendVerificationCode(
   target: string,
   code: string,
   locale?: Locale
-): Promise<void> {
+): Promise<{ ok: boolean; reason?: "not_configured" | "provider" }> {
   if (channel === "whatsapp") {
     console.warn(`[verify] WhatsApp channel not configured (D5) — code for ${target}: ${code}`);
-    return;
+    return { ok: false, reason: "not_configured" };
   }
   const loc: Locale = locale ?? "en";
   const T = {
@@ -54,7 +63,7 @@ export async function sendVerificationCode(
       <p style="font-size:34px;font-weight:700;letter-spacing:6px;color:#b85c38">${code}</p>
       <p style="color:#9c9288;font-size:13px">${T.hint}</p>
     </div>`;
-  await resendSend(target, T.subject, html);
+  return resendSend(target, T.subject, html);
 }
 
 /** Алерт админу об авто-паузе вакансии по жалобам. */

@@ -17,7 +17,10 @@ import type {
 // ---------------------- Employer verification -------------------------
 
 /** Сгенерировать 6-значный код, сохранить его хэш, отправить письмом. */
-export async function requestEmployerVerification(): Promise<{ ok: boolean }> {
+export async function requestEmployerVerification(): Promise<{
+  ok: boolean;
+  error?: "not_configured" | "provider";
+}> {
   const supabase = await getSupabaseServer();
   const {
     data: { user },
@@ -43,7 +46,8 @@ export async function requestEmployerVerification(): Promise<{ ok: boolean }> {
   if (error) return { ok: false };
 
   const locale = await getLocale();
-  await sendVerificationCode("email", email, code, locale);
+  const delivery = await sendVerificationCode("email", email, code, locale);
+  if (!delivery.ok) return { ok: false, error: delivery.reason };
   return { ok: true };
 }
 
