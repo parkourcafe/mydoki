@@ -493,6 +493,18 @@ function Check() {
   return <span className="font-semibold text-[#b85c38]">✓</span>;
 }
 
+function localizedPath(locale: Locale, path: string) {
+  if (!path.startsWith("/")) return path;
+  return locale === "en" ? path : `/${locale}${path}`;
+}
+
+function signupPath(locale: Locale, next?: string) {
+  const base = localizedPath(locale, "/login");
+  const qs = new URLSearchParams({ mode: "signup" });
+  if (next) qs.set("next", next);
+  return `${base}?${qs.toString()}`;
+}
+
 /** Структурированные данные для поисковиков (без выдуманных рейтингов/отзывов). */
 function buildJsonLd(t: Dict, locale: Locale, appUrl: string) {
   return {
@@ -577,10 +589,10 @@ export default async function Home({
             </div>
             <div className="flex items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale={locale} />
-              <Link href="/login" className="hidden rounded-3xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white md:block">
+              <Link href={localizedPath(locale, "/login")} className="hidden rounded-3xl border border-[#d4c9b8] px-5 py-2.5 text-sm font-medium transition-colors hover:bg-white md:block">
                 {t.nav.login}
               </Link>
-              <Link href="/login" className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
+              <Link href={signupPath(locale)} className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
                 <span className="sm:hidden">{t.nav.startShort}</span>
                 <span className="hidden sm:inline">{t.nav.start}</span>
               </Link>
@@ -610,7 +622,7 @@ export default async function Home({
             <p className="mb-8 max-w-md text-[19px] leading-snug text-[#5c5248]">{t.hero.subtitle}</p>
 
             <div className="mb-8 flex max-w-lg flex-col gap-3 sm:flex-row">
-              <Link href="/login" className="accent-btn flex flex-1 items-center justify-center rounded-3xl px-8 py-[17px] text-[17px] font-semibold active:scale-[0.985]">
+              <Link href={signupPath(locale)} className="accent-btn flex flex-1 items-center justify-center rounded-3xl px-8 py-[17px] text-[17px] font-semibold active:scale-[0.985]">
                 {t.hero.cta1}
               </Link>
               <a href="#how" className="flex flex-1 items-center justify-center rounded-3xl border border-[#d4c9b8] px-8 py-[17px] text-[17px] font-semibold transition-colors hover:bg-white">
@@ -619,7 +631,7 @@ export default async function Home({
             </div>
 
             <Link
-              href="/demo"
+              href={localizedPath(locale, "/demo")}
               className="mb-6 inline-block text-sm font-medium text-[#b85c38] hover:underline"
             >
               {t.hero.demo}
@@ -677,7 +689,7 @@ export default async function Home({
             {segmentLinks(locale).map((s) => (
               <Link
                 key={s.key}
-                href={`/for/${s.key}`}
+                href={localizedPath(locale, `/for/${s.key}`)}
                 className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
               >
                 <span>{s.emoji}</span> {s.label}
@@ -690,7 +702,7 @@ export default async function Home({
               {comparisonLinks(locale).map((cmp) => (
                 <Link
                   key={cmp.key}
-                  href={`/vs/${cmp.key}`}
+                  href={localizedPath(locale, `/vs/${cmp.key}`)}
                   className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
                 >
                   <span>{cmp.emoji}</span> {cmp.label}
@@ -704,7 +716,7 @@ export default async function Home({
               {landingLinks(locale).map((l) => (
                 <Link
                   key={l.key}
-                  href={`/${l.key}`}
+                  href={localizedPath(locale, `/${l.key}`)}
                   className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
                 >
                   <span>{l.emoji}</span> {l.label}
@@ -718,7 +730,7 @@ export default async function Home({
               {checklistLinks(locale).map((l) => (
                 <Link
                   key={l.key}
-                  href={`/checklists/${l.key}`}
+                  href={localizedPath(locale, `/checklists/${l.key}`)}
                   className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
                 >
                   <span>{l.emoji}</span> {l.label}
@@ -733,7 +745,7 @@ export default async function Home({
                 {guideLinks(locale).map((l) => (
                   <Link
                     key={l.key}
-                    href={`/blog/${l.key}`}
+                    href={localizedPath(locale, `/blog/${l.key}`)}
                     className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
                   >
                     <span>{l.emoji}</span> {l.label}
@@ -749,7 +761,7 @@ export default async function Home({
                 {usecaseLinks().map((uc) => (
                   <Link
                     key={uc.key}
-                    href={`/keep/${uc.key}`}
+                    href={localizedPath(locale, `/keep/${uc.key}`)}
                     className="inline-flex items-center gap-1.5 rounded-2xl border border-[#e8e0d5] bg-white px-3.5 py-1.5 text-sm text-[#5c5248] transition-colors hover:border-[#d4a373]"
                   >
                     <span>{uc.emoji}</span> {uc.label}
@@ -851,7 +863,7 @@ export default async function Home({
         </div>
         <div className="mt-8 text-center">
           <Link
-            href="/security"
+            href={localizedPath(locale, "/security")}
             className="text-sm font-medium text-[#b85c38] hover:underline"
           >
             {t.footer.security} →
@@ -912,7 +924,7 @@ export default async function Home({
         <div className="rounded-3xl bg-[#2c2522] px-8 py-10 text-center text-[#f9f5f0]">
           <h2 className="mb-4 text-3xl font-semibold tracking-tight">{t.cta.heading}</h2>
           <p className="mx-auto mb-7 max-w-sm text-[#d4c9b8]">{t.cta.sub}</p>
-          <Link href="/login" className="inline-flex items-center justify-center rounded-3xl bg-[#b85c38] px-10 py-4 text-lg font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]">
+          <Link href={signupPath(locale)} className="inline-flex items-center justify-center rounded-3xl bg-[#b85c38] px-10 py-4 text-lg font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]">
             {t.cta.button}
           </Link>
         </div>
@@ -923,13 +935,13 @@ export default async function Home({
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
           <div>{t.footer.copyright}</div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
-            <Link href="/pricing" className="hover:text-[#2c2522]">{t.footer.pricing}</Link>
-            <Link href="/security" className="hover:text-[#2c2522]">{t.footer.security}</Link>
+            <Link href={localizedPath(locale, "/pricing")} className="hover:text-[#2c2522]">{t.footer.pricing}</Link>
+            <Link href={localizedPath(locale, "/security")} className="hover:text-[#2c2522]">{t.footer.security}</Link>
             {trustLinks(locale).map((tl) => (
-              <Link key={tl.key} href={`/${tl.key}`} className="hover:text-[#2c2522]">{tl.label}</Link>
+              <Link key={tl.key} href={localizedPath(locale, `/${tl.key}`)} className="hover:text-[#2c2522]">{tl.label}</Link>
             ))}
-            <Link href="/privacy" className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
-            <Link href="/login" className="hover:text-[#2c2522]">{t.footer.login}</Link>
+            <Link href={localizedPath(locale, "/privacy")} className="hover:text-[#2c2522]">{t.footer.privacy}</Link>
+            <Link href={localizedPath(locale, "/login")} className="hover:text-[#2c2522]">{t.footer.login}</Link>
           </div>
         </div>
       </footer>
