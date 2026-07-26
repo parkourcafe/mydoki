@@ -4,7 +4,7 @@ import { getLocale } from "@/lib/i18n";
 
 const META_DESC = {
   ru: "Условия использования Doki.help — beta-сейфа семейных документов с напоминаниями и безопасным обменом. Не юридическая консультация.",
-  en: "The terms for using Doki.help — a beta family document vault with reminders and secure sharing. Not legal advice.",
+  en: "The terms for using Doki.help — a beta candidate and employee document workflow with checklists and secure sharing. Not legal advice.",
   id: "Ketentuan penggunaan Doki.help — alur dokumen kandidat dan karyawan (beta) dengan checklist dan berbagi aman. Bukan nasihat hukum.",
   uz: "Doki.help’dan foydalanish shartlari — eslatmalar va xavfsiz ulashishli oilaviy hujjatlar seyfi (beta). Yuridik maslahat emas.",
 } as const;
@@ -52,11 +52,11 @@ const M = {
     title: "Terms of Service",
     lastUpdated: "Last updated: 23.06.2026.",
     h1: "1. About the service",
-    p1: "doki.help is a service for storing and organizing your family's documents: IDs, medical records, property, trips and more, with reminders about deadlines and secure sharing via link. The service is under active development (beta) and is provided «as is».",
+    p1: "doki.help is a service for collecting, storing, and organizing candidate and employee documents: identity documents, CVs, certificates, contracts, onboarding forms, and other files relevant to work processes in Indonesia. The service is under active development (beta) and is provided «as is».",
     h2: "2. Registration and access",
     p2: "An account is required to use the service (email or sign-in via Google). You are responsible for keeping your account access secure. We recommend enabling two-factor authentication.",
     h3: "3. Your content",
-    p3: "You upload documents and data at your own responsibility and confirm that you have the right to store and process them (including the data of family members — with their knowledge, and in respect of children — as their legal representative). Uploading illegal materials and other people's data without a legal basis is prohibited.",
+    p3: "You upload documents and data at your own responsibility and confirm that you have the right to store, send, or process them. Companies must request only documents relevant to the application, onboarding, or employment process and limit access to authorized people. Uploading illegal materials and other people's data without a legal basis is prohibited.",
     h4: "4. AI assistant and AI lawyer",
     p4: "Responses from AI features, including the AI lawyer, are for reference and informational purposes only and do not constitute legal, medical or any other professional advice. For important matters, consult a qualified specialist. We do not guarantee the accuracy and completeness of AI responses.",
     h5: "5. Backups",

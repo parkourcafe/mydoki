@@ -17,12 +17,12 @@ const M = {
     oauthError: "Не удалось войти через Google. Попробуйте ещё раз.",
   },
   en: {
-    badge: "Family vault",
-    headingLead: "All your family's documents —",
-    headingAccent: "in one secure place",
+    badge: "Work documents",
+    headingLead: "Candidate and employee documents —",
+    headingAccent: "complete with one link",
     subtitle:
-      "Passports, diplomas, medical records and property — at hand and protected.",
-    security: "Private by default · RLS · private storage",
+      "Sign in to create a checklist, send a link, or complete a work-document package.",
+    security: "Controlled access · secure links · clear document status",
     privacy: "Privacy",
     terms: "Terms",
     oauthError: "Couldn't sign in with Google. Please try again.",

@@ -167,111 +167,111 @@ const M: Record<Locale, Dict> = {
     footer: { copyright: "© 2026 doki.help — Семейный архив документов", pricing: "Цены", security: "Безопасность", privacy: "Конфиденциальность", login: "Войти" },
   },
   en: {
-    nav: { login: "Sign in", start: "Get started free", startShort: "Start" },
+    nav: { login: "Sign in", start: "Create a free checklist", startShort: "Start" },
     hero: {
-      badge: "A private vault for your whole family's documents",
-      title: ["A family vault", "for all your documents —", "with deadlines under control"],
+      badge: "For HR teams, business owners, candidates, and employees in Indonesia",
+      title: ["Collect candidate", "and employee documents —", "with one link"],
       subtitle:
-        "Passports, medical results, visas, diplomas, certificates and travel docs. Access from any device. Reminders run on their own.",
-      cta1: "Create your vault — free",
+        "Create a document checklist, send it over WhatsApp, and see who is complete — without messy chats or spreadsheets.",
+      cta1: "Create a free checklist",
       cta2: "How it works",
-      demo: "See the demo — no sign-up →",
-      trust: ["Any device", "2 GB free", "Sign in with Google"],
+      demo: "See the document flow demo →",
+      trust: ["For Indonesian employers", "Candidates upload by link", "Document status is visible"],
       security:
-        "Private storage · Only your family has access · AI recognition is opt-in",
-      imgAlt: "A family's documents — organized and at hand",
+        "Controlled access · Secure links · AI/OCR only when enabled",
+      imgAlt: "Candidate and employee documents organized for hiring and onboarding",
     },
     store: {
-      heading: "What you can keep in your vault",
-      sub: "Everything important for your family — in one secure place.",
-      medTitle: "Medical results and tests",
-      medBadge: "Reminders — free",
-      medCol1: ["Lab test results", "Blood panels, CBC, hormones, urinalysis", "Ultrasound, MRI, CT, X-ray"],
-      medCol2: ["Doctor's reports", "Vaccination certificates", "Medical certificates"],
-      medNote: "Deadline reminders — free.",
+      heading: "Work documents you can collect",
+      sub: "Everything needed for applications, onboarding, and internal verification — in one clean flow.",
+      medTitle: "Candidate and employee documents",
+      medBadge: "Checklist — free",
+      medCol1: ["KTP or the requested identity document", "CV, diplomas, training certificates", "Portfolio or work references"],
+      medCol2: ["Contracts and onboarding forms", "Health certificates when actually required", "Work permit or visa documents when relevant"],
+      medNote: "Ask only for documents that are truly needed for the current stage.",
       cats: [
-        { icon: "📄", title: "Personal & immigration documents", items: ["Passports & international passports", "Visas and visa paperwork", "Citizenship documents", "Tax & social security IDs", "Diplomas and certificates"] },
-        { icon: "✈️", title: "Trips & travel", items: ["Tour packages & vouchers", "Tickets and bookings", "Travel insurance", "Entry/exit documents", "Child travel consents"] },
-        { icon: "🚗", title: "Vehicles & property", items: ["Car insurance", "Vehicle titles & registration", "Property records & contracts"] },
-        { icon: "🧾", title: "Receipts & certificates", items: ["Payment receipts", "Work / study certificates", "Powers of attorney"] },
+        { icon: "📄", title: "Identity & profile", items: ["KTP/passport when needed", "CV and contact details", "Candidate profile documents or photo"] },
+        { icon: "🎓", title: "Qualifications", items: ["Diplomas and transcripts", "Training certificates", "Licenses or professional permits"] },
+        { icon: "🏨", title: "Hospitality & operations", items: ["Hygiene or safety certificates", "Work references", "Experience documents"] },
+        { icon: "🧾", title: "Onboarding", items: ["Contracts", "Internal forms", "Checklist of documents still missing"] },
       ],
     },
     pain: {
-      heading: "Sound familiar?",
+      heading: "Common document problems",
       items: [
-        "Daycare needs a certificate this morning — and you can't find it.",
-        "The airport asks for your insurance, and it's lost in some chat.",
-        "A doctor wants past lab results — they're on an old phone.",
-        "A visa or insurance is expiring, and you find out at the last minute.",
+        "KTP, CVs, certificates, and contracts arrive in different chats.",
+        "HR has to remind candidates one by one.",
+        "Owners cannot see who has completed their documents.",
+        "Sensitive documents sit in WhatsApp with no clear access control.",
       ],
     },
     how: {
       heading: "How it works",
-      sub: "Upload a document — the app does the rest",
+      sub: "The company creates a checklist, the candidate uploads documents, and status stays clear.",
       steps: [
-        { n: "1", title: "Upload a photo or scan", text: "Passport, visa, medical result, travel doc — any document." },
-        { n: "2", title: "Add the expiry date", text: "Enter the 'valid until' date — the app remembers and reminds you in advance." },
-        { n: "3", title: "Get reminders", text: "You'll be warned before a visa, test or insurance expires." },
-        { n: "4", title: "Control access", text: "Send expiring links to doctors, banks or relatives." },
+        { n: "1", title: "Create a document checklist", text: "Choose the documents needed for a role, application stage, or onboarding." },
+        { n: "2", title: "Send a link to the candidate", text: "Share it over WhatsApp, email, or your internal workflow — no extra spreadsheet." },
+        { n: "3", title: "Candidates upload files", text: "They see what is required and what is still missing." },
+        { n: "4", title: "Track completion status", text: "HR or the owner sees what came in, what is missing, and which links are active." },
       ],
     },
     security: {
-      heading: "Your documents are safe",
-      sub: "We know how important these documents are — and built everything so you can feel at ease.",
+      heading: "Candidate documents stay safer",
+      sub: "Work documents contain sensitive data. doki.help helps collect them with clearer access than ordinary chat.",
       promise:
-        "Your privacy and security are our top priority. Your data is kept in a secure cloud and sent over HTTPS, with access locked down by strict database rules. We never sell or trade your data, and we never share it for advertising.",
+        "Privacy and security are our top priority. Data is sent over HTTPS, access is restricted by database rules, and document links can be controlled. We do not sell data or share it for advertising.",
       items: [
-        { icon: "👨‍👩‍👧", title: "Only your family sees the documents", text: "Access is isolated at the database level (RLS) — outsiders can't see your documents." },
-        { icon: "🛡️", title: "Secure sign-in and storage", text: "Files in private storage, transfer over HTTPS. Two-factor sign-in and an email alert on new-device logins." },
-        { icon: "🎚️", title: "You control access", text: "Share a document via an expiring link and revoke it anytime." },
-        { icon: "🙅", title: "We don't sell your data", text: "We never share or sell your data to third parties." },
-        { icon: "📥", title: "Available offline", text: "Save the documents you need to your phone and open them even with no connection — on a trip or in roaming." },
+        { icon: "🏢", title: "Access only for authorized teams", text: "Documents are not scattered across private chats; access is managed through accounts and links." },
+        { icon: "🛡️", title: "Secure sign-in and storage", text: "Files are sent over HTTPS and protected by database access rules." },
+        { icon: "🎚️", title: "Status and access can be controlled", text: "See complete/missing documents and limit who can open files." },
+        { icon: "🙅", title: "Not for advertising", text: "Candidate and employee data is not sold and is not shared for advertising." },
+        { icon: "📥", title: "Cleaner than WhatsApp", text: "Checklists, uploads, and document status stay in one place." },
       ],
     },
     cta: {
-      heading: "Ready to gather all your family's documents?",
-      sub: "Less than 15 minutes — and order that lasts.",
-      button: "Create your vault — free",
+      heading: "Ready to organize candidate and employee documents?",
+      sub: "Create the first checklist, send one link, and see document status without chasing every chat.",
+      button: "Create a free checklist",
     },
     faq: {
       heading: "Frequently asked questions",
       items: [
-        { q: "Is it free?", a: "Yes. Right now you get 2 GB of storage, deadline reminders, family sharing and offline access — for free. A paid plan with more storage will come later; what's available now stays." },
-        { q: "Who can see my documents?", a: "Only you and the family members you grant access to. Access is isolated at the database level (RLS), and files are kept in private storage." },
-        { q: "How do reminders work?", a: "You set a document's expiry date (e.g. a passport or insurance), and the service emails you a reminder in advance." },
-        { q: "Can I share a document?", a: "Yes — via a time-limited link you can revoke at any moment." },
-        { q: "Where is my data stored?", a: "In secure cloud storage, with transfer over HTTPS. We never sell or share your data with third parties." },
-        { q: "Can I export my documents?", a: "Yes. The cabinet has an export — take your files and data out at any time, with no lock-in." },
-        { q: "Does the service use AI to read my documents?", a: "By default, no. AI recognition is off; you turn it on yourself in settings, and only then is a document image sent to an AI provider." },
-        { q: "Why is it better than Google Drive or my phone gallery?", a: "A regular cloud just stores files. doki sorts documents by person and category, reminds you of deadlines, and lets you share a single document via an expiring link — not the whole folder." },
+        { q: "Is this a job board?", a: "No. doki.help is not a job marketplace. It helps companies collect and review candidate/employee documents after there is a hiring or onboarding process." },
+        { q: "Who uses doki.help?", a: "HR teams, owners, admins, candidates, and new employees who need to send or review a work-document package." },
+        { q: "Do candidates need an account?", a: "Candidate flows can work through a document link. To manage personal documents or file history, users can sign in to their own account." },
+        { q: "Which documents should be requested?", a: "Only documents relevant to the stage: for example CV/certificates during application, then contracts or onboarding documents after acceptance." },
+        { q: "What about KTP and sensitive documents?", a: "Ask for them only when truly required, explain why, and limit access to authorized people." },
+        { q: "Can document status be tracked?", a: "Yes. The checklist helps show what has arrived, what is incomplete, and what may need updating." },
+        { q: "Does AI/OCR automatically read documents?", a: "No automatic promise by default. AI/OCR recognition is used only when that feature is enabled and fits the applicable policy." },
+        { q: "Why is it better than WhatsApp or spreadsheets?", a: "Because checklists, uploads, status, and access links are in one place — not scattered across many chats and files." },
       ],
     },
     forWhom: {
       heading: "Who it's for",
       items: [
-        "Families who want all important documents in one place",
-        "Parents — keep and never lose your children's documents",
-        "Frequent travelers: passports, visas, insurance at hand",
-        "Anyone afraid of missing a deadline — visa, insurance, passport renewal",
-        "Those who share documents with a doctor or lawyer via a secure link",
+        "Restaurant, villa, spa, school, clinic, and agency owners in Bali and Indonesia",
+        "HR or admin teams collecting candidate documents through WhatsApp",
+        "Candidates who need to send a complete document package to a company",
+        "New employees completing onboarding paperwork",
+        "Teams that need clear status: complete, missing, or needs update",
       ],
     },
     diff: {
-      heading: "Why it beats a regular cloud",
-      intro: "doki.help isn't just another file drive — it's built for documents:",
+      heading: "Why it beats WhatsApp or a regular cloud",
+      intro: "doki.help is built for work-document workflows — not just file storage:",
       items: [
-        { t: "Reminds you of deadlines", d: "Set a date and a reminder comes in advance. A regular cloud can't do that." },
-        { t: "Organized by people and categories", d: "Documents are sorted by family member and type, not dumped into folders." },
-        { t: "Safe per-document sharing", d: "A temporary link to a single file that you can revoke." },
-        { t: "Works offline", d: "Open the documents you need with no internet — on a trip or in roaming." },
+        { t: "Checklists per role", d: "Define the documents needed for each role or onboarding stage." },
+        { t: "Completion status", d: "See who is complete and who is still missing files." },
+        { t: "Candidate links", d: "Candidates upload through a link; HR does not need to hunt through chat files." },
+        { t: "More controlled access", d: "Sensitive documents are not spread across shared folders or private conversations." },
       ],
     },
     operator: {
       heading: "Who runs the service",
-      line: "Operator: the owner of the doki.help service, TIN 780728592634.",
+      line: "Operator: the owner of the doki.help service, foreign tax number 780728592634.",
       contactLabel: "Support:",
     },
-    footer: { copyright: "© 2026 doki.help — Family document vault", pricing: "Pricing", security: "Security", privacy: "Privacy", login: "Sign in" },
+    footer: { copyright: "© 2026 doki.help — Candidate and employee documents", pricing: "Pricing", security: "Security", privacy: "Privacy", login: "Sign in" },
   },
   id: {
     nav: { login: "Masuk", start: "Buat checklist gratis", startShort: "Mulai" },
@@ -686,11 +686,11 @@ export default async function Home({
             ))}
           </ul>
           <div className="mt-6 flex flex-wrap gap-2">
-            {locale === "id" ? (
+            {locale === "id" || locale === "en" ? (
               [
-                { href: "/for/employers", emoji: "🏢", label: "Untuk perusahaan" },
-                { href: "/for/job-seekers", emoji: "🧑‍💼", label: "Untuk kandidat" },
-                { href: "/hiring", emoji: "📋", label: "Alur hiring & onboarding" },
+                { href: "/for/employers", emoji: "🏢", label: locale === "id" ? "Untuk perusahaan" : "For employers" },
+                { href: "/for/job-seekers", emoji: "🧑‍💼", label: locale === "id" ? "Untuk kandidat" : "For candidates" },
+                { href: "/hiring", emoji: "📋", label: locale === "id" ? "Alur hiring & onboarding" : "Hiring & onboarding flow" },
               ].map((s) => (
                 <Link
                   key={s.href}
@@ -712,7 +712,7 @@ export default async function Home({
               ))
             )}
           </div>
-          {locale !== "id" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+          {locale !== "id" && locale !== "en" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
             <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{comparisonsHeading(locale)}</div>
             <div className="flex flex-wrap gap-2">
               {comparisonLinks(locale).map((cmp) => (
@@ -726,7 +726,7 @@ export default async function Home({
               ))}
             </div>
           </div>}
-          {locale !== "id" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+          {locale !== "id" && locale !== "en" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
             <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].tools}</div>
             <div className="flex flex-wrap gap-2">
               {landingLinks(locale).map((l) => (
@@ -740,7 +740,7 @@ export default async function Home({
               ))}
             </div>
           </div>}
-          {locale !== "id" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
+          {locale !== "id" && locale !== "en" && <div className="mt-5 border-t border-[#e8e0d5] pt-5">
             <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].checklists}</div>
             <div className="flex flex-wrap gap-2">
               {checklistLinks(locale).map((l) => (
@@ -754,7 +754,7 @@ export default async function Home({
               ))}
             </div>
           </div>}
-          {locale !== "id" && guideLinks(locale).length > 0 && (
+          {locale !== "id" && locale !== "en" && guideLinks(locale).length > 0 && (
             <div className="mt-5 border-t border-[#e8e0d5] pt-5">
               <div className="mb-3 text-sm font-medium text-[#8a7c6d]">{MORE_HEADINGS[locale].guides}</div>
               <div className="flex flex-wrap gap-2">

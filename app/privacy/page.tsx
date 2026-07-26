@@ -4,7 +4,7 @@ import { getLocale } from "@/lib/i18n";
 
 const META_DESC = {
   ru: "Как Doki.help обрабатывает документы и данные вашей семьи: хранение, доступ, обмен, ИИ и ваши права.",
-  en: "How Doki.help handles your family's documents and data: storage, access, sharing, AI and your rights.",
+  en: "How Doki.help handles candidate and employee documents: storage, access, sharing, AI and your rights.",
   id: "Bagaimana Doki.help menangani dokumen kandidat dan karyawan: penyimpanan, akses, berbagi, AI, dan hak Anda.",
   uz: "Doki.help oila hujjatlari va maʼlumotlarini qanday boshqaradi: saqlash, kirish, ulashish, AI va huquqlaringiz.",
 } as const;
@@ -73,7 +73,7 @@ const M = {
     intro: "The “doki.help” service (hereinafter — the Service). Last updated: 23.06.2026.",
     h1: "1. Operator",
     operatorPre:
-      "The operator processing personal data is the owner of the doki.help Service, TIN 780728592634. Contact for data-related inquiries: ",
+      "The operator processing personal data is the owner of the doki.help Service, foreign tax number 780728592634. Contact for data-related inquiries: ",
     operatorPost: ".",
     h2: "2. What data we process",
     data1: "— Account data: your email address, and when signing in via Google — your name and email from your Google profile.",
@@ -84,7 +84,7 @@ const M = {
     data4: "— Phone number — only if you provide it for SMS notifications.",
     h3: "3. Purposes and legal basis",
     purpose:
-      "We process data to provide the Service: to store and organize your documents, remind you of deadlines, and ensure secure access and support. The legal basis is your consent, given upon registration, and the performance of the contract (provision of the Service).",
+      "We process data to provide the Service: to collect, store, and organize candidate and employee documents, support document checklists, provide controlled access, and help with reminders or status tracking. The legal basis is your consent, given upon registration, and the performance of the contract (provision of the Service).",
     hSpecial: "3.1. Special categories of personal data (health information)",
     special:
       "If you upload medical documents (test results, reports, vaccination certificates, etc.), the Service processes special categories of personal data — health information. Such processing is carried out only with your separate explicit consent, given at registration, and only in respect of the data you upload yourself. You can delete these documents or your account at any time, which stops the processing; consent can be withdrawn by writing to support@doki.help.",
@@ -98,7 +98,7 @@ const M = {
       "We do not sell your data. We share it only: (a) with infrastructure providers (hosting, database, sending of emails/SMS) to the extent necessary for the Service to operate; (b) with the AI provider — when the relevant features are used; (c) at the lawful request of authorized bodies. You decide for yourself to whom and when you open a document via a link.",
     h7: "7. Protection",
     protection:
-      "Data is isolated per family at the database level (Row Level Security), files are kept in private storage, and transmission is over a secure connection. Two-factor authentication and notifications of sign-ins from a new device are available.",
+      "Data is isolated per account and workspace at the database level (Row Level Security), files are kept in private storage, and transmission is over a secure connection. Document access is limited according to roles and links granted.",
     h8: "8. Retention and deletion",
     retentionPre:
       "We keep data while your account is active. You can request deletion of your account and data by writing to ",

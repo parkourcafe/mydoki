@@ -27,9 +27,9 @@ const M = {
   en: {
     title: "Security",
     subtitle:
-      "We know you're trusting us with passports, medical records and your children's documents. Here's exactly how we protect them — no fluff.",
+      "Candidate and employee documents contain sensitive data. Here's how doki.help helps collect them with more controlled access than ordinary chat.",
     items: [
-      { icon: "👨‍👩‍👧", title: "Only your family sees the documents", text: "Access is isolated at the database level (RLS): outsiders and other families can't see your documents — it's not a setting, it's a rule inside the database itself." },
+      { icon: "🏢", title: "Only authorized people see documents", text: "Access is isolated at the database level (RLS) and limited by account, workspace, role, or the link granted." },
       { icon: "🗄️", title: "Private file storage", text: "Files live in a private bucket and are served only via short-lived signed links (about 2 minutes). A file has no public URL." },
       { icon: "🔗", title: "Per-document sharing", text: "Share a single document, not the whole archive — via a temporary link you can revoke anytime, cap by number of views, and mark with a watermark." },
       { icon: "🛡️", title: "Two-factor sign-in and alerts", text: "You can enable a second factor (TOTP). A new-device login triggers an email, so you notice unfamiliar access right away." },
@@ -39,10 +39,10 @@ const M = {
       { icon: "📤", title: "Export and deletion", text: "You can export your documents from the cabinet at any time — no lock-in. To delete your account and data, contact support." },
     ],
     betaTitle: "Honest about beta",
-    beta: "The service is in active development and provided “as is.” It's great for day-to-day access to your documents, but it doesn't replace your own backup of the truly important originals.",
+    beta: "The service is in active development and provided “as is.” Use it to organize work-document flows, but keep your own backup of truly important originals.",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
-    cta: "Create your vault for free",
+    cta: "Create a free checklist",
     back: "← Home",
   },
   id: {
