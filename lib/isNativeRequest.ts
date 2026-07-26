@@ -5,7 +5,9 @@ import { isNativeUserAgent } from "./nativeUserAgent";
 export {
   NATIVE_UA_MARKER,
   NATIVE_UA_MARKERS,
+  RUSTORE_UA_MARKER,
   isNativeUserAgent,
+  isRuStoreUserAgent,
 } from "./nativeUserAgent";
 
 /**

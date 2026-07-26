@@ -26,7 +26,7 @@ export interface EventMap {
   document_added: {
     category?: string;
     /** Как добавлен документ: вручную, нативной камерой или через AI-распознавание. */
-    via: "manual" | "camera" | "ai";
+    via: "manual" | "camera" | "ai" | "share_drop";
   };
   document_recognized: { category?: string; success: boolean };
   reminder_set: { doc_category?: string };

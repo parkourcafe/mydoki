@@ -31,8 +31,20 @@ next-env.d.ts
 /playwright-report
 /playwright/.cache
 
-# capacitor — генерируемые нативные проекты (пересоздаются `npx cap add ios`)
+# capacitor
 /ios
-/android
 # сгенерированные @capacitor/assets наборы (генерятся на Mac из assets/*.svg)
 /ios/App/App/Assets.xcassets
+/android/.gradle
+/android/.idea
+/android/build
+/android/app/build
+/android/local.properties
+/android/keystore.properties
+/android/app/*.jks
+/android/app/*.keystore
+
+# release artifacts are generated locally and uploaded to the store manually
+/artifacts
+.vercel
+.env*

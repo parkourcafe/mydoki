@@ -91,3 +91,40 @@ export function evalNameMatch(
     details: { holder_name: holder, member_name: member },
   };
 }
+
+export type OwnerCandidate = {
+  id: string;
+  full_name: string;
+};
+
+export type OwnerSuggestion = {
+  member_id: string;
+  member_name: string;
+  reason: "exact_name";
+};
+
+/**
+ * Ищет однозначного владельца документа среди всех профилей семьи.
+ * Возвращает предложение только для единственного точного совпадения ФИО и
+ * только если документ сейчас лежит у другого человека. Нечёткие и
+ * неоднозначные случаи намеренно остаются на ручной выбор.
+ */
+export function suggestDocumentOwner(
+  holderName: string | null | undefined,
+  currentMemberId: string | null | undefined,
+  members: OwnerCandidate[]
+): OwnerSuggestion | null {
+  const holder = normalizeName(holderName ?? "");
+  if (!holder) return null;
+
+  const matches = members.filter(
+    (member) => normalizeName(member.full_name) === holder
+  );
+  if (matches.length !== 1 || matches[0].id === currentMemberId) return null;
+
+  return {
+    member_id: matches[0].id,
+    member_name: matches[0].full_name,
+    reason: "exact_name",
+  };
+}

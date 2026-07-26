@@ -1,6 +1,6 @@
 import "server-only";
 import { cookies, headers } from "next/headers";
-import { isNativeUserAgent } from "./nativeUserAgent";
+import { isNativeUserAgent, isRuStoreUserAgent } from "./nativeUserAgent";
 
 export type Locale = "ru" | "en" | "id" | "uz";
 
@@ -25,9 +25,10 @@ export function isAppReviewAccountEmail(email: string | null | undefined): boole
 export async function getLocale(): Promise<Locale> {
   const requestHeaders = await headers();
 
-  // The App Store listing and review build are English. Do not let an old web
-  // cookie or the reviewer's device language switch the native shell to RU.
+  // Store shells have fixed listing languages. The RuStore build must remain
+  // Russian even if a web cookie was previously set to another locale.
   const ua = requestHeaders.get("user-agent") || "";
+  if (isRuStoreUserAgent(ua)) return "ru";
   if (isNativeUserAgent(ua)) return "en";
 
   // Языковой префикс в URL (/ru, /en…) — middleware кладёт его в заголовок.

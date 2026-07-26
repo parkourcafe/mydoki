@@ -6,6 +6,7 @@ import {
 } from "@/lib/queries";
 import { categories, type DocCategory } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
 import { createDocSection } from "@/app/my/actions";
 import SubmitButton from "@/components/SubmitButton";
 
@@ -64,7 +65,10 @@ const M = {
 } as const;
 
 export default async function DocumentsPage() {
-  const locale = await getLocale();
+  const [locale, ruStore] = await Promise.all([
+    getLocale(),
+    isRuStoreRequest(),
+  ]);
   const t = M[locale];
 
   const householdId = await getOrCreateHouseholdId();
@@ -87,7 +91,9 @@ export default async function DocumentsPage() {
     }
   }
 
-  const cats = categories(locale);
+  const cats = categories(locale).filter(
+    (category) => !ruStore || category.key !== "medical"
+  );
 
   const tiles = [
     ...cats.map((c) => ({

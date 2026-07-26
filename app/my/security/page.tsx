@@ -7,6 +7,7 @@ import AlertPhone from "./AlertPhone";
 import AiRecognitionToggle from "./AiRecognitionToggle";
 import DeleteAccount from "./DeleteAccount";
 import SignOutButton from "@/components/SignOutButton";
+import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
 
 const M = {
   ru: {
@@ -165,7 +166,10 @@ function Chip({
 }
 
 export default async function SecurityPage() {
-  const locale = await getLocale();
+  const [locale, ruStore] = await Promise.all([
+    getLocale(),
+    isRuStoreRequest(),
+  ]);
   const t = M[locale];
   const [user, logins] = await Promise.all([getUser(), listLoginEvents(10)]);
   const emailOn = !!process.env.RESEND_API_KEY;
@@ -177,7 +181,7 @@ export default async function SecurityPage() {
       process.env.TWILIO_FROM
     );
   const phone = (user?.user_metadata?.alert_phone as string | undefined) ?? "";
-  const aiOn = aiConfigured();
+  const aiOn = !ruStore && aiConfigured();
   const aiProvider = aiProviderName();
   const aiPref = userWantsAi(user);
 
@@ -207,15 +211,17 @@ export default async function SecurityPage() {
         <AlertPhone initial={phone} locale={locale} />
       </section>
 
-      <section className="card space-y-3">
-        <h2 className="font-medium">{t.aiRecognition}</h2>
-        <AiRecognitionToggle
-          initial={aiPref}
-          configured={aiOn}
-          provider={aiProvider}
-          locale={locale}
-        />
-      </section>
+      {!ruStore && (
+        <section className="card space-y-3">
+          <h2 className="font-medium">{t.aiRecognition}</h2>
+          <AiRecognitionToggle
+            initial={aiPref}
+            configured={aiOn}
+            provider={aiProvider}
+            locale={locale}
+          />
+        </section>
+      )}
 
       <section className="card">
         <h2 className="mb-3 font-medium">{t.recentLogins}</h2>

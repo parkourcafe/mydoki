@@ -3,6 +3,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { classifyDocument, userWantsAi } from "@/lib/classify";
 import { allowAiCall } from "@/lib/ratelimit";
 import { getLocale } from "@/lib/i18n";
+import { isRuStoreUserAgent } from "@/lib/nativeUserAgent";
 
 export const maxDuration = 60;
 
@@ -49,6 +50,13 @@ const M = {
 } as const;
 
 export async function POST(request: Request) {
+  if (isRuStoreUserAgent(request.headers.get("user-agent") || "")) {
+    return NextResponse.json(
+      { error: "ИИ-распознавание не входит в версию DOKI HELP для RuStore." },
+      { status: 403 }
+    );
+  }
+
   // Только авторизованный пользователь может звать классификатор
   const supabase = await getSupabaseServer();
   const {
@@ -58,8 +66,13 @@ export async function POST(request: Request) {
 
   const t = M[await getLocale()];
 
-  // Распознавание работает только если пользователь сам включил его в настройках.
-  if (!userWantsAi(user)) {
+  const form = await request.formData();
+  const scopedMedicalShareConsent =
+    form.get("medical_share_consent") === "true";
+
+  // Обычно действует настройка профиля. Для медицинского пакета допустимо
+  // отдельное явное согласие непосредственно перед переносом файла.
+  if (!userWantsAi(user) && !scopedMedicalShareConsent) {
     return NextResponse.json({ error: t.notEnabled }, { status: 403 });
   }
 
@@ -67,7 +80,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: t.limit }, { status: 429 });
   }
 
-  const form = await request.formData();
   const file = form.get("file");
   if (!(file instanceof File) || file.size === 0) {
     return NextResponse.json({ error: t.noFile }, { status: 400 });

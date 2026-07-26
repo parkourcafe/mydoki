@@ -51,7 +51,9 @@ export async function initNativeShell(): Promise<void> {
 
 /** APNs: запрос разрешения, регистрация, отправка токена на бэкенд. */
 export async function registerPush(): Promise<void> {
-  if (!isNativeApp()) return;
+  // Android push is not shipped in RuStore v1: there is no configured FCM
+  // sender yet, so asking for notifications would be misleading.
+  if (!isNativeApp() || nativePlatform() !== "ios") return;
   try {
     const { PushNotifications } = await import("@capacitor/push-notifications");
 

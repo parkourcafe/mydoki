@@ -7,6 +7,7 @@ import {
 } from "@/lib/queries";
 import { relations, relationLabel } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
 import StorageBar from "@/components/StorageBar";
 import SubmitButton from "@/components/SubmitButton";
 import { createMember } from "./actions";
@@ -107,8 +108,15 @@ const M = {
 } as const;
 
 export default async function MyHome() {
-  const locale = await getLocale();
+  const [locale, ruStore] = await Promise.all([
+    getLocale(),
+    isRuStoreRequest(),
+  ]);
   const t = M[locale];
+  const title = ruStore ? "Мои документы" : t.title;
+  const subtitle = ruStore
+    ? "Личные и семейные документы, сроки и защищённый доступ в одном месте."
+    : t.subtitle;
 
   const householdId = await getOrCreateHouseholdId();
   const [members, storage, expiring] = await Promise.all([
@@ -121,9 +129,9 @@ export default async function MyHome() {
     <div className="space-y-8">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold">{t.title}</h1>
+          <h1 className="text-2xl font-semibold">{title}</h1>
           <p className="mt-1 text-sm text-slate-500">
-            {t.subtitle}
+            {subtitle}
           </p>
         </div>
         <a href="/my/export" className="btn-ghost shrink-0">

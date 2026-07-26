@@ -19,6 +19,8 @@ import {
 import { parseOffsets } from "@/lib/reminders";
 import { hashSharePassword } from "@/lib/shareAccess";
 import { normalizeEmploymentType } from "@/lib/employment";
+import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
+import { isRuStoreRestrictedDocumentCategory } from "@/lib/rustore";
 
 export async function signOut() {
   const supabase = await getSupabaseServer();
@@ -198,6 +200,13 @@ export async function createDocumentMeta(input: {
   notes?: string;
   tags?: string[];
 }): Promise<{ id: string; householdId: string }> {
+  if (
+    (await isRuStoreRequest()) &&
+    isRuStoreRestrictedDocumentCategory(input.category)
+  ) {
+    throw new Error("Медицинские документы не входят в версию для RuStore.");
+  }
+
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
 
@@ -331,6 +340,61 @@ export async function unarchiveDocument(formData: FormData) {
 }
 
 /**
+ * Подтверждённый пользователем перенос документа между профилями одной семьи.
+ * Никакого автоматического переноса: action вызывается только формой в UI.
+ */
+export async function moveDocumentToMember(formData: FormData) {
+  const documentId = String(formData.get("document_id") ?? "");
+  const targetMemberId = String(formData.get("target_member_id") ?? "");
+  if (!documentId || !targetMemberId) return;
+
+  const supabase = await getSupabaseServer();
+  const { data: doc, error: docError } = await supabase
+    .from("documents")
+    .select("id, household_id, member_id")
+    .eq("id", documentId)
+    .maybeSingle();
+  if (docError) throw docError;
+  if (!doc) throw new Error("DOCUMENT_NOT_FOUND");
+
+  const { data: target, error: memberError } = await supabase
+    .from("members")
+    .select("id, household_id, full_name")
+    .eq("id", targetMemberId)
+    .eq("household_id", doc.household_id)
+    .maybeSingle();
+  if (memberError) throw memberError;
+  if (!target) throw new Error("TARGET_MEMBER_NOT_FOUND");
+  if (doc.member_id === target.id) return;
+
+  const previousMemberId = doc.member_id as string | null;
+  const { error } = await supabase
+    .from("documents")
+    .update({ member_id: target.id, asset_id: null })
+    .eq("id", documentId)
+    .eq("household_id", doc.household_id);
+  if (error) throw error;
+
+  await supabase.rpc("log_audit", {
+    p_household: doc.household_id,
+    p_action: "document.owner_changed",
+    p_entity_type: "document",
+    p_entity_id: documentId,
+    p_metadata: {
+      previous_member_id: previousMemberId,
+      target_member_id: target.id,
+      target_member_name: target.full_name,
+      confirmed_by_user: true,
+    },
+  });
+
+  revalidatePath(`/my/documents/${documentId}`);
+  if (previousMemberId) revalidatePath(`/my/members/${previousMemberId}`);
+  revalidatePath(`/my/members/${target.id}`);
+  revalidatePath("/my/documents");
+}
+
+/**
  * Запустить автопроверки по текущей версии документа. Идемпотентно: каждый
  * запуск создаёт новые строки document_checks (история сохраняется).
  * Результаты — только pass/mismatch/unreadable; вердиктов о подлинности нет.
@@ -455,6 +519,9 @@ export async function deleteDocument(formData: FormData) {
 }
 
 export async function createRecord(formData: FormData) {
+  if (await isRuStoreRequest()) {
+    throw new Error("Медицинские записи не входят в версию для RuStore.");
+  }
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
 
@@ -476,6 +543,9 @@ export async function createRecord(formData: FormData) {
 }
 
 export async function deleteRecord(formData: FormData) {
+  if (await isRuStoreRequest()) {
+    throw new Error("Медицинские записи не входят в версию для RuStore.");
+  }
   const supabase = await getSupabaseServer();
   const id = String(formData.get("id") ?? "");
   const member_id = String(formData.get("member_id") ?? "");
@@ -490,6 +560,12 @@ export async function createShare(formData: FormData) {
   const document_id = String(formData.get("document_id") ?? "");
   const doc = await getDocument(document_id);
   if (!doc) throw new Error("Документ не найден");
+  if (
+    (await isRuStoreRequest()) &&
+    isRuStoreRestrictedDocumentCategory(doc.category)
+  ) {
+    throw new Error("Медицинские документы не входят в версию для RuStore.");
+  }
 
   const days = Math.max(1, Math.min(90, Number(formData.get("days") ?? 7)));
   const expires_at = new Date(Date.now() + days * 86400_000).toISOString();
@@ -525,6 +601,12 @@ export async function createDocumentShare(
   const supabase = await getSupabaseServer();
   const doc = await getDocument(input.documentId);
   if (!doc) return { error: "not_found" };
+  if (
+    (await isRuStoreRequest()) &&
+    isRuStoreRestrictedDocumentCategory(doc.category)
+  ) {
+    return { error: "not_available_in_rustore" };
+  }
 
   const days = Math.max(1, Math.min(90, Number(input.days) || 7));
   const maxViewsRaw = Number(input.maxViews) || 0;

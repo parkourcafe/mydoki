@@ -16,6 +16,7 @@ import {
   runDocumentChecks,
 } from "@/app/my/actions";
 import { trackEvent } from "@/lib/events";
+import { captureDocument, isNativeApp } from "@/lib/native";
 
 /** sha256 файла (hex) средствами браузера. Пусто, если Web Crypto недоступен. */
 async function sha256Hex(file: File): Promise<string> {
@@ -271,6 +272,7 @@ export default function DocumentForm({
   storageUsed = 0,
   storageLimit,
   aiEnabled = false,
+  excludedCategories = [],
   owners,
   defaultCategory,
   customCategoryId,
@@ -281,6 +283,7 @@ export default function DocumentForm({
   storageUsed?: number;
   storageLimit?: number;
   aiEnabled?: boolean;
+  excludedCategories?: DocCategory[];
   owners?: { id: string; name: string; kind: "member" | "asset" }[];
   defaultCategory?: string;
   // Если документ кладут в пользовательский раздел — встроенную категорию
@@ -288,6 +291,9 @@ export default function DocumentForm({
   customCategoryId?: string;
 }) {
   const t = M[locale];
+  const availableCategories = categories(locale).filter(
+    (category) => !excludedCategories.includes(category.key)
+  );
   const remaining =
     storageLimit != null ? Math.max(0, storageLimit - storageUsed) : null;
   const router = useRouter();
@@ -299,7 +305,11 @@ export default function DocumentForm({
   );
   const [f, setF] = useState<Fields>(() => ({
     ...EMPTY,
-    category: defaultCategory || EMPTY.category,
+    category:
+      defaultCategory &&
+      !excludedCategories.includes(defaultCategory as DocCategory)
+        ? defaultCategory
+        : availableCategories[0]?.key || EMPTY.category,
   }));
   const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
@@ -312,9 +322,8 @@ export default function DocumentForm({
 
   const set = (k: keyof Fields, v: string) => setF((p) => ({ ...p, [k]: v }));
 
-  function addFiles(list: FileList | null) {
-    if (!list || !list.length) return;
-    const incoming = Array.from(list);
+  function appendFiles(incoming: File[]) {
+    if (!incoming.length) return;
     const isFirstFile = files.length === 0;
     setFiles((prev) => {
       const seen = new Set(prev.map((x) => x.name + x.size));
@@ -327,6 +336,33 @@ export default function DocumentForm({
     // запуска или дозагруженных файлов.
     if (aiEnabled && isFirstFile && incoming[0]) {
       classify(incoming[0], true);
+    }
+  }
+
+  function addFiles(list: FileList | null) {
+    if (!list?.length) return;
+    appendFiles(Array.from(list));
+  }
+
+  async function takePhoto() {
+    if (!isNativeApp()) {
+      camRef.current?.click();
+      return;
+    }
+
+    setMsg(null);
+    const dataUrl = await captureDocument();
+    if (!dataUrl) return;
+
+    try {
+      const blob = await (await fetch(dataUrl)).blob();
+      appendFiles([
+        new File([blob], `doki-${Date.now()}.jpg`, {
+          type: blob.type || "image/jpeg",
+        }),
+      ]);
+    } catch {
+      setMsg(t.networkFail);
     }
   }
 
@@ -359,6 +395,7 @@ export default function DocumentForm({
           doc_number: data.doc_number ?? p.doc_number,
           issued_at: data.issued_at ?? p.issued_at,
           expires_at: data.expires_at ?? p.expires_at,
+          holder_name: data.holder_name ?? p.holder_name,
           tags:
             Array.isArray(data.tags) && data.tags.length
               ? data.tags.join(", ")
@@ -505,7 +542,7 @@ export default function DocumentForm({
           </button>
           <button
             type="button"
-            onClick={() => camRef.current?.click()}
+            onClick={() => void takePhoto()}
             className="btn-ghost"
           >
             {t.photo}
@@ -598,7 +635,7 @@ export default function DocumentForm({
             }}
             className="input"
           >
-            {categories(locale).map((c) => (
+            {availableCategories.map((c) => (
               <option key={c.key} value={c.key}>
                 {c.label}
               </option>

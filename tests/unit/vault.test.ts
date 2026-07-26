@@ -10,6 +10,7 @@ import {
   evalDateConsistency,
   evalNameMatch,
   normalizeName,
+  suggestDocumentOwner,
 } from "../../lib/documentChecks.ts";
 import { toCanonical, fromCanonical } from "../../lib/docTypes.ts";
 
@@ -74,6 +75,35 @@ test("evalNameMatch: разные имена → mismatch с обоими ист
 test("evalNameMatch: нет одного из имён → не применимо", () => {
   assert.equal(evalNameMatch(null, "Пётр"), null);
   assert.equal(evalNameMatch("Пётр", ""), null);
+});
+
+test("suggestDocumentOwner: предлагает другого члена семьи при точном совпадении", () => {
+  assert.deepEqual(
+    suggestDocumentOwner("Петров Пётр", "masha", [
+      { id: "masha", full_name: "Мария Петрова" },
+      { id: "petya", full_name: "Пётр Петров" },
+    ]),
+    {
+      member_id: "petya",
+      member_name: "Пётр Петров",
+      reason: "exact_name",
+    }
+  );
+});
+
+test("suggestDocumentOwner: не предлагает текущего или неоднозначного владельца", () => {
+  const members = [
+    { id: "one", full_name: "Иван Петров" },
+    { id: "two", full_name: "Иван Петров" },
+  ];
+  assert.equal(suggestDocumentOwner("Иван Петров", "one", members), null);
+  assert.equal(suggestDocumentOwner("Неизвестный", "one", members), null);
+  assert.equal(
+    suggestDocumentOwner("Мария Петрова", "masha", [
+      { id: "masha", full_name: "Мария Петрова" },
+    ]),
+    null
+  );
 });
 
 test("docTypes: fromCanonical даёт ожидаемые пары", () => {

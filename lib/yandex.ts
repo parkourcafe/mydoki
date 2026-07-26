@@ -92,6 +92,7 @@ const SYSTEM_PROMPT = `Ты извлекаешь метаданные из те�
 - "doc_number": номер документа или null
 - "issued_at": дата выдачи в формате YYYY-MM-DD или null
 - "expires_at": срок действия в формате YYYY-MM-DD или null
+- "holder_name": полное имя человека, которому принадлежит документ, или null
 - "tags": массив коротких русских тегов (может быть [])
 Если поле не удаётся определить — поставь null. Никакого текста кроме JSON.`;
 
@@ -162,6 +163,7 @@ function normalize(raw: Record<string, unknown>): ClassifyResult {
     doc_number: str(raw.doc_number),
     issued_at: str(raw.issued_at),
     expires_at: str(raw.expires_at),
+    holder_name: str(raw.holder_name),
     tags: Array.isArray(raw.tags)
       ? raw.tags.filter((t): t is string => typeof t === "string").slice(0, 10)
       : [],
@@ -307,6 +309,7 @@ function extractFromText(fullText: string): ClassifyResult {
     doc_number: docNumber,
     issued_at: issued,
     expires_at: expires,
+    holder_name: null,
     tags: [],
   };
 }

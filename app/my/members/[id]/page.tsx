@@ -16,6 +16,7 @@ import {
   type RecordKind,
 } from "@/lib/categories";
 import { getLocale } from "@/lib/i18n";
+import { isRuStoreRequest } from "@/lib/isRuStoreRequest";
 import { aiConfigured, userWantsAi } from "@/lib/classify";
 import { createRecord, deleteRecord } from "@/app/my/actions";
 import SubmitButton from "@/components/SubmitButton";
@@ -143,7 +144,10 @@ export default async function MemberPage({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ archived?: string }>;
 }) {
-  const locale = await getLocale();
+  const [locale, ruStore] = await Promise.all([
+    getLocale(),
+    isRuStoreRequest(),
+  ]);
   const t = M[locale];
   const { id } = await params;
   const showArchived = (await searchParams).archived === "1";
@@ -152,14 +156,17 @@ export default async function MemberPage({
 
   const [docs, records, storage, user] = await Promise.all([
     listDocumentsByMember(id, showArchived),
-    listRecordsByMember(id),
+    ruStore ? Promise.resolve([]) : listRecordsByMember(id),
     getStorageInfo(member.household_id),
     getUser(),
   ]);
-  const aiEnabled = aiConfigured() && userWantsAi(user);
+  const aiEnabled = !ruStore && aiConfigured() && userWantsAi(user);
+  const visibleDocs = ruStore
+    ? docs.filter((document) => document.category !== "medical")
+    : docs;
 
-  const byCategory = new Map<DocCategory, typeof docs>();
-  for (const d of docs) {
+  const byCategory = new Map<DocCategory, typeof visibleDocs>();
+  for (const d of visibleDocs) {
     const arr = byCategory.get(d.category) ?? [];
     arr.push(d);
     byCategory.set(d.category, arr);
@@ -176,22 +183,28 @@ export default async function MemberPage({
           {member.relation ? relationLabel(locale, member.relation) : t.none}
           {member.birth_date ? ` · ${member.birth_date}` : ""}
         </p>
-        <Link
-          href={`/my/members/${member.id}/health`}
-          className="mt-2 inline-block text-sm font-medium text-brand-600 hover:underline"
-        >
-          {t.health}
-        </Link>
+        {!ruStore && (
+          <Link
+            href={`/my/members/${member.id}/health`}
+            className="mt-2 inline-block text-sm font-medium text-brand-600 hover:underline"
+          >
+            {t.health}
+          </Link>
+        )}
       </div>
 
       {/* Документы */}
-      {docs.length === 0 ? (
+      {visibleDocs.length === 0 ? (
         <div className="card text-center text-slate-500">
           {t.noDocs}
         </div>
       ) : (
         <div className="space-y-6">
-          {categories(locale).filter((c) => byCategory.has(c.key)).map((c) => (
+          {categories(locale)
+            .filter(
+              (c) => (!ruStore || c.key !== "medical") && byCategory.has(c.key)
+            )
+            .map((c) => (
             <section key={c.key}>
               <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
                 {c.emoji} {c.label}
@@ -258,11 +271,13 @@ export default async function MemberPage({
           storageUsed={storage.used}
           storageLimit={storage.limit}
           aiEnabled={aiEnabled}
+          excludedCategories={ruStore ? ["medical"] : undefined}
         />
       </details>
 
       {/* Записи (медкарта/заметки без файла) */}
-      <section className="space-y-3">
+      {!ruStore && (
+        <section className="space-y-3">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
           {t.records}
         </h2>
@@ -336,7 +351,9 @@ export default async function MemberPage({
             </div>
           </form>
         </details>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
+
