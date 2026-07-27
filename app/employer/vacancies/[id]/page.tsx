@@ -27,12 +27,13 @@ export default async function VacancyDashboard({
   const { id } = await params;
   const { created, updated } = await searchParams;
   const user = await getUser();
+  if (!user) redirect("/login");
   const supabase = await getSupabaseServer();
 
   const { data: profile } = await supabase
     .from("employer_profiles")
     .select("id")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .maybeSingle();
   if (!profile) redirect("/employer");
 

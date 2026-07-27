@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
@@ -72,12 +73,13 @@ export default async function EmployerHome() {
   const locale = await getLocale();
   const t = M[locale];
   const user = await getUser();
+  if (!user) redirect("/login");
   const supabase = await getSupabaseServer();
 
   const { data: profile } = await supabase
     .from("employer_profiles")
     .select("id")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .maybeSingle();
 
   if (!profile) {
