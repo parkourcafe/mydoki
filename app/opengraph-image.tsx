@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "doki.help — a safe place for your family's documents";
+export const alt = "doki.help — candidate and employee documents with one link";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -39,7 +39,7 @@ export default function Image() {
             color: "#5c5248",
           }}
         >
-          A safe place for your family&apos;s documents
+          Candidate and employee documents with one link
         </div>
         <div
           style={{
@@ -50,7 +50,7 @@ export default function Image() {
             letterSpacing: 1,
           }}
         >
-          IDs  ·  Medical  ·  Education  ·  Property
+          KTP  ·  CV  ·  Certificates  ·  Onboarding
         </div>
       </div>
     ),

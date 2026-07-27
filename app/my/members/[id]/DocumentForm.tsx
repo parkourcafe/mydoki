@@ -59,11 +59,11 @@ const M = {
     filesLabel: "Document files",
     remove: "remove",
     filesHint:
-      "On a phone, “Take a photo” opens the camera. Files are kept in your family's private storage.",
+      "On a phone, “Take a photo” opens the camera. Files are kept in your private document storage.",
     free: "Free",
     gb: "GB",
     quotaExceeded:
-      "Not enough space in your family's storage. Delete files you don't need — or contact us to raise the limit.",
+      "Not enough space in your document storage. Delete files you don't need — or contact us to raise the limit.",
     owner: "Whose document",
     title: "Title",
     optional: "optional",

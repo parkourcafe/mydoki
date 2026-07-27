@@ -37,7 +37,7 @@ const M = {
     validUntil: "valid until",
     open: "Open",
     download: "↓ Download",
-    footer: "🔐 Secure “Family Vault” link. Access is time-limited and logged.",
+    footer: "🔐 Secure document package link. Access is time-limited and logged.",
   },
   id: {
     invalidTitle: "Tautan tidak valid",
@@ -48,7 +48,7 @@ const M = {
     validUntil: "berlaku hingga",
     open: "Buka",
     download: "↓ Unduh",
-    footer: "🔐 Tautan aman “Brankas Keluarga”. Akses dibatasi waktu dan dicatat.",
+    footer: "🔐 Tautan paket dokumen aman. Akses dibatasi waktu dan dicatat.",
   },
   uz: {
     invalidTitle: "Havola yaroqsiz",

@@ -67,10 +67,10 @@ const M = {
     mfaRecommend: "— hujjatlaringiz uchun qoʻshimcha himoya.",
   },
   id: {
-    brand: "Brankas keluarga",
+    brand: "Dokumen kerja",
     signOut: "Keluar",
     menu: "Menu",
-    family: "Keluarga",
+    family: "Dokumen saya",
     documents: "Dokumen",
     assets: "Aset",
     search: "Cari",

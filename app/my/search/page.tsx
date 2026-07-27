@@ -22,7 +22,7 @@ const M = {
   },
   en: {
     title: "Search",
-    subtitle: "By title, type, or issuer — within your family.",
+    subtitle: "By title, type, or issuer — across your documents.",
     query: "Query",
     queryPlaceholder: "passport, diploma, insurance…",
     category: "Category",
@@ -46,7 +46,7 @@ const M = {
   },
   id: {
     title: "Cari",
-    subtitle: "Berdasarkan judul, jenis, atau penerbit — dalam keluarga Anda.",
+    subtitle: "Berdasarkan judul, jenis, atau penerbit — di semua dokumen Anda.",
     query: "Kueri",
     queryPlaceholder: "paspor, ijazah, asuransi…",
     category: "Kategori",
