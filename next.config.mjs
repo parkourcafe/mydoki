@@ -29,6 +29,7 @@ const noindexHeader = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
 const NOINDEX_SOURCES = [
   "/s/:path*",
   "/pkg/:path*",
+  "/apply/:path*",
   "/applications/status/:path*",
   "/apply/claim/:path*",
   "/portfolio/:path*",
