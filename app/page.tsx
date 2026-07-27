@@ -13,9 +13,10 @@ import { trustLinks } from "@/lib/trust";
 
 const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3EKntK4EDjG8nay4H1dy1TK30mB";
 const MEDIA = {
-  heroVideo: `${CDN}/hf_20260705_173559_470d784d-c825-4060-9400-401a45fa6312.mp4`,
-  heroPoster: `${CDN}/hf_20260705_173205_0c5580fc-2c91-4fb3-9491-b220403182bb_min.webp`,
-  employer: `${CDN}/hf_20260705_174154_99154d83-7edc-496c-9a27-e6d039f29f05_min.webp`,
+  heroVideo: `${CDN}/hf_20260727_140309_c3960ccb-994b-4610-8aab-0249e1636093.mp4`,
+  heroPoster: `${CDN}/hf_20260727_140307_284c2800-4778-44f8-997a-b9f7350a96b3_min.webp`,
+  heroPerson: `${CDN}/hf_20260727_140305_8c031099-59d5-48b5-97dd-e64cb5a539c4_min.webp`,
+  workflowPhoto: `${CDN}/hf_20260727_140307_284c2800-4778-44f8-997a-b9f7350a96b3_min.webp`,
   heroFallback: `${CDN}/hf_20260624_011709_6438e496-ffee-421a-a01a-41cca1abd28f_min.webp`,
 };
 
@@ -681,7 +682,7 @@ export default async function Home({
               <div className="hero-rise hero-rise-4 overflow-hidden rounded-[1.75rem] border border-white/15 bg-white/[0.08] p-3 shadow-2xl backdrop-blur-md">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={MEDIA.employer}
+                  src={MEDIA.heroPerson}
                   alt={t.hero.imgAlt}
                   width={928}
                   height={1152}
@@ -728,7 +729,7 @@ export default async function Home({
               <div className="relative min-h-[360px] lg:col-span-5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={MEDIA.employer}
+                  src={MEDIA.workflowPhoto}
                   alt={locale === "id" ? "Pemilik bisnis meninjau checklist dokumen kandidat" : "Business owner reviewing candidate document checklist"}
                   className="absolute inset-0 h-full w-full object-cover opacity-72"
                 />
