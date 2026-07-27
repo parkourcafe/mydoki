@@ -360,7 +360,7 @@ export default function LoginForm({
               </span>
             </label>
             <label className="flex items-start gap-2 text-xs text-slate-500">
-              <input type="checkbox" required className="mt-0.5" />
+              <input type="checkbox" className="mt-0.5" />
               <span>{t.consentHealth}</span>
             </label>
           </>

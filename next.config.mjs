@@ -28,6 +28,11 @@ const agentLinkHeader = [
 const noindexHeader = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
 const NOINDEX_SOURCES = [
   "/s/:path*",
+  "/pkg/:path*",
+  "/applications/status/:path*",
+  "/apply/claim/:path*",
+  "/portfolio/:path*",
+  "/employer/:path*",
   "/invite/:path*",
   "/saved",
   "/offline",
