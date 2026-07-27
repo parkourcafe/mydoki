@@ -85,3 +85,41 @@ body {
 .nav-link:hover {
   color: #2c2522;
 }
+
+/* Cinematic landing layer restored from the earlier approved visual direction. */
+.hero-stage {
+  position: relative;
+  overflow: hidden;
+  min-height: 690px;
+  background: radial-gradient(circle at 20% 20%, rgb(184 92 56 / 0.35), transparent 34%), #241b16;
+  box-shadow: 0 34px 80px -28px rgb(44 37 34 / 0.55);
+}
+.hero-accent {
+  color: #f6b17e;
+}
+.hero-cta {
+  background: linear-gradient(135deg, #d47645 0%, #b85c38 100%);
+  box-shadow: 0 16px 35px -18px rgb(232 147 95 / 0.9);
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+.hero-cta:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+.hero-rise {
+  animation: heroRise 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.hero-rise-1 { animation-delay: 0.03s; }
+.hero-rise-2 { animation-delay: 0.11s; }
+.hero-rise-3 { animation-delay: 0.18s; }
+.hero-rise-4 { animation-delay: 0.26s; }
+.hero-kicker-dot {
+  box-shadow: 0 0 0 7px rgb(232 147 95 / 0.12);
+}
+@keyframes heroRise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 640px) {
+  .hero-stage { min-height: 720px; }
+}

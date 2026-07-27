@@ -11,6 +11,14 @@ import { checklistLinks } from "@/lib/checklists";
 import { guideLinks } from "@/lib/guides";
 import { trustLinks } from "@/lib/trust";
 
+const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3EKntK4EDjG8nay4H1dy1TK30mB";
+const MEDIA = {
+  heroVideo: `${CDN}/hf_20260705_173559_470d784d-c825-4060-9400-401a45fa6312.mp4`,
+  heroPoster: `${CDN}/hf_20260705_173205_0c5580fc-2c91-4fb3-9491-b220403182bb_min.webp`,
+  employer: `${CDN}/hf_20260705_174154_99154d83-7edc-496c-9a27-e6d039f29f05_min.webp`,
+  heroFallback: `${CDN}/hf_20260624_011709_6438e496-ffee-421a-a01a-41cca1abd28f_min.webp`,
+};
+
 // Заголовки блоков внутренней перелинковки на новые SEO-страницы.
 const MORE_HEADINGS: Record<Locale, { tools: string; checklists: string; guides: string }> = {
   ru: { tools: "Напоминания о сроках и сейфы", checklists: "Чеклисты документов", guides: "Гайды" },
@@ -601,60 +609,98 @@ export default async function Home({
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="mx-auto max-w-screen-xl px-5 pb-8 pt-10">
-        <div className="grid items-center gap-x-8 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <div className="mb-6 inline-flex items-center gap-x-2 rounded-full border border-[#e8e0d5] bg-white px-4 py-1.5 text-sm">
-              <span className="h-2 w-2 rounded-full bg-[#b85c38]" />
-              <span className="font-medium text-[#5c5248]">{t.hero.badge}</span>
-            </div>
-
-            <h1 className="heading-font mb-5 text-[2.65rem] leading-[1.05] tracking-[-1.4px] text-[#2c2522] lg:text-[3.5rem]">
-              {t.hero.title.map((line, i) => (
-                <span key={i}>
-                  {line}
-                  {i < t.hero.title.length - 1 && <br />}
-                </span>
-              ))}
-            </h1>
-
-            <p className="mb-8 max-w-md text-[19px] leading-snug text-[#5c5248]">{t.hero.subtitle}</p>
-
-            <div className="mb-8 flex max-w-lg flex-col gap-3 sm:flex-row">
-              <Link href={signupPath(locale)} className="accent-btn flex flex-1 items-center justify-center rounded-3xl px-8 py-[17px] text-[17px] font-semibold active:scale-[0.985]">
-                {t.hero.cta1}
-              </Link>
-              <a href="#how" className="flex flex-1 items-center justify-center rounded-3xl border border-[#d4c9b8] px-8 py-[17px] text-[17px] font-semibold transition-colors hover:bg-white">
-                {t.hero.cta2}
-              </a>
-            </div>
-
-            <Link
-              href={localizedPath(locale, "/demo")}
-              className="mb-6 inline-block text-sm font-medium text-[#b85c38] hover:underline"
-            >
-              {t.hero.demo}
-            </Link>
-
-            <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#5c5248]">
-              {t.hero.trust.map((tr) => (
-                <span key={tr} className="flex items-center gap-x-2"><Check /> {tr}</span>
-              ))}
-            </div>
-            <p className="mt-3 text-xs text-[#8a7c6d]">🔒 {t.hero.security}</p>
-          </div>
-
-          <div className="mt-8 lg:col-span-5 lg:mt-0">
+      {/* HERO — restored cinematic video/photo layer, with current employer/candidate copy */}
+      <section className="mx-auto max-w-screen-xl px-3 pt-4 sm:px-5 sm:pt-6">
+        <div className="hero-stage rounded-[2rem] px-5 py-10 text-[#f9f5f0] sm:px-10 sm:py-14 lg:px-14">
+          <div className="absolute inset-0 overflow-hidden rounded-[2rem]" aria-hidden="true">
+            <video
+              className="h-full w-full object-cover opacity-40 motion-reduce:hidden"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={MEDIA.heroPoster}
+              src={MEDIA.heroVideo}
+            />
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://d8j0ntlcm91z4.cloudfront.net/user_3EKntK4EDjG8nay4H1dy1TK30mB/hf_20260624_011709_6438e496-ffee-421a-a01a-41cca1abd28f_min.webp"
-              alt={t.hero.imgAlt}
-              width={928}
-              height={1152}
-              loading="eager"
-              className="h-auto w-full rounded-3xl border border-[#e8e0d5] object-cover shadow-2xl"
+              src={MEDIA.heroPoster}
+              alt=""
+              className="hidden h-full w-full object-cover opacity-40 motion-reduce:block"
             />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#241b16]/95 via-[#241b16]/72 to-[#241b16]/28" />
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#241b16]/80 to-transparent" />
+          </div>
+
+          <div className="relative z-10 grid items-center gap-x-12 gap-y-12 lg:grid-cols-12">
+            <div className="lg:col-span-7">
+              <div className="hero-rise hero-rise-1 mb-6 inline-flex items-center gap-x-2.5 rounded-full border border-white/15 bg-white/[0.06] px-4 py-1.5 text-sm backdrop-blur">
+                <span className="hero-kicker-dot h-2 w-2 rounded-full bg-[#e8935f]" />
+                <span className="font-medium text-[#e9ddcd]">{t.hero.badge}</span>
+              </div>
+
+              <h1 className="hero-rise hero-rise-2 heading-font mb-5 text-[2.55rem] leading-[1.04] tracking-[-1.4px] sm:text-[3.1rem] lg:text-[3.65rem]">
+                {t.hero.title.map((line, i) => (
+                  <span key={i} className={i === 1 ? "hero-accent" : undefined}>
+                    {line}
+                    {i < t.hero.title.length - 1 && <br />}
+                  </span>
+                ))}
+              </h1>
+
+              <p className="hero-rise hero-rise-3 mb-8 max-w-xl text-[17px] leading-relaxed text-[#cfc2b1] sm:text-[18px]">
+                {t.hero.subtitle}
+              </p>
+
+              <div className="hero-rise hero-rise-4 mb-7 flex max-w-xl flex-col gap-3 sm:flex-row">
+                <Link href={signupPath(locale)} className="hero-cta flex flex-1 items-center justify-center rounded-3xl px-8 py-[17px] text-[17px] font-semibold text-white active:scale-[0.985]">
+                  {t.hero.cta1}
+                </Link>
+                <a href="#how" className="flex flex-1 items-center justify-center rounded-3xl border border-white/20 bg-white/[0.06] px-8 py-[17px] text-[17px] font-semibold text-white backdrop-blur transition-colors hover:bg-white/[0.12]">
+                  {t.hero.cta2}
+                </a>
+              </div>
+
+              <Link
+                href={localizedPath(locale, "/demo")}
+                className="mb-6 inline-block text-sm font-medium text-[#f6b17e] hover:underline"
+              >
+                {t.hero.demo}
+              </Link>
+
+              <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-[#ded0bd]">
+                {t.hero.trust.map((tr) => (
+                  <span key={tr} className="flex items-center gap-x-2"><Check /> {tr}</span>
+                ))}
+              </div>
+              <p className="mt-3 text-xs text-[#bfae9b]">🔒 {t.hero.security}</p>
+            </div>
+
+            <div className="lg:col-span-5">
+              <div className="hero-rise hero-rise-4 overflow-hidden rounded-[1.75rem] border border-white/15 bg-white/[0.08] p-3 shadow-2xl backdrop-blur-md">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={MEDIA.employer}
+                  alt={t.hero.imgAlt}
+                  width={928}
+                  height={1152}
+                  loading="eager"
+                  className="aspect-[4/5] w-full rounded-[1.35rem] object-cover"
+                />
+                <div className="mt-3 rounded-2xl border border-white/10 bg-[#241b16]/70 p-4 text-sm text-[#e9ddcd]">
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <span className="font-semibold">{locale === "id" ? "Status dokumen" : "Document status"}</span>
+                    <span className="rounded-full bg-[#2f6d4f] px-2.5 py-1 text-xs text-white">{locale === "id" ? "3 lengkap" : "3 complete"}</span>
+                  </div>
+                  <div className="space-y-2 text-[#cfc2b1]">
+                    <div className="flex justify-between gap-3"><span>KTP / ID</span><span className="text-[#a8e6bd]">✓</span></div>
+                    <div className="flex justify-between gap-3"><span>CV</span><span className="text-[#a8e6bd]">✓</span></div>
+                    <div className="flex justify-between gap-3"><span>{locale === "id" ? "Kontrak" : "Contract"}</span><span className="text-[#f6b17e]">{locale === "id" ? "perlu tanda tangan" : "needs signature"}</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -673,6 +719,108 @@ export default async function Home({
           </ul>
         </div>
       </section>
+
+      {/* VISUAL WORKFLOW — richer product feel for the Indonesia employer/candidate launch */}
+      {(locale === "en" || locale === "id") && (
+        <section className="mx-auto max-w-screen-xl px-4 py-8 sm:px-5">
+          <div className="overflow-hidden rounded-[2rem] border border-[#e8e0d5] bg-[#2c2522] text-[#f9f5f0] shadow-2xl">
+            <div className="grid gap-0 lg:grid-cols-12">
+              <div className="relative min-h-[360px] lg:col-span-5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={MEDIA.employer}
+                  alt={locale === "id" ? "Pemilik bisnis meninjau checklist dokumen kandidat" : "Business owner reviewing candidate document checklist"}
+                  className="absolute inset-0 h-full w-full object-cover opacity-72"
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#2c2522]/35 via-[#2c2522]/35 to-[#2c2522] lg:bg-gradient-to-r" />
+                <div className="absolute bottom-5 left-5 right-5 rounded-3xl border border-white/15 bg-[#241b16]/75 p-4 text-sm shadow-2xl backdrop-blur">
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="font-semibold">{locale === "id" ? "Lowongan: Front Desk" : "Role: Front Desk"}</span>
+                    <span className="rounded-full bg-[#2f6d4f] px-2.5 py-1 text-xs">{locale === "id" ? "siap dikirim" : "ready to send"}</span>
+                  </div>
+                  <div className="text-[#d8c9b8]">
+                    {locale === "id"
+                      ? "Checklist: KTP, CV, sertifikat training, kontrak onboarding"
+                      : "Checklist: KTP/ID, CV, training certificate, onboarding contract"}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-6 sm:p-8 lg:col-span-7 lg:p-10">
+                <div className="mb-4 inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#f6b17e]">
+                  {locale === "id" ? "Alur nyata" : "Real workflow"}
+                </div>
+                <h2 className="heading-font max-w-2xl text-3xl tracking-tight sm:text-4xl">
+                  {locale === "id"
+                    ? "Dari link kandidat ke board dokumen yang jelas"
+                    : "From candidate link to a clear document board"}
+                </h2>
+                <p className="mt-4 max-w-2xl text-[17px] leading-relaxed text-[#d8c9b8]">
+                  {locale === "id"
+                    ? "Kandidat membuka tautan dari WhatsApp, mengunggah dokumen yang diminta, lalu perusahaan melihat status tanpa mengejar file satu per satu."
+                    : "The candidate opens a WhatsApp-ready link, uploads the requested files, and the company sees status without chasing every document manually."}
+                </p>
+
+                <div className="mt-8 grid gap-5 md:grid-cols-[0.85fr_1.15fr]">
+                  <div className="mx-auto w-full max-w-[260px] rounded-[2.1rem] border border-white/15 bg-[#111]/80 p-3 shadow-2xl">
+                    <div className="rounded-[1.65rem] bg-[#fdfaf5] p-4 text-[#2c2522]">
+                      <div className="mb-3 flex items-center justify-between text-xs text-[#8a7c6d]">
+                        <span>doki.help</span>
+                        <span>09:41</span>
+                      </div>
+                      <div className="rounded-2xl bg-[#efe5d8] p-3">
+                        <div className="text-sm font-semibold">{locale === "id" ? "Paket dokumen Anda" : "Your document package"}</div>
+                        <div className="mt-1 text-xs text-[#6b5d50]">{locale === "id" ? "Front Desk · Bali" : "Front Desk · Bali"}</div>
+                      </div>
+                      <div className="mt-4 space-y-2 text-sm">
+                        {[
+                          ["KTP / ID", true],
+                          ["CV", true],
+                          [locale === "id" ? "Sertifikat" : "Certificate", false],
+                          [locale === "id" ? "Kontrak" : "Contract", false],
+                        ].map(([label, ok]) => (
+                          <div key={String(label)} className="flex items-center justify-between rounded-xl border border-[#eadfce] bg-white px-3 py-2">
+                            <span>{label}</span>
+                            <span className={ok ? "text-[#2f6d4f]" : "text-[#b85c38]"}>{ok ? "✓" : "•"}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-4 rounded-2xl bg-[#b85c38] py-3 text-center text-sm font-semibold text-white">
+                        {locale === "id" ? "Unggah dokumen" : "Upload documents"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-[1.7rem] border border-white/12 bg-white/[0.07] p-4 backdrop-blur">
+                    <div className="mb-4 flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-sm text-[#bfae9b]">{locale === "id" ? "Board perusahaan" : "Employer board"}</div>
+                        <div className="text-xl font-semibold">{locale === "id" ? "Status kandidat" : "Candidate status"}</div>
+                      </div>
+                      <div className="rounded-full bg-white/10 px-3 py-1 text-xs text-[#d8c9b8]">{locale === "id" ? "live" : "live"}</div>
+                    </div>
+                    <div className="space-y-3">
+                      {[
+                        ["Ayu", locale === "id" ? "lengkap" : "complete", "#2f6d4f"],
+                        ["Budi", locale === "id" ? "perlu tanda tangan" : "needs signature", "#b85c38"],
+                        ["Maya", locale === "id" ? "kurang sertifikat" : "missing certificate", "#9f6b33"],
+                      ].map(([name, status, color]) => (
+                        <div key={String(name)} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-[#241b16]/65 p-4">
+                          <div>
+                            <div className="font-semibold">{name}</div>
+                            <div className="mt-1 text-sm text-[#bfae9b]">KTP · CV · {locale === "id" ? "kontrak" : "contract"}</div>
+                          </div>
+                          <span className="rounded-full px-3 py-1 text-xs text-white" style={{ backgroundColor: String(color) }}>{status}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* FOR WHOM */}
       <section className="mx-auto max-w-screen-xl px-5 py-8">
