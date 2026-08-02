@@ -203,7 +203,8 @@ export async function saveCompanySettings(formData: FormData) {
   if (!user) redirect("/login");
 
   const company_name = String(formData.get("company_name") ?? "").trim();
-  if (!company_name) return;
+  // Пустое название раньше тихо выходило — форма закрывалась как будто сохранила.
+  if (!company_name) redirect("/employer/settings?saved=name");
   const contact_whatsapp = String(formData.get("contact_whatsapp") ?? "").trim();
   const contact_email = String(formData.get("contact_email") ?? "").trim();
   const country = String(formData.get("country") ?? "").trim();
@@ -233,6 +234,7 @@ export async function saveCompanySettings(formData: FormData) {
   );
   if (error) throw error;
   revalidatePath("/employer/settings");
+  redirect("/employer/settings?saved=1");
 }
 
 export type CreateVacancyInput = {
