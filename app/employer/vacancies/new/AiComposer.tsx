@@ -51,6 +51,7 @@ const M = {
     disclaimer: "AI only fills the form — nothing is published until you review and click Publish.",
     generate: "Generate draft",
     generating: "Generating…",
+    errFailed: "Couldn't generate a draft. Try again, or fill the form in manually.",
     close: "Close",
     empty: "Describe who you need first.",
   },
@@ -62,6 +63,7 @@ const M = {
     disclaimer: "AI hanya mengisi formulir — tidak ada yang dipublikasikan sampai Anda meninjau dan klik Publikasikan.",
     generate: "Buat draf",
     generating: "Membuat…",
+    errFailed: "Draf tidak dapat dibuat. Coba lagi, atau isi formulir secara manual.",
     close: "Tutup",
     empty: "Jelaskan dulu siapa yang Anda butuhkan.",
   },
@@ -73,6 +75,7 @@ const M = {
     disclaimer: "ИИ только заполняет форму — ничего не публикуется, пока вы не проверите и не нажмёте «Опубликовать».",
     generate: "Сгенерировать черновик",
     generating: "Генерация…",
+    errFailed: "Не удалось сгенерировать черновик. Попробуйте ещё раз или заполните форму вручную.",
     close: "Закрыть",
     empty: "Сначала опишите, кто вам нужен.",
   },
@@ -84,6 +87,7 @@ const M = {
     disclaimer: "AI faqat shaklni to‘ldiradi — siz ko‘rib chiqib «E’lon qilish»ni bosmaguningizcha hech narsa e’lon qilinmaydi.",
     generate: "Draft yaratish",
     generating: "Yaratilmoqda…",
+    errFailed: "Qoralamani yaratib bo‘lmadi. Qayta urining yoki formani qo‘lda to‘ldiring.",
     close: "Yopish",
     empty: "Avval kim kerakligini yozing.",
   },
@@ -137,7 +141,7 @@ export default function AiComposer({
           generation_success: false,
           error_type: (data?.error_type as string) ?? `http_${res.status}`,
         });
-        setError((data?.error as string) || t.generating);
+        setError(t.errFailed);
         setBusy(false);
         return;
       }
@@ -155,7 +159,7 @@ export default function AiComposer({
         generation_success: false,
         error_type: "network",
       });
-      setError(t.generating);
+      setError(t.errFailed);
       setBusy(false);
     }
   }

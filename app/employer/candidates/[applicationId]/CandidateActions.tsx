@@ -207,14 +207,14 @@ export default function CandidateActions({
             />
             <button
               type="button"
-              disabled={pending}
+              disabled={pending || !reqNote.trim()}
               onClick={() =>
                 run(async () => {
                   await requestApplicationDocuments(applicationId, vacancyId, reqNote);
                   setReqNote("");
                 })
               }
-              className="btn-ghost mt-2"
+              className="btn-ghost mt-2 disabled:opacity-50"
             >
               {t.request}
             </button>

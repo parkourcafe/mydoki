@@ -30,6 +30,31 @@ function hashCode(code: string): string {
   return createHash("sha256").update(VERIFY_SALT + code).digest("hex");
 }
 
+// Письмо с кодом — на языке кабинета работодателя. Индонезийский рынок
+// основной, поэтому дефолт при неизвестной локали — id.
+const CODE_EMAIL = {
+  id: {
+    subject: (c: string) => `Doki — kode verifikasi: ${c}`,
+    lead: "Kode verifikasi perusahaan Anda:",
+    note: "Kode berlaku 15 menit. Jika Anda tidak memintanya, abaikan saja email ini.",
+  },
+  en: {
+    subject: (c: string) => `Doki — verification code: ${c}`,
+    lead: "Your employer verification code:",
+    note: "The code is valid for 15 minutes. If you didn't request it, just ignore this email.",
+  },
+  ru: {
+    subject: (c: string) => `Doki — код подтверждения: ${c}`,
+    lead: "Код подтверждения работодателя:",
+    note: "Код действует 15 минут. Если вы его не запрашивали — просто проигнорируйте письмо.",
+  },
+  uz: {
+    subject: (c: string) => `Doki — tasdiqlash kodi: ${c}`,
+    lead: "Ish beruvchi tasdiqlash kodingiz:",
+    note: "Kod 15 daqiqa amal qiladi. Agar so‘ramagan bo‘lsangiz, xatga e’tibor bermang.",
+  },
+} as const;
+
 async function sendCodeEmail(
   to: string,
   code: string,
@@ -38,6 +63,7 @@ async function sendCodeEmail(
   if (!key || !to) return { ok: false, detail: "no RESEND_API_KEY" };
   const from =
     process.env.ALERT_EMAIL_FROM || "Doki <noreply@doki.help>";
+  const t = CODE_EMAIL[await getLocale()] ?? CODE_EMAIL.id;
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -48,10 +74,10 @@ async function sendCodeEmail(
       body: JSON.stringify({
         from,
         to,
-        subject: `Doki — код подтверждения: ${code}`,
-        html: `<p>Код подтверждения работодателя:</p>
+        subject: t.subject(code),
+        html: `<p>${t.lead}</p>
 <p style="font-size:26px;font-weight:700;letter-spacing:4px">${code}</p>
-<p>Код действует 15 минут. Если вы его не запрашивали — просто проигнорируйте письмо.</p>`,
+<p>${t.note}</p>`,
       }),
     });
     if (res.ok) return { ok: true };
