@@ -5,19 +5,19 @@ import { getLocale, type Locale } from "@/lib/i18n";
 const META: Record<Locale, { title: string; description: string }> = {
   ru: {
     title: "Пользовательское соглашение",
-    description: "Условия использования doki.help: аккаунт, ваши документы, AI-функции, резервные копии, удаление и ответственность.",
+    description: "Условия использования doki.help: аккаунт, документы кандидатов и сотрудников, AI-функции, резервные копии, удаление и ответственность. Не юридическая консультация.",
   },
   en: {
     title: "Terms of Service",
-    description: "Terms for using doki.help, including accounts, uploaded documents, AI features, backups, deletion, and liability.",
+    description: "Terms for using doki.help: accounts, candidate and employee documents, AI features, backups, deletion, and liability. Not legal advice.",
   },
   id: {
     title: "Ketentuan Penggunaan",
-    description: "Ketentuan penggunaan doki.help mengenai akun, dokumen yang diunggah, fitur AI, cadangan, penghapusan, dan tanggung jawab.",
+    description: "Ketentuan penggunaan doki.help: akun, dokumen kandidat dan karyawan, fitur AI, cadangan, penghapusan, dan tanggung jawab. Bukan nasihat hukum.",
   },
   uz: {
     title: "Foydalanish shartlari",
-    description: "doki.help hisoblari, yuklangan hujjatlar, AI funksiyalari, zaxira, oʻchirish va javobgarlik bo‘yicha foydalanish shartlari.",
+    description: "doki.help shartlari: hisob, nomzod va xodim hujjatlari, AI funksiyalari, zaxira, oʻchirish va javobgarlik. Yuridik maslahat emas.",
   },
 };
 
@@ -63,11 +63,11 @@ const M = {
     title: "Terms of Service",
     lastUpdated: "Last updated: 23.06.2026.",
     h1: "1. About the service",
-    p1: "doki.help is a service for storing and organizing your family's documents: IDs, medical records, property, trips and more, with reminders about deadlines and secure sharing via link. The service is under active development (beta) and is provided «as is».",
+    p1: "doki.help is a service for collecting, storing, and organizing candidate and employee documents: identity documents, CVs, certificates, contracts, onboarding forms, and other files relevant to work processes in Indonesia. The service is under active development (beta) and is provided «as is».",
     h2: "2. Registration and access",
     p2: "An account is required to use the service (email or sign-in via Google). You are responsible for keeping your account access secure. We recommend enabling two-factor authentication.",
     h3: "3. Your content",
-    p3: "You upload documents and data at your own responsibility and confirm that you have the right to store and process them (including the data of family members — with their knowledge, and in respect of children — as their legal representative). Uploading illegal materials and other people's data without a legal basis is prohibited.",
+    p3: "You upload documents and data at your own responsibility and confirm that you have the right to store, send, or process them. Companies must request only documents relevant to the application, onboarding, or employment process and limit access to authorized people. Uploading illegal materials and other people's data without a legal basis is prohibited.",
     h4: "4. AI assistant and AI lawyer",
     p4: "Responses from AI features, including the AI lawyer, are for reference and informational purposes only and do not constitute legal, medical or any other professional advice. For important matters, consult a qualified specialist. We do not guarantee the accuracy and completeness of AI responses.",
     h5: "5. Backups",
@@ -88,11 +88,11 @@ const M = {
     title: "Ketentuan Penggunaan",
     lastUpdated: "Tanggal pembaruan terakhir: 23.06.2026.",
     h1: "1. Tentang layanan",
-    p1: "doki.help adalah layanan untuk menyimpan dan menata dokumen keluarga: identitas, data medis, properti, perjalanan, dan lainnya, dengan pengingat tenggat waktu dan pengiriman aman melalui tautan. Layanan ini sedang dalam pengembangan aktif (beta) dan disediakan «sebagaimana adanya».",
+    p1: "doki.help adalah layanan untuk mengumpulkan, menyimpan, dan menata dokumen kandidat dan karyawan: identitas, CV, sertifikat, kontrak, formulir onboarding, dan berkas lain yang relevan dengan proses kerja. Layanan ini sedang dalam pengembangan aktif (beta) dan disediakan «sebagaimana adanya».",
     h2: "2. Pendaftaran dan akses",
     p2: "Untuk menggunakan layanan diperlukan akun (email atau masuk melalui Google). Anda bertanggung jawab menjaga keamanan akses ke akun Anda. Kami menyarankan untuk mengaktifkan autentikasi dua faktor.",
     h3: "3. Konten Anda",
-    p3: "Anda mengunggah dokumen dan data atas tanggung jawab Anda sendiri dan menyatakan bahwa Anda berhak menyimpan dan memprosesnya (termasuk data anggota keluarga — dengan sepengetahuan mereka, dan untuk anak-anak — sebagai wali yang sah). Dilarang mengunggah materi ilegal dan data orang lain tanpa dasar yang sah.",
+    p3: "Anda mengunggah dokumen dan data atas tanggung jawab Anda sendiri dan menyatakan bahwa Anda berhak menyimpan, mengirim, atau memprosesnya. Perusahaan wajib meminta hanya dokumen yang relevan dengan proses lamaran, onboarding, atau hubungan kerja, dan membatasi akses kepada pihak yang berwenang. Dilarang mengunggah materi ilegal dan data orang lain tanpa dasar yang sah.",
     h4: "4. Asisten AI dan pengacara AI",
     p4: "Jawaban dari fitur AI, termasuk pengacara AI, bersifat referensi dan informasi saja serta bukan merupakan nasihat hukum, medis, atau nasihat profesional lainnya. Untuk hal-hal penting, hubungi spesialis yang berkualifikasi. Kami tidak menjamin keakuratan dan kelengkapan jawaban AI.",
     h5: "5. Cadangan data",

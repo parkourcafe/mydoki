@@ -28,6 +28,12 @@ const agentLinkHeader = [
 const noindexHeader = [{ key: "X-Robots-Tag", value: "noindex, nofollow" }];
 const NOINDEX_SOURCES = [
   "/s/:path*",
+  "/pkg/:path*",
+  "/apply/:path*",
+  "/applications/status/:path*",
+  "/apply/claim/:path*",
+  "/portfolio/:path*",
+  "/employer/:path*",
   "/invite/:path*",
   "/saved",
   "/offline",
@@ -47,4 +53,11 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// T7: анализатор бандла. Включается только при ANALYZE=true (`npm run analyze`),
+// в обычной сборке — no-op, без веса в проде.
+const withBundleAnalyzer = (await import("@next/bundle-analyzer")).default({
+  enabled: process.env.ANALYZE === "true",
+  openAnalyzer: false,
+});
+
+export default withBundleAnalyzer(nextConfig);

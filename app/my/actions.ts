@@ -10,6 +10,7 @@ import {
   getOrCreateHouseholdId,
   getStorageInfo,
   getUser,
+  assertEmailVerified,
 } from "@/lib/queries";
 import {
   evalDateConsistency,
@@ -198,6 +199,7 @@ export async function createDocumentMeta(input: {
   notes?: string;
   tags?: string[];
 }): Promise<{ id: string; householdId: string }> {
+  await assertEmailVerified(); // загрузка документов — только после подтверждения email
   const supabase = await getSupabaseServer();
   const householdId = await getOrCreateHouseholdId();
 
@@ -253,6 +255,7 @@ export async function attachDocumentFile(input: {
   sizeBytes: number;
   fileHash?: string;
 }) {
+  await assertEmailVerified(); // подтверждение email — предусловие загрузки файла
   const supabase = await getSupabaseServer();
 
   // Лимит хранилища пространства: не даём превысить.
@@ -486,6 +489,7 @@ export async function deleteRecord(formData: FormData) {
 }
 
 export async function createShare(formData: FormData) {
+  await assertEmailVerified(); // шеринг наружу — только после подтверждения email
   const supabase = await getSupabaseServer();
   const document_id = String(formData.get("document_id") ?? "");
   const doc = await getDocument(document_id);

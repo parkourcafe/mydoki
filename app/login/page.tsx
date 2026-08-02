@@ -18,23 +18,23 @@ const M = {
     oauthError: "Не удалось войти через Google. Попробуйте ещё раз.",
   },
   en: {
-    badge: "Family vault",
-    headingLead: "All your family's documents —",
-    headingAccent: "in one secure place",
+    badge: "Work documents",
+    headingLead: "Candidate and employee documents —",
+    headingAccent: "complete with one link",
     subtitle:
-      "Passports, diplomas, medical records and property — at hand and protected.",
-    security: "Private by default · RLS · private storage",
+      "Sign in to create a checklist, send a link, or complete a work-document package.",
+    security: "Controlled access · secure links · clear document status",
     privacy: "Privacy",
     terms: "Terms",
     oauthError: "Couldn't sign in with Google. Please try again.",
   },
   id: {
-    badge: "Brankas keluarga",
-    headingLead: "Semua dokumen keluarga Anda —",
-    headingAccent: "di satu tempat yang aman",
+    badge: "Dokumen kerja",
+    headingLead: "Dokumen kandidat dan karyawan —",
+    headingAccent: "lengkap lewat satu link",
     subtitle:
-      "Paspor, ijazah, rekam medis, dan properti — selalu di tangan dan terlindungi.",
-    security: "Privat secara bawaan · RLS · penyimpanan privat",
+      "Masuk untuk membuat checklist, mengirim tautan, atau melengkapi paket dokumen kerja.",
+    security: "Akses terkontrol · tautan aman · status dokumen jelas",
     privacy: "Privasi",
     terms: "Ketentuan",
     oauthError: "Gagal masuk dengan Google. Silakan coba lagi.",
@@ -55,7 +55,7 @@ const M = {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ next?: string; error?: string }>;
+  searchParams: Promise<{ next?: string; error?: string; mode?: string }>;
 }) {
   const sp = await searchParams;
   const next = safeNextPath(sp.next);
@@ -64,6 +64,7 @@ export default async function LoginPage({
   const [locale, native] = await Promise.all([getLocale(), isNativeRequest()]);
   const t = M[locale];
   const oauthFailed = sp.error === "google";
+  const initialMode = sp.mode === "signup" ? "signup" : "login";
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-12">
@@ -90,7 +91,13 @@ export default async function LoginPage({
         )}
 
         <div className="card shadow-md">
-          <LoginForm locale={locale} next={next} showGoogle={!native} />
+          <LoginForm
+            locale={locale}
+            next={next}
+            showGoogle={!native}
+            initialMode={initialMode}
+          />
+
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-400">

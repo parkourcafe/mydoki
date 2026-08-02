@@ -23,6 +23,13 @@ const IGNORE_FILES = [
   "lib/ai/prompts.ts",
 ];
 
+// Жалоба кандидата на мошенническую ВАКАНСИЮ — тот же контекст, что и
+// EmployerVerification (защита кандидатов), а не вердикт о подлинности
+// документа. Разрешаем только строки, где 'fake' — значение перечисления
+// причин жалобы или его подпись в UI.
+const ALLOW_LINE =
+  /reason|rFake|'fake'|"fake"|report_reason/i;
+
 const hits = [];
 
 function walk(dir) {
@@ -38,7 +45,8 @@ function walk(dir) {
 function scan(file) {
   const lines = readFileSync(file, "utf8").split("\n");
   lines.forEach((line, i) => {
-    if (PATTERN.test(line)) hits.push(`${file}:${i + 1}: ${line.trim()}`);
+    if (PATTERN.test(line) && !ALLOW_LINE.test(line))
+      hits.push(`${file}:${i + 1}: ${line.trim()}`);
   });
 }
 

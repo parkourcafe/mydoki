@@ -4,7 +4,7 @@ import type { Locale } from "./i18n";
 import { getLocale } from "./i18n";
 import { altLangs } from "./seo";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 /**
  * Реестр SEO-лендингов (Deadline-Led Document SEO). Каждый ключ — отдельный
@@ -131,7 +131,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How will I be reminded?",
-            a: "By email, before the expiry date you set.",
+            a: "By email, before the expiry date you set. The reminder comes 30, 7 and 1 day before that date.",
           },
           {
             q: "Can I access my passport scan offline?",
@@ -204,7 +204,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Как придёт напоминание?",
-            a: "На email, до указанной вами даты окончания.",
+            a: "На email, до указанной вами даты окончания. Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
           {
             q: "Будет ли доступ к скану офлайн?",
@@ -277,7 +277,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Bagaimana pengingatnya datang?",
-            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan.",
+            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah akses pindaian paspor offline?",
@@ -350,7 +350,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Eslatma qanday keladi?",
-            a: "Email orqali, siz belgilagan tugash sanasidan oldin.",
+            a: "Email orqali, siz belgilagan tugash sanasidan oldin. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Pasport skaniga oflayn kirsa boʻladimi?",
@@ -766,7 +766,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "How early will I be reminded?",
-            a: "A reminder arrives by email before the “valid until” date you set.",
+            a: "A reminder arrives by email before the “valid until” date you set. The reminder comes 30, 7 and 1 day before that date.",
           },
           {
             q: "How do I set an expiry date?",
@@ -838,7 +838,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "За сколько придёт напоминание?",
-            a: "Напоминание приходит на email до указанной вами даты «действует до».",
+            a: "Напоминание приходит на email до указанной вами даты «действует до». Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
           {
             q: "Как указать дату окончания?",
@@ -910,7 +910,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Seberapa awal saya akan diingatkan?",
-            a: "Pengingat tiba lewat email sebelum tanggal “berlaku sampai” yang Anda tetapkan.",
+            a: "Pengingat tiba lewat email sebelum tanggal “berlaku sampai” yang Anda tetapkan. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bagaimana cara menetapkan tanggal kedaluwarsa?",
@@ -982,7 +982,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Eslatma qancha oldin keladi?",
-            a: "Eslatma siz belgilagan “amal qiladi” sanasidan oldin email orqali keladi.",
+            a: "Eslatma siz belgilagan “amal qiladi” sanasidan oldin email orqali keladi. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Tugash sanasini qanday belgilayman?",
@@ -1375,7 +1375,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How early are reminders sent?",
-            a: "By email, before the expiry date you set.",
+            a: "By email, before the expiry date you set. The reminder comes 30, 7 and 1 day before that date.",
           },
           {
             q: "Can I share my visa securely with a lawyer?",
@@ -1448,7 +1448,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "За сколько приходят напоминания?",
-            a: "На email, до указанной вами даты окончания.",
+            a: "На email, до указанной вами даты окончания. Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
           {
             q: "Можно ли безопасно поделиться визой с юристом?",
@@ -1521,7 +1521,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Seberapa awal pengingat dikirim?",
-            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan.",
+            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah berbagi visa dengan pengacara secara aman?",
@@ -1594,7 +1594,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Eslatmalar qancha oldin keladi?",
-            a: "Email orqali, siz belgilagan tugash sanasidan oldin.",
+            a: "Email orqali, siz belgilagan tugash sanasidan oldin. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Vizani yurist bilan xavfsiz ulashsa boʻladimi?",
@@ -1692,7 +1692,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Will I know if someone opened it?",
-            a: "Yes. Every open is recorded in an access log for that link.",
+            a: "Yes. Every open is recorded in an access log for that link — you can see which document was opened and when.",
           },
           {
             q: "Do links expire automatically?",
@@ -1762,7 +1762,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Узнаю ли я, что кто-то открыл?",
-            a: "Да. Каждое открытие фиксируется в логе доступа этой ссылки.",
+            a: "Да. Каждое открытие фиксируется в логе доступа этой ссылки — видно, какой документ открывали и когда.",
           },
           {
             q: "Истекают ли ссылки автоматически?",
@@ -1832,7 +1832,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Apakah saya tahu jika seseorang membukanya?",
-            a: "Ya. Tiap pembukaan dicatat dalam log akses tautan itu.",
+            a: "Ya. Tiap pembukaan dicatat dalam log akses tautan itu — Anda bisa melihat dokumen mana yang dibuka dan kapan.",
           },
           {
             q: "Apakah tautan kedaluwarsa otomatis?",
@@ -1902,7 +1902,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Kimdir ochganini bilamanmi?",
-            a: "Ha. Har bir ochilish oʻsha havolaning kirish jurnalida qayd etiladi.",
+            a: "Ha. Har bir ochilish oʻsha havolaning kirish jurnalida qayd etiladi — qaysi hujjat qachon ochilganini koʻrasiz.",
           },
           {
             q: "Havolalar avtomatik muddati tugaydimi?",
@@ -2000,7 +2000,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Is it free?",
-            a: "Yes. The free tier includes 2 GB, reminders, family access and offline access. A paid tier may come later.",
+            a: "Yes. The free tier includes 2 GB, reminders, family access and offline access. A paid tier may come later. Documents are stored in secure cloud (Supabase); servers may be located outside Russia — see our Privacy Policy.",
           },
         ],
       },
@@ -2070,7 +2070,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Это бесплатно?",
-            a: "Да. Бесплатный тариф включает 2 ГБ, напоминания, семейный доступ и офлайн-доступ. Платный тариф может появиться позже.",
+            a: "Да. Бесплатный тариф включает 2 ГБ, напоминания, семейный доступ и офлайн-доступ. Платный тариф может появиться позже. Документы хранятся в защищённом облаке (Supabase); серверы могут находиться вне РФ — подробности в Политике конфиденциальности.",
           },
         ],
       },
@@ -2140,7 +2140,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Apakah gratis?",
-            a: "Ya. Paket gratis mencakup 2 GB, pengingat, akses keluarga dan akses offline. Paket berbayar mungkin hadir nanti.",
+            a: "Ya. Paket gratis mencakup 2 GB, pengingat, akses keluarga dan akses offline. Paket berbayar mungkin hadir nanti. Dokumen disimpan di cloud aman (Supabase); server bisa berada di luar Rusia — lihat Kebijakan Privasi kami.",
           },
         ],
       },
@@ -2210,7 +2210,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Bu bepulmi?",
-            a: "Ha. Bepul tarif 2 GB, eslatmalar, oilaviy kirish va oflayn kirishni oʻz ichiga oladi. Pullik tarif keyinroq paydo boʻlishi mumkin.",
+            a: "Ha. Bepul tarif 2 GB, eslatmalar, oilaviy kirish va oflayn kirishni oʻz ichiga oladi. Pullik tarif keyinroq paydo boʻlishi mumkin. Hujjatlar xavfsiz bulutda (Supabase) saqlanadi; serverlar Rossiyadan tashqarida boʻlishi mumkin — Maxfiylik siyosatimizga qarang.",
           },
         ],
       },
@@ -2305,7 +2305,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How is sensitive medical data protected?",
-            a: "Files are kept in a private bucket over HTTPS, access is isolated to your family at the database level, and two-factor login is available.",
+            a: "Files are kept in a private bucket over HTTPS, access is isolated to your family at the database level, and two-factor login is available. Servers may be located outside Russia — see our Privacy Policy.",
           },
         ],
       },
@@ -2376,7 +2376,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Как защищены чувствительные медицинские данные?",
-            a: "Файлы хранятся в приватном bucket по HTTPS, доступ изолирован вашей семьёй на уровне базы, доступен двухфакторный вход.",
+            a: "Файлы хранятся в приватном bucket по HTTPS, доступ изолирован вашей семьёй на уровне базы, доступен двухфакторный вход. Серверы могут находиться вне РФ — подробности в Политике конфиденциальности.",
           },
         ],
       },
@@ -2447,7 +2447,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Bagaimana data medis sensitif dilindungi?",
-            a: "Berkas disimpan di bucket privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data, dan login dua faktor tersedia.",
+            a: "Berkas disimpan di bucket privat lewat HTTPS, akses diisolasi untuk keluarga Anda di tingkat basis data, dan login dua faktor tersedia. Server bisa berada di luar Rusia — lihat Kebijakan Privasi kami.",
           },
         ],
       },
@@ -2518,7 +2518,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Nozik tibbiy maʼlumot qanday himoyalanadi?",
-            a: "Fayllar maxfiy bucketda HTTPS orqali saqlanadi, kirish oilangiz darajasida izolyatsiya qilingan, ikki bosqichli kirish mavjud.",
+            a: "Fayllar maxfiy bucketda HTTPS orqali saqlanadi, kirish oilangiz darajasida izolyatsiya qilingan, ikki bosqichli kirish mavjud. Serverlar Rossiyadan tashqarida boʻlishi mumkin — Maxfiylik siyosatimizga qarang.",
           },
         ],
       },
@@ -2604,7 +2604,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Will I be reminded before a passport or visa expires?",
-            a: "Yes. Add a \"valid until\" date and a reminder arrives by email before it expires.",
+            a: "Yes. Add a \"valid until\" date and a reminder arrives by email before it expires. The reminder comes 30, 7 and 1 day before that date.",
           },
           {
             q: "Can I store child travel consent forms?",
@@ -2674,7 +2674,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Напомнит ли о сроке паспорта или визы?",
-            a: "Да. Укажите дату «действует до» — и напоминание придёт на email заранее.",
+            a: "Да. Укажите дату «действует до» — и напоминание придёт на email заранее. Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
           {
             q: "Можно хранить согласия на выезд ребёнка?",
@@ -2744,7 +2744,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Apakah saya diingatkan sebelum paspor atau visa kedaluwarsa?",
-            a: "Ya. Tambahkan tanggal \"berlaku sampai\" dan pengingat tiba lewat email sebelum kedaluwarsa.",
+            a: "Ya. Tambahkan tanggal \"berlaku sampai\" dan pengingat tiba lewat email sebelum kedaluwarsa. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah menyimpan surat izin perjalanan anak?",
@@ -2814,7 +2814,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Pasport yoki viza muddati tugashidan oldin eslatadimi?",
-            a: "Ha. \"Amal qiladi\" sanasini qoʻshing — eslatma muddat tugashidan oldin email orqali keladi.",
+            a: "Ha. \"Amal qiladi\" sanasini qoʻshing — eslatma muddat tugashidan oldin email orqali keladi. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Bola sayohati uchun rozilik hujjatlarini saqlasa boʻladimi?",

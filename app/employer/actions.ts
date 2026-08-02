@@ -11,6 +11,9 @@ import {
 import { checkCompleteness } from "@/lib/ai/completeness";
 import { normalizeEmploymentType } from "@/lib/employment";
 import { runAgent, aiTextConfigured } from "@/lib/ai";
+import { sendPushToUser } from "@/lib/push";
+import { getLocale } from "@/lib/i18n";
+import { sendVerificationCode } from "@/lib/email";
 import type {
   RequiredDocument,
   ScreeningQuestion,
@@ -401,6 +404,32 @@ export async function setApplicationStatus(
     p_new_status: status,
   });
   if (error) throw error;
+
+  // Пуш кандидату только на shortlist (D8: на reject не шлём).
+  if (status === "shortlisted") {
+    const { data: appRow } = await supabase
+      .from("applications")
+      .select("user_id, access_token, vacancy_id")
+      .eq("id", applicationId)
+      .maybeSingle();
+    const a = appRow as
+      | { user_id?: string | null; access_token?: string; vacancy_id?: string }
+      | null;
+    if (a?.user_id && a.vacancy_id) {
+      const { data: vac } = await supabase
+        .from("vacancies")
+        .select("title")
+        .eq("id", a.vacancy_id)
+        .maybeSingle();
+      const title = (vac as { title?: string } | null)?.title ?? "";
+      await sendPushToUser(a.user_id, {
+        type: "shortlisted",
+        vars: { vacancy: title },
+        url: a.access_token ? `/applications/status/${a.access_token}` : "/",
+      });
+    }
+  }
+
   revalidatePath(`/employer/vacancies/${vacancyId}`);
 }
 
@@ -471,6 +500,36 @@ export async function signApplicationDoc(path: string): Promise<string | null> {
     .from("applications")
     .createSignedUrl(path, 120);
   return data?.signedUrl ?? null;
+}
+
+/**
+ * Откат ПОСЛЕДНЕГО отклонения (окно 10 мин). Возвращает восстановленный
+ * статус либо код ошибки (expired/not_rejected/not_owner/generic).
+ */
+export async function revertRejection(
+  applicationId: string,
+  vacancyId: string
+): Promise<
+  | { ok: true; status: ApplicationStatus }
+  | { ok: false; error: "expired" | "not_rejected" | "not_owner" | "generic" }
+> {
+  const supabase = await getSupabaseServer();
+  const { data, error } = await supabase.rpc("revert_last_rejection", {
+    p_application_id: applicationId,
+  });
+  if (error) {
+    const msg = error.message || "";
+    const code = /UNDO_EXPIRED/.test(msg)
+      ? "expired"
+      : /NOT_REJECTED/.test(msg)
+        ? "not_rejected"
+        : /NOT_OWNER/.test(msg)
+          ? "not_owner"
+          : "generic";
+    return { ok: false, error: code };
+  }
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+  return { ok: true, status: (data as ApplicationStatus) ?? "new" };
 }
 
 /** Signed URL (5 мин) на видео-ответ кандидата из приватного bucket. */

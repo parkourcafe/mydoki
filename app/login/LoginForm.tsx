@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
-import { login, signup, resendConfirmation, type AuthState } from "./actions";
+import { login, signup, type AuthState } from "./actions";
 import type { Locale } from "@/lib/i18n";
 
 const initial: AuthState = {};
@@ -11,6 +11,7 @@ const M = {
   ru: {
     googleSignIn: "Войти через Google",
     enterEmail: "Введите email.",
+    resetFailed: "Не удалось отправить ссылку. Проверьте email и попробуйте ещё раз.",
     resetSent:
       "Если такой email есть — мы отправили ссылку для сброса пароля. Проверьте почту (и папку «Спам»).",
     backToLogin: "← Вернуться ко входу",
@@ -25,7 +26,8 @@ const M = {
     consentAnd: "и",
     consentPrivacy: "Политику конфиденциальности",
     consentTrail: "и даю согласие на обработку персональных данных.",
-    googleFailed: "Не удалось начать вход через Google. Попробуйте ещё раз.",
+    consentHealth:
+      "Отдельно даю согласие на обработку специальных категорий ПДн — сведений о здоровье — если я загружаю медицинские документы.",
     submitting: "Минутку…",
     signIn: "Войти",
     createAccount: "Создать аккаунт",
@@ -33,11 +35,15 @@ const M = {
     haveAccount: "Уже есть аккаунт? ",
     signUp: "Зарегистрироваться",
     or: "или",
-    resendConfirm: "Отправить письмо ещё раз",
+    resendVerification: "Отправить письмо повторно",
+    resending: "Отправляю…",
+    verificationResent:
+      "Отправили новую ссылку для подтверждения. Проверьте почту (и папку «Спам»).",
   },
   en: {
     googleSignIn: "Sign in with Google",
     enterEmail: "Enter your email.",
+    resetFailed: "We couldn't send the reset link. Check the email and try again.",
     resetSent:
       "If that email exists, we've sent a password reset link. Check your inbox (and the “Spam” folder).",
     backToLogin: "← Back to sign in",
@@ -53,7 +59,8 @@ const M = {
     consentAnd: "and",
     consentPrivacy: "Privacy Policy",
     consentTrail: "and consent to the processing of my personal data.",
-    googleFailed: "Couldn't start Google sign-in. Please try again.",
+    consentHealth:
+      "I separately consent to the processing of special categories of personal data — health information — if I upload medical documents.",
     submitting: "Just a moment…",
     signIn: "Sign in",
     createAccount: "Create account",
@@ -61,11 +68,15 @@ const M = {
     haveAccount: "Already have an account? ",
     signUp: "Sign up",
     or: "or",
-    resendConfirm: "Resend confirmation email",
+    resendVerification: "Resend verification email",
+    resending: "Sending…",
+    verificationResent:
+      "We've sent a new verification link. Check your inbox (and the “Spam” folder).",
   },
   id: {
     googleSignIn: "Masuk dengan Google",
     enterEmail: "Masukkan email Anda.",
+    resetFailed: "Tautan pengaturan ulang tidak dapat dikirim. Periksa email lalu coba lagi.",
     resetSent:
       "Jika email tersebut ada, kami telah mengirimkan tautan untuk mengatur ulang kata sandi. Periksa kotak masuk Anda (dan folder “Spam”).",
     backToLogin: "← Kembali ke halaman masuk",
@@ -81,7 +92,8 @@ const M = {
     consentAnd: "dan",
     consentPrivacy: "Kebijakan Privasi",
     consentTrail: "serta menyetujui pemrosesan data pribadi saya.",
-    googleFailed: "Gagal memulai login Google. Silakan coba lagi.",
+    consentHealth:
+      "Saya secara terpisah menyetujui pemrosesan kategori khusus data pribadi — informasi kesehatan — jika saya mengunggah dokumen medis.",
     submitting: "Sebentar…",
     signIn: "Masuk",
     createAccount: "Buat akun",
@@ -89,11 +101,15 @@ const M = {
     haveAccount: "Sudah punya akun? ",
     signUp: "Daftar",
     or: "atau",
-    resendConfirm: "Kirim ulang email konfirmasi",
+    resendVerification: "Kirim ulang email verifikasi",
+    resending: "Mengirim…",
+    verificationResent:
+      "Kami telah mengirim tautan verifikasi baru. Periksa kotak masuk Anda (dan folder “Spam”).",
   },
   uz: {
     googleSignIn: "Google orqali kirish",
     enterEmail: "Emailingizni kiriting.",
+    resetFailed: "Tiklash havolasini yuborib bo‘lmadi. Emailni tekshirib, qayta urinib ko‘ring.",
     resetSent:
       "Agar bunday email mavjud boʻlsa, biz parolni tiklash havolasini yubordik. Pochtangizni (va “Spam” jildini) tekshiring.",
     backToLogin: "← Kirish sahifasiga qaytish",
@@ -109,7 +125,8 @@ const M = {
     consentAnd: "va",
     consentPrivacy: "Maxfiylik siyosati",
     consentTrail: "hamda shaxsiy maʼlumotlarimni qayta ishlashga rozilik beraman.",
-    googleFailed: "Google orqali kirishni boshlab bo‘lmadi. Qayta urinib ko‘ring.",
+    consentHealth:
+      "Tibbiy hujjatlarni yuklasam, shaxsiy maʼlumotlarning maxsus toifalari — sogʻliq haqidagi maʼlumotlarni qayta ishlashga alohida rozilik beraman.",
     submitting: "Bir lahza…",
     signIn: "Kirish",
     createAccount: "Hisob yaratish",
@@ -117,63 +134,43 @@ const M = {
     haveAccount: "Hisobingiz bormi? ",
     signUp: "Roʻyxatdan oʻtish",
     or: "yoki",
-    resendConfirm: "Tasdiqlash xatini qayta yuborish",
+    resendVerification: "Tasdiqlash xatini qayta yuborish",
+    resending: "Yuborilmoqda…",
+    verificationResent:
+      "Yangi tasdiqlash havolasini yubordik. Pochtangizni (va “Spam” jildini) tekshiring.",
   },
 } as const;
 
 function GoogleButton({ locale, next }: { locale: Locale; next?: string }) {
   const t = M[locale];
-  const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
-
   async function google() {
-    setError(null);
-    setBusy(true);
-    try {
-      const supabase = getSupabaseBrowser();
-      // Куда вернуться после OAuth — передаём в query самого callback-URL.
-      // Обмен кода на сессию и редирект делает серверный route-handler
-      // /auth/callback, поэтому sessionStorage здесь не нужен.
-      const callback = new URL("/auth/callback", window.location.origin);
-      if (next) callback.searchParams.set("next", next);
-      const { error: oauthError } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: callback.toString(),
-        },
-      });
-      if (oauthError) {
-        setError(t.googleFailed);
-        setBusy(false);
-      }
-    } catch {
-      setError(t.googleFailed);
-      setBusy(false);
-    }
+    const supabase = getSupabaseBrowser();
+    // Куда вернуться после OAuth — передаём в query самого callback-URL.
+    // Обмен кода на сессию и редирект делает серверный route-handler
+    // /auth/callback, поэтому sessionStorage здесь не нужен.
+    const callback = new URL("/auth/callback", window.location.origin);
+    if (next) callback.searchParams.set("next", next);
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: callback.toString(),
+      },
+    });
   }
-
   return (
-    <div className="space-y-2">
-      <button
-        type="button"
-        onClick={google}
-        disabled={busy}
-        className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60"
-      >
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-          <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z" />
-          <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z" />
-          <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z" />
-          <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
-        </svg>
-        {t.googleSignIn}
-      </button>
-      {error && (
-        <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
-        </p>
-      )}
-    </div>
+    <button
+      type="button"
+      onClick={google}
+      className="flex min-h-[44px] w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+    >
+      <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
+        <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z" />
+        <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.84.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z" />
+        <path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z" />
+        <path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z" />
+      </svg>
+      {t.googleSignIn}
+    </button>
   );
 }
 
@@ -199,11 +196,12 @@ function ResetRequest({
     }
     setBusy(true);
     const supabase = getSupabaseBrowser();
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || window.location.origin).replace(/\/$/, "");
     const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-      redirectTo: `${window.location.origin}/reset-password`,
+      redirectTo: `${appUrl}/reset-password`,
     });
     setBusy(false);
-    if (error) setErr(error.message);
+    if (error) setErr(t.resetFailed);
     else setSent(true);
   }
 
@@ -263,21 +261,29 @@ export default function LoginForm({
   locale,
   next = "",
   showGoogle = true,
+  initialMode = "login",
 }: {
   locale: Locale;
   next?: string;
   showGoogle?: boolean;
+  initialMode?: "login" | "signup";
 }) {
   const t = M[locale];
-  const [mode, setMode] = useState<"login" | "signup" | "reset">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "reset">(initialMode);
   const action = mode === "signup" ? signup : login;
   const [state, formAction, pending] = useActionState(action, initial);
-  const [resend, setResend] = useState<{ busy?: boolean; msg?: string; err?: string }>({});
+  // Email контролируем, чтобы повторно отправить письмо подтверждения на тот же
+  // адрес без повторного ввода (после ошибки «email не подтверждён»).
+  const [email, setEmail] = useState("");
+  const [resend, setResend] = useState<"idle" | "sending" | "sent">("idle");
 
-  async function doResend() {
-    setResend({ busy: true });
-    const r = await resendConfirmation(state.email ?? "");
-    setResend({ msg: r.message, err: r.error });
+  async function resendVerification() {
+    if (!email.trim()) return;
+    setResend("sending");
+    const supabase = getSupabaseBrowser();
+    // Игнорируем ошибку намеренно: не раскрываем, существует ли аккаунт.
+    await supabase.auth.resend({ type: "signup", email: email.trim() });
+    setResend("sent");
   }
 
   if (mode === "reset")
@@ -285,17 +291,14 @@ export default function LoginForm({
 
   return (
     <div className="space-y-4">
-      {showGoogle && (
-        <>
-          <GoogleButton locale={locale} next={next} />
-          <div className="flex items-center gap-3 text-xs text-slate-400">
-            <span className="h-px flex-1 bg-slate-200" /> {t.or}{" "}
-            <span className="h-px flex-1 bg-slate-200" />
-          </div>
-        </>
-      )}
+      {showGoogle && <GoogleButton locale={locale} next={next} />}
 
-      <form action={formAction} aria-busy={pending} className="space-y-4">
+      <div className="flex items-center gap-3 text-xs text-slate-400">
+        <span className="h-px flex-1 bg-slate-200" /> {t.or}{" "}
+        <span className="h-px flex-1 bg-slate-200" />
+      </div>
+
+      <form action={formAction} className="space-y-4">
         <input type="hidden" name="next" value={next} />
         <div>
           <label className="label" htmlFor="email">
@@ -307,6 +310,8 @@ export default function LoginForm({
             type="email"
             autoComplete="email"
             required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="input"
             placeholder="you@example.com"
           />
@@ -339,74 +344,56 @@ export default function LoginForm({
         </div>
 
         {mode === "signup" && (
-          <label className="flex items-start gap-2 text-xs text-slate-500">
-            <input
-              type="checkbox"
-              name="accept_terms"
-              value="yes"
-              required
-              className="mt-0.5"
-            />
-            <span>
-              {t.consentLead}{" "}
-              <a href="/terms" target="_blank" className="text-brand-600 hover:underline">
-                {t.consentTerms}
-              </a>{" "}
-              {t.consentAnd}{" "}
-              <a href="/privacy" target="_blank" className="text-brand-600 hover:underline">
-                {t.consentPrivacy}
-              </a>{" "}
-              {t.consentTrail}
-            </span>
-          </label>
+          <>
+            <label className="flex items-start gap-2 text-xs text-slate-500">
+              <input type="checkbox" required className="mt-0.5" />
+              <span>
+                {t.consentLead}{" "}
+                <a href={locale === "en" ? "/terms" : `/${locale}/terms`} target="_blank" className="text-brand-600 hover:underline">
+                  {t.consentTerms}
+                </a>{" "}
+                {t.consentAnd}{" "}
+                <a href={locale === "en" ? "/privacy" : `/${locale}/privacy`} target="_blank" className="text-brand-600 hover:underline">
+                  {t.consentPrivacy}
+                </a>{" "}
+                {t.consentTrail}
+              </span>
+            </label>
+            <label className="flex items-start gap-2 text-xs text-slate-500">
+              <input type="checkbox" className="mt-0.5" />
+              <span>{t.consentHealth}</span>
+            </label>
+          </>
         )}
 
         {state.error && (
-          <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
             {state.error}
           </p>
         )}
         {state.message && (
-          <p role="status" className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+          <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
             {state.message}
           </p>
         )}
 
-        {pending && (
-          <p role="status" aria-live="polite" className="rounded-lg bg-brand-50 px-3 py-2 text-center text-sm text-brand-700">
-            {t.submitting}
-          </p>
-        )}
-
-        {state.needsConfirm && (
-          <div className="space-y-2">
+        {state.needsVerification &&
+          (resend === "sent" ? (
+            <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+              {t.verificationResent}
+            </p>
+          ) : (
             <button
               type="button"
-              onClick={doResend}
-              disabled={resend.busy}
-              className="w-full rounded-lg border border-brand-300 px-3 py-2 text-sm font-medium text-brand-700 hover:bg-brand-50 disabled:opacity-50"
+              onClick={resendVerification}
+              disabled={resend === "sending" || !email.trim()}
+              className="w-full rounded-lg border border-brand-200 bg-brand-50 px-3 py-2 text-sm font-medium text-brand-700 hover:bg-brand-100 disabled:opacity-50"
             >
-              {resend.busy ? t.sending : t.resendConfirm}
+              {resend === "sending" ? t.resending : t.resendVerification}
             </button>
-            {resend.msg && (
-              <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-                {resend.msg}
-              </p>
-            )}
-            {resend.err && (
-              <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-                {resend.err}
-              </p>
-            )}
-          </div>
-        )}
+          ))}
 
-        <button
-          type="submit"
-          formAction={formAction}
-          disabled={pending}
-          className="btn-primary w-full"
-        >
+        <button type="submit" disabled={pending} className="btn-primary w-full">
           {pending
             ? t.submitting
             : mode === "login"

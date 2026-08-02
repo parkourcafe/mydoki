@@ -28,9 +28,9 @@ const M = {
   en: {
     title: "Security",
     subtitle:
-      "We know you're trusting us with passports, medical records and your children's documents. Here's exactly how we protect them — no fluff.",
+      "Candidate and employee documents contain sensitive data. Here's how doki.help helps collect them with more controlled access than ordinary chat.",
     items: [
-      { icon: "👨‍👩‍👧", title: "Only your family sees the documents", text: "Access is isolated at the database level (RLS): outsiders and other families can't see your documents — it's not a setting, it's a rule inside the database itself." },
+      { icon: "🏢", title: "Only authorized people see documents", text: "Access is isolated at the database level (RLS) and limited by account, workspace, role, or the link granted." },
       { icon: "🗄️", title: "Private file storage", text: "Files live in a private bucket and are served only via short-lived signed links (about 2 minutes). A file has no public URL." },
       { icon: "🔗", title: "Per-document sharing", text: "Share a single document, not the whole archive — via a temporary link you can revoke anytime, cap by number of views, and mark with a watermark." },
       { icon: "🛡️", title: "Two-factor sign-in and alerts", text: "You can enable a second factor (TOTP). A new-device login triggers an email, so you notice unfamiliar access right away." },
@@ -43,15 +43,15 @@ const M = {
     incidentText: "If a breach affects your personal data, we commit to notifying affected users and the relevant authority within 3×24 hours, in line with Indonesia's Personal Data Protection Law (UU PDP 27/2022). Report a suspected security issue to security@doki.help.",
     privacy: "Privacy Policy",
     terms: "Terms of Service",
-    cta: "Create your vault for free",
+    cta: "Create a free checklist",
     back: "← Home",
   },
   id: {
     title: "Keamanan",
     subtitle:
-      "Kami tahu Anda mempercayakan paspor, rekam medis, dan dokumen anak Anda kepada kami. Begini cara kami melindunginya — tanpa basa-basi.",
+      "Dokumen kandidat dan karyawan berisi data sensitif. Begini cara doki.help membantu mengumpulkannya dengan akses yang lebih terkontrol daripada chat biasa.",
     items: [
-      { icon: "👨‍👩‍👧", title: "Hanya keluarga Anda yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS): orang luar dan keluarga lain tidak bisa melihat dokumen Anda — ini bukan setelan, tapi aturan di dalam basis data itu sendiri." },
+      { icon: "🏢", title: "Hanya pihak berwenang yang melihat dokumen", text: "Akses diisolasi pada tingkat basis data (RLS) dan dibatasi sesuai akun, ruang kerja, peran, atau tautan yang diberikan." },
       { icon: "🗄️", title: "Penyimpanan berkas privat", text: "Berkas berada di bucket privat dan hanya disajikan lewat tautan bertanda tangan berumur pendek (sekitar 2 menit). Berkas tidak punya URL publik." },
       { icon: "🔗", title: "Berbagi per dokumen", text: "Bagikan satu dokumen, bukan seluruh arsip — lewat tautan sementara yang bisa dicabut kapan saja, dibatasi jumlah tampilan, dan diberi tanda air." },
       { icon: "🛡️", title: "Masuk dua faktor dan peringatan", text: "Anda bisa mengaktifkan faktor kedua (TOTP). Login dari perangkat baru memicu email, jadi Anda langsung tahu akses asing." },
@@ -64,7 +64,7 @@ const M = {
     incidentText: "Jika terjadi kebocoran yang memengaruhi data pribadi Anda, kami berkomitmen memberi tahu pengguna yang terdampak dan otoritas terkait dalam waktu 3×24 jam, sesuai UU Pelindungan Data Pribadi (UU PDP 27/2022). Laporkan dugaan masalah keamanan ke security@doki.help.",
     privacy: "Kebijakan Privasi",
     terms: "Ketentuan Layanan",
-    cta: "Buat brankas gratis",
+    cta: "Buat checklist gratis",
     back: "← Beranda",
   },
   uz: {
@@ -94,7 +94,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const t = M[locale];
   return {
-    title: `${t.title} — doki.help`,
+    title: t.title,
     description: t.subtitle,
   };
 }

@@ -76,6 +76,7 @@ const M = {
     enterTitle: "Введите название документа.",
     fileErr: (name: string, m: string) => `Файл «${name}»: ${m}`,
     saveFail: "Не удалось сохранить.",
+    notVerified: "Подтвердите email, чтобы загружать документы (баннер выше).",
     kb: "КБ",
     mb: "МБ",
   },
@@ -87,14 +88,14 @@ const M = {
     filesLabel: "Document files",
     remove: "remove",
     filesHint:
-      "On a phone, “Take a photo” opens the camera. Files are kept in your family's private storage.",
+      "On a phone, “Take a photo” opens the camera. Files are kept in your private document storage.",
     autoHint:
       "AI recognition is on in your settings: the category and fields will be filled in automatically from the first file — review before saving.",
     altLead: "AI isn't sure about the category — please confirm:",
     free: "Free",
     gb: "GB",
     quotaExceeded:
-      "Not enough space in your family's storage. Delete files you don't need — or contact us to raise the limit.",
+      "Not enough space in your document storage. Delete files you don't need — or contact us to raise the limit.",
     owner: "Whose document",
     title: "Title",
     optional: "optional",
@@ -124,6 +125,7 @@ const M = {
     enterTitle: "Enter the document title.",
     fileErr: (name: string, m: string) => `File “${name}”: ${m}`,
     saveFail: "Could not save.",
+    notVerified: "Verify your email to upload documents (see the banner above).",
     kb: "KB",
     mb: "MB",
   },
@@ -172,6 +174,7 @@ const M = {
     enterTitle: "Hujjat nomini kiriting.",
     fileErr: (name: string, m: string) => `“${name}” fayli: ${m}`,
     saveFail: "Saqlab boʻlmadi.",
+    notVerified: "Hujjat yuklash uchun emailni tasdiqlang (yuqoridagi banner).",
     kb: "KB",
     mb: "MB",
   },
@@ -220,6 +223,7 @@ const M = {
     enterTitle: "Masukkan judul dokumen.",
     fileErr: (name: string, m: string) => `Berkas “${name}”: ${m}`,
     saveFail: "Tidak dapat menyimpan.",
+    notVerified: "Verifikasi email untuk mengunggah dokumen (lihat banner di atas).",
     kb: "KB",
     mb: "MB",
   },
@@ -468,7 +472,13 @@ export default function DocumentForm({
       router.push(`/my/documents/${id}`);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
-      setSaveErr(m === "QUOTA_EXCEEDED" ? t.quotaExceeded : m || t.saveFail);
+      setSaveErr(
+        m === "QUOTA_EXCEEDED"
+          ? t.quotaExceeded
+          : m === "EMAIL_NOT_VERIFIED"
+            ? t.notVerified
+            : m || t.saveFail
+      );
       setSaving(false);
     }
   }

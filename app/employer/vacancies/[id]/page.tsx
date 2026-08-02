@@ -9,7 +9,7 @@ import {
   type Vacancy,
 } from "@/lib/career";
 import { markApplicationsViewed } from "@/app/employer/actions";
-import ShareBox from "./ShareBox";
+import DistributionCoach from "./DistributionCoach";
 import ApplicationsBoard, { type BoardApp } from "./ApplicationsBoard";
 import VacancyDescription from "@/components/VacancyDescription";
 
@@ -32,12 +32,13 @@ export default async function VacancyDashboard({
   const { id } = await params;
   const { created, updated } = await searchParams;
   const user = await getUser();
+  if (!user) redirect("/login");
   const supabase = await getSupabaseServer();
 
   const { data: profile } = await supabase
     .from("employer_profiles")
     .select("id")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .maybeSingle();
   if (!profile) redirect("/employer");
 
@@ -78,7 +79,7 @@ export default async function VacancyDashboard({
     const [{ data: docs }, { data: answers }] = await Promise.all([
       supabase
         .from("application_documents")
-        .select("application_id, document_type, document_label, file_name, file_path")
+        .select("id, application_id, document_type, document_label, file_name, file_path")
         .in("application_id", appIds),
       supabase
         .from("application_answers")
@@ -86,6 +87,7 @@ export default async function VacancyDashboard({
         .in("application_id", appIds),
     ]);
     for (const d of (docs ?? []) as {
+      id: string;
       application_id: string;
       document_type: string;
       document_label: string;
@@ -93,6 +95,7 @@ export default async function VacancyDashboard({
       file_path: string;
     }[]) {
       (docsByApp[d.application_id] ??= []).push({
+        id: d.id,
         type: d.document_type,
         label: d.document_label,
         file_name: d.file_name,
@@ -156,28 +159,47 @@ export default async function VacancyDashboard({
         </p>
       )}
 
-      <div className="mb-5">
-        <ShareBox
+      {applications.length === 0 && vacancy.status === "active" ? (
+        <DistributionCoach
           locale={locale}
           applyUrl={applyUrl}
           title={vacancy.title}
           company={vacancy.company_name}
+          location={vacancy.location}
           slug={vacancy.slug}
+          viewsCount={vacancy.views_count}
         />
-      </div>
+      ) : (
+        <>
+          <div className="mb-4 flex justify-end">
+            <DistributionCoach
+              compact
+              locale={locale}
+              applyUrl={applyUrl}
+              title={vacancy.title}
+              company={vacancy.company_name}
+              location={vacancy.location}
+              slug={vacancy.slug}
+              viewsCount={vacancy.views_count}
+            />
+          </div>
 
-      {vacancy.description && (
-        <div className="card mb-5">
-          <VacancyDescription description={vacancy.description} />
-        </div>
+          {vacancy.description && (
+            <div className="card mb-5">
+              <VacancyDescription description={vacancy.description} />
+            </div>
+          )}
+
+          <ApplicationsBoard
+            locale={locale}
+            vacancyId={vacancy.id}
+            requiredDocs={filterApplicationStageDocuments(
+              vacancy.required_documents
+            )}
+            initialApplications={applications}
+          />
+        </>
       )}
-
-      <ApplicationsBoard
-        locale={locale}
-        vacancyId={vacancy.id}
-        requiredDocs={filterApplicationStageDocuments(vacancy.required_documents)}
-        initialApplications={applications}
-      />
     </div>
   );
 }

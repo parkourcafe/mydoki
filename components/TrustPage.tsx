@@ -5,7 +5,7 @@ import LangSwitcher from "@/components/LangSwitcher";
 import { getTrustPage } from "@/lib/trust";
 import { supportWhatsappUrl } from "@/lib/support";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 const UI: Record<Locale, { start: string; startShort: string; home: string; privacy: string; terms: string; faq: string; support: string }> = {
   ru: { start: "Начать бесплатно", startShort: "Начать", home: "← На главную", privacy: "Конфиденциальность", terms: "Условия", faq: "Вопросы", support: "Поддержка в WhatsApp" },

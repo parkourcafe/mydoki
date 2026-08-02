@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getLocale, type Locale } from "@/lib/i18n";
 
-export const alt = "doki.help — a safe place for your family's documents";
+export const alt = "doki.help — candidate and employee documents with one link";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -9,20 +9,20 @@ export const contentType = "image/png";
 // guaranteed present in the default renderer font).
 const COPY: Record<Locale, { tagline: string; tags: string }> = {
   ru: {
-    tagline: "Надёжное место для документов вашей семьи",
-    tags: "Документы  ·  Медицина  ·  Образование  ·  Имущество",
+    tagline: "Документы кандидатов и сотрудников — по одной ссылке",
+    tags: "KTP  ·  CV  ·  Справки  ·  Онбординг",
   },
   en: {
-    tagline: "A safe place for your family's documents",
-    tags: "IDs  ·  Medical  ·  Education  ·  Property",
+    tagline: "Candidate and employee documents with one link",
+    tags: "KTP  ·  CV  ·  Certificates  ·  Onboarding",
   },
   id: {
-    tagline: "Tempat aman untuk dokumen keluarga Anda",
-    tags: "Identitas  ·  Medis  ·  Pendidikan  ·  Properti",
+    tagline: "Dokumen kandidat dan karyawan lewat satu link",
+    tags: "KTP  ·  CV  ·  Sertifikat  ·  Onboarding",
   },
   uz: {
-    tagline: "Oilangiz hujjatlari uchun ishonchli joy",
-    tags: "Hujjatlar  ·  Tibbiyot  ·  Ta'lim  ·  Mulk",
+    tagline: "Nomzod va xodim hujjatlari — bitta havola bilan",
+    tags: "KTP  ·  CV  ·  Sertifikatlar  ·  Onboarding",
   },
 };
 

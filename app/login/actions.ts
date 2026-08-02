@@ -1,95 +1,71 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { recordLogin } from "@/lib/loginEvents";
-import { getLocale, isAppReviewAccountEmail } from "@/lib/i18n";
-import { safeNextPath, withEv } from "@/lib/nextPath";
-import {
-  isExistingSignupResponse,
-  validateSignupInput,
-} from "@/lib/authSignup";
+import { getLocale } from "@/lib/i18n";
+import { safeNextPath } from "@/lib/nextPath";
 
 export type AuthState = {
   error?: string;
   message?: string;
-  needsConfirm?: boolean;
-  email?: string;
+  /** true, когда вход/регистрация упёрлись в неподтверждённый email —
+   * форме показать кнопку «Отправить письмо повторно». */
+  needsVerification?: boolean;
 };
 
 const M = {
   ru: {
     missingCredentials: "Введите email и пароль.",
     signupRequirements: "Email и пароль (от 8 символов) обязательны.",
-    acceptTermsRequired:
-      "Примите Условия и Политику конфиденциальности, чтобы создать аккаунт.",
     confirmEmail:
       "Аккаунт создан. Подтвердите email по ссылке из письма, затем войдите.",
     invalidCredentials: "Неверный email или пароль.",
     emailNotConfirmed: "Сначала подтвердите email по ссылке из письма.",
-    alreadyRegistered:
-      "Аккаунт с таким email уже существует. Войдите или используйте «Забыли пароль?».",
+    alreadyRegistered: "Аккаунт с таким email уже существует — войдите.",
     rateLimit: "Слишком много попыток. Подождите немного и попробуйте снова.",
     weakPassword: "Пароль слишком простой — минимум 8 символов.",
     loginFailed: "Не удалось войти. Проверьте данные и попробуйте снова.",
     signupFailed: "Не удалось создать аккаунт. Попробуйте ещё раз.",
-    resendSent: "Письмо отправлено повторно. Проверьте почту (и папку «Спам»).",
-    resendFailed: "Не удалось отправить письмо. Попробуйте чуть позже.",
   },
   en: {
     missingCredentials: "Enter your email and password.",
     signupRequirements: "Email and password (at least 8 characters) are required.",
-    acceptTermsRequired:
-      "Accept the Terms and Privacy Policy to create an account.",
     confirmEmail:
       "Account created. Confirm your email via the link we sent, then sign in.",
     invalidCredentials: "Wrong email or password.",
     emailNotConfirmed: "Please confirm your email via the link we sent first.",
-    alreadyRegistered:
-      "An account with this email already exists. Sign in or use “Forgot password?”.",
+    alreadyRegistered: "An account with this email already exists — sign in.",
     rateLimit: "Too many attempts. Please wait a moment and try again.",
     weakPassword: "Password is too weak — at least 8 characters.",
     loginFailed: "Could not sign in. Check your details and try again.",
     signupFailed: "Could not create the account. Please try again.",
-    resendSent: "Confirmation email sent again. Check your inbox (and Spam).",
-    resendFailed: "Couldn't send the email. Please try again shortly.",
   },
   id: {
     missingCredentials: "Masukkan email dan kata sandi Anda.",
     signupRequirements: "Email dan kata sandi (minimal 8 karakter) wajib diisi.",
-    acceptTermsRequired:
-      "Setujui Ketentuan dan Kebijakan Privasi untuk membuat akun.",
     confirmEmail:
       "Akun berhasil dibuat. Konfirmasikan email Anda melalui tautan yang kami kirim, lalu masuk.",
     invalidCredentials: "Email atau kata sandi salah.",
     emailNotConfirmed: "Konfirmasikan email Anda lewat tautan yang kami kirim dulu.",
-    alreadyRegistered:
-      "Akun dengan email ini sudah ada. Masuk atau gunakan “Lupa kata sandi?”.",
+    alreadyRegistered: "Akun dengan email ini sudah ada — silakan masuk.",
     rateLimit: "Terlalu banyak percobaan. Tunggu sebentar lalu coba lagi.",
     weakPassword: "Kata sandi terlalu lemah — minimal 8 karakter.",
     loginFailed: "Gagal masuk. Periksa data Anda lalu coba lagi.",
     signupFailed: "Gagal membuat akun. Silakan coba lagi.",
-    resendSent: "Email konfirmasi dikirim ulang. Periksa kotak masuk (dan Spam).",
-    resendFailed: "Gagal mengirim email. Coba lagi sebentar lagi.",
   },
   uz: {
     missingCredentials: "Email va parolni kiriting.",
     signupRequirements: "Email va parol (kamida 8 ta belgi) talab qilinadi.",
-    acceptTermsRequired:
-      "Hisob yaratish uchun Shartlar va Maxfiylik siyosatini qabul qiling.",
     confirmEmail:
       "Hisob yaratildi. Biz yuborgan havola orqali emailingizni tasdiqlang, soʻngra kiring.",
     invalidCredentials: "Email yoki parol notoʻgʻri.",
     emailNotConfirmed: "Avval biz yuborgan havola orqali emailingizni tasdiqlang.",
-    alreadyRegistered:
-      "Bu email bilan hisob allaqachon mavjud. Kiring yoki “Parolni unutdingizmi?”dan foydalaning.",
+    alreadyRegistered: "Bu email bilan hisob allaqachon mavjud — kiring.",
     rateLimit: "Juda koʻp urinish. Biroz kuting va qayta urinib koʻring.",
     weakPassword: "Parol juda oddiy — kamida 8 ta belgi.",
     loginFailed: "Kirib boʻlmadi. Maʼlumotlarni tekshirib, qayta urinib koʻring.",
     signupFailed: "Hisob yaratib boʻlmadi. Qaytadan urinib koʻring.",
-    resendSent: "Tasdiqlash xati qayta yuborildi. Pochtangizni (va Spam) tekshiring.",
-    resendFailed: "Xat yuborilmadi. Birozdan soʻng qayta urining.",
   },
 } as const;
 
@@ -102,7 +78,6 @@ function mapAuthError(
     alreadyRegistered: string;
     rateLimit: string;
     weakPassword: string;
-    resendFailed: string;
   },
   fallback: string
 ): string {
@@ -112,9 +87,6 @@ function mapAuthError(
   if (m.includes("already registered") || m.includes("already been registered"))
     return t.alreadyRegistered;
   if (m.includes("rate limit") || m.includes("too many")) return t.rateLimit;
-  // Supabase не смог отправить письмо (SMTP не настроен/ошибка провайдера).
-  if (m.includes("error sending") || m.includes("confirmation email"))
-    return t.resendFailed;
   if (m.includes("password")) return t.weakPassword;
   return fallback;
 }
@@ -131,37 +103,18 @@ export async function login(
   const supabase = await getSupabaseServer();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) {
-    const notConfirmed = error.message.toLowerCase().includes("email not confirmed");
+    // Явно распознаём «email не подтверждён» — форма покажет кнопку повторной
+    // отправки письма (частый затык на первом входе).
+    const needsVerification = error.message
+      .toLowerCase()
+      .includes("email not confirmed");
     return {
       error: mapAuthError(error.message, t, t.loginFailed),
-      ...(notConfirmed ? { needsConfirm: true, email } : {}),
+      needsVerification,
     };
   }
   await recordLogin(supabase);
-  if (isAppReviewAccountEmail(email)) {
-    (await cookies()).set("locale", "en", {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: "lax",
-    });
-  }
-  redirect(withEv(safeNextPath(formData.get("next")), "logged_in", "email"));
-}
-
-/** Повторно отправить письмо подтверждения email (кнопка на входе). */
-export async function resendConfirmation(email: string): Promise<AuthState> {
-  const t = M[await getLocale()];
-  const clean = (email || "").trim();
-  if (!clean) return { error: t.missingCredentials, needsConfirm: true };
-  const supabase = await getSupabaseServer();
-  const { error } = await supabase.auth.resend({ type: "signup", email: clean });
-  if (error)
-    return {
-      error: mapAuthError(error.message, t, t.resendFailed),
-      needsConfirm: true,
-      email: clean,
-    };
-  return { message: t.resendSent };
+  redirect(safeNextPath(formData.get("next")));
 }
 
 export async function signup(
@@ -171,33 +124,19 @@ export async function signup(
   const t = M[await getLocale()];
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "");
-  const validationIssue = validateSignupInput(
-    email,
-    password,
-    formData.get("accept_terms") === "yes"
-  );
-  if (validationIssue === "credentials")
+  if (!email || password.length < 8)
     return { error: t.signupRequirements };
-  if (validationIssue === "terms")
-    return { error: t.acceptTermsRequired };
 
   const supabase = await getSupabaseServer();
   const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) return { error: mapAuthError(error.message, t, t.signupFailed) };
-  if (isExistingSignupResponse(data.user)) {
-    return { error: t.alreadyRegistered, email };
-  }
 
   if (!data.session) {
-    return { message: t.confirmEmail, needsConfirm: true, email };
+    return {
+      message: t.confirmEmail,
+      needsVerification: true,
+    };
   }
   await recordLogin(supabase);
-  if (isAppReviewAccountEmail(email)) {
-    (await cookies()).set("locale", "en", {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: "lax",
-    });
-  }
-  redirect(withEv(safeNextPath(formData.get("next")), "signed_up", "email"));
+  redirect(safeNextPath(formData.get("next")));
 }

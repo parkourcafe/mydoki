@@ -41,7 +41,7 @@ const M = {
     validUntil: "valid until",
     open: "Open",
     download: "↓ Download",
-    footer: "🔐 Secure “Family Vault” link. Access is time-limited and logged.",
+    footer: "🔐 Secure document package link. Access is time-limited and logged.",
     pwTitle: "This link is password-protected", pwHint: "Enter the password from the sender.", pwPh: "Password", unlock: "Open", pwWrong: "Wrong password.",
   },
   id: {
@@ -53,7 +53,7 @@ const M = {
     validUntil: "berlaku hingga",
     open: "Buka",
     download: "↓ Unduh",
-    footer: "🔐 Tautan aman “Brankas Keluarga”. Akses dibatasi waktu dan dicatat.",
+    footer: "🔐 Tautan paket dokumen aman. Akses dibatasi waktu dan dicatat.",
     pwTitle: "Tautan dilindungi kata sandi", pwHint: "Masukkan kata sandi dari pengirim.", pwPh: "Kata sandi", unlock: "Buka", pwWrong: "Kata sandi salah.",
   },
   uz: {

@@ -23,7 +23,7 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 const META = {
   ru: {
@@ -41,30 +41,30 @@ const META = {
     ogLocale: "ru_RU",
   },
   en: {
-    title: "Family Vault — all your family's documents in one place",
+    title: "Candidate & Employee Documents — collect them with one link",
     description:
-      "All your family's documents in one secure place: IDs, education, medical, property. Expiry reminders (passport, insurance, visa) and safe sharing via expiring links.",
+      "Create document checklists for candidates and employees in Indonesia, send one WhatsApp-ready link, and track completion without messy chats or spreadsheets.",
     keywords: [
-      "family document archive",
-      "store documents online",
-      "document expiry reminders",
-      "passport visa insurance reminder",
-      "family documents in one place",
-      "document vault",
+      "candidate documents Indonesia",
+      "employee documents Indonesia",
+      "onboarding checklist Indonesia",
+      "HR document collection Bali",
+      "work documents Bali",
+      "candidate document link",
     ],
     ogLocale: "en_US",
   },
   id: {
-    title: "Brankas Keluarga — semua dokumen keluarga Anda di satu tempat",
+    title: "Dokumen Kandidat & Karyawan — kumpulkan lewat satu link",
     description:
-      "Semua dokumen keluarga Anda di satu tempat yang aman: identitas, pendidikan, medis, properti. Pengingat tenggat (paspor, asuransi, visa) dan berbagi aman lewat tautan berbatas waktu.",
+      "Buat checklist dokumen untuk kandidat dan karyawan, kirim tautan lewat WhatsApp, dan pantau kelengkapan tanpa spreadsheet atau chat berantakan.",
     keywords: [
-      "arsip dokumen keluarga",
-      "simpan dokumen online",
-      "pengingat tenggat dokumen",
-      "pengingat paspor visa asuransi",
-      "dokumen keluarga di satu tempat",
-      "brankas dokumen",
+      "dokumen kandidat",
+      "dokumen karyawan",
+      "checklist onboarding",
+      "pengumpulan dokumen HR",
+      "dokumen kerja Bali",
+      "tautan dokumen kandidat",
     ],
     ogLocale: "id_ID",
   },

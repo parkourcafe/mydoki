@@ -6,19 +6,19 @@ import { indonesiaRep } from "@/lib/support";
 const META: Record<Locale, { title: string; description: string }> = {
   ru: {
     title: "Политика конфиденциальности",
-    description: "Какие данные обрабатывает doki.help, зачем они нужны, где хранятся и как удалить документы или аккаунт.",
+    description: "Как doki.help обрабатывает документы кандидатов и сотрудников: хранение, доступ, обмен, ИИ, ваши права и удаление аккаунта.",
   },
   en: {
     title: "Privacy Policy",
-    description: "What data doki.help processes, why it is needed, where it is stored, and how to delete documents or your account.",
+    description: "How doki.help handles candidate and employee documents: storage, access, sharing, AI, your rights, and account deletion.",
   },
   id: {
     title: "Kebijakan Privasi",
-    description: "Data yang diproses doki.help, alasan pemrosesan, lokasi penyimpanan, dan cara menghapus dokumen atau akun Anda.",
+    description: "Bagaimana doki.help menangani dokumen kandidat dan karyawan: penyimpanan, akses, berbagi, AI, hak Anda, dan penghapusan akun.",
   },
   uz: {
     title: "Maxfiylik siyosati",
-    description: "doki.help qanday maʼlumotlarni qayta ishlashi, saqlash joyi va hujjatlar yoki hisobni qanday oʻchirish haqida.",
+    description: "doki.help nomzod va xodim hujjatlarini qanday boshqaradi: saqlash, kirish, ulashish, AI, huquqlaringiz va hisobni oʻchirish.",
   },
 };
 
@@ -104,7 +104,7 @@ const M = {
     data4: "— Phone number — only if you provide it for SMS notifications.",
     h3: "3. Purposes and legal basis",
     purpose:
-      "We process data to provide the Service: to store and organize your documents, remind you of deadlines, and ensure secure access and support. The legal basis is your consent, given upon registration, and the performance of the contract (provision of the Service).",
+      "We process data to provide the Service: to collect, store, and organize candidate and employee documents, support document checklists, provide controlled access, and help with reminders or status tracking. The legal basis is your consent, given upon registration, and the performance of the contract (provision of the Service).",
     hSpecial: "3.1. Special categories of personal data (health information)",
     special:
       "Special (sensitive) categories include health data, financial data and children's data. The Service does not require such data to create an account; processing begins only when you choose and upload the relevant document (medical, financial, etc.), and is limited to the storage, organization and sharing features you request. Do not upload another person's data (including a child's) unless you have a lawful basis or their consent. You can delete the document or your entire account at any time.",
@@ -118,7 +118,7 @@ const M = {
       "We do not sell your data. We share it only: (a) with infrastructure providers (hosting, database, sending of emails/SMS) to the extent necessary for the Service to operate; (b) with the AI provider — when the relevant features are used; (c) with an anti-abuse verification service (Cloudflare Turnstile) when you submit the public vacancy application form; (d) at the lawful request of authorized bodies. You decide for yourself to whom and when you open a document via a link.",
     h7: "7. Protection",
     protection:
-      "Data is isolated per family at the database level (Row Level Security), files are kept in private storage, and transmission is over a secure connection. Two-factor authentication and notifications of sign-ins from a new device are available.",
+      "Data is isolated per account and workspace at the database level (Row Level Security), files are kept in private storage, and transmission is over a secure connection. Document access is limited according to roles and links granted.",
     h8: "8. Retention and deletion",
     retentionPre:
       "We keep data while your account is active. You can delete your account and associated data in the app under Settings → Security → Delete account. If you cannot sign in, contact ",
@@ -170,7 +170,7 @@ const M = {
       "Kami tidak menjual data Anda. Kami membagikannya hanya: (a) kepada penyedia infrastruktur (hosting, basis data, pengiriman email/SMS) sebatas yang diperlukan untuk pengoperasian Layanan; (b) kepada penyedia AI — saat fitur terkait digunakan; (c) kepada layanan verifikasi anti-penyalahgunaan (Cloudflare Turnstile) saat Anda mengisi formulir lamaran lowongan publik; (d) atas permintaan sah dari otoritas yang berwenang. Anda sendiri yang memutuskan kepada siapa dan kapan Anda membuka dokumen melalui tautan.",
     h7: "7. Perlindungan",
     protection:
-      "Data diisolasi per keluarga pada tingkat basis data (Row Level Security), berkas disimpan dalam penyimpanan pribadi, dan pengirimannya melalui koneksi yang aman. Tersedia autentikasi dua faktor dan pemberitahuan masuk dari perangkat baru.",
+      "Data diisolasi per akun dan ruang kerja pada tingkat basis data (Row Level Security), berkas disimpan dalam penyimpanan pribadi, dan pengirimannya melalui koneksi yang aman. Akses dokumen dibatasi sesuai peran dan tautan yang diberikan.",
     h8: "8. Masa simpan dan penghapusan",
     retentionPre:
       "Kami menyimpan data selama akun Anda aktif. Anda dapat menghapus akun dan data terkait di aplikasi melalui Pengaturan → Keamanan → Hapus akun. Jika Anda tidak dapat masuk, hubungi ",

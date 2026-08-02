@@ -6,6 +6,7 @@ import { isNativeRequest } from "@/lib/isNativeRequest";
 import AppNav from "@/components/AppNav";
 import IdentifyUser from "@/components/IdentifyUser";
 import AnalyticsEvents from "@/components/AnalyticsEvents";
+import VerifyEmailBanner from "@/components/VerifyEmailBanner";
 
 const M = {
   ru: {
@@ -102,10 +103,10 @@ const M = {
     mfaRecommend: "— hujjatlaringiz uchun qoʻshimcha himoya.",
   },
   id: {
-    brand: "Brankas keluarga",
+    brand: "Dokumen kerja",
     signOut: "Keluar",
     menu: "Menu",
-    family: "Keluarga",
+    family: "Dokumen saya",
     documents: "Dokumen",
     assets: "Aset",
     search: "Cari",
@@ -164,6 +165,8 @@ export default async function MyLayout({
     .eq("household_id", activeId);
   const showMfaNudge = !hasMfa && (docCount ?? 0) > 0;
 
+  // ЛИЧНОЕ — ровно 5 пунктов (T8). Поиск/Офлайн/Безопасность вынесены в шапку
+  // и подвал; все прежние URL сохранены и открываются напрямую.
   const nav = [
     {
       title: t.grpFamily,
@@ -222,6 +225,9 @@ export default async function MyLayout({
       spaces={spaces}
       activeId={activeId}
       nav={nav}
+      search={{ href: "/my/search", label: t.search }}
+      saved={{ href: "/saved", label: t.offline }}
+      settings={{ href: "/my/security", label: t.security }}
       mfa={
         showMfaNudge
           ? {
@@ -232,6 +238,9 @@ export default async function MyLayout({
           : null
       }
     >
+      {!user.email_confirmed_at && (
+        <VerifyEmailBanner locale={locale} email={user.email ?? ""} />
+      )}
       {children}
       </AppNav>
     </>

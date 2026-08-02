@@ -47,6 +47,15 @@ export type ApplicationStatus =
   | "shortlisted"
   | "rejected"
   | "hired";
+export type Source = "wa" | "ig" | "qr" | "direct" | "other";
+
+export const SOURCES: Source[] = ["wa", "ig", "qr", "direct", "other"];
+
+/** Нормализуем ?src= в допустимое значение (по умолчанию 'direct'). */
+export function parseSource(raw: string | null | undefined): Source {
+  const s = (raw ?? "").toLowerCase();
+  return (SOURCES as string[]).includes(s) ? (s as Source) : "direct";
+}
 
 export type EmployerProfile = {
   id: string;
@@ -74,6 +83,7 @@ export type Vacancy = {
   video_screening: VideoScreening;
   video_question: string | null;
   status: VacancyStatus;
+  views_count: number;
   closes_at: string | null;
   // Структурированные блоки (§8 v1.1). Могут отсутствовать у старых вакансий.
   problem_statement?: string | null;

@@ -5,11 +5,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SpaceSwitcher from "@/components/SpaceSwitcher";
 import SignOutButton from "@/components/SignOutButton";
+import OfflinePill from "@/components/OfflinePill";
 import { signOut } from "@/app/my/actions";
 import type { Locale } from "@/lib/i18n";
 
 type NavItem = { href: string; emoji: string; label: string };
 type NavGroup = { title?: string; emoji?: string; items: NavItem[] };
+type LinkRef = { href: string; label: string };
 
 /**
  * Оболочка кабинета: слева — вертикальное меню разделов, справа — контент.
@@ -25,6 +27,9 @@ export default function AppNav({
   spaces,
   activeId,
   nav,
+  search,
+  saved,
+  settings,
   mfa,
   children,
 }: {
@@ -36,6 +41,9 @@ export default function AppNav({
   spaces: { id: string; name: string }[];
   activeId: string;
   nav: NavGroup[];
+  search?: LinkRef;
+  saved?: LinkRef;
+  settings?: LinkRef;
   mfa: { warning: string; enable2fa: string; recommend: string } | null;
   children: React.ReactNode;
 }) {
@@ -172,6 +180,16 @@ export default function AppNav({
         </nav>
 
         <div className="border-t border-[#e8e0d5] px-3 py-3">
+          {settings && (
+            <Link
+              href={settings.href}
+              onClick={() => setOpen(false)}
+              className="mb-1 flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-[#5c5248] hover:bg-[#f0e6d9]"
+            >
+              <span className="text-base">🛡️</span>
+              <span>{settings.label}</span>
+            </Link>
+          )}
           <div className="mb-2 truncate px-3 text-xs text-slate-500">
             {userEmail}
           </div>
@@ -186,19 +204,31 @@ export default function AppNav({
 
       {/* КОНТЕНТ */}
       <div className="flex min-w-0 flex-1 flex-col">
-        {/* Верхняя панель (только мобильный) */}
-        <header className="flex items-center gap-3 border-b border-[#e8e0d5] bg-[#fdfaf5] px-4 py-3 md:hidden">
+        {/* Верхняя панель: гамбургер+бренд на мобильном, поиск/офлайн — всегда */}
+        <header className="flex items-center gap-2 border-b border-[#e8e0d5] bg-[#fdfaf5] px-4 py-3">
           <button
             onClick={() => setOpen(true)}
             aria-label={menuLabel}
-            className="-ml-1 rounded-lg p-2 text-xl leading-none hover:bg-[#f0e6d9]"
+            className="-ml-1 rounded-lg p-2 text-xl leading-none hover:bg-[#f0e6d9] md:hidden"
           >
             ☰
           </button>
-          <Link href="/my" className="flex items-center gap-2 font-semibold">
+          <Link href="/my" className="flex items-center gap-2 font-semibold md:hidden">
             <span className="text-lg">🔐</span>
             <span>{brand}</span>
           </Link>
+          <div className="flex-1" />
+          {saved && <OfflinePill href={saved.href} label={saved.label} />}
+          {search && (
+            <Link
+              href={search.href}
+              aria-label={search.label}
+              title={search.label}
+              className="flex h-11 w-11 items-center justify-center rounded-lg text-lg hover:bg-[#f0e6d9]"
+            >
+              🔍
+            </Link>
+          )}
         </header>
 
         {mfa && (

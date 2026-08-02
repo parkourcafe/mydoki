@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import {
@@ -11,12 +11,16 @@ import {
 } from "@/lib/career";
 import {
   setApplicationStatus,
+  revertRejection,
   signApplicationDoc,
   signApplicationVideo,
 } from "@/app/employer/actions";
 import { track } from "@/lib/analytics";
 
-export type BoardDoc = { type: string; label: string; file_name: string; path: string };
+// Окно отмены отклонения (совпадает с revert_last_rejection в БД).
+const UNDO_MS = 10 * 60 * 1000;
+
+export type BoardDoc = { id: string; type: string; label: string; file_name: string; path: string };
 export type BoardAnswer = { question: string; answer: string; type: string };
 export type BoardApp = {
   id: string;
@@ -45,6 +49,7 @@ const M = {
         : `Hello! Could you please send the remaining documents for your application?`,
     stNew: "New", stViewed: "Viewed", stShortlisted: "Shortlisted", stRejected: "Rejected", stHired: "Hired",
     answersNone: "No answers", docsNone: "No documents required",
+    rejectedToast: "Rejected", undo: "Undo", restored: "Restored", undoExpired: "Undo window has expired.",
   },
   id: {
     total: "Total", new: "Baru", shortlisted: "Terpilih", rejected: "Ditolak", hired: "Diterima",
@@ -59,6 +64,7 @@ const M = {
         : `Halo! Boleh kirimkan dokumen yang tersisa untuk lamaran Anda?`,
     stNew: "Baru", stViewed: "Dilihat", stShortlisted: "Terpilih", stRejected: "Ditolak", stHired: "Diterima",
     answersNone: "Tidak ada jawaban", docsNone: "Tidak ada dokumen wajib",
+    rejectedToast: "Ditolak", undo: "Batalkan", restored: "Dikembalikan", undoExpired: "Waktu pembatalan sudah habis.",
   },
   ru: {
     total: "Всего", new: "Новые", shortlisted: "Отобраны", rejected: "Отклонены", hired: "Приняты",
@@ -73,6 +79,7 @@ const M = {
         : `Здравствуйте! Пришлите, пожалуйста, недостающие документы по вашему отклику.`,
     stNew: "Новый", stViewed: "Просмотрен", stShortlisted: "Отобран", stRejected: "Отклонён", stHired: "Принят",
     answersNone: "Нет ответов", docsNone: "Документы не требуются",
+    rejectedToast: "Отклонено", undo: "Вернуть", restored: "Возвращено", undoExpired: "Окно отмены истекло.",
   },
   uz: {
     total: "Jami", new: "Yangi", shortlisted: "Tanlangan", rejected: "Rad etilgan", hired: "Qabul qilingan",
@@ -87,6 +94,7 @@ const M = {
         : `Assalomu alaykum! Iltimos, arizangiz uchun qolgan hujjatlarni yuboring.`,
     stNew: "Yangi", stViewed: "Ko‘rilgan", stShortlisted: "Tanlangan", stRejected: "Rad etilgan", stHired: "Qabul qilingan",
     answersNone: "Javoblar yo‘q", docsNone: "Hujjat talab qilinmaydi",
+    rejectedToast: "Rad etildi", undo: "Qaytarish", restored: "Qaytarildi", undoExpired: "Bekor qilish vaqti tugadi.",
   },
 } as const;
 
@@ -154,6 +162,23 @@ export default function ApplicationsBoard({
   const [apps, setApps] = useState<BoardApp[]>(initialApplications);
   const [filter, setFilter] = useState<Filter>("all");
   const [pending, setPending] = useState<Record<string, boolean>>({});
+  const [undoId, setUndoId] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
+  const [rejectedAt, setRejectedAt] = useState<Record<string, number>>({});
+
+  // Тост «Отклонено — Вернуть» держим 7 секунд.
+  useEffect(() => {
+    if (!undoId) return;
+    const h = setTimeout(() => setUndoId(null), 7000);
+    return () => clearTimeout(h);
+  }, [undoId]);
+
+  // Инфо-тост («Возвращено» / «Окно истекло») — 3 секунды.
+  useEffect(() => {
+    if (!info) return;
+    const h = setTimeout(() => setInfo(null), 3000);
+    return () => clearTimeout(h);
+  }, [info]);
 
   // Отсутствие поля required у старых записей трактуем как обязательный.
   const requiredOnly = requiredDocs.filter((d) => d.required !== false);
@@ -198,6 +223,42 @@ export default function ApplicationsBoard({
       setApps(prev); // откат при ошибке
     } finally {
       setPending((p) => ({ ...p, [id]: false }));
+    }
+  }
+
+  // Отклонить — с окном отмены: оптимистично + тост «Вернуть».
+  async function rejectApp(id: string) {
+    const prev = apps;
+    setApps((p) => p.map((a) => (a.id === id ? { ...a, status: "rejected" } : a)));
+    setPending((p) => ({ ...p, [id]: true }));
+    try {
+      await setApplicationStatus(id, vacancyId, "rejected");
+      setRejectedAt((p) => ({ ...p, [id]: Date.now() }));
+      setInfo(null);
+      setUndoId(id);
+    } catch {
+      setApps(prev);
+    } finally {
+      setPending((p) => ({ ...p, [id]: false }));
+    }
+  }
+
+  // Вернуть последнее отклонение (сервер enforces окно 10 мин и «последнее»).
+  async function revertApp(id: string) {
+    setPending((p) => ({ ...p, [id]: true }));
+    const res = await revertRejection(id, vacancyId);
+    setPending((p) => ({ ...p, [id]: false }));
+    setUndoId(null);
+    setRejectedAt((p) => {
+      const n = { ...p };
+      delete n[id];
+      return n;
+    });
+    if (res.ok) {
+      setApps((p) => p.map((a) => (a.id === id ? { ...a, status: res.status } : a)));
+      setInfo(t.restored);
+    } else if (res.error === "expired") {
+      setInfo(t.undoExpired);
     }
   }
 
@@ -280,13 +341,14 @@ export default function ApplicationsBoard({
                           <span className="text-red-500">❌</span>
                         )}
                         {uploaded ? (
-                          <button
-                            type="button"
-                            onClick={() => openDoc(uploaded.path)}
+                          <a
+                            href={`/api/employer/doc/${uploaded.id}`}
+                            target="_blank"
+                            rel="noreferrer"
                             className="text-brand-600 hover:underline"
                           >
                             {d.label}
-                          </button>
+                          </a>
                         ) : (
                           <span className="text-slate-500">
                             {d.label}
@@ -369,20 +431,65 @@ export default function ApplicationsBoard({
                 >
                   📄 {t.requestDoc}
                 </a>
-                {a.status !== "rejected" && a.status !== "hired" && (
+                {a.status !== "rejected" && a.status !== "hired" ? (
                   <button
                     type="button"
                     disabled={pending[a.id]}
-                    onClick={() => changeStatus(a.id, "rejected")}
+                    onClick={() => rejectApp(a.id)}
                     className="btn border border-slate-300 bg-white text-slate-600 hover:bg-slate-100 disabled:opacity-50"
                   >
                     {t.reject}
                   </button>
+                ) : (
+                  rejectedAt[a.id] &&
+                  Date.now() - rejectedAt[a.id] < UNDO_MS && (
+                    <button
+                      type="button"
+                      disabled={pending[a.id]}
+                      onClick={() => revertApp(a.id)}
+                      className="btn border border-slate-300 bg-white text-brand-600 hover:bg-slate-100 disabled:opacity-50"
+                    >
+                      ↩ {t.undo}
+                    </button>
+                  )
                 )}
               </div>
             </li>
           ))}
         </ul>
+      )}
+
+      {/* Undo-тост после отклонения (≥ 7 c) */}
+      {undoId && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4"
+        >
+          <div className="flex items-center gap-3 rounded-full bg-slate-900 px-4 py-2 text-sm text-white shadow-lg">
+            <span>{t.rejectedToast}</span>
+            <button
+              type="button"
+              onClick={() => revertApp(undoId)}
+              className="font-semibold text-brand-300 hover:text-brand-200"
+            >
+              {t.undo}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Инфо-тост */}
+      {info && !undoId && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed inset-x-0 bottom-4 z-50 flex justify-center px-4"
+        >
+          <div className="rounded-full bg-slate-900 px-4 py-2 text-sm text-white shadow-lg">
+            {info}
+          </div>
+        </div>
       )}
     </div>
   );

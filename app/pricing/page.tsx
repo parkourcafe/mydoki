@@ -4,7 +4,7 @@ import { getLocale, type Locale } from "@/lib/i18n";
 
 const M = {
   ru: {
-    metaTitle: "Цены — doki.help",
+    metaTitle: "Цены",
     metaDesc:
       "Сейчас бесплатно: 2 ГБ, напоминания о сроках, семейный доступ, офлайн и временные ссылки. Платные тарифы для большего объёма появятся позже.",
     back: "← На главную",
@@ -27,7 +27,7 @@ const M = {
     later: "Позже появятся платные тарифы для большего объёма. Никаких скрытых платежей: пока тариф один и он бесплатный.",
   },
   en: {
-    metaTitle: "Pricing — doki.help",
+    metaTitle: "Pricing",
     metaDesc:
       "Free right now: 2 GB, deadline reminders, family access, offline and expiring links. Paid plans for more storage will come later.",
     back: "← Home",
@@ -38,19 +38,19 @@ const M = {
     features: [
       "2 GB of storage",
       "Deadline reminders",
-      "Documents by family member and category",
-      "Family access — several people",
+      "Documents by candidate, employee, and category",
+      "Team access for authorized people",
       "Offline access to the documents you need",
       "Expiring links with revoke, view limits and watermark",
       "Two-factor authentication (2FA)",
       "Export all your data at any time",
     ],
-    cta: "Create your vault — free",
+    cta: "Create a free checklist",
     laterTitle: "And later?",
     later: "Paid plans for more storage will come later. No hidden charges: for now there's one plan and it's free.",
   },
   id: {
-    metaTitle: "Harga — doki.help",
+    metaTitle: "Harga",
     metaDesc:
       "Gratis sekarang: 2 GB, pengingat tenggat, akses keluarga, offline, dan tautan berbatas waktu. Paket berbayar untuk ruang lebih besar hadir nanti.",
     back: "← Beranda",
@@ -61,19 +61,19 @@ const M = {
     features: [
       "Penyimpanan 2 GB",
       "Pengingat tenggat",
-      "Dokumen per anggota keluarga dan kategori",
-      "Akses keluarga — beberapa orang",
+      "Dokumen per kandidat, karyawan, dan kategori",
+      "Akses tim untuk pihak yang berwenang",
       "Akses offline ke dokumen yang Anda butuhkan",
       "Tautan berbatas waktu dengan cabut, batas tampilan, dan tanda air",
       "Autentikasi dua faktor (2FA)",
       "Ekspor semua data Anda kapan saja",
     ],
-    cta: "Buat brankas — gratis",
+    cta: "Buat checklist gratis",
     laterTitle: "Lalu nanti?",
     later: "Paket berbayar untuk ruang lebih besar akan hadir nanti. Tanpa biaya tersembunyi: untuk sekarang ada satu paket dan itu gratis.",
   },
   uz: {
-    metaTitle: "Narxlar — doki.help",
+    metaTitle: "Narxlar",
     metaDesc:
       "Hozir bepul: 2 GB, muddat eslatmalari, oilaviy kirish, oflayn va muddatli havolalar. Koʻproq joy uchun pullik tariflar keyinroq paydo boʻladi.",
     back: "← Bosh sahifa",

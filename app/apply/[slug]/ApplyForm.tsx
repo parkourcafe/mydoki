@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
-import { compressImage } from "@/lib/imageCompress";
+import { compressImage, formatBytes } from "@/lib/compressImage";
 import { track } from "@/lib/analytics";
 import { POLICY_VERSION } from "@/lib/policy";
 import {
@@ -15,8 +15,14 @@ import {
   type RequiredDocument,
   type ScreeningQuestion,
   type VideoScreening,
+  type Source,
 } from "@/lib/career";
-import { submitApplication, attachVaultDocs } from "../actions";
+import {
+  submitApplication,
+  attachVaultDocs,
+  precheckApplication,
+  incrementVacancyView,
+} from "../actions";
 import VideoRecorder from "./VideoRecorder";
 import TurnstileWidget from "@/components/TurnstileWidget";
 
@@ -37,6 +43,7 @@ const M = {
     replace: "Replace",
     pending: "Not uploaded",
     uploading: "Uploading…",
+    compressing: "Optimizing…",
     uploaded: "Uploaded",
     errored: "Upload failed — try again",
     questions: "Questions",
@@ -91,6 +98,7 @@ const M = {
     replace: "Ganti",
     pending: "Belum diunggah",
     uploading: "Mengunggah…",
+    compressing: "Mengoptimalkan…",
     uploaded: "Terunggah",
     errored: "Gagal unggah — coba lagi",
     questions: "Pertanyaan",
@@ -145,6 +153,7 @@ const M = {
     replace: "Заменить",
     pending: "Не загружен",
     uploading: "Загрузка…",
+    compressing: "Оптимизация…",
     uploaded: "Загружен",
     errored: "Ошибка загрузки — повторите",
     questions: "Вопросы",
@@ -199,6 +208,7 @@ const M = {
     replace: "Almashtirish",
     pending: "Yuklanmagan",
     uploading: "Yuklanmoqda…",
+    compressing: "Optimallashtirilmoqda…",
     uploaded: "Yuklandi",
     errored: "Yuklashda xato — qayta urining",
     questions: "Savollar",
@@ -239,10 +249,21 @@ const M = {
   },
 } as const;
 
-type UploadState = "pending" | "uploading" | "uploaded" | "error";
+type UploadState = "pending" | "compressing" | "uploading" | "uploaded" | "error";
 
 function safeName(name: string): string {
   return name.replace(/[^\w.\-]+/g, "_") || "file";
+}
+
+// Метрика: сжатие упало (грузим исходник). Best-effort, без падений.
+function fireCompressFail() {
+  try {
+    const id = process.env.NEXT_PUBLIC_YM_ID;
+    const ym = (window as unknown as { ym?: (...a: unknown[]) => void }).ym;
+    if (id && ym) ym(Number(id), "reachGoal", "compress_fail");
+  } catch {
+    /* noop */
+  }
 }
 
 export default function ApplyForm({
@@ -250,6 +271,7 @@ export default function ApplyForm({
   vacancyId,
   slug,
   companyName,
+  source,
   requiredDocuments,
   screeningQuestions,
   videoScreening,
@@ -261,6 +283,7 @@ export default function ApplyForm({
   vacancyId: string;
   slug: string;
   companyName: string;
+  source: Source;
   requiredDocuments: RequiredDocument[];
   screeningQuestions: ScreeningQuestion[];
   videoScreening: VideoScreening;
@@ -279,6 +302,7 @@ export default function ApplyForm({
   const [email, setEmail] = useState(prefill?.email ?? "");
   const [files, setFiles] = useState<Record<number, File>>({});
   const [docStatus, setDocStatus] = useState<Record<number, UploadState>>({});
+  const [sizeInfo, setSizeInfo] = useState<Record<number, string>>({});
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -288,6 +312,9 @@ export default function ApplyForm({
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [vaultPicked, setVaultPicked] = useState<Record<string, boolean>>({});
   const errorRef = useRef<HTMLDivElement>(null);
+  // Форма показывает список ошибок валидации; для одиночных ошибок отправки
+  // (лимит, размер файла) используем ту же ленту.
+  const setError = (m: string) => setErrors([m]);
 
   useEffect(() => {
     if (!errors.length) return;
@@ -311,6 +338,16 @@ export default function ApplyForm({
       new URLSearchParams(window.location.search).get("src") || "direct";
     srcRef.current = src;
     track("vacancy_viewed", { vacancy_id: vacancyId, src });
+    // Счётчик просмотров вакансии — один на сессию браузера (дедуп через
+    // sessionStorage, чтобы reload не удваивал views_count работодателя).
+    const key = `viewed:${slug}`;
+    try {
+      if (sessionStorage.getItem(key)) return;
+      sessionStorage.setItem(key, "1");
+    } catch {
+      /* приватный режим — просто инкрементим */
+    }
+    void incrementVacancyView(slug);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   function markStarted() {
@@ -330,7 +367,7 @@ export default function ApplyForm({
     // Downscale large camera photos before the size check (budget Androids, ТЗ E1).
     let f = file;
     if (file.type.startsWith("image/")) {
-      f = await compressImage(file);
+      f = (await compressImage(file)).file;
     }
     if (f.size > MAX_FILE_BYTES) {
       setErrors([t.errFileSize]);
@@ -371,9 +408,25 @@ export default function ApplyForm({
 
     setBusy(true);
     const applicationId = crypto.randomUUID();
+    // T7: @supabase/supabase-js (~50 КБ gzip) грузим ЛЕНИВО — только при
+    // реальной отправке. Форма рендерится и интерактивна без него, поэтому
+    // клиент не тянет вес в First Load apply-страницы (бюджет ≤150 КБ gzip).
+    const { getSupabaseBrowser } = await import("@/lib/supabase/client");
     const supabase = getSupabaseBrowser();
 
     try {
+      // Precheck ДО загрузки файлов: дубликат/лимит — не заливаем впустую.
+      const pre = await precheckApplication({ slug, whatsapp });
+      if (pre.rateLimited) {
+        setError(t.errRateLimit);
+        setBusy(false);
+        return;
+      }
+      if (pre.duplicate && pre.accessToken) {
+        setDoneToken(pre.accessToken);
+        return;
+      }
+
       const uploaded: {
         type: string;
         label: string;
@@ -383,9 +436,28 @@ export default function ApplyForm({
       }[] = [];
 
       for (let i = 0; i < requiredDocuments.length; i++) {
-        const file = files[i];
-        if (!file) continue;
+        const raw = files[i];
+        if (!raw) continue;
         const doc = requiredDocuments[i];
+
+        // Сжатие изображений / конверсия HEIC — до загрузки (lazy-import).
+        setDocStatus((p) => ({ ...p, [i]: "compressing" }));
+        const outcome = await compressImage(raw);
+        if (outcome.failed) fireCompressFail();
+        if (outcome.tooLarge) {
+          setDocStatus((p) => ({ ...p, [i]: "error" }));
+          setError(t.errFileSize);
+          setBusy(false);
+          return;
+        }
+        if (outcome.changed) {
+          setSizeInfo((p) => ({
+            ...p,
+            [i]: `${formatBytes(outcome.originalSize)} → ${formatBytes(outcome.finalSize)}`,
+          }));
+        }
+        const file = outcome.file;
+
         setDocStatus((p) => ({ ...p, [i]: "uploading" }));
         const path = `${vacancyId}/${applicationId}/${doc.type}_${Date.now()}-${safeName(
           file.name
@@ -405,8 +477,8 @@ export default function ApplyForm({
           type: doc.type,
           label: doc.label,
           path,
-          name: file.name,
-          size: file.size,
+          name: raw.name, // исходное имя пользователю
+          size: file.size, // сжатый размер
         });
       }
 
@@ -449,7 +521,7 @@ export default function ApplyForm({
         answer: (answers[i] ?? "").trim(),
       }));
 
-      const { accessToken } = await submitApplication({
+      const result = await submitApplication({
         applicationId,
         slug,
         fullName: fullName.trim(),
@@ -460,11 +532,25 @@ export default function ApplyForm({
         turnstileToken,
         answers: answerPayload,
         documents: uploaded,
+        docsComplete: uploaded.length,
+        docsTotal: requiredDocuments.length,
       });
+
+      if (!result.ok) {
+        setErrors([
+          result.error === "turnstile"
+            ? t.errTurnstile
+            : result.error === "rate_limited"
+              ? t.errRateLimit
+              : t.errGeneric,
+        ]);
+        setBusy(false);
+        return;
+      }
 
       track("consent_given", { vacancy_id: vacancyId, policy_version: POLICY_VERSION });
       track("application_submitted", { vacancy_id: vacancyId });
-      setDoneToken(accessToken);
+      setDoneToken(result.accessToken);
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
       // Понятные сообщения вместо кодов из БД.
@@ -595,7 +681,7 @@ export default function ApplyForm({
                     </label>
                   </div>
                   {chosen && (
-                    <p className="mt-2 flex items-center gap-2 text-xs">
+                    <p className="mt-2 flex flex-wrap items-center gap-2 text-xs">
                       <span className="truncate text-slate-500">{chosen.name}</span>
                       <span
                         className={
@@ -603,7 +689,7 @@ export default function ApplyForm({
                             ? "text-green-600"
                             : st === "error"
                               ? "text-red-600"
-                              : st === "uploading"
+                              : st === "uploading" || st === "compressing"
                                 ? "text-brand-600"
                                 : "text-slate-400"
                         }
@@ -612,10 +698,15 @@ export default function ApplyForm({
                           ? `✓ ${t.uploaded}`
                           : st === "error"
                             ? t.errored
-                            : st === "uploading"
-                              ? t.uploading
-                              : t.pending}
+                            : st === "compressing"
+                              ? t.compressing
+                              : st === "uploading"
+                                ? t.uploading
+                                : t.pending}
                       </span>
+                      {sizeInfo[i] && (
+                        <span className="text-slate-400">· {sizeInfo[i]}</span>
+                      )}
                     </p>
                   )}
                 </li>

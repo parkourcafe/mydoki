@@ -4,7 +4,7 @@ import type { Locale } from "./i18n";
 import { getLocale } from "./i18n";
 import { altLangs } from "./seo";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://doki.help";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 /**
  * Чеклист-страницы (/checklists/*). Контент-лид-магниты: практичный список
@@ -112,7 +112,7 @@ const DATA: Record<string, Checklist> = {
           },
           {
             q: "How do I avoid documents expiring during a trip?",
-            a: "Set a “valid until” date on each passport, visa and insurance policy, and a reminder arrives by email before it expires.",
+            a: "Set a “valid until” date on each passport, visa and insurance policy, and a reminder arrives by email before it expires. The reminder comes 30, 7 and 1 day before that date.",
           },
         ],
       },
@@ -185,7 +185,7 @@ const DATA: Record<string, Checklist> = {
           },
           {
             q: "Как не дать документам истечь во время поездки?",
-            a: "Укажите дату «действует до» для каждого паспорта, визы и страховки — напоминание придёт на email заранее.",
+            a: "Укажите дату «действует до» для каждого паспорта, визы и страховки — напоминание придёт на email заранее. Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
         ],
       },
@@ -258,7 +258,7 @@ const DATA: Record<string, Checklist> = {
           },
           {
             q: "Bagaimana mencegah dokumen kedaluwarsa saat perjalanan?",
-            a: "Pasang tanggal “berlaku sampai” pada tiap paspor, visa, dan polis asuransi, dan pengingat tiba lewat email sebelum kedaluwarsa.",
+            a: "Pasang tanggal “berlaku sampai” pada tiap paspor, visa, dan polis asuransi, dan pengingat tiba lewat email sebelum kedaluwarsa. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
         ],
       },
@@ -331,7 +331,7 @@ const DATA: Record<string, Checklist> = {
           },
           {
             q: "Hujjatlar sayohat paytida tugab qolmasligi uchun nima qilish kerak?",
-            a: "Har bir pasport, viza va sugʻurta polisiga “amal qiladi” sanasini qoʻying — eslatma muddat tugashidan oldin email orqali keladi.",
+            a: "Har bir pasport, viza va sugʻurta polisiga “amal qiladi” sanasini qoʻying — eslatma muddat tugashidan oldin email orqali keladi. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
         ],
       },
@@ -428,7 +428,7 @@ const DATA: Record<string, Checklist> = {
           },
           {
             q: "Can I get reminders before a child's passport expires?",
-            a: "Yes. Set a “valid until” date on each child's passport and a reminder arrives by email before it expires.",
+            a: "Yes. Set a “valid until” date on each child's passport and a reminder arrives by email before it expires. The reminder comes 30, 7 and 1 day before that date.",
           },
         ],
       },
@@ -501,7 +501,7 @@ const DATA: Record<string, Checklist> = {
           },
           {
             q: "Будет ли напоминание до окончания паспорта ребёнка?",
-            a: "Да. Укажите дату «действует до» для паспорта каждого ребёнка — напоминание придёт на email заранее.",
+            a: "Да. Укажите дату «действует до» для паспорта каждого ребёнка — напоминание придёт на email заранее. Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
         ],
       },
@@ -574,7 +574,7 @@ const DATA: Record<string, Checklist> = {
           },
           {
             q: "Bisakah dapat pengingat sebelum paspor anak kedaluwarsa?",
-            a: "Bisa. Pasang tanggal “berlaku sampai” pada paspor tiap anak, dan pengingat tiba lewat email sebelum kedaluwarsa.",
+            a: "Bisa. Pasang tanggal “berlaku sampai” pada paspor tiap anak, dan pengingat tiba lewat email sebelum kedaluwarsa. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
         ],
       },
@@ -647,7 +647,7 @@ const DATA: Record<string, Checklist> = {
           },
           {
             q: "Bola pasporti tugashidan oldin eslatma olsa boʻladimi?",
-            a: "Ha. Har bir bola pasportiga “amal qiladi” sanasini qoʻying — eslatma muddat tugashidan oldin email orqali keladi.",
+            a: "Ha. Har bir bola pasportiga “amal qiladi” sanasini qoʻying — eslatma muddat tugashidan oldin email orqali keladi. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
         ],
       },
