@@ -345,6 +345,8 @@ export default async function CandidatePage({
           applicationId={app.id}
           defaultPosition={vacancy.title}
           hasAccount={!!app.user_id}
+          fullName={app.full_name}
+          whatsapp={app.whatsapp}
           existingEmploymentId={existingEmploymentId}
         />
       )}

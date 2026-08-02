@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import { EMPLOYMENT_TYPES, employmentTypeLabel } from "@/lib/employment";
 import { createEmploymentFromApplication } from "@/app/employer/actions";
+import InviteToRegister from "./InviteToRegister";
 
 const M = {
   ru: {
@@ -83,12 +84,16 @@ export default function EmployeeOnboard({
   defaultPosition,
   hasAccount,
   existingEmploymentId,
+  fullName,
+  whatsapp,
 }: {
   locale: Locale;
   applicationId: string;
   defaultPosition: string;
   hasAccount: boolean;
   existingEmploymentId: string | null;
+  fullName: string;
+  whatsapp: string;
 }) {
   const t = M[locale];
   const router = useRouter();
@@ -126,6 +131,11 @@ export default function EmployeeOnboard({
         <div className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
           <p>{t.noAccount}</p>
           <p className="mt-1">{t.noAccountNext}</p>
+          <InviteToRegister
+            locale={locale}
+            fullName={fullName}
+            whatsapp={whatsapp}
+          />
         </div>
       ) : !open ? (
         <>
