@@ -95,12 +95,14 @@ the visitor's language.
 Create a free account at ${APP_URL}/login, add your first family member, then
 upload or photograph a document.
 
-### Note for agents
+## Note for agents
 
-This is a private application. There is no public API, OAuth server, or
-agentic-commerce endpoint. A family's documents are accessible only to its
-authenticated members. A reusable skill describing how to organize family
-documents is published at ${APP_URL}/.well-known/agent-skills/index.json
+This applies to both products. This is a private application. There is no
+public API, OAuth server, or agentic-commerce endpoint. A family's documents
+are accessible only to its authenticated members, and hiring data is
+accessible only to the employer account that owns it. A reusable skill
+describing how to organize family documents is published at
+${APP_URL}/.well-known/agent-skills/index.json
 `;
 
 export function GET() {
