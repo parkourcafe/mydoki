@@ -9,12 +9,14 @@ import {
   addApplicationNote,
   requestApplicationDocuments,
   signApplicationDoc,
+  revertRejection,
 } from "@/app/employer/actions";
 
 type Doc = { type: string; label: string; file_name: string; path: string };
 
 const M = {
   ru: {
+    undo: "Вернуть", undone: "Отклонение отменено.", undoExpired: "Окно отмены истекло.",
     err: "Не удалось выполнить. Попробуйте ещё раз.",
     decision: "Решение",
     moveStage: "Этап воронки",
@@ -34,6 +36,7 @@ const M = {
     stageNames: { new: "Новый", review: "Рассмотрение", interview: "Интервью", assignment: "Задание", decision: "Решение" } as Record<string, string>,
   },
   en: {
+    undo: "Undo", undone: "Rejection reverted.", undoExpired: "Undo window has expired.",
     err: "That didn't go through. Please try again.",
     decision: "Decision",
     moveStage: "Funnel stage",
@@ -53,6 +56,7 @@ const M = {
     stageNames: { new: "New", review: "Review", interview: "Interview", assignment: "Assignment", decision: "Decision" } as Record<string, string>,
   },
   uz: {
+    undo: "Qaytarish", undone: "Rad etish bekor qilindi.", undoExpired: "Bekor qilish vaqti tugadi.",
     err: "Bajarilmadi. Qayta urinib ko‘ring.",
     decision: "Qaror",
     moveStage: "Voronka bosqichi",
@@ -72,6 +76,7 @@ const M = {
     stageNames: { new: "Yangi", review: "Koʻrib chiqish", interview: "Suhbat", assignment: "Topshiriq", decision: "Qaror" } as Record<string, string>,
   },
   id: {
+    undo: "Batalkan", undone: "Penolakan dibatalkan.", undoExpired: "Waktu pembatalan sudah habis.",
     err: "Tidak berhasil. Silakan coba lagi.",
     decision: "Keputusan",
     moveStage: "Tahap corong",
@@ -128,6 +133,10 @@ export default function CandidateActions({
   const active = state === "active";
 
   const [err, setErr] = useState(false);
+  // То же окно отмены, что на доске откликов (revert_last_rejection в БД).
+  const UNDO_MS = 10 * 60 * 1000;
+  const [rejectedAt, setRejectedAt] = useState<number | null>(null);
+  const [undoMsg, setUndoMsg] = useState<string | null>(null);
 
   // Действия могут и бросить, и вернуть { error } — раньше оба случая
   // проглатывались, и кнопка выглядела сработавшей.
@@ -280,12 +289,41 @@ export default function CandidateActions({
               type="button"
               disabled={pending || !reason.trim()}
               onClick={() =>
-                run(() => rejectApplication(applicationId, vacancyId, reason))
+                run(async () => {
+                  const res = await rejectApplication(applicationId, vacancyId, reason);
+                  setRejectedAt(Date.now());
+                  setUndoMsg(null);
+                  return res;
+                })
               }
               className="btn-danger mt-2"
             >
               {t.rejectBtn}
             </button>
+            {rejectedAt !== null && Date.now() - rejectedAt < UNDO_MS && (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() =>
+                  run(async () => {
+                    const r = await revertRejection(applicationId, vacancyId);
+                    if (!r.ok) {
+                      setUndoMsg(r.error === "expired" ? t.undoExpired : t.err);
+                      return { error: true };
+                    }
+                    setRejectedAt(null);
+                    setUndoMsg(t.undone);
+                    return r;
+                  })
+                }
+                className="btn-ghost ml-2 mt-2"
+              >
+                ↩ {t.undo}
+              </button>
+            )}
+            {undoMsg && (
+              <p className="mt-2 text-sm text-slate-600">{undoMsg}</p>
+            )}
           </div>
         </>
       )}
