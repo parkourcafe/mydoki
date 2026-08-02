@@ -87,6 +87,49 @@
 
 С 21-го дня — только GSC-driven (см. §7): берём запросы с показами, но низким CTR / позицией 8–30 и усиливаем.
 
+## 3a. Партия 2 — отбор из внешнего intent-реестра (август 2026)
+
+Источник: внешний `intent-registry-combined.json` (268 интентов). **Взято 22 из 112**
+индонезийских запросов; 156 запросов реестра — на русском (не ищутся в Индонезии),
+а ~90 индонезийских обслуживают семейный B2C (COLLAB/LEGACY/MAINT/BACKUP,
+`dokumen keluarga`, `akta kelahiran`, `warisan`) — это позиция, от которой продукт
+ушёл, поэтому в работу не берутся.
+
+⚠️ Реестр использовать только как список запросов, не как архитектуру: в нём все
+268 интентов ведут на 26 URL (32 записи ORG → один `/organize-documents/`),
+иерархия пустая (`parent_intent` = null у всех), `cannibalization_risk` = "Low"
+у всех 268 при фактическом наложении 32:1.
+
+**A. Новые страницы (запрос достаточно отличается от уже сидящих):**
+
+| Запрос (BI) | Интенты | Реестр | Slug | Почему отдельная страница |
+|---|---|---|---|---|
+| ijazah dan transkrip untuk lamaran kerja | ORG_059, ORG_060, TYPES_112 | `lib/checklists.ts` | `ijazah-transkrip-checklist` | Легализир ижазы/транскрипта — самостоятельная и очень частая боль индонезийского найма, в текущих чек-листах не раскрыта |
+| privasi dokumen kandidat / siapa yang melihat KTP saya | ORG_065, SAFE_074, SAFE_080, SAFE_082 | `lib/landings.ts` | `candidate-document-privacy` | Закрывает боль кандидата из §1 («кто увидит мой KTP»), питает виральную петлю; сейчас страницы нет |
+| dokumen untuk permohonan cepat | SPEED_096, DISC_028, DISC_029 | `lib/comparisons.ts` или checklist | `fast-document-submission` | Ценность «быстро подать полный пакет» — угол кандидата, а не HR; решить формат при реализации |
+
+**B. Дозаливка в существующие страницы (FAQ/секция, не новый URL — иначе каннибализация):**
+
+| Запрос (BI) | Интенты | Куда добавить |
+|---|---|---|
+| dokumen kadaluarsa kapan diperbarui · reminder dokumen kadaluarsa · jadwal perpanjangan · masa berlaku dokumen | TRACK_097–099, ORG_045 | `document-expiry-reminder` + HR-угол (сроки SKCK/KITAS) в `skck-checklist`, `kitas-work-permit-checklist` |
+| dokumen identitas apa saja | TYPES_100 | FAQ в `candidate-documents-requested-checklist` |
+| persyaratan dokumen administrasi · dokumen sah dan resmi | COMPLY_018, COMPLY_019 | FAQ в `employee-onboarding-11-checklist` (описательно + «cek syarat resmi») |
+| perjanjian kontrak · dokumen legal dan kontrak | ORG_062, TYPES_105 | FAQ в `employee-onboarding-11-checklist` (трудовой договор в онбординге) |
+| paspor dan visa dokumen | ORG_063 | FAQ в `kitas-work-permit-checklist` / `/for/visa-agents` |
+| fotokopi digital dokumen | ORG_048 | FAQ в `/candidate-document-collection` (скан с телефона вместо фотокопии) |
+
+**C. Исключено намеренно:**
+
+- `ORG_071 «Verifikasi dokumen asli»` — запрос про проверку подлинности. Прямо
+  конфликтует с гардрейлами (`lib/ai/guardrails.ts` — без вердиктов о подлинности)
+  и `tests/lexicon.mjs`. Брать можно **только** как FAQ-ответ в формате «мы этого
+  не делаем: doki собирает и показывает комплектность, подлинность проверяет
+  работодатель у официального источника».
+- `SAFE_077 «Enkripsi dokumen digital»`, `SAFE_081 «Enkripsi end-to-end»` — брать
+  лишь если формулировки совпадут с тем, что реально заявлено на `/security`;
+  E2E не заявлять, если это не так (beta-честность §0).
+
 ## 4. Структуры (совпадают с формой реестров)
 
 **Checklist** (`ChecklistContent`): navLabel · title ≤60 · metaDescription ≤155 · h1 · intro (answer-first, 2–3 фразы) · ctaPrimary · groups[{h2, items[]}] (2–3 группы) · faqHeading · faq[{q,a}] (3). Все 4 локали обязательны. Отдаёт Article+FAQPage+ItemList+BreadcrumbList.
