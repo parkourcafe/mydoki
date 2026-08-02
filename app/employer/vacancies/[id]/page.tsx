@@ -14,10 +14,10 @@ import ApplicationsBoard, { type BoardApp } from "./ApplicationsBoard";
 import VacancyDescription from "@/components/VacancyDescription";
 
 const M = {
-  en: { back: "← All vacancies", edit: "✏️ Edit", created: "Vacancy created — share the link below to start receiving applications.", updated: "Changes saved. They apply to new applications; existing ones keep their original answers." },
-  id: { back: "← Semua lowongan", edit: "✏️ Edit", created: "Lowongan dibuat — bagikan tautan di bawah untuk mulai menerima lamaran.", updated: "Perubahan tersimpan. Berlaku untuk lamaran baru; lamaran lama tetap dengan jawaban aslinya." },
-  ru: { back: "← Все вакансии", edit: "✏️ Изменить", created: "Вакансия создана — поделитесь ссылкой ниже, чтобы начать принимать отклики.", updated: "Изменения сохранены. Они действуют для новых откликов; уже полученные сохраняют исходные ответы." },
-  uz: { back: "← Barcha vakansiyalar", edit: "✏️ Tahrirlash", created: "Vakansiya yaratildi — arizalarni qabul qilish uchun havolani ulashing.", updated: "O‘zgarishlar saqlandi. Ular yangi arizalar uchun amal qiladi; eskilari asl javoblarini saqlaydi." },
+  en: { statusActive: "Active", statusPaused: "Paused", statusClosed: "Closed", back: "← All vacancies", edit: "✏️ Edit", created: "Vacancy created — share the link below to start receiving applications.", updated: "Changes saved. They apply to new applications; existing ones keep their original answers." },
+  id: { statusActive: "Aktif", statusPaused: "Dijeda", statusClosed: "Ditutup", back: "← Semua lowongan", edit: "✏️ Edit", created: "Lowongan dibuat — bagikan tautan di bawah untuk mulai menerima lamaran.", updated: "Perubahan tersimpan. Berlaku untuk lamaran baru; lamaran lama tetap dengan jawaban aslinya." },
+  ru: { statusActive: "Активна", statusPaused: "На паузе", statusClosed: "Закрыта", back: "← Все вакансии", edit: "✏️ Изменить", created: "Вакансия создана — поделитесь ссылкой ниже, чтобы начать принимать отклики.", updated: "Изменения сохранены. Они действуют для новых откликов; уже полученные сохраняют исходные ответы." },
+  uz: { statusActive: "Faol", statusPaused: "Pauzada", statusClosed: "Yopilgan", back: "← Barcha vakansiyalar", edit: "✏️ Tahrirlash", created: "Vakansiya yaratildi — arizalarni qabul qilish uchun havolani ulashing.", updated: "O‘zgarishlar saqlandi. Ular yangi arizalar uchun amal qiladi; eskilari asl javoblarini saqlaydi." },
 } as const;
 
 export default async function VacancyDashboard({
@@ -141,7 +141,25 @@ export default async function VacancyDashboard({
       </div>
 
       <div className="mb-4 mt-2">
-        <h1 className="text-2xl font-semibold">{vacancy.title}</h1>
+        <div className="flex flex-wrap items-center gap-2">
+          <h1 className="text-2xl font-semibold">{vacancy.title}</h1>
+          {/* Статус был виден только в списке вакансий. */}
+          <span
+            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
+              vacancy.status === "active"
+                ? "bg-green-100 text-green-700"
+                : vacancy.status === "paused"
+                  ? "bg-amber-100 text-amber-800"
+                  : "bg-slate-200 text-slate-600"
+            }`}
+          >
+            {vacancy.status === "active"
+              ? t.statusActive
+              : vacancy.status === "paused"
+                ? t.statusPaused
+                : t.statusClosed}
+          </span>
+        </div>
         <p className="text-sm text-slate-500">
           {vacancy.company_name}
           {vacancy.location ? ` · ${vacancy.location}` : ""}
