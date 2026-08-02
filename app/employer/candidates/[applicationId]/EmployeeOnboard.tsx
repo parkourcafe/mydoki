@@ -19,7 +19,9 @@ const M = {
     already: "Сотрудник оформлен.",
     openCard: "Карточка сотрудника →",
     noAccount:
-      "У кандидата нет аккаунта Doki — оформить в трудовые отношения нельзя (нужен аккаунт человека). Кандидат может зарегистрироваться и откликнуться снова.",
+      "Кандидат откликнулся без регистрации, поэтому трудовые отношения пока не оформляются: запись двусторонняя и должна быть видна человеку в его кабинете.",
+    noAccountNext:
+      "Это не мешает работе: кандидат отмечен как принятый, а все его документы остаются на этой карточке.",
     error: "Не удалось оформить. Проверьте, что кандидат нанят.",
   },
   en: {
@@ -34,7 +36,9 @@ const M = {
     already: "Employee onboarded.",
     openCard: "Employee card →",
     noAccount:
-      "The candidate has no Doki account — they can't be added to employment (a personal account is required). They can register and apply again.",
+      "This candidate applied without registering, so employment isn't created yet: the record is two-sided and has to be visible in their own account.",
+    noAccountNext:
+      "Nothing is blocked: the candidate is marked as hired and all of their documents stay on this card.",
     error: "Couldn't onboard. Make sure the candidate is hired.",
   },
   id: {
@@ -49,7 +53,9 @@ const M = {
     already: "Karyawan telah diproses.",
     openCard: "Kartu karyawan →",
     noAccount:
-      "Kandidat tidak punya akun Doki — tidak bisa dimasukkan ke hubungan kerja (perlu akun pribadi). Kandidat bisa daftar dan melamar lagi.",
+      "Kandidat ini melamar tanpa mendaftar, jadi hubungan kerja belum dibuat: catatannya dua arah dan harus terlihat di akun miliknya.",
+    noAccountNext:
+      "Tidak ada yang terhambat: kandidat sudah ditandai diterima dan semua dokumennya tetap ada di kartu ini.",
     error: "Gagal memproses. Pastikan kandidat sudah diterima.",
   },
   uz: {
@@ -64,7 +70,9 @@ const M = {
     already: "Xodim rasmiylashtirildi.",
     openCard: "Xodim kartasi →",
     noAccount:
-      "Nomzodda Doki akkaunti yoʻq — mehnat munosabatlariga qoʻshib boʻlmaydi (shaxsiy akkaunt kerak). Nomzod roʻyxatdan oʻtib, qayta ariza bera oladi.",
+      "Bu nomzod roʻyxatdan oʻtmasdan ariza bergan, shuning uchun mehnat munosabatlari hozircha yaratilmaydi: yozuv ikki tomonlama va uning kabinetida koʻrinishi kerak.",
+    noAccountNext:
+      "Bu ishga xalaqit bermaydi: nomzod qabul qilingan deb belgilangan, barcha hujjatlari shu kartada qoladi.",
     error: "Rasmiylashtirib boʻlmadi. Nomzod qabul qilinganini tekshiring.",
   },
 } as const;
@@ -115,9 +123,10 @@ export default function EmployeeOnboard({
       </h2>
 
       {!hasAccount ? (
-        <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
-          {t.noAccount}
-        </p>
+        <div className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
+          <p>{t.noAccount}</p>
+          <p className="mt-1">{t.noAccountNext}</p>
+        </div>
       ) : !open ? (
         <>
           <p className="text-sm text-slate-600">{t.hired}</p>
