@@ -15,6 +15,7 @@ type Doc = { type: string; label: string; file_name: string; path: string };
 
 const M = {
   ru: {
+    err: "Не удалось выполнить. Попробуйте ещё раз.",
     decision: "Решение",
     moveStage: "Этап воронки",
     documents: "Документы",
@@ -33,6 +34,7 @@ const M = {
     stageNames: { new: "Новый", review: "Рассмотрение", interview: "Интервью", assignment: "Задание", decision: "Решение" } as Record<string, string>,
   },
   en: {
+    err: "That didn't go through. Please try again.",
     decision: "Decision",
     moveStage: "Funnel stage",
     documents: "Documents",
@@ -51,6 +53,7 @@ const M = {
     stageNames: { new: "New", review: "Review", interview: "Interview", assignment: "Assignment", decision: "Decision" } as Record<string, string>,
   },
   uz: {
+    err: "Bajarilmadi. Qayta urinib ko‘ring.",
     decision: "Qaror",
     moveStage: "Voronka bosqichi",
     documents: "Hujjatlar",
@@ -69,6 +72,7 @@ const M = {
     stageNames: { new: "Yangi", review: "Koʻrib chiqish", interview: "Suhbat", assignment: "Topshiriq", decision: "Qaror" } as Record<string, string>,
   },
   id: {
+    err: "Tidak berhasil. Silakan coba lagi.",
     decision: "Keputusan",
     moveStage: "Tahap corong",
     documents: "Dokumen",
@@ -123,15 +127,32 @@ export default function CandidateActions({
 
   const active = state === "active";
 
+  const [err, setErr] = useState(false);
+
+  // Действия могут и бросить, и вернуть { error } — раньше оба случая
+  // проглатывались, и кнопка выглядела сработавшей.
   function run(fn: () => Promise<unknown>) {
     start(async () => {
-      await fn();
+      setErr(false);
+      try {
+        const res = await fn();
+        if (res && typeof res === "object" && "error" in res && res.error) {
+          setErr(true);
+          return;
+        }
+      } catch {
+        setErr(true);
+        return;
+      }
       router.refresh();
     });
   }
 
   return (
     <section className="card space-y-5">
+      {err && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{t.err}</p>
+      )}
       <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
         {t.decision}
       </h2>

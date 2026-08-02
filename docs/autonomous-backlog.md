@@ -62,7 +62,7 @@ npm run build           # успешно
 
 ## Группа 1 — механика кабинета (решений не требует)
 
-- [ ] **1.1 Тихие сбои в трёх компонентах.**
+- [x] **1.1 Тихие сбои в трёх компонентах.**
   `CandidateActions.tsx`, `CandidateAI.tsx`, `employees/[id]/OnboardingManager.tsx`
   глотают ошибки в `run()`. Скопировать рабочий паттерн с `t.err` из
   `OffboardingManager.tsx` / `AmendmentsManager.tsx`.
