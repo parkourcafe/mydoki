@@ -31,6 +31,9 @@ const M = {
     step1: "Добавьте члена семьи — можно начать с себя",
     step2: "Загрузите первый документ: фото или скан",
     step3: "Укажите срок действия — и мы напомним заранее",
+    nextTitle: "Хорошее начало! 👍",
+    nextText: "Теперь добавьте первый документ — откройте человека и загрузите фото или скан. Укажете срок действия — напомним заранее.",
+    nextCta: "Загрузить первый документ →",
   },
   en: {
     title: "Family",
@@ -51,6 +54,9 @@ const M = {
     step1: "Add a family member — you can start with yourself",
     step2: "Upload the first document: a photo or scan",
     step3: "Set the expiry date — and we'll remind you in advance",
+    nextTitle: "Great start! 👍",
+    nextText: "Now add the first document — open a person and upload a photo or scan. Set an expiry date and we'll remind you in advance.",
+    nextCta: "Upload the first document →",
   },
   uz: {
     title: "Oila",
@@ -71,6 +77,9 @@ const M = {
     step1: "Oila aʼzosini qoʻshing — oʻzingizdan boshlashingiz mumkin",
     step2: "Birinchi hujjatni yuklang: rasm yoki skan",
     step3: "Amal qilish muddatini koʻrsating — oldindan eslatamiz",
+    nextTitle: "Yaxshi boshlanish! 👍",
+    nextText: "Endi birinchi hujjatni qoʻshing — insonni oching va rasm yoki skan yuklang. Amal muddatini koʻrsating — oldindan eslatamiz.",
+    nextCta: "Birinchi hujjatni yuklash →",
   },
   id: {
     title: "Keluarga",
@@ -91,6 +100,9 @@ const M = {
     step1: "Tambahkan anggota keluarga — bisa mulai dari diri sendiri",
     step2: "Unggah dokumen pertama: foto atau pindaian",
     step3: "Tetapkan tanggal berlaku — kami akan ingatkan lebih awal",
+    nextTitle: "Awal yang bagus! 👍",
+    nextText: "Sekarang tambahkan dokumen pertama — buka seseorang lalu unggah foto atau pindaian. Tetapkan masa berlaku, kami ingatkan lebih awal.",
+    nextCta: "Unggah dokumen pertama →",
   },
 } as const;
 
@@ -141,6 +153,19 @@ export default async function MyHome() {
       )}
 
       <StorageBar used={storage.used} limit={storage.limit} locale={locale} />
+
+      {members.length > 0 && storage.used === 0 && (
+        <Link
+          href={`/my/members/${members[0].id}`}
+          className="block rounded-2xl border border-brand-200 bg-brand-50/60 px-5 py-4 transition hover:bg-brand-50"
+        >
+          <div className="font-semibold text-slate-800">{t.nextTitle}</div>
+          <p className="mt-1 text-sm text-slate-600">{t.nextText}</p>
+          <span className="mt-2 inline-block text-sm font-medium text-brand-700">
+            {t.nextCta}
+          </span>
+        </Link>
+      )}
 
       {members.length === 0 ? (
         <div className="card space-y-3">

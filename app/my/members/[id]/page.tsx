@@ -42,6 +42,13 @@ const M = {
     titlePh: "Общий анализ крови",
     note: "Заметка",
     saveRecord: "Сохранить запись",
+    showArchived: "Показать архив",
+    hideArchived: "Скрыть архив",
+    archivedBadge: "в архиве",
+    tipIssuer: "Кем выдан",
+    tipNumber: "Номер",
+    tipHolder: "Владелец",
+    tipTags: "Теги",
   },
   en: {
     back: "← Family",
@@ -63,6 +70,13 @@ const M = {
     titlePh: "Complete blood count",
     note: "Note",
     saveRecord: "Save record",
+    showArchived: "Show archive",
+    hideArchived: "Hide archive",
+    archivedBadge: "archived",
+    tipIssuer: "Issued by",
+    tipNumber: "Number",
+    tipHolder: "Holder",
+    tipTags: "Tags",
   },
   uz: {
     back: "← Oila",
@@ -84,6 +98,13 @@ const M = {
     titlePh: "Umumiy qon tahlili",
     note: "Izoh",
     saveRecord: "Yozuvni saqlash",
+    showArchived: "Arxivni koʻrsatish",
+    hideArchived: "Arxivni yashirish",
+    archivedBadge: "arxivda",
+    tipIssuer: "Kim tomonidan berilgan",
+    tipNumber: "Raqami",
+    tipHolder: "Egasi",
+    tipTags: "Teglar",
   },
   id: {
     back: "← Keluarga",
@@ -105,22 +126,32 @@ const M = {
     titlePh: "Pemeriksaan darah lengkap",
     note: "Catatan",
     saveRecord: "Simpan catatan",
+    showArchived: "Tampilkan arsip",
+    hideArchived: "Sembunyikan arsip",
+    archivedBadge: "diarsipkan",
+    tipIssuer: "Diterbitkan oleh",
+    tipNumber: "Nomor",
+    tipHolder: "Pemilik",
+    tipTags: "Tag",
   },
 } as const;
 
 export default async function MemberPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ archived?: string }>;
 }) {
   const locale = await getLocale();
   const t = M[locale];
   const { id } = await params;
+  const showArchived = (await searchParams).archived === "1";
   const member = await getMember(id);
   if (!member) notFound();
 
   const [docs, records, storage, user] = await Promise.all([
-    listDocumentsByMember(id),
+    listDocumentsByMember(id, showArchived),
     listRecordsByMember(id),
     getStorageInfo(member.household_id),
     getUser(),
@@ -166,24 +197,58 @@ export default async function MemberPage({
                 {c.emoji} {c.label}
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
-                {byCategory.get(c.key)!.map((d) => (
-                  <Link
-                    key={d.id}
-                    href={`/my/documents/${d.id}`}
-                    className="card transition hover:border-brand-300 hover:shadow"
-                  >
-                    <div className="font-medium">{d.title}</div>
-                    <div className="mt-1 text-xs text-slate-500">
-                      {d.subtype ? `${d.subtype} · ` : ""}
-                      {d.expires_at ? t.validUntil(d.expires_at) : t.noExpiry}
-                    </div>
-                  </Link>
-                ))}
+                {byCategory.get(c.key)!.map((d) => {
+                  // Тултип наведения: только уже сохранённые метаданные
+                  // документа — без обращения к ИИ и лишних запросов.
+                  const tip = [
+                    d.issuer ? `${t.tipIssuer}: ${d.issuer}` : null,
+                    d.doc_number ? `${t.tipNumber}: ${d.doc_number}` : null,
+                    d.holder_name ? `${t.tipHolder}: ${d.holder_name}` : null,
+                    d.tags?.length ? `${t.tipTags}: ${d.tags.join(", ")}` : null,
+                    d.notes ? d.notes : null,
+                  ].filter(Boolean) as string[];
+                  return (
+                    <Link
+                      key={d.id}
+                      href={`/my/documents/${d.id}`}
+                      className="group relative card transition hover:border-brand-300 hover:shadow"
+                    >
+                      <div className="flex items-center gap-2 font-medium">
+                        {d.title}
+                        {d.status === "archived" && (
+                          <span className="rounded-full bg-slate-200 px-2 py-0.5 text-xs font-normal text-slate-600">
+                            {t.archivedBadge}
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-1 text-xs text-slate-500">
+                        {d.subtype ? `${d.subtype} · ` : ""}
+                        {d.expires_at ? t.validUntil(d.expires_at) : t.noExpiry}
+                      </div>
+                      {tip.length > 0 && (
+                        <div className="pointer-events-none absolute left-0 top-full z-10 mt-1 hidden w-64 rounded-lg border border-slate-200 bg-white p-2.5 text-xs leading-snug text-slate-600 shadow-lg group-hover:block">
+                          {tip.map((line, i) => (
+                            <p key={i} className={i > 0 ? "mt-1" : ""}>
+                              {line}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
               </div>
             </section>
           ))}
         </div>
       )}
+
+      <Link
+        href={showArchived ? `/my/members/${member.id}` : `/my/members/${member.id}?archived=1`}
+        className="inline-block text-sm text-slate-500 hover:underline"
+      >
+        {showArchived ? t.hideArchived : t.showArchived}
+      </Link>
 
       <details className="card">
         <summary className="cursor-pointer font-medium">{t.addDocument}</summary>

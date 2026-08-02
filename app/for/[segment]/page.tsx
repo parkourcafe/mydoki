@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLocale, type Locale } from "@/lib/i18n";
+import { altLangs } from "@/lib/seo";
 import LangSwitcher from "@/components/LangSwitcher";
 import { getSegment } from "@/lib/segments";
 
@@ -10,6 +11,7 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 const UI = {
   ru: {
     start: "Начать бесплатно",
+    startShort: "Начать",
     back: "← На главную",
     pains: "Знакомо?",
     solutions: "Как помогает doki.help",
@@ -21,6 +23,7 @@ const UI = {
   },
   en: {
     start: "Start for free",
+    startShort: "Start",
     back: "← Home",
     pains: "Sound familiar?",
     solutions: "How doki.help helps",
@@ -32,6 +35,7 @@ const UI = {
   },
   id: {
     start: "Mulai gratis",
+    startShort: "Mulai",
     back: "← Beranda",
     pains: "Terdengar familier?",
     solutions: "Bagaimana doki.help membantu",
@@ -43,6 +47,7 @@ const UI = {
   },
   uz: {
     start: "Bepul boshlash",
+    startShort: "Boshlash",
     back: "← Bosh sahifa",
     pains: "Tanishmi?",
     solutions: "doki.help qanday yordam beradi",
@@ -66,6 +71,7 @@ export async function generateMetadata({
   return {
     title: c.title,
     description: c.subtitle,
+    alternates: await altLangs(),
     openGraph: {
       title: c.title,
       description: c.subtitle,
@@ -94,6 +100,8 @@ export default async function SegmentPage({
   const locale = await getLocale();
   const c = seg.locales[locale];
   const t = UI[locale];
+  const ctaHref = seg.ctaHref ?? "/login";
+  const ctaLabel = c.ctaLabel ?? t.start;
 
   const breadcrumb = {
     "@context": "https://schema.org",
@@ -126,10 +134,11 @@ export default async function SegmentPage({
                 <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
               </div>
             </Link>
-            <div className="flex items-center gap-x-4">
+            <div className="flex shrink-0 items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale={locale} />
-              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
-                {t.start}
+              <Link href="/login" className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
+                <span className="sm:hidden">{t.startShort}</span>
+                <span className="hidden sm:inline">{t.start}</span>
               </Link>
             </div>
           </div>
@@ -148,10 +157,10 @@ export default async function SegmentPage({
         <p className="mt-5 max-w-2xl text-[19px] leading-snug text-[#5c5248]">{c.subtitle}</p>
         <div className="mt-7">
           <Link
-            href="/login"
+            href={ctaHref}
             className="accent-btn inline-flex items-center justify-center rounded-3xl px-8 py-[15px] text-[17px] font-semibold active:scale-[0.985]"
           >
-            {t.start}
+            {ctaLabel}
           </Link>
         </div>
       </section>
@@ -194,16 +203,28 @@ export default async function SegmentPage({
         </div>
       </section>
 
+      {/* CASE STUDY — иллюстративный сценарий (не реальный отзыв клиента) */}
+      {c.caseStudy && (
+        <section className="mx-auto max-w-screen-xl px-5 py-6">
+          <div className="mx-auto max-w-2xl rounded-3xl border border-[#e8e0d5] bg-[#fdfaf5] p-7">
+            <p className="text-[17px] italic leading-relaxed text-[#3d3530]">
+              “{c.caseStudy.quote}”
+            </p>
+            <p className="mt-3 text-sm font-medium text-[#8a7c6d]">{c.caseStudy.role}</p>
+          </div>
+        </section>
+      )}
+
       {/* CTA */}
       <section className="mx-auto max-w-screen-xl px-5 py-12">
         <div className="rounded-3xl bg-[#2c2522] px-8 py-10 text-center text-[#f9f5f0]">
           <h2 className="mb-3 text-3xl font-semibold tracking-tight">{t.ctaHeading}</h2>
           <p className="mx-auto mb-7 max-w-sm text-[#d4c9b8]">{t.ctaSub}</p>
           <Link
-            href="/login"
+            href={ctaHref}
             className="inline-flex items-center justify-center rounded-3xl bg-[#b85c38] px-10 py-4 text-lg font-semibold transition-all hover:bg-[#9f4a2e] active:scale-[0.985]"
           >
-            {t.start}
+            {ctaLabel}
           </Link>
         </div>
       </section>
@@ -212,7 +233,13 @@ export default async function SegmentPage({
       <footer className="border-t border-[#e8e0d5] bg-[#fdfaf5] px-5 py-8 text-sm text-[#8a7c6d]">
         <div className="mx-auto flex max-w-screen-xl flex-col items-center justify-between gap-y-3 text-center md:flex-row md:text-left">
           <Link href="/" className="hover:text-[#2c2522]">{t.back}</Link>
-          <div className="flex gap-x-6">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-1">
+            {segment === "employers" && (
+              <>
+                <Link href="/faq#hr" className="hover:text-[#2c2522]">FAQ</Link>
+                <Link href="/dpa" className="hover:text-[#2c2522]">DPA</Link>
+              </>
+            )}
             <Link href="/privacy" className="hover:text-[#2c2522]">{t.privacy}</Link>
             <Link href="/terms" className="hover:text-[#2c2522]">{t.terms}</Link>
           </div>

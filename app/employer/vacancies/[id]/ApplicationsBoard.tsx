@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import {
   timeAgo,
@@ -8,7 +9,13 @@ import {
   type ApplicationStatus,
   type RequiredDocument,
 } from "@/lib/career";
-import { setApplicationStatus, revertRejection } from "@/app/employer/actions";
+import {
+  setApplicationStatus,
+  revertRejection,
+  signApplicationDoc,
+  signApplicationVideo,
+} from "@/app/employer/actions";
+import { track } from "@/lib/analytics";
 
 // Окно отмены отклонения (совпадает с revert_last_rejection в БД).
 const UNDO_MS = 10 * 60 * 1000;
@@ -30,42 +37,62 @@ type Filter = "all" | "new" | "complete" | "missing";
 
 const M = {
   en: {
-    total: "Total", new: "New", shortlisted: "Shortlisted", rejected: "Rejected",
+    total: "Total", new: "New", shortlisted: "Shortlisted", rejected: "Rejected", hired: "Hired",
     fAll: "All", fNew: "New", fComplete: "All docs complete", fMissing: "Missing docs",
     empty: "No applications match this filter yet.",
-    shortlist: "Shortlist", reject: "Reject", whatsapp: "WhatsApp",
-    requestDoc: "Request doc", soon: "Coming soon",
-    stNew: "New", stViewed: "Viewed", stShortlisted: "Shortlisted", stRejected: "Rejected",
+    shortlist: "Shortlist", reject: "Reject", whatsapp: "WhatsApp", markHired: "Mark as hired",
+    requestDoc: "Request missing docs via WhatsApp", soon: "Coming soon",
+    confirmHire: "Mark this candidate as hired?",
+    reqDocMsg: (list: string) =>
+      list
+        ? `Hello! Your application is missing some documents: ${list}. Could you please send them in reply to this message?`
+        : `Hello! Could you please send the remaining documents for your application?`,
+    stNew: "New", stViewed: "Viewed", stShortlisted: "Shortlisted", stRejected: "Rejected", stHired: "Hired",
     answersNone: "No answers", docsNone: "No documents required",
     rejectedToast: "Rejected", undo: "Undo", restored: "Restored", undoExpired: "Undo window has expired.",
   },
   id: {
-    total: "Total", new: "Baru", shortlisted: "Terpilih", rejected: "Ditolak",
+    total: "Total", new: "Baru", shortlisted: "Terpilih", rejected: "Ditolak", hired: "Diterima",
     fAll: "Semua", fNew: "Baru", fComplete: "Dokumen lengkap", fMissing: "Dokumen kurang",
     empty: "Belum ada lamaran yang cocok dengan filter ini.",
-    shortlist: "Pilih", reject: "Tolak", whatsapp: "WhatsApp",
-    requestDoc: "Minta dokumen", soon: "Segera hadir",
-    stNew: "Baru", stViewed: "Dilihat", stShortlisted: "Terpilih", stRejected: "Ditolak",
+    shortlist: "Pilih", reject: "Tolak", whatsapp: "WhatsApp", markHired: "Tandai diterima",
+    requestDoc: "Minta dokumen via WhatsApp", soon: "Segera hadir",
+    confirmHire: "Tandai kandidat ini sebagai diterima?",
+    reqDocMsg: (list: string) =>
+      list
+        ? `Halo! Lamaran Anda kurang beberapa dokumen: ${list}. Boleh dikirim sebagai balasan pesan ini?`
+        : `Halo! Boleh kirimkan dokumen yang tersisa untuk lamaran Anda?`,
+    stNew: "Baru", stViewed: "Dilihat", stShortlisted: "Terpilih", stRejected: "Ditolak", stHired: "Diterima",
     answersNone: "Tidak ada jawaban", docsNone: "Tidak ada dokumen wajib",
     rejectedToast: "Ditolak", undo: "Batalkan", restored: "Dikembalikan", undoExpired: "Waktu pembatalan sudah habis.",
   },
   ru: {
-    total: "Всего", new: "Новые", shortlisted: "Отобраны", rejected: "Отклонены",
+    total: "Всего", new: "Новые", shortlisted: "Отобраны", rejected: "Отклонены", hired: "Приняты",
     fAll: "Все", fNew: "Новые", fComplete: "Все документы", fMissing: "Не хватает",
     empty: "Пока нет откликов под этот фильтр.",
-    shortlist: "В шортлист", reject: "Отклонить", whatsapp: "WhatsApp",
-    requestDoc: "Запросить док.", soon: "Скоро",
-    stNew: "Новый", stViewed: "Просмотрен", stShortlisted: "Отобран", stRejected: "Отклонён",
+    shortlist: "В шортлист", reject: "Отклонить", whatsapp: "WhatsApp", markHired: "Принят на работу",
+    requestDoc: "Запросить документы в WhatsApp", soon: "Скоро",
+    confirmHire: "Отметить кандидата как принятого на работу?",
+    reqDocMsg: (list: string) =>
+      list
+        ? `Здравствуйте! По вашему отклику не хватает документов: ${list}. Пришлите их, пожалуйста, в ответ на это сообщение.`
+        : `Здравствуйте! Пришлите, пожалуйста, недостающие документы по вашему отклику.`,
+    stNew: "Новый", stViewed: "Просмотрен", stShortlisted: "Отобран", stRejected: "Отклонён", stHired: "Принят",
     answersNone: "Нет ответов", docsNone: "Документы не требуются",
     rejectedToast: "Отклонено", undo: "Вернуть", restored: "Возвращено", undoExpired: "Окно отмены истекло.",
   },
   uz: {
-    total: "Jami", new: "Yangi", shortlisted: "Tanlangan", rejected: "Rad etilgan",
+    total: "Jami", new: "Yangi", shortlisted: "Tanlangan", rejected: "Rad etilgan", hired: "Qabul qilingan",
     fAll: "Barchasi", fNew: "Yangi", fComplete: "Hujjatlar to‘liq", fMissing: "Hujjat yetishmaydi",
     empty: "Bu filtrga mos ariza yo‘q.",
-    shortlist: "Tanlash", reject: "Rad etish", whatsapp: "WhatsApp",
-    requestDoc: "Hujjat so‘rash", soon: "Tez orada",
-    stNew: "Yangi", stViewed: "Ko‘rilgan", stShortlisted: "Tanlangan", stRejected: "Rad etilgan",
+    shortlist: "Tanlash", reject: "Rad etish", whatsapp: "WhatsApp", markHired: "Ishga qabul qilindi",
+    requestDoc: "WhatsApp orqali hujjat so‘rash", soon: "Tez orada",
+    confirmHire: "Nomzodni ishga qabul qilingan deb belgilaysizmi?",
+    reqDocMsg: (list: string) =>
+      list
+        ? `Assalomu alaykum! Arizangizda ba'zi hujjatlar yetishmaydi: ${list}. Iltimos, shu xabarga javoban yuboring.`
+        : `Assalomu alaykum! Iltimos, arizangiz uchun qolgan hujjatlarni yuboring.`,
+    stNew: "Yangi", stViewed: "Ko‘rilgan", stShortlisted: "Tanlangan", stRejected: "Rad etilgan", stHired: "Qabul qilingan",
     answersNone: "Javoblar yo‘q", docsNone: "Hujjat talab qilinmaydi",
     rejectedToast: "Rad etildi", undo: "Qaytarish", restored: "Qaytarildi", undoExpired: "Bekor qilish vaqti tugadi.",
   },
@@ -77,9 +104,47 @@ function StatusBadge({ status, t }: { status: ApplicationStatus; t: (typeof M)[L
     viewed: { label: t.stViewed, cls: "bg-slate-100 text-slate-600" },
     shortlisted: { label: t.stShortlisted, cls: "bg-green-100 text-green-700" },
     rejected: { label: t.stRejected, cls: "bg-red-100 text-red-700" },
+    hired: { label: t.stHired, cls: "bg-emerald-600 text-white" },
   };
   const s = map[status];
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${s.cls}`}>{s.label}</span>;
+}
+
+function VideoIntro({ path, label }: { path: string; label: string }) {
+  const [url, setUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  async function load() {
+    setLoading(true);
+    const u = await signApplicationVideo(path);
+    setLoading(false);
+    setUrl(u);
+  }
+  return (
+    <div className="mt-3 border-t border-slate-100 pt-3">
+      <p className="mb-1 text-xs text-slate-400">🎥 {label}</p>
+      {url ? (
+        // eslint-disable-next-line jsx-a11y/media-has-caption
+        <video src={url} controls playsInline className="w-full rounded-lg bg-black" />
+      ) : (
+        <button
+          type="button"
+          onClick={load}
+          disabled={loading}
+          className="btn border border-brand-200 bg-brand-50 text-brand-700 disabled:opacity-50"
+        >
+          {loading ? "…" : "▶ Video"}
+        </button>
+      )}
+    </div>
+  );
+}
+
+async function openDoc(path: string) {
+  // Открываем вкладку синхронно (иначе блокировщик), затем ставим URL.
+  const w = window.open("", "_blank");
+  const url = await signApplicationDoc(path);
+  if (url && w) w.location.href = url;
+  else if (w) w.close();
 }
 
 export default function ApplicationsBoard({
@@ -115,20 +180,22 @@ export default function ApplicationsBoard({
     return () => clearTimeout(h);
   }, [info]);
 
-  const requiredOnly = requiredDocs.filter((d) => d.required);
+  // Отсутствие поля required у старых записей трактуем как обязательный.
+  const requiredOnly = requiredDocs.filter((d) => d.required !== false);
 
   const hasType = (app: BoardApp, type: string) =>
     app.documents.some((d) => d.type === type);
   const isComplete = (app: BoardApp) => requiredOnly.every((d) => hasType(app, d.type));
 
   const stats = useMemo(() => {
-    let nw = 0, sl = 0, rj = 0;
+    let nw = 0, sl = 0, rj = 0, hd = 0;
     for (const a of apps) {
       if (a.status === "shortlisted") sl++;
       else if (a.status === "rejected") rj++;
+      else if (a.status === "hired") hd++;
       else nw++; // new + viewed = ещё не решено
     }
-    return { total: apps.length, nw, sl, rj };
+    return { total: apps.length, nw, sl, rj, hd };
   }, [apps]);
 
   const filtered = useMemo(() => {
@@ -151,6 +218,7 @@ export default function ApplicationsBoard({
     setPending((p) => ({ ...p, [id]: true }));
     try {
       await setApplicationStatus(id, vacancyId, status);
+      track("application_status_changed", { to: status, vacancy_id: vacancyId });
     } catch {
       setApps(prev); // откат при ошибке
     } finally {
@@ -204,11 +272,12 @@ export default function ApplicationsBoard({
   return (
     <div>
       {/* Stats */}
-      <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <div className="mb-4 grid grid-cols-3 gap-2 sm:grid-cols-5">
         {[
           { label: t.total, value: stats.total },
           { label: t.new, value: stats.nw },
           { label: t.shortlisted, value: stats.sl },
+          { label: t.hired, value: stats.hd },
           { label: t.rejected, value: stats.rj },
         ].map((s) => (
           <div key={s.label} className="rounded-lg border border-[#e8e0d5] bg-[#fdfaf5] p-3 text-center">
@@ -248,7 +317,12 @@ export default function ApplicationsBoard({
             <li key={a.id} className="card">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <p className="font-medium">{a.full_name}</p>
+                  <Link
+                    href={`/employer/candidates/${a.id}`}
+                    className="font-medium hover:underline"
+                  >
+                    {a.full_name}
+                  </Link>
                   <p className="text-xs text-slate-400">{timeAgo(a.created_at, locale)}</p>
                 </div>
                 <StatusBadge status={a.status} t={t} />
@@ -278,7 +352,7 @@ export default function ApplicationsBoard({
                         ) : (
                           <span className="text-slate-500">
                             {d.label}
-                            {!d.required && " ·"}
+                            {d.required === false && " ·"}
                           </span>
                         )}
                       </li>
@@ -299,6 +373,12 @@ export default function ApplicationsBoard({
                 </dl>
               )}
 
+              {/* Видео-ответ */}
+              {(() => {
+                const v = a.documents.find((d) => d.type === "video_intro");
+                return v ? <VideoIntro path={v.path} label={v.label} /> : null;
+              })()}
+
               {/* Actions */}
               <div className="mt-4 flex flex-wrap gap-2">
                 {(a.status === "new" || a.status === "viewed") && (
@@ -311,23 +391,47 @@ export default function ApplicationsBoard({
                     ⭐ {t.shortlist}
                   </button>
                 )}
+                {a.status === "shortlisted" && (
+                  <button
+                    type="button"
+                    disabled={pending[a.id]}
+                    onClick={() => {
+                      if (window.confirm(t.confirmHire)) {
+                        void changeStatus(a.id, "hired");
+                      }
+                    }}
+                    className="btn border border-emerald-600 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
+                  >
+                    ✅ {t.markHired}
+                  </button>
+                )}
                 <a
                   href={waLink(a.whatsapp)}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => track("whatsapp_clicked", { vacancy_id: vacancyId })}
                   className="btn border border-blue-200 bg-blue-50 text-blue-700 hover:bg-blue-100"
                 >
                   💬 {t.whatsapp}
                 </a>
-                <button
-                  type="button"
-                  disabled
-                  title={t.soon}
-                  className="btn border border-amber-200 bg-amber-50 text-amber-700 opacity-60"
+                <a
+                  href={waLink(
+                    a.whatsapp,
+                    t.reqDocMsg(
+                      requiredOnly
+                        .filter((d) => !hasType(a, d.type))
+                        .map((d) => d.label)
+                        .join(", "),
+                    ),
+                  )}
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => track("doc_requested", { vacancy_id: vacancyId })}
+                  className="btn border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100"
                 >
                   📄 {t.requestDoc}
-                </button>
-                {a.status !== "rejected" ? (
+                </a>
+                {a.status !== "rejected" && a.status !== "hired" ? (
                   <button
                     type="button"
                     disabled={pending[a.id]}

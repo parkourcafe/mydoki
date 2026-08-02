@@ -22,7 +22,7 @@ export async function middleware(request: NextRequest) {
 
   // 0) Домен doki.id — второй домен на том же деплое, отдаёт только карьерные
   //    маршруты. Корень → лендинг /hiring; всё остальное не-карьерное → 308 на
-  //    doki.help (канонический хост, D1/D2).
+  //    канонический хост (D1/D2).
   const host = request.headers.get("host") ?? "";
   if (host.endsWith("doki.id")) {
     if (pathname === "/") {
@@ -37,16 +37,40 @@ export async function middleware(request: NextRequest) {
       (p) => bare.startsWith(p) || pathname.startsWith(p)
     );
     if (!isCareer) {
+      // Сразу на www — иначе цепочка редиректов через apex ниже.
       return NextResponse.redirect(
-        `https://doki.help${pathname}${request.nextUrl.search}`,
+        `https://www.doki.help${pathname}${request.nextUrl.search}`,
         308
       );
     }
     // Карьерный путь на doki.id — падаем в обычную обработку ниже.
   }
 
+  const requestHost = host.split(":")[0].toLowerCase();
+  if (requestHost === "doki.help") {
+    const url = request.nextUrl.clone();
+    url.hostname = "www.doki.help";
+    url.protocol = "https";
+    return NextResponse.redirect(url, 308);
+  }
+
+  const localeMatch = pathname.match(LOCALE_RE);
+  const effectivePath = localeMatch
+    ? localeMatch[2] && localeMatch[2].length > 0
+      ? localeMatch[2]
+      : "/"
+    : pathname;
+
+  const isRuOnlyPublicPage =
+    effectivePath.startsWith("/keep/") || effectivePath === "/vs/gosuslugi";
+  if (isRuOnlyPublicPage && localeMatch?.[1] !== "ru") {
+    const url = request.nextUrl.clone();
+    url.pathname = `/ru${effectivePath}`;
+    return NextResponse.redirect(url, 308);
+  }
+
   // 1) Языковой префикс — переписываем на без-префиксный путь.
-  const m = pathname.match(LOCALE_RE);
+  const m = localeMatch;
   if (m) {
     const locale = m[1];
     const rest = m[2] && m[2].length > 0 ? m[2] : "/";

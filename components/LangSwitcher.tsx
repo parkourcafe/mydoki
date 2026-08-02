@@ -2,12 +2,22 @@
 
 import type { Locale } from "@/lib/i18n";
 
-const LOCALES: { code: Locale; label: string }[] = [
-  { code: "ru", label: "RU" },
-  { code: "en", label: "EN" },
-  { code: "id", label: "ID" },
-  { code: "uz", label: "UZ" },
-];
+const LABELS: Record<Locale, string> = {
+  ru: "RU",
+  en: "EN",
+  id: "ID",
+  uz: "UZ",
+};
+
+// Only offer languages relevant to the current audience. For the Indonesia
+// launch, an ID/EN visitor must never be shown RU/UZ (ТЗ B2.1/B2.2); the active
+// locale is always included so RU/UZ users can still switch away.
+const VISIBLE: Record<Locale, Locale[]> = {
+  id: ["en", "id"],
+  en: ["en", "id"],
+  ru: ["ru", "en", "id"],
+  uz: ["uz", "en", "id"],
+};
 
 function set(locale: Locale) {
   document.cookie = `locale=${locale}; path=/; max-age=31536000; samesite=lax`;
@@ -15,9 +25,12 @@ function set(locale: Locale) {
 }
 
 export default function LangSwitcher({ locale }: { locale: Locale }) {
+  const codes = VISIBLE[locale] ?? ["en", "id"];
   return (
     <div className="flex items-center gap-0.5 text-sm sm:gap-1">
-      {LOCALES.map((l, i) => (
+      {codes.map((code, i) => {
+        const l = { code, label: LABELS[code] };
+        return (
         <span key={l.code} className="flex items-center gap-0.5 sm:gap-1">
           {i > 0 && <span className="text-[#d4c9b8]">·</span>}
           <button
@@ -32,7 +45,8 @@ export default function LangSwitcher({ locale }: { locale: Locale }) {
             {l.label}
           </button>
         </span>
-      ))}
+        );
+      })}
     </div>
   );
 }

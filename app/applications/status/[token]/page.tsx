@@ -1,7 +1,14 @@
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
-import { getLocale, type Locale } from "@/lib/i18n";
-import { waLink, type ApplicationStatus } from "@/lib/career";
+import { getPublicHiringLocale, type Locale } from "@/lib/i18n";
+import {
+  waLink,
+  filterApplicationStageDocuments,
+  type ApplicationStatus,
+  type RequiredDocument,
+} from "@/lib/career";
+import type { CandidateOffer } from "@/lib/offer";
+import OfferResponse from "./OfferResponse";
 
 export const metadata = {
   robots: { index: false, follow: false },
@@ -13,7 +20,10 @@ type StatusData = {
   created_at: string;
   vacancy: { title: string; company_name: string; location: string | null; slug: string };
   employer_contact: { whatsapp: string | null; email: string | null } | null;
+  offer: CandidateOffer | null;
   timeline: { old_status: string | null; new_status: string; created_at: string }[];
+  required_documents: RequiredDocument[];
+  documents: { type: string; label: string }[];
 };
 
 const M = {
@@ -22,44 +32,60 @@ const M = {
     notFoundText: "This status link is invalid or the application was deleted.",
     yourApplication: "Your application",
     submittedOn: "Submitted on",
-    statusLabels: { new: "Submitted", viewed: "Viewed", shortlisted: "Shortlisted", rejected: "Not selected" },
+    statusLabels: { new: "Submitted", viewed: "Viewed", shortlisted: "Shortlisted", rejected: "Not selected", hired: "Hired 🎉" },
     timeline: "Timeline",
     contact: "Employer contact",
     contactHint: "You've been shortlisted — reach out to the employer:",
     poweredBy: "Powered by",
+    docsHeading: "Documents",
+    complete: "Complete ✓",
+    missing: (n: number) => `Missing ${n} document${n === 1 ? "" : "s"}`,
+    missingList: "Still needed:",
   },
   id: {
     notFoundTitle: "Lamaran tidak ditemukan",
     notFoundText: "Tautan status ini tidak valid atau lamaran telah dihapus.",
     yourApplication: "Lamaran Anda",
     submittedOn: "Dikirim pada",
-    statusLabels: { new: "Terkirim", viewed: "Dilihat", shortlisted: "Terpilih", rejected: "Tidak dipilih" },
+    statusLabels: { new: "Terkirim", viewed: "Dilihat", shortlisted: "Terpilih", rejected: "Tidak dipilih", hired: "Diterima 🎉" },
     timeline: "Linimasa",
     contact: "Kontak perusahaan",
     contactHint: "Anda terpilih — hubungi perusahaan:",
     poweredBy: "Didukung oleh",
+    docsHeading: "Dokumen",
+    complete: "Lengkap ✓",
+    missing: (n: number) => `Kurang ${n} dokumen`,
+    missingList: "Masih dibutuhkan:",
   },
   ru: {
     notFoundTitle: "Отклик не найден",
     notFoundText: "Ссылка недействительна или отклик был удалён.",
     yourApplication: "Ваш отклик",
     submittedOn: "Отправлено",
-    statusLabels: { new: "Отправлено", viewed: "Просмотрено", shortlisted: "В шортлисте", rejected: "Не выбран" },
+    statusLabels: { new: "Отправлено", viewed: "Просмотрено", shortlisted: "В шортлисте", rejected: "Не выбран", hired: "Приняты 🎉" },
     timeline: "История",
     contact: "Контакт работодателя",
     contactHint: "Вас отобрали — свяжитесь с работодателем:",
     poweredBy: "Работает на",
+    docsHeading: "Документы",
+    complete: "Полный пакет ✓",
+    missing: (n: number) => `Не хватает: ${n} док.`,
+    missingList: "Ещё нужно:",
   },
   uz: {
     notFoundTitle: "Ariza topilmadi",
     notFoundText: "Havola yaroqsiz yoki ariza o‘chirilgan.",
     yourApplication: "Arizangiz",
     submittedOn: "Yuborilgan sana",
-    statusLabels: { new: "Yuborildi", viewed: "Ko‘rildi", shortlisted: "Tanlangan", rejected: "Tanlanmadi" },
+    statusLabels: { new: "Yuborildi", viewed: "Ko‘rildi", shortlisted: "Tanlangan", rejected: "Tanlanmadi", hired: "Qabul qilindi 🎉" },
     timeline: "Vaqt chizig‘i",
     contact: "Ish beruvchi aloqasi",
     contactHint: "Siz tanlandingiz — ish beruvchiga murojaat qiling:",
     poweredBy: "Ishlaydi",
+    docsHeading: "Hujjatlar",
+    complete: "To‘liq ✓",
+    missing: (n: number) => `${n} ta hujjat yetishmayapti`,
+    missingList: "Yana kerak:",
   },
 } as const;
 
@@ -91,7 +117,7 @@ export default async function StatusPage({
 }: {
   params: Promise<{ token: string }>;
 }) {
-  const locale = await getLocale();
+  const locale = await getPublicHiringLocale();
   const t = M[locale];
   const { token } = await params;
 
@@ -119,7 +145,17 @@ export default async function StatusPage({
     viewed: "bg-slate-100 text-slate-600",
     shortlisted: "bg-green-100 text-green-700",
     rejected: "bg-red-100 text-red-700",
+    hired: "bg-emerald-600 text-white",
   };
+
+  // E2: same completeness check the employer board runs — one required-docs
+  // list (application stage only), one source of truth for "lengkap/kurang".
+  const requiredOnly = filterApplicationStageDocuments(app.required_documents).filter(
+    (d) => d.required !== false,
+  );
+  const uploadedTypes = new Set(app.documents.map((d) => d.type));
+  const missingDocs = requiredOnly.filter((d) => !uploadedTypes.has(d.type));
+  const isComplete = missingDocs.length === 0;
 
   return (
     <Shell>
@@ -143,6 +179,31 @@ export default async function StatusPage({
             {statusLabel(app.status)}
           </span>
         </div>
+
+        {requiredOnly.length > 0 && (
+          <div className="rounded-lg border border-slate-200 p-3">
+            <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-slate-400">
+              {t.docsHeading}
+            </p>
+            <span
+              className={`rounded-full px-3 py-1 text-sm font-medium ${
+                isComplete ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"
+              }`}
+            >
+              {isComplete ? t.complete : t.missing(missingDocs.length)}
+            </span>
+            {!isComplete && (
+              <p className="mt-2 text-sm text-slate-600">
+                {t.missingList}{" "}
+                {missingDocs.map((d) => d.label).join(", ")}
+              </p>
+            )}
+          </div>
+        )}
+
+        {app.offer && (
+          <OfferResponse locale={locale} token={token} offer={app.offer} />
+        )}
 
         {app.status === "shortlisted" && app.employer_contact && (
           <div className="rounded-lg bg-green-50 p-3 text-sm">

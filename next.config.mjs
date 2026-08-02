@@ -38,6 +38,8 @@ const NOINDEX_SOURCES = [
   "/saved",
   "/offline",
   "/auth/:path*",
+  "/login",
+  "/reset-password",
 ];
 
 /** @type {import('next').NextConfig} */

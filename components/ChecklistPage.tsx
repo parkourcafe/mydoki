@@ -6,11 +6,11 @@ import { getChecklist } from "@/lib/checklists";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
-const UI: Record<Locale, { start: string; home: string; seeAlso: string; privacy: string; terms: string; ctaSub: string }> = {
-  ru: { start: "Начать бесплатно", home: "← На главную", seeAlso: "Смотрите также", privacy: "Конфиденциальность", terms: "Условия", ctaSub: "Сохраните эти документы и поставьте напоминания." },
-  en: { start: "Start for free", home: "← Home", seeAlso: "See also", privacy: "Privacy", terms: "Terms", ctaSub: "Save these documents and set reminders." },
-  id: { start: "Mulai gratis", home: "← Beranda", seeAlso: "Lihat juga", privacy: "Privasi", terms: "Ketentuan", ctaSub: "Simpan dokumen ini dan pasang pengingat." },
-  uz: { start: "Bepul boshlash", home: "← Bosh sahifa", seeAlso: "Shuningdek", privacy: "Maxfiylik", terms: "Shartlar", ctaSub: "Bu hujjatlarni saqlang va eslatmalar qoʻying." },
+const UI: Record<Locale, { start: string; startShort: string; home: string; seeAlso: string; privacy: string; terms: string; ctaSub: string }> = {
+  ru: { start: "Начать бесплатно", startShort: "Начать", home: "← На главную", seeAlso: "Смотрите также", privacy: "Конфиденциальность", terms: "Условия", ctaSub: "Сохраните эти документы и поставьте напоминания." },
+  en: { start: "Start for free", startShort: "Start", home: "← Home", seeAlso: "See also", privacy: "Privacy", terms: "Terms", ctaSub: "Save these documents and set reminders." },
+  id: { start: "Mulai gratis", startShort: "Mulai", home: "← Beranda", seeAlso: "Lihat juga", privacy: "Privasi", terms: "Ketentuan", ctaSub: "Simpan dokumen ini dan pasang pengingat." },
+  uz: { start: "Bepul boshlash", startShort: "Boshlash", home: "← Bosh sahifa", seeAlso: "Shuningdek", privacy: "Maxfiylik", terms: "Shartlar", ctaSub: "Bu hujjatlarni saqlang va eslatmalar qoʻying." },
 };
 
 export default async function ChecklistPage({ slug }: { slug: string }) {
@@ -79,10 +79,11 @@ export default async function ChecklistPage({ slug }: { slug: string }) {
                 <span className="text-2xl font-semibold tracking-tighter text-[#c17a5e]">.help</span>
               </div>
             </Link>
-            <div className="flex items-center gap-x-4">
+            <div className="flex shrink-0 items-center gap-x-2 sm:gap-x-4">
               <LangSwitcher locale={locale} />
-              <Link href="/login" className="accent-btn rounded-3xl px-6 py-2.5 text-sm font-semibold">
-                {u.start}
+              <Link href="/login" className="accent-btn shrink-0 rounded-3xl px-4 py-2.5 text-sm font-semibold sm:px-6">
+                <span className="sm:hidden">{u.startShort}</span>
+                <span className="hidden sm:inline">{u.start}</span>
               </Link>
             </div>
           </div>

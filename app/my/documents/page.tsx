@@ -19,6 +19,7 @@ const M = {
         : `${n} ${n % 10 === 1 && n % 100 !== 11 ? "документ" : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? "документа" : "документов"}`,
     addSection: "+ Свой раздел",
     addSectionHint: "Заведи раздел под себя — например «Путешествия» или «Питомцы».",
+    emptyHint: "Пока ни одного документа. Откройте любой раздел ниже и добавьте первый — фото или скан.",
     nameLabel: "Название раздела",
     namePh: "Путешествия",
     emojiLabel: "Значок",
@@ -30,6 +31,7 @@ const M = {
     docs: (n: number) => (n === 0 ? "empty" : `${n} ${n === 1 ? "document" : "documents"}`),
     addSection: "+ Your own section",
     addSectionHint: "Create a section of your own — e.g. “Travel” or “Pets”.",
+    emptyHint: "No documents yet. Open any section below and add your first — a photo or scan.",
     nameLabel: "Section name",
     namePh: "Travel",
     emojiLabel: "Icon",
@@ -41,6 +43,7 @@ const M = {
     docs: (n: number) => (n === 0 ? "kosong" : `${n} dokumen`),
     addSection: "+ Bagian sendiri",
     addSectionHint: "Buat bagian sendiri — misalnya “Perjalanan” atau “Hewan”.",
+    emptyHint: "Belum ada dokumen. Buka salah satu bagian di bawah dan tambahkan yang pertama — foto atau pindaian.",
     nameLabel: "Nama bagian",
     namePh: "Perjalanan",
     emojiLabel: "Ikon",
@@ -52,6 +55,7 @@ const M = {
     docs: (n: number) => (n === 0 ? "boʻsh" : `${n} ta hujjat`),
     addSection: "+ Oʻz boʻlimingiz",
     addSectionHint: "Oʻzingizga moslab boʻlim oching — masalan «Sayohatlar» yoki «Uy hayvonlari».",
+    emptyHint: "Hozircha hujjat yoʻq. Quyidagi istalgan boʻlimni oching va birinchisini qoʻshing — rasm yoki skan.",
     nameLabel: "Boʻlim nomi",
     namePh: "Sayohatlar",
     emojiLabel: "Belgi",
@@ -106,6 +110,12 @@ export default async function DocumentsPage() {
         <h1 className="text-2xl font-semibold">{t.title}</h1>
         <p className="mt-1 text-sm text-slate-500">{t.subtitle}</p>
       </div>
+
+      {docs.length === 0 && (
+        <div className="rounded-2xl border border-brand-200 bg-brand-50/60 px-5 py-4 text-sm text-slate-600">
+          {t.emptyHint}
+        </div>
+      )}
 
       <div className="grid gap-3 sm:grid-cols-2">
         {tiles.map((tile) => (

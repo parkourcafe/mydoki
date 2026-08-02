@@ -10,6 +10,7 @@ import { signOut } from "@/app/my/actions";
 import type { Locale } from "@/lib/i18n";
 
 type NavItem = { href: string; emoji: string; label: string };
+type NavGroup = { title?: string; emoji?: string; items: NavItem[] };
 type LinkRef = { href: string; label: string };
 
 /**
@@ -26,7 +27,6 @@ export default function AppNav({
   spaces,
   activeId,
   nav,
-  work,
   search,
   saved,
   settings,
@@ -40,8 +40,7 @@ export default function AppNav({
   userEmail: string;
   spaces: { id: string; name: string }[];
   activeId: string;
-  nav: NavItem[];
-  work?: NavItem[];
+  nav: NavGroup[];
   search?: LinkRef;
   saved?: LinkRef;
   settings?: LinkRef;
@@ -49,7 +48,17 @@ export default function AppNav({
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  // Ручные переопределения свёрнутости групп (по индексу). Если для группы
+  // ничего не задано — по умолчанию открыта только та, где текущая страница;
+  // остальные свёрнуты. Заголовок группы — кнопка, разворачивающая список.
+  const [collapsed, setCollapsed] = useState<Record<number, boolean>>({});
   const pathname = usePathname();
+
+  const activeGroupIndex = nav.findIndex((g) =>
+    g.items.some((it) =>
+      it.href === "/my" ? pathname === "/my" : pathname.startsWith(it.href),
+    ),
+  );
 
   // Закрываем выезжающее меню при смене маршрута.
   useEffect(() => {
@@ -105,34 +114,49 @@ export default function AppNav({
           <SpaceSwitcher spaces={spaces} activeId={activeId} locale={locale} />
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-2 text-sm">
-          {nav.map((item) => {
-            const active =
-              item.href === "/my"
-                ? pathname === "/my"
-                : pathname.startsWith(item.href);
+        <nav className="flex-1 overflow-y-auto px-3 py-2 text-sm">
+          {nav.map((group, gi) => {
+            const isCollapsed = collapsed[gi] ?? gi !== activeGroupIndex;
             return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className={
-                  "flex items-center gap-3 rounded-lg px-3 py-2 transition-colors " +
-                  (active
-                    ? "bg-[#f0e6d9] font-medium text-[#2c2522]"
-                    : "text-[#5c5248] hover:bg-[#f0e6d9]")
-                }
-              >
-                <span className="text-base">{item.emoji}</span>
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
-
-          {work && work.length > 0 && (
-            <div className="mt-4 space-y-1 border-t border-[#e8e0d5] pt-3">
-              {work.map((item) => {
-                const active = pathname.startsWith(item.href);
+            <div
+              key={gi}
+              className={
+                "space-y-0.5 " +
+                (gi > 0 ? "mt-2 border-t border-[#e8e0d5] pt-2" : "")
+              }
+            >
+              {group.title && (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setCollapsed((c) => ({ ...c, [gi]: !isCollapsed }))
+                  }
+                  aria-expanded={!isCollapsed}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors hover:bg-[#f0e6d9]"
+                >
+                  {group.emoji && (
+                    <span className="text-base leading-none">{group.emoji}</span>
+                  )}
+                  <span className="text-[13px] font-bold tracking-wide text-[#2c2522]">
+                    {group.title}
+                  </span>
+                  <span
+                    className={
+                      "ml-auto text-xs text-slate-400 transition-transform duration-200 " +
+                      (isCollapsed ? "" : "rotate-90")
+                    }
+                    aria-hidden="true"
+                  >
+                    ▸
+                  </span>
+                </button>
+              )}
+              {!isCollapsed &&
+                group.items.map((item) => {
+                const active =
+                  item.href === "/my"
+                    ? pathname === "/my"
+                    : pathname.startsWith(item.href);
                 return (
                   <Link
                     key={item.href}
@@ -151,7 +175,8 @@ export default function AppNav({
                 );
               })}
             </div>
-          )}
+            );
+          })}
         </nav>
 
         <div className="border-t border-[#e8e0d5] px-3 py-3">

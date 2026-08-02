@@ -3,10 +3,15 @@ import { notFound, redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
-import { appBaseUrl, type Vacancy } from "@/lib/career";
+import {
+  appBaseUrl,
+  filterApplicationStageDocuments,
+  type Vacancy,
+} from "@/lib/career";
 import { markApplicationsViewed } from "@/app/employer/actions";
 import DistributionCoach from "./DistributionCoach";
 import ApplicationsBoard, { type BoardApp } from "./ApplicationsBoard";
+import VacancyDescription from "@/components/VacancyDescription";
 
 const M = {
   en: { back: "← All vacancies", edit: "✏️ Edit", created: "Vacancy created — share the link below to start receiving applications.", updated: "Changes saved. They apply to new applications; existing ones keep their original answers." },
@@ -48,10 +53,17 @@ export default async function VacancyDashboard({
 
   const { data: appData } = await supabase
     .from("applications")
-    .select("id, full_name, whatsapp, email, status, created_at")
+    .select("id, full_name, whatsapp, email, status, created_at, consent_revoked_at")
     .eq("vacancy_id", vacancy.id)
     .order("created_at", { ascending: false });
-  const rows = (appData ?? []) as Omit<BoardApp, "documents" | "answers">[];
+  const appRows = (appData ?? []) as (Omit<BoardApp, "documents" | "answers"> & {
+    consent_revoked_at: string | null;
+  })[];
+  // Отзыв согласия: прекращаем показывать документы кандидата на доске.
+  const revoked = new Set(
+    appRows.filter((r) => r.consent_revoked_at).map((r) => r.id)
+  );
+  const rows = appRows.map(({ consent_revoked_at: _c, ...r }) => r);
 
   // Автопометка «просмотрено»: все new → viewed при открытии дашборда.
   const newIds = rows.filter((r) => r.status === "new").map((r) => r.id);
@@ -106,11 +118,13 @@ export default async function VacancyDashboard({
 
   const applications: BoardApp[] = rows.map((r) => ({
     ...r,
-    documents: docsByApp[r.id] ?? [],
+    // При отозванном согласии документы не отдаём (доступ закрыт).
+    documents: revoked.has(r.id) ? [] : docsByApp[r.id] ?? [],
     answers: answersByApp[r.id] ?? [],
   }));
 
-  const applyUrl = `${appBaseUrl()}/apply/${vacancy.slug}`;
+  const publicLocale = locale === "id" ? "id" : "en";
+  const applyUrl = `${appBaseUrl()}/${publicLocale}/apply/${vacancy.slug}`;
 
   return (
     <div>
@@ -169,10 +183,19 @@ export default async function VacancyDashboard({
               viewsCount={vacancy.views_count}
             />
           </div>
+
+          {vacancy.description && (
+            <div className="card mb-5">
+              <VacancyDescription description={vacancy.description} />
+            </div>
+          )}
+
           <ApplicationsBoard
             locale={locale}
             vacancyId={vacancy.id}
-            requiredDocs={vacancy.required_documents ?? []}
+            requiredDocs={filterApplicationStageDocuments(
+              vacancy.required_documents
+            )}
             initialApplications={applications}
           />
         </>

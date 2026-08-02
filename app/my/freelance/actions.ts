@@ -4,7 +4,12 @@ import { revalidatePath } from "next/cache";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 
-export type PortfolioItem = { title: string; description: string; link: string };
+export type PortfolioItem = {
+  title: string;
+  description: string;
+  link: string;
+  image_path?: string | null;
+};
 
 export type PortfolioInput = {
   display_name: string;
@@ -50,9 +55,10 @@ export async function savePortfolio(
       title: (it.title ?? "").trim().slice(0, 120),
       description: (it.description ?? "").trim().slice(0, 1000) || null,
       link: (it.link ?? "").trim().slice(0, 500) || null,
+      image_path: (it.image_path ?? "").trim().slice(0, 400) || null,
       sort: idx,
     }))
-    .filter((it) => it.title || it.description || it.link)
+    .filter((it) => it.title || it.description || it.link || it.image_path)
     .slice(0, 50);
 
   const { error: e2 } = await supabase

@@ -26,8 +26,27 @@ export type ScreeningQuestion = {
 };
 
 export type Urgency = "normal" | "hiring_now";
+export type VideoScreening = "off" | "optional" | "required";
+export type CreatedVia = "manual" | "template" | "ai";
+
+/**
+ * «Спящий» критерий найма ДЛЯ РОЛИ (не оценка кандидата). Хранится как
+ * метаданные уровня вакансии. Правила использования — канонично в
+ * DEV_TASK §8: в MVP не участвует ни в каком скоринге/ранжировании/
+ * фильтрации кандидатов и не читается ни одним кандидат-фейсинг компонентом.
+ */
+export type ScorecardCriterion = {
+  criterion: string;
+  /** Ориентировочный вес критерия, 0–100. */
+  weight: number;
+};
 export type VacancyStatus = "active" | "paused" | "closed";
-export type ApplicationStatus = "new" | "viewed" | "shortlisted" | "rejected";
+export type ApplicationStatus =
+  | "new"
+  | "viewed"
+  | "shortlisted"
+  | "rejected"
+  | "hired";
 export type Source = "wa" | "ig" | "qr" | "direct" | "other";
 
 export const SOURCES: Source[] = ["wa", "ig", "qr", "direct", "other"];
@@ -61,11 +80,35 @@ export type Vacancy = {
   urgency: Urgency;
   required_documents: RequiredDocument[];
   screening_questions: ScreeningQuestion[];
+  video_screening: VideoScreening;
+  video_question: string | null;
   status: VacancyStatus;
   views_count: number;
   closes_at: string | null;
+  // Структурированные блоки (§8 v1.1). Могут отсутствовать у старых вакансий.
+  problem_statement?: string | null;
+  must_have?: string[];
+  trainable?: string[];
+  stages?: string[];
+  success_criteria_probation?: string | null;
+  published_at?: string | null;
   created_at: string;
+  // T11 Vacancy Composer (Screen 1). Все поля добавлены миграцией
+  // 20260705000000_vacancy_composer и на кандидат-фейсинг экранах не читаются.
+  role_template?: string | null;
+  created_via?: CreatedVia;
+  clarity_score?: number | null;
+  // Спящие критерии найма ДЛЯ РОЛИ (§8) — унифицированы к ScorecardCriterion[].
+  scorecard?: ScorecardCriterion[];
 };
+
+export const DEFAULT_STAGES = [
+  "new",
+  "review",
+  "interview",
+  "assignment",
+  "decision",
+];
 
 export type Application = {
   id: string;
@@ -105,6 +148,34 @@ export const DOC_TYPES: DocType[] = [
   "certificate",
   "other",
 ];
+
+/** Documents suitable for the initial application stage. */
+export const APPLICATION_DOC_TYPES: DocType[] = [
+  "cv",
+  "diploma",
+  "certificate",
+  "other",
+];
+
+const SENSITIVE_APPLICATION_LABEL =
+  /\b(ktp|identity|id card|passport|paspor|health|medical|surat sehat)\b|удостовер|паспорт|медсправ|здоров|shaxs/i;
+
+/** Government ID and health records belong to post-offer onboarding. */
+export function isSensitiveApplicationDocument(
+  doc: Pick<RequiredDocument, "type" | "label">,
+): boolean {
+  return (
+    doc.type === "ktp" ||
+    doc.type === "health_cert" ||
+    SENSITIVE_APPLICATION_LABEL.test(doc.label || "")
+  );
+}
+
+export function filterApplicationStageDocuments(
+  documents: RequiredDocument[] | null | undefined,
+): RequiredDocument[] {
+  return (documents ?? []).filter((doc) => !isSensitiveApplicationDocument(doc));
+}
 
 export const MAX_FILE_BYTES = 10 * 1024 * 1024; // 10MB
 export const ACCEPTED_MIME = ["application/pdf", "image/jpeg", "image/png"];
@@ -170,9 +241,10 @@ export function normalizeWhatsapp(raw: string): string {
 }
 
 /** Ссылка wa.me/<цифры без плюса>. */
-export function waLink(whatsapp: string): string {
+export function waLink(whatsapp: string, text?: string): string {
   const digits = normalizeWhatsapp(whatsapp).replace(/\D/g, "");
-  return `https://wa.me/${digits}`;
+  const q = text ? `?text=${encodeURIComponent(text)}` : "";
+  return `https://wa.me/${digits}${q}`;
 }
 
 /** Базовая валидация номера (после нормализации 10–15 цифр). */

@@ -1,17 +1,28 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getLocale } from "@/lib/i18n";
+import { getLocale, type Locale } from "@/lib/i18n";
 
-const META_DESC = {
-  ru: "Условия использования Doki.help — beta-сейфа семейных документов с напоминаниями и безопасным обменом. Не юридическая консультация.",
-  en: "The terms for using Doki.help — a beta candidate and employee document workflow with checklists and secure sharing. Not legal advice.",
-  id: "Ketentuan penggunaan Doki.help — alur dokumen kandidat dan karyawan (beta) dengan checklist dan berbagi aman. Bukan nasihat hukum.",
-  uz: "Doki.help’dan foydalanish shartlari — eslatmalar va xavfsiz ulashishli oilaviy hujjatlar seyfi (beta). Yuridik maslahat emas.",
-} as const;
+const META: Record<Locale, { title: string; description: string }> = {
+  ru: {
+    title: "Пользовательское соглашение",
+    description: "Условия использования doki.help: аккаунт, документы кандидатов и сотрудников, AI-функции, резервные копии, удаление и ответственность. Не юридическая консультация.",
+  },
+  en: {
+    title: "Terms of Service",
+    description: "Terms for using doki.help: accounts, candidate and employee documents, AI features, backups, deletion, and liability. Not legal advice.",
+  },
+  id: {
+    title: "Ketentuan Penggunaan",
+    description: "Ketentuan penggunaan doki.help: akun, dokumen kandidat dan karyawan, fitur AI, cadangan, penghapusan, dan tanggung jawab. Bukan nasihat hukum.",
+  },
+  uz: {
+    title: "Foydalanish shartlari",
+    description: "doki.help shartlari: hisob, nomzod va xodim hujjatlari, AI funksiyalari, zaxira, oʻchirish va javobgarlik. Yuridik maslahat emas.",
+  },
+};
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getLocale();
-  return { title: M[locale].title, description: META_DESC[locale] };
+  return META[await getLocale()];
 }
 
 function P({ children }: { children: React.ReactNode }) {

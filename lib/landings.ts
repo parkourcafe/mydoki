@@ -60,6 +60,9 @@ export const LANDING_KEYS = [
   "medical-document-organizer",
   "travel-documents",
   "family-emergency-documents",
+  "candidate-document-collection",
+  "hr-document-checklist",
+  "candidate-document-privacy",
 ] as const;
 export type LandingKey = (typeof LANDING_KEYS)[number];
 
@@ -129,7 +132,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How will I be reminded?",
-            a: "By email, before the expiry date you set. The reminder comes 30, 15, 7 and 1 day before that date.",
+            a: "By email, before the expiry date you set. The reminder comes 30, 7 and 1 day before that date.",
           },
           {
             q: "Can I access my passport scan offline?",
@@ -202,7 +205,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Как придёт напоминание?",
-            a: "На email, до указанной вами даты окончания. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
+            a: "На email, до указанной вами даты окончания. Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
           {
             q: "Будет ли доступ к скану офлайн?",
@@ -275,7 +278,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Bagaimana pengingatnya datang?",
-            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
+            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah akses pindaian paspor offline?",
@@ -348,7 +351,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Eslatma qanday keladi?",
-            a: "Email orqali, siz belgilagan tugash sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
+            a: "Email orqali, siz belgilagan tugash sanasidan oldin. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Pasport skaniga oflayn kirsa boʻladimi?",
@@ -764,7 +767,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "How early will I be reminded?",
-            a: "A reminder arrives by email before the “valid until” date you set. The reminder comes 30, 15, 7 and 1 day before that date.",
+            a: "A reminder arrives by email before the “valid until” date you set. The reminder comes 30, 7 and 1 day before that date.",
           },
           {
             q: "How do I set an expiry date?",
@@ -781,6 +784,10 @@ const DATA: Record<LandingKey, Landing> = {
           {
             q: "Is it free?",
             a: "Yes. The free tier includes 2 GB of storage, expiry reminders, family access and offline access. A paid tier may come later.",
+          },
+          {
+            q: "Can I use this to track staff document expiry?",
+            a: "Yes. Store a validity date on each document — an SKCK, a KITAS or a health certificate — and reminders arrive by email 30, 7 and 1 day before that date.",
           },
         ],
       },
@@ -836,7 +843,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "За сколько придёт напоминание?",
-            a: "Напоминание приходит на email до указанной вами даты «действует до». Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
+            a: "Напоминание приходит на email до указанной вами даты «действует до». Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
           {
             q: "Как указать дату окончания?",
@@ -853,6 +860,10 @@ const DATA: Record<LandingKey, Landing> = {
           {
             q: "Это бесплатно?",
             a: "Да. Бесплатный тариф включает 2 ГБ хранилища, напоминания о сроках, семейный доступ и офлайн-доступ. Платный тариф может появиться позже.",
+          },
+          {
+            q: "Можно ли отслеживать сроки документов сотрудников?",
+            a: "Да. Укажите дату действия у каждого документа — SKCK, KITAS или медсправки — и напоминания придут на email за 30, 7 и 1 день до этой даты.",
           },
         ],
       },
@@ -908,7 +919,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Seberapa awal saya akan diingatkan?",
-            a: "Pengingat tiba lewat email sebelum tanggal “berlaku sampai” yang Anda tetapkan. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
+            a: "Pengingat tiba lewat email sebelum tanggal “berlaku sampai” yang Anda tetapkan. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bagaimana cara menetapkan tanggal kedaluwarsa?",
@@ -925,6 +936,10 @@ const DATA: Record<LandingKey, Landing> = {
           {
             q: "Apakah gratis?",
             a: "Ya. Tier gratis mencakup penyimpanan 2 GB, pengingat kedaluwarsa, akses keluarga, dan akses offline. Tier berbayar mungkin hadir nanti.",
+          },
+          {
+            q: "Bisakah dipakai untuk melacak masa berlaku dokumen karyawan?",
+            a: "Bisa. Simpan tanggal berlaku pada tiap dokumen — mis. SKCK, KITAS, atau sertifikat kesehatan — dan pengingat dikirim lewat email 30, 7, dan 1 hari sebelum tanggal itu.",
           },
         ],
       },
@@ -980,7 +995,7 @@ const DATA: Record<LandingKey, Landing> = {
         faq: [
           {
             q: "Eslatma qancha oldin keladi?",
-            a: "Eslatma siz belgilagan “amal qiladi” sanasidan oldin email orqali keladi. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
+            a: "Eslatma siz belgilagan “amal qiladi” sanasidan oldin email orqali keladi. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Tugash sanasini qanday belgilayman?",
@@ -997,6 +1012,10 @@ const DATA: Record<LandingKey, Landing> = {
           {
             q: "Bu bepulmi?",
             a: "Ha. Bepul tarif 2 GB ombor, muddat eslatmalari, oilaviy kirish va oflayn kirishni oʻz ichiga oladi. Pulli tarif keyinroq chiqishi mumkin.",
+          },
+          {
+            q: "Xodimlar hujjatlari muddatini kuzatish uchun ishlatsa bo‘ladimi?",
+            a: "Ha. Har bir hujjatga amal qilish sanasini kiriting — SKCK, KITAS yoki tibbiy ma’lumotnoma — eslatmalar shu sanadan 30, 7 va 1 kun oldin email orqali keladi.",
           },
         ],
       },
@@ -1373,7 +1392,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "How early are reminders sent?",
-            a: "By email, before the expiry date you set. The reminder comes 30, 15, 7 and 1 day before that date.",
+            a: "By email, before the expiry date you set. The reminder comes 30, 7 and 1 day before that date.",
           },
           {
             q: "Can I share my visa securely with a lawyer?",
@@ -1446,7 +1465,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "За сколько приходят напоминания?",
-            a: "На email, до указанной вами даты окончания. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
+            a: "На email, до указанной вами даты окончания. Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
           {
             q: "Можно ли безопасно поделиться визой с юристом?",
@@ -1519,7 +1538,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Seberapa awal pengingat dikirim?",
-            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
+            a: "Lewat email, sebelum tanggal kedaluwarsa yang Anda tetapkan. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah berbagi visa dengan pengacara secara aman?",
@@ -1592,7 +1611,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Eslatmalar qancha oldin keladi?",
-            a: "Email orqali, siz belgilagan tugash sanasidan oldin. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
+            a: "Email orqali, siz belgilagan tugash sanasidan oldin. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Vizani yurist bilan xavfsiz ulashsa boʻladimi?",
@@ -2602,7 +2621,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Will I be reminded before a passport or visa expires?",
-            a: "Yes. Add a \"valid until\" date and a reminder arrives by email before it expires. The reminder comes 30, 15, 7 and 1 day before that date.",
+            a: "Yes. Add a \"valid until\" date and a reminder arrives by email before it expires. The reminder comes 30, 7 and 1 day before that date.",
           },
           {
             q: "Can I store child travel consent forms?",
@@ -2672,7 +2691,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Напомнит ли о сроке паспорта или визы?",
-            a: "Да. Укажите дату «действует до» — и напоминание придёт на email заранее. Напоминание приходит за 30, 15, 7 и 1 день до этой даты.",
+            a: "Да. Укажите дату «действует до» — и напоминание придёт на email заранее. Напоминание приходит за 30, 7 и 1 день до этой даты.",
           },
           {
             q: "Можно хранить согласия на выезд ребёнка?",
@@ -2742,7 +2761,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Apakah saya diingatkan sebelum paspor atau visa kedaluwarsa?",
-            a: "Ya. Tambahkan tanggal \"berlaku sampai\" dan pengingat tiba lewat email sebelum kedaluwarsa. Pengingat datang 30, 15, 7, dan 1 hari sebelum tanggal itu.",
+            a: "Ya. Tambahkan tanggal \"berlaku sampai\" dan pengingat tiba lewat email sebelum kedaluwarsa. Pengingat datang 30, 7, dan 1 hari sebelum tanggal itu.",
           },
           {
             q: "Bisakah menyimpan surat izin perjalanan anak?",
@@ -2812,7 +2831,7 @@ const DATA: Record<LandingKey, Landing> = {
           },
           {
             q: "Pasport yoki viza muddati tugashidan oldin eslatadimi?",
-            a: "Ha. \"Amal qiladi\" sanasini qoʻshing — eslatma muddat tugashidan oldin email orqali keladi. Eslatma shu sanadan 30, 15, 7 va 1 kun oldin keladi.",
+            a: "Ha. \"Amal qiladi\" sanasini qoʻshing — eslatma muddat tugashidan oldin email orqali keladi. Eslatma shu sanadan 30, 7 va 1 kun oldin keladi.",
           },
           {
             q: "Bola sayohati uchun rozilik hujjatlarini saqlasa boʻladimi?",
@@ -3133,6 +3152,698 @@ const DATA: Record<LandingKey, Landing> = {
       uz: [
         { href: "/family-document-vault", label: "Oilaviy hujjatlar sefi" },
         { href: "/medical-document-organizer", label: "Tibbiy hujjatlar tartiblagichi" },
+      ],
+    },
+  },
+  "candidate-document-collection": {
+    slug: "candidate-document-collection",
+    emoji: "📨",
+    locales: {
+      en: {
+        navLabel: "Collect candidate docs",
+        title: "Collect Candidate Documents via One Link | Doki.help",
+        metaDescription:
+          "Send candidates one checklist link and get complete document packages — with a “what's missing” status and expiry reminders. No candidate account.",
+        h1: "Collect candidate documents via one link",
+        intro:
+          "Stop chasing candidates for files across WhatsApp and email. Send one checklist link, and each candidate uploads their documents without an account — you see a complete/missing status per person.",
+        ctaPrimary: "Create your first checklist",
+        sections: [
+          {
+            h2: "How it works",
+            bullets: [
+              "Create a checklist of the documents you need (or start from a template)",
+              "Share the link with candidates over WhatsApp",
+              "Candidates upload without registering",
+              "You see who is complete and who is still missing documents",
+            ],
+          },
+          {
+            h2: "Built for hiring at volume",
+            body: "One link works for many candidates at once. Sensitive documents like KTP and health certificates are collected after an offer, not from every applicant.",
+          },
+          {
+            h2: "Nothing expires unnoticed",
+            body: "Add expiry dates for documents like SKCK, KITAS and certificates and get reminders before they lapse.",
+          },
+        ],
+        trustHeading: "How documents are protected",
+        trust: [
+          "Files served via short-lived signed links, not public URLs",
+          "Revocable share links with expiry, view limits and watermark",
+          "Access is isolated at the database level (RLS)",
+        ],
+        faqHeading: "Frequently asked",
+        faq: [
+          { q: "Do candidates need an account?", a: "No. They open the link and upload documents without registering." },
+          { q: "Can I collect from many candidates with one link?", a: "Yes — the same checklist link works for every candidate; each gets their own package." },
+          { q: "Where are documents stored?", a: "In secure cloud infrastructure (Supabase); servers may be located outside Indonesia — see the Privacy Policy." },
+          {
+            q: "Do candidates need to photocopy or scan documents?",
+            a: "No trip to a copy shop needed. Candidates can photograph a document with their phone — images are shrunk automatically before upload, so large files don't fail.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Kumpulkan dokumen kandidat",
+        title: "Kumpulkan Dokumen Kandidat Lewat Satu Tautan | Doki.help",
+        metaDescription:
+          "Kirim satu tautan ceklis ke kandidat dan terima paket dokumen lengkap — dengan status “apa yang kurang” dan pengingat tenggat. Tanpa akun untuk kandidat.",
+        h1: "Kumpulkan dokumen kandidat lewat satu tautan",
+        intro:
+          "Berhenti mengejar kandidat untuk berkas di WhatsApp dan email. Kirim satu tautan ceklis, dan tiap kandidat mengunggah dokumennya tanpa akun — Anda melihat status lengkap/kurang per orang.",
+        ctaPrimary: "Buat checklist pertama",
+        sections: [
+          {
+            h2: "Cara kerjanya",
+            bullets: [
+              "Buat ceklis dokumen yang dibutuhkan (atau mulai dari template)",
+              "Bagikan tautannya ke kandidat lewat WhatsApp",
+              "Kandidat mengunggah tanpa mendaftar",
+              "Anda melihat siapa yang lengkap dan siapa yang masih kurang",
+            ],
+          },
+          {
+            h2: "Dibuat untuk rekrutmen jumlah banyak",
+            body: "Satu tautan berlaku untuk banyak kandidat sekaligus. Dokumen sensitif seperti KTP dan surat sehat dikumpulkan setelah penawaran, bukan dari setiap pelamar.",
+          },
+          {
+            h2: "Tidak ada yang kedaluwarsa diam-diam",
+            body: "Tambahkan tanggal masa berlaku untuk dokumen seperti SKCK, KITAS, dan sertifikat, lalu dapatkan pengingat sebelum kedaluwarsa.",
+          },
+        ],
+        trustHeading: "Cara dokumen dilindungi",
+        trust: [
+          "Berkas disajikan lewat tautan bertanda tangan berumur pendek, bukan URL publik",
+          "Tautan berbagi bisa dicabut dengan kedaluwarsa, batas tampilan, dan watermark",
+          "Akses diisolasi pada tingkat basis data (RLS)",
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          { q: "Apakah kandidat perlu akun?", a: "Tidak. Mereka membuka tautan dan mengunggah dokumen tanpa mendaftar." },
+          { q: "Bisakah mengumpulkan dari banyak kandidat dengan satu tautan?", a: "Bisa — tautan ceklis yang sama berlaku untuk tiap kandidat; masing-masing punya paketnya sendiri." },
+          { q: "Di mana dokumen disimpan?", a: "Di infrastruktur cloud aman (Supabase); server dapat berada di luar Indonesia — lihat Kebijakan Privasi." },
+          {
+            q: "Apakah kandidat perlu fotokopi atau memindai dokumen?",
+            a: "Tidak perlu ke tempat fotokopi. Kandidat cukup memotret dokumen dengan ponsel — foto dikecilkan otomatis sebelum dikirim, jadi berkas besar tidak gagal terunggah.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Сбор документов кандидатов",
+        title: "Сбор документов кандидатов по одной ссылке | Doki.help",
+        metaDescription:
+          "Отправьте кандидатам ссылку-чек-лист и получите полные пакеты документов — со статусом «чего не хватает» и напоминаниями. Без регистрации кандидата.",
+        h1: "Сбор документов кандидатов по одной ссылке",
+        intro:
+          "Хватит гоняться за кандидатами по WhatsApp и почте. Отправьте одну ссылку-чек-лист — каждый кандидат загружает документы без аккаунта, а вы видите статус «полный / не хватает» по каждому.",
+        ctaPrimary: "Создать первый чек-лист",
+        sections: [
+          {
+            h2: "Как это работает",
+            bullets: [
+              "Создайте чек-лист нужных документов (или из шаблона)",
+              "Отправьте ссылку кандидатам в WhatsApp",
+              "Кандидаты загружают без регистрации",
+              "Вы видите, кто укомплектован, а у кого чего не хватает",
+            ],
+          },
+          {
+            h2: "Под наём на объёме",
+            body: "Одна ссылка работает сразу для многих кандидатов. Чувствительные документы вроде KTP и медсправок собираются после оффера, а не у каждого соискателя.",
+          },
+          {
+            h2: "Ничего не просрочено",
+            body: "Добавьте сроки для документов вроде SKCK, KITAS и сертификатов и получайте напоминания заранее.",
+          },
+        ],
+        trustHeading: "Как защищены документы",
+        trust: [
+          "Файлы отдаются по короткоживущим подписанным ссылкам, без публичных адресов",
+          "Отзывные ссылки с истечением, лимитом просмотров и watermark",
+          "Доступ изолирован на уровне базы (RLS)",
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          { q: "Нужен ли кандидату аккаунт?", a: "Нет. Он открывает ссылку и загружает документы без регистрации." },
+          { q: "Можно собрать у многих кандидатов одной ссылкой?", a: "Да — одна ссылка-чек-лист работает для каждого; у каждого свой пакет." },
+          { q: "Где хранятся документы?", a: "В защищённой облачной инфраструктуре (Supabase); серверы могут быть за пределами Индонезии — см. Политику конфиденциальности." },
+          {
+            q: "Нужно ли кандидату делать ксерокопию или скан?",
+            a: "Ходить в копицентр не нужно. Кандидат может сфотографировать документ на телефон — снимок уменьшается автоматически перед отправкой, поэтому крупные файлы не отваливаются.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Nomzod hujjatlarini yig‘ish",
+        title: "Nomzod hujjatlarini bitta havola orqali yig‘ing | Doki.help",
+        metaDescription:
+          "Nomzodlarga ro‘yxat-havola yuboring va to‘liq hujjat paketlarini oling — “nima yetishmayapti” statusi va eslatmalar bilan. Nomzodga hisob kerak emas.",
+        h1: "Nomzod hujjatlarini bitta havola orqali yig‘ing",
+        intro:
+          "Nomzodlarni WhatsApp va emailda fayllar uchun quvishni bas qiling. Bitta ro‘yxat-havola yuboring — har bir nomzod hujjatlarini hisobsiz yuklaydi, siz esa har biri bo‘yicha to‘liq/kam statusini ko‘rasiz.",
+        ctaPrimary: "Birinchi ro‘yxatni yaratish",
+        sections: [
+          {
+            h2: "Qanday ishlaydi",
+            bullets: [
+              "Kerakli hujjatlar ro‘yxatini tuzing (yoki shablondan boshlang)",
+              "Havolani nomzodlarga WhatsApp orqali ulashing",
+              "Nomzodlar ro‘yxatdan o‘tmasdan yuklaydi",
+              "Kim to‘liq, kimda hujjat yetishmayotganini ko‘rasiz",
+            ],
+          },
+          {
+            h2: "Ko‘p sonli yollash uchun",
+            body: "Bitta havola bir vaqtda ko‘p nomzod uchun ishlaydi. KTP va tibbiy ma’lumotnoma kabi sezgir hujjatlar har bir arizachidan emas, taklifdan keyin yig‘iladi.",
+          },
+          {
+            h2: "Hech narsa bilinmay o‘tmaydi",
+            body: "SKCK, KITAS va sertifikatlar kabi hujjatlar uchun muddat qo‘shing va tugashidan oldin eslatma oling.",
+          },
+        ],
+        trustHeading: "Hujjatlar qanday himoyalanadi",
+        trust: [
+          "Fayllar ommaviy URL emas, qisqa muddatli imzolangan havolalar orqali beriladi",
+          "Ulashish havolalari muddati, ko‘rish chegarasi va watermark bilan bekor qilinadi",
+          "Kirish ma’lumotlar bazasi darajasida ajratilgan (RLS)",
+        ],
+        faqHeading: "Ko‘p beriladigan savollar",
+        faq: [
+          { q: "Nomzodga hisob kerakmi?", a: "Yo‘q. U havolani ochib, hujjatlarni ro‘yxatdan o‘tmasdan yuklaydi." },
+          { q: "Bitta havola bilan ko‘p nomzoddan yig‘sa bo‘ladimi?", a: "Ha — bir xil ro‘yxat-havola har bir nomzod uchun ishlaydi; har birida o‘z paketi bo‘ladi." },
+          { q: "Hujjatlar qayerda saqlanadi?", a: "Xavfsiz bulut infratuzilmasida (Supabase); serverlar Indoneziyadan tashqarida bo‘lishi mumkin — Maxfiylik siyosatiga qarang." },
+          {
+            q: "Nomzod hujjatni nusxalashi yoki skanerlashi kerakmi?",
+            a: "Nusxa olish shoxobchasiga borish shart emas. Nomzod hujjatni telefonda suratga olishi kifoya — surat yuborishdan oldin avtomatik kichraytiriladi, shuning uchun katta fayllar yuklanmay qolmaydi.",
+          },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/recruitment-agencies", label: "For recruiting agencies" },
+        { href: "/checklists/skck-checklist", label: "SKCK checklist" },
+        { href: "/security", label: "How your documents are protected" },
+      ],
+      id: [
+        { href: "/for/recruitment-agencies", label: "Untuk agensi rekrutmen" },
+        { href: "/checklists/skck-checklist", label: "Ceklis SKCK" },
+        { href: "/security", label: "Cara dokumen Anda dilindungi" },
+      ],
+      ru: [
+        { href: "/for/recruitment-agencies", label: "Для рекрутинговых агентств" },
+        { href: "/checklists/skck-checklist", label: "Чек-лист SKCK" },
+        { href: "/security", label: "Как защищены документы" },
+      ],
+      uz: [
+        { href: "/for/recruitment-agencies", label: "Rekruting agentliklari uchun" },
+        { href: "/checklists/skck-checklist", label: "SKCK ro‘yxati" },
+        { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
+      ],
+    },
+  },
+  "hr-document-checklist": {
+    slug: "hr-document-checklist",
+    emoji: "✅",
+    locales: {
+      en: {
+        navLabel: "HR document checklist",
+        title: "HR Document Checklist Tool for Hiring | Doki.help",
+        metaDescription:
+          "Build a document checklist for any role, send it as one link, and get complete candidate packages with a “what's missing” status and reminders.",
+        h1: "HR document checklist — build it, send it, track it",
+        intro:
+          "Turn “please send your documents” into a structured checklist. Pick the documents a role needs, share one link, and Doki tracks who is complete and who is still missing files.",
+        ctaPrimary: "Create your first checklist",
+        sections: [
+          {
+            h2: "Start from a template or build your own",
+            bullets: [
+              "Ready pack templates: villa staff, F&B, receptionist, driver, general staff",
+              "Or pick documents one by one for the role",
+              "Reuse the same checklist for every candidate",
+            ],
+          },
+          {
+            h2: "Send one link, track completeness",
+            bullets: [
+              "Candidates upload without an account",
+              "See a “complete / missing” status per person",
+              "Reminders for SKCK, KITAS and certificate expiry",
+            ],
+          },
+          {
+            h2: "Privacy by design",
+            body: "Sensitive documents like KTP and health certificates are collected after an offer, not from every applicant — a cleaner, more trustworthy process for candidates.",
+          },
+        ],
+        trustHeading: "How documents are protected",
+        trust: [
+          "Revocable share links with expiry, view limits and watermark",
+          "Files served via short-lived signed links, not public URLs",
+          "Export with no lock-in",
+        ],
+        faqHeading: "Frequently asked",
+        faq: [
+          { q: "Can I reuse one checklist for many candidates?", a: "Yes — the same link works for every candidate; each gets their own package." },
+          { q: "Do candidates need an account?", a: "No. They open the link and upload without registering." },
+          { q: "Can I edit the checklist?", a: "Yes — start from a template and add or remove documents for the role." },
+        ],
+      },
+      id: {
+        navLabel: "Checklist dokumen HR",
+        title: "Alat Ceklis Dokumen HR untuk Rekrutmen | Doki.help",
+        metaDescription:
+          "Buat ceklis dokumen untuk posisi apa pun, kirim sebagai satu tautan, dan terima paket kandidat lengkap dengan status “apa yang kurang” dan pengingat.",
+        h1: "Ceklis dokumen HR — buat, kirim, pantau",
+        intro:
+          "Ubah “tolong kirim dokumennya” jadi ceklis yang terstruktur. Pilih dokumen yang dibutuhkan sebuah posisi, bagikan satu tautan, dan Doki memantau siapa yang lengkap dan siapa yang masih kurang.",
+        ctaPrimary: "Buat checklist pertama",
+        sections: [
+          {
+            h2: "Mulai dari template atau buat sendiri",
+            bullets: [
+              "Template paket siap pakai: staf vila, F&B, resepsionis, sopir, staf umum",
+              "Atau pilih dokumen satu per satu untuk posisinya",
+              "Pakai ulang ceklis yang sama untuk tiap kandidat",
+            ],
+          },
+          {
+            h2: "Kirim satu tautan, pantau kelengkapan",
+            bullets: [
+              "Kandidat mengunggah tanpa akun",
+              "Lihat status “lengkap / kurang” per orang",
+              "Pengingat masa berlaku SKCK, KITAS, dan sertifikat",
+            ],
+          },
+          {
+            h2: "Privasi sejak awal",
+            body: "Dokumen sensitif seperti KTP dan surat sehat dikumpulkan setelah penawaran, bukan dari setiap pelamar — proses yang lebih rapi dan tepercaya bagi kandidat.",
+          },
+        ],
+        trustHeading: "Cara dokumen dilindungi",
+        trust: [
+          "Tautan berbagi bisa dicabut dengan kedaluwarsa, batas tampilan, dan watermark",
+          "Berkas disajikan lewat tautan bertanda tangan berumur pendek, bukan URL publik",
+          "Ekspor tanpa terkunci",
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          { q: "Bisakah pakai satu ceklis untuk banyak kandidat?", a: "Bisa — tautan yang sama berlaku untuk tiap kandidat; masing-masing punya paketnya sendiri." },
+          { q: "Apakah kandidat perlu akun?", a: "Tidak. Mereka membuka tautan dan mengunggah tanpa mendaftar." },
+          { q: "Bisakah mengedit ceklisnya?", a: "Bisa — mulai dari template lalu tambah atau hapus dokumen sesuai posisi." },
+        ],
+      },
+      ru: {
+        navLabel: "Чек-лист документов HR",
+        title: "Инструмент чек-листа документов для HR | Doki.help",
+        metaDescription:
+          "Соберите чек-лист документов под любую роль, отправьте одной ссылкой и получайте полные пакеты кандидатов со статусом «чего не хватает» и напоминаниями.",
+        h1: "Чек-лист документов HR — собрать, отправить, отследить",
+        intro:
+          "Превратите «пришлите документы» в структурированный чек-лист. Выберите документы под роль, отправьте одну ссылку — Doki отследит, кто укомплектован, а у кого чего не хватает.",
+        ctaPrimary: "Создать первый чек-лист",
+        sections: [
+          {
+            h2: "Из шаблона или свой",
+            bullets: [
+              "Готовые шаблоны паков: персонал виллы, F&B, ресепшн, водитель, линейный персонал",
+              "Или выберите документы по одному под роль",
+              "Переиспользуйте один чек-лист для каждого кандидата",
+            ],
+          },
+          {
+            h2: "Одна ссылка, контроль комплектности",
+            bullets: [
+              "Кандидаты загружают без аккаунта",
+              "Статус «полный / не хватает» по каждому",
+              "Напоминания о сроках SKCK, KITAS и сертификатов",
+            ],
+          },
+          {
+            h2: "Приватность по умолчанию",
+            body: "Чувствительные документы вроде KTP и медсправок собираются после оффера, а не у каждого соискателя — это чище и надёжнее для кандидатов.",
+          },
+        ],
+        trustHeading: "Как защищены документы",
+        trust: [
+          "Отзывные ссылки с истечением, лимитом просмотров и watermark",
+          "Файлы отдаются по короткоживущим подписанным ссылкам, без публичных адресов",
+          "Экспорт без привязки",
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          { q: "Можно один чек-лист для многих кандидатов?", a: "Да — одна ссылка работает для каждого; у каждого свой пакет." },
+          { q: "Нужен ли кандидату аккаунт?", a: "Нет. Он открывает ссылку и загружает без регистрации." },
+          { q: "Можно редактировать чек-лист?", a: "Да — начните с шаблона и добавьте/уберите документы под роль." },
+        ],
+      },
+      uz: {
+        navLabel: "HR hujjat ro‘yxati",
+        title: "Yollash uchun HR hujjat ro‘yxati vositasi | Doki.help",
+        metaDescription:
+          "Istalgan lavozim uchun hujjatlar ro‘yxatini tuzing, bitta havola qilib yuboring va to‘liq nomzod paketlarini “nima yetishmayapti” statusi bilan oling.",
+        h1: "HR hujjat ro‘yxati — tuzing, yuboring, kuzating",
+        intro:
+          "“Hujjatlaringizni yuboring” ni tuzilgan ro‘yxatga aylantiring. Lavozimga kerakli hujjatlarni tanlang, bitta havola ulashing — Doki kim to‘liq, kimda nima kamligini kuzatadi.",
+        ctaPrimary: "Birinchi ro‘yxatni yaratish",
+        sections: [
+          {
+            h2: "Shablondan yoki o‘zingiz",
+            bullets: [
+              "Tayyor paket shablonlari: villa xodimi, F&B, resepsionist, haydovchi, umumiy xodim",
+              "Yoki lavozim uchun hujjatlarni birma-bir tanlang",
+              "Bir xil ro‘yxatni har bir nomzod uchun qayta ishlating",
+            ],
+          },
+          {
+            h2: "Bitta havola, to‘liqlikni kuzating",
+            bullets: [
+              "Nomzodlar hisobsiz yuklaydi",
+              "Har bir odam bo‘yicha “to‘liq / kam” statusi",
+              "SKCK, KITAS va sertifikat muddatlari bo‘yicha eslatmalar",
+            ],
+          },
+          {
+            h2: "Boshidan maxfiylik",
+            body: "KTP va tibbiy ma’lumotnoma kabi sezgir hujjatlar har bir arizachidan emas, taklifdan keyin yig‘iladi — nomzodlar uchun tozaroq va ishonchliroq jarayon.",
+          },
+        ],
+        trustHeading: "Hujjatlar qanday himoyalanadi",
+        trust: [
+          "Ulashish havolalari muddati, ko‘rish chegarasi va watermark bilan bekor qilinadi",
+          "Fayllar ommaviy URL emas, qisqa muddatli imzolangan havolalar orqali beriladi",
+          "Bog‘lanishsiz eksport",
+        ],
+        faqHeading: "Ko‘p beriladigan savollar",
+        faq: [
+          { q: "Bitta ro‘yxatni ko‘p nomzod uchun ishlatsa bo‘ladimi?", a: "Ha — bir xil havola har bir nomzod uchun ishlaydi; har birida o‘z paketi bo‘ladi." },
+          { q: "Nomzodga hisob kerakmi?", a: "Yo‘q. Havolani ochib, ro‘yxatdan o‘tmasdan yuklaydi." },
+          { q: "Ro‘yxatni tahrirlash mumkinmi?", a: "Ha — shablondan boshlang va lavozimga qarab hujjat qo‘shing yoki olib tashlang." },
+        ],
+      },
+    },
+    related: {
+      en: [
+        { href: "/for/employers", label: "For HR teams & agencies" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Onboarding checklist" },
+        { href: "/candidate-document-collection", label: "Collect candidate documents" },
+      ],
+      id: [
+        { href: "/for/employers", label: "Untuk tim HR & agensi" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Ceklis onboarding" },
+        { href: "/candidate-document-collection", label: "Kumpulkan dokumen kandidat" },
+      ],
+      ru: [
+        { href: "/for/employers", label: "Для HR-команд и агентств" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Чек-лист онбординга" },
+        { href: "/candidate-document-collection", label: "Сбор документов кандидатов" },
+      ],
+      uz: [
+        { href: "/for/employers", label: "HR jamoalari va agentliklar uchun" },
+        { href: "/checklists/employee-onboarding-11-checklist", label: "Onboarding ro‘yxati" },
+        { href: "/candidate-document-collection", label: "Nomzod hujjatlarini yig‘ish" },
+      ],
+    },
+  },
+  // Боль кандидата «кто увидит мой KTP». Все утверждения ниже соответствуют
+  // тому, что заявлено на /security (RLS, приватный bucket + короткие signed
+  // URL, отзывные ссылки, лог доступа, AI строго по согласию). E2E-шифрование
+  // НЕ заявляем — его нет.
+  "candidate-document-privacy": {
+    slug: "candidate-document-privacy",
+    emoji: "🔒",
+    locales: {
+      id: {
+        navLabel: "Privasi dokumen",
+        title: "Siapa yang Melihat Dokumen Lamaran Anda?",
+        metaDescription:
+          "KTP, ijazah, dan surat sehat berisi data pribadi. Begini cara dokumen lamaran Anda disimpan, siapa yang bisa melihatnya, dan hak Anda atasnya.",
+        h1: "Siapa yang bisa melihat dokumen lamaran Anda",
+        intro:
+          "Melamar kerja berarti menyerahkan data pribadi: KTP, ijazah, kadang surat sehat. Wajar kalau Anda ingin tahu ke mana berkas itu pergi. Halaman ini menjelaskan apa yang terjadi pada dokumen yang Anda unggah lewat doki.help — tanpa janji berlebihan.",
+        ctaPrimary: "Simpan dokumen Anda sendiri",
+        sections: [
+          {
+            h2: "Siapa yang bisa membukanya",
+            bullets: [
+              "Perusahaan yang mengirimi Anda tautan lamaran tersebut",
+              "Bukan pelamar lain, bukan perusahaan lain",
+              "Akses dipisahkan di tingkat basis data, bukan hanya di tampilan",
+            ],
+          },
+          {
+            h2: "Dokumen sensitif ditunda",
+            body: "KTP dan dokumen kesehatan secara bawaan tidak diminta dari setiap pelamar — dokumen itu dikumpulkan setelah ada penawaran kerja. Jadi puluhan perusahaan tidak menyimpan KTP Anda hanya karena Anda melamar.",
+          },
+          {
+            h2: "Berkas tidak punya alamat publik",
+            bullets: [
+              "Disimpan di penyimpanan privat, bukan folder terbuka",
+              "Dibuka lewat tautan bertanda tangan berumur pendek",
+              "Tautan berbagi bisa dicabut, dibatasi tampilannya, dan diberi tanda air",
+            ],
+          },
+          {
+            h2: "AI hanya kalau Anda mengaktifkannya",
+            body: "Pengenalan dokumen dengan AI nonaktif secara bawaan. Gambar dokumen dikirim ke penyedia AI hanya jika pemilik akun sendiri menyalakannya di pengaturan.",
+          },
+        ],
+        trustHeading: "Hak Anda atas data sendiri",
+        trust: [
+          "Anda bisa meminta penghapusan data lamaran Anda",
+          "Persetujuan Anda dicatat beserta versi kebijakannya",
+          "Setiap pembukaan dokumen lewat tautan tercatat di log akses",
+          "Kami tidak menjual atau membagikan data Anda untuk iklan",
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Apakah perusahaan lain bisa melihat lamaran saya?",
+            a: "Tidak. Setiap lamaran hanya terlihat oleh perusahaan pemilik lowongan tersebut.",
+          },
+          {
+            q: "Kenapa saya diminta KTP?",
+            a: "Untuk tahap lamaran awal biasanya tidak. Jika sebuah lowongan memintanya lebih awal, Anda berhak bertanya alasannya — dokumen identitas umumnya baru diperlukan setelah penawaran kerja.",
+          },
+          {
+            q: "Bagaimana cara menghapus dokumen yang sudah saya kirim?",
+            a: "Hubungi perusahaan yang menerima lamaran Anda, atau tim kami lewat kontak di Kebijakan Privasi. Permintaan penghapusan adalah hak Anda menurut UU PDP.",
+          },
+          {
+            q: "Apakah dokumen saya dienkripsi ujung ke ujung?",
+            a: "Tidak, dan kami tidak mengklaim itu. Berkas ditransfer lewat HTTPS dan disimpan di penyimpanan privat dengan akses terbatas — kami menyebut apa adanya, bukan lebih.",
+          },
+        ],
+      },
+      en: {
+        navLabel: "Document privacy",
+        title: "Who Can See the Documents You Send?",
+        metaDescription:
+          "ID cards, diplomas and health certificates are personal data. Here's where your application documents go, who can open them, and your rights.",
+        h1: "Who can see the documents you send with an application",
+        intro:
+          "Applying for a job means handing over personal data: an ID card, a diploma, sometimes a health certificate. Wanting to know where that ends up is reasonable. This page explains what happens to documents you upload through doki.help — without overclaiming.",
+        ctaPrimary: "Keep your own copy",
+        sections: [
+          {
+            h2: "Who can open them",
+            bullets: [
+              "The employer whose application link you used",
+              "Not other applicants, not other employers",
+              "Access is separated at the database level, not just in the interface",
+            ],
+          },
+          {
+            h2: "Sensitive documents are deferred",
+            body: "ID cards and health documents are not requested from every applicant by default — they're collected after an offer. So a dozen employers don't end up holding your ID just because you applied.",
+          },
+          {
+            h2: "Files have no public address",
+            bullets: [
+              "Kept in private storage, not an open folder",
+              "Served through short-lived signed links",
+              "Share links can be revoked, view-limited and watermarked",
+            ],
+          },
+          {
+            h2: "AI only if it's switched on",
+            body: "AI document recognition is off by default. Document images go to an AI provider only when the account owner turns it on in settings.",
+          },
+        ],
+        trustHeading: "Your rights over your own data",
+        trust: [
+          "You can request deletion of your application data",
+          "Your consent is recorded together with the policy version",
+          "Every document opened through a link is written to an access log",
+          "We don't sell or share your data for advertising",
+        ],
+        faqHeading: "Common questions",
+        faq: [
+          {
+            q: "Can other employers see my application?",
+            a: "No. Each application is visible only to the employer who posted that vacancy.",
+          },
+          {
+            q: "Why am I being asked for my ID card?",
+            a: "At the application stage you usually shouldn't be. If a vacancy asks early, you're entitled to ask why — identity documents are normally only needed after an offer.",
+          },
+          {
+            q: "How do I delete documents I've already sent?",
+            a: "Contact the employer who received your application, or reach us through the contact in the Privacy Policy. Requesting deletion is your right under Indonesia's UU PDP.",
+          },
+          {
+            q: "Are my documents end-to-end encrypted?",
+            a: "No, and we don't claim they are. Files travel over HTTPS and sit in private storage with restricted access — we'd rather state that plainly than overpromise.",
+          },
+        ],
+      },
+      ru: {
+        navLabel: "Приватность документов",
+        title: "Кто увидит документы, которые вы отправили",
+        metaDescription:
+          "Удостоверение, диплом и справки — это личные данные. Куда попадают документы отклика, кто может их открыть и какие у вас права.",
+        h1: "Кто может увидеть документы, отправленные с откликом",
+        intro:
+          "Откликнуться на вакансию — значит отдать личные данные: удостоверение, диплом, иногда медсправку. Хотеть понимать, куда это уходит, нормально. Здесь — что происходит с документами, загруженными через doki.help, без преувеличений.",
+        ctaPrimary: "Сохранить свою копию",
+        sections: [
+          {
+            h2: "Кто может их открыть",
+            bullets: [
+              "Работодатель, по чьей ссылке вы откликнулись",
+              "Не другие кандидаты и не другие работодатели",
+              "Доступ разделён на уровне базы данных, а не только в интерфейсе",
+            ],
+          },
+          {
+            h2: "Чувствительные документы откладываются",
+            body: "Удостоверение личности и медицинские документы по умолчанию не запрашиваются у каждого откликнувшегося — их собирают после оффера. Так десяток работодателей не хранит ваш документ только потому, что вы откликнулись.",
+          },
+          {
+            h2: "У файлов нет публичного адреса",
+            bullets: [
+              "Хранятся в приватном хранилище, а не в открытой папке",
+              "Отдаются по коротким подписанным ссылкам",
+              "Ссылки можно отозвать, ограничить по просмотрам и пометить водяным знаком",
+            ],
+          },
+          {
+            h2: "ИИ — только если он включён",
+            body: "ИИ-распознавание документов выключено по умолчанию. Изображение уходит ИИ-провайдеру, только когда владелец аккаунта сам включил это в настройках.",
+          },
+        ],
+        trustHeading: "Ваши права на свои данные",
+        trust: [
+          "Вы можете запросить удаление данных вашего отклика",
+          "Ваше согласие фиксируется вместе с версией политики",
+          "Каждое открытие документа по ссылке пишется в лог доступа",
+          "Мы не продаём и не передаём ваши данные для рекламы",
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Могут ли другие работодатели увидеть мой отклик?",
+            a: "Нет. Каждый отклик виден только тому работодателю, который разместил эту вакансию.",
+          },
+          {
+            q: "Почему у меня просят удостоверение личности?",
+            a: "На этапе отклика обычно не должны. Если вакансия просит его сразу, вы вправе спросить зачем — документы, удостоверяющие личность, как правило нужны только после оффера.",
+          },
+          {
+            q: "Как удалить уже отправленные документы?",
+            a: "Напишите работодателю, который получил отклик, или нам по контакту из Политики конфиденциальности. Запрос на удаление — ваше право по UU PDP.",
+          },
+          {
+            q: "Документы шифруются end-to-end?",
+            a: "Нет, и мы этого не заявляем. Файлы передаются по HTTPS и лежат в приватном хранилище с ограниченным доступом — честнее сказать так, чем обещать лишнее.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Hujjat maxfiyligi",
+        title: "Yuborgan hujjatlaringizni kim ko‘radi",
+        metaDescription:
+          "Guvohnoma, diplom va ma’lumotnomalar — shaxsiy ma’lumot. Ariza hujjatlaringiz qayerga boradi, kim ocha oladi va huquqlaringiz qanday.",
+        h1: "Ariza bilan yuborgan hujjatlaringizni kim ko‘ra oladi",
+        intro:
+          "Ishga ariza berish — shaxsiy ma’lumotni topshirish demak: guvohnoma, diplom, ba’zan tibbiy ma’lumotnoma. Bu qayerga borishini bilishni istash tabiiy. Bu sahifada doki.help orqali yuklangan hujjatlarga nima bo‘lishi ortiqcha va’dalarsiz tushuntiriladi.",
+        ctaPrimary: "O‘z nusxangizni saqlang",
+        sections: [
+          {
+            h2: "Kim ocha oladi",
+            bullets: [
+              "Havolasi orqali ariza bergan ish beruvchi",
+              "Boshqa nomzodlar ham, boshqa ish beruvchilar ham emas",
+              "Kirish ma’lumotlar bazasi darajasida ajratilgan",
+            ],
+          },
+          {
+            h2: "Sezgir hujjatlar keyinga qoldiriladi",
+            body: "Shaxsni tasdiqlovchi va tibbiy hujjatlar har bir arizachidan so‘ralmaydi — ular taklifdan keyin yig‘iladi. Shunday qilib, o‘nlab ish beruvchi shunchaki ariza bergani uchun guvohnomangizni saqlab qolmaydi.",
+          },
+          {
+            h2: "Fayllarning ommaviy manzili yo‘q",
+            bullets: [
+              "Ochiq papkada emas, shaxsiy xotirada saqlanadi",
+              "Qisqa muddatli imzolangan havolalar orqali beriladi",
+              "Havolalarni bekor qilish, ko‘rishlar sonini cheklash mumkin",
+            ],
+          },
+          {
+            h2: "AI faqat yoqilgan bo‘lsa",
+            body: "Hujjatlarni AI orqali aniqlash sukut bo‘yicha o‘chirilgan. Tasvir AI provayderiga faqat hisob egasi buni sozlamalarda o‘zi yoqqanda yuboriladi.",
+          },
+        ],
+        trustHeading: "O‘z ma’lumotlaringizga bo‘lgan huquqlaringiz",
+        trust: [
+          "Ariza ma’lumotlaringizni o‘chirishni so‘rashingiz mumkin",
+          "Roziligingiz siyosat versiyasi bilan birga qayd etiladi",
+          "Havola orqali ochilgan har bir hujjat jurnalga yoziladi",
+          "Ma’lumotlaringizni reklama uchun sotmaymiz va bermaymiz",
+        ],
+        faqHeading: "Ko‘p so‘raladigan savollar",
+        faq: [
+          {
+            q: "Boshqa ish beruvchilar arizamni ko‘radimi?",
+            a: "Yo‘q. Har bir ariza faqat o‘sha vakansiyani joylashtirgan ish beruvchiga ko‘rinadi.",
+          },
+          {
+            q: "Nega mendan guvohnoma so‘rashyapti?",
+            a: "Ariza bosqichida odatda so‘ralmasligi kerak. Agar vakansiya darhol so‘rasa, sababini so‘rashga haqlisiz — shaxsni tasdiqlovchi hujjatlar odatda taklifdan keyin kerak bo‘ladi.",
+          },
+          {
+            q: "Yuborilgan hujjatlarni qanday o‘chiraman?",
+            a: "Arizangizni olgan ish beruvchiga yoki Maxfiylik siyosatidagi kontakt orqali bizga murojaat qiling. O‘chirishni so‘rash — UU PDP bo‘yicha huquqingiz.",
+          },
+          {
+            q: "Hujjatlarim uchdan-uchgacha shifrlanganmi?",
+            a: "Yo‘q va biz bunday da’vo qilmaymiz. Fayllar HTTPS orqali uzatiladi va cheklangan kirishli shaxsiy xotirada turadi — ortiqcha va’da berishdan ko‘ra shuni aniq aytganimiz to‘g‘ri.",
+          },
+        ],
+      },
+    },
+    related: {
+      id: [
+        { href: "/security", label: "Cara dokumen Anda dilindungi" },
+        { href: "/privacy", label: "Kebijakan Privasi" },
+        { href: "/checklists/fast-document-submission", label: "Kirim berkas dengan cepat" },
+      ],
+      en: [
+        { href: "/security", label: "How your documents are protected" },
+        { href: "/privacy", label: "Privacy Policy" },
+        { href: "/checklists/fast-document-submission", label: "Send your documents quickly" },
+      ],
+      ru: [
+        { href: "/security", label: "Как защищены документы" },
+        { href: "/privacy", label: "Политика конфиденциальности" },
+        { href: "/checklists/fast-document-submission", label: "Быстрая отправка документов" },
+      ],
+      uz: [
+        { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
+        { href: "/privacy", label: "Maxfiylik siyosati" },
+        { href: "/checklists/fast-document-submission", label: "Hujjatlarni tez yuborish" },
       ],
     },
   },

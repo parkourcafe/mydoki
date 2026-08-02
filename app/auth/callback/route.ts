@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { recordLogin } from "@/lib/loginEvents";
-import { safeNextPath } from "@/lib/nextPath";
+import { safeNextPath, withEv } from "@/lib/nextPath";
+import { isAppReviewAccountEmail } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,11 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${base}/login?error=google`);
   }
 
-  const response = NextResponse.redirect(`${base}${next}`);
+  // Флаг события входа: клиент прочитает его на целевой странице, отправит
+  // logged_in и уберёт из URL (см. components/AnalyticsEvents.tsx).
+  const response = NextResponse.redirect(
+    `${base}${withEv(next, "logged_in", "google")}`
+  );
   const cookieStore = await cookies();
 
   const supabase = createServerClient(
@@ -54,9 +59,17 @@ export async function GET(request: Request) {
     }
   );
 
-  const { error } = await supabase.auth.exchangeCodeForSession(code);
+  const { data, error } = await supabase.auth.exchangeCodeForSession(code);
   if (error) {
     return NextResponse.redirect(`${base}/login?error=google`);
+  }
+
+  if (isAppReviewAccountEmail(data.user?.email)) {
+    response.cookies.set("locale", "en", {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
   }
 
   try {

@@ -2,7 +2,10 @@ import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser, getOrCreateHouseholdId, listSpaces } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
+import { isNativeRequest } from "@/lib/isNativeRequest";
 import AppNav from "@/components/AppNav";
+import IdentifyUser from "@/components/IdentifyUser";
+import AnalyticsEvents from "@/components/AnalyticsEvents";
 import VerifyEmailBanner from "@/components/VerifyEmailBanner";
 
 const M = {
@@ -16,12 +19,23 @@ const M = {
     search: "Поиск",
     reminders: "Сроки",
     access: "Доступ",
-    accessLinks: "Доступ и ссылки",
+    delegated: "Доступ мне",
     security: "Безопасность",
     offline: "Офлайн",
-    hiring: "Найм",
+    hiring: "Нанимаю",
+    myApplications: "Мои отклики",
+    employment: "Мои трудовые отношения",
+    career: "Карьерный таймлайн",
+    legal: "Правовая информация",
+    sharePackage: "Поделиться",
+    overview: "Обзор",
     resume: "Моё резюме",
-    freelance: "Портфолио",
+    portfolio: "Портфолио",
+    workHub: "Обзор ролей",
+    grpFamily: "Семья",
+    grpDocs: "Документы",
+    grpWork: "Работа",
+    grpSettings: "Настройки",
     mfaWarning: "🔒 Хотите усилить защиту?",
     enable2fa: "Включить 2FA",
     mfaRecommend: "— дополнительная защита для ваших документов.",
@@ -36,12 +50,23 @@ const M = {
     search: "Search",
     reminders: "Deadlines",
     access: "Access",
-    accessLinks: "Access & links",
+    delegated: "Granted to me",
     security: "Security",
     offline: "Offline",
-    hiring: "Hiring",
+    hiring: "Hire",
+    myApplications: "My applications",
+    employment: "My employment",
+    career: "Career timeline",
+    legal: "Legal information",
+    sharePackage: "Share",
+    overview: "Overview",
     resume: "My resume",
-    freelance: "Portfolio",
+    portfolio: "Portfolio",
+    workHub: "Roles overview",
+    grpFamily: "Family",
+    grpDocs: "Documents",
+    grpWork: "Work",
+    grpSettings: "Settings",
     mfaWarning: "🔒 Want extra protection?",
     enable2fa: "Enable 2FA",
     mfaRecommend: "— an extra layer of security for your documents.",
@@ -56,12 +81,23 @@ const M = {
     search: "Qidiruv",
     reminders: "Muddatlar",
     access: "Kirish huquqi",
-    accessLinks: "Kirish va havolalar",
+    delegated: "Menga berilgan",
     security: "Xavfsizlik",
     offline: "Oflayn",
     hiring: "Yollash",
-    resume: "Rezyumem",
-    freelance: "Portfolio",
+    myApplications: "Mening arizalarim",
+    employment: "Mehnat munosabatlarim",
+    career: "Karyera tarixi",
+    legal: "Huquqiy ma’lumot",
+    sharePackage: "Ulashish",
+    overview: "Umumiy",
+    resume: "Mening rezyumem",
+    portfolio: "Portfolio",
+    workHub: "Rollar sharhi",
+    grpFamily: "Oila",
+    grpDocs: "Hujjatlar",
+    grpWork: "Ish",
+    grpSettings: "Sozlamalar",
     mfaWarning: "🔒 Himoyani kuchaytirasizmi?",
     enable2fa: "2FA ni yoqish",
     mfaRecommend: "— hujjatlaringiz uchun qoʻshimcha himoya.",
@@ -76,12 +112,23 @@ const M = {
     search: "Cari",
     reminders: "Tenggat waktu",
     access: "Akses",
-    accessLinks: "Akses & tautan",
+    delegated: "Diberikan ke saya",
     security: "Keamanan",
     offline: "Offline",
-    hiring: "Rekrutmen",
+    hiring: "Merekrut",
+    myApplications: "Lamaran saya",
+    employment: "Hubungan kerja saya",
+    career: "Linimasa karier",
+    legal: "Informasi hukum",
+    sharePackage: "Bagikan",
+    overview: "Ringkasan",
     resume: "Resume saya",
-    freelance: "Portofolio",
+    portfolio: "Portofolio",
+    workHub: "Ikhtisar peran",
+    grpFamily: "Keluarga",
+    grpDocs: "Dokumen",
+    grpWork: "Kerja",
+    grpSettings: "Pengaturan",
     mfaWarning: "🔒 Mau proteksi ekstra?",
     enable2fa: "Aktifkan 2FA",
     mfaRecommend: "— lapisan keamanan tambahan untuk dokumen Anda.",
@@ -98,6 +145,7 @@ export default async function MyLayout({
 
   const user = await getUser();
   if (!user) redirect("/login");
+  const native = await isNativeRequest();
 
   // Статус 2FA: есть ли подтверждённый TOTP-фактор
   const supabase = await getSupabaseServer();
@@ -120,21 +168,55 @@ export default async function MyLayout({
   // ЛИЧНОЕ — ровно 5 пунктов (T8). Поиск/Офлайн/Безопасность вынесены в шапку
   // и подвал; все прежние URL сохранены и открываются напрямую.
   const nav = [
-    { href: "/my", emoji: "👪", label: t.family },
-    { href: "/my/documents", emoji: "📄", label: t.documents },
-    { href: "/my/assets", emoji: "🚗", label: t.assets },
-    { href: "/my/reminders", emoji: "⏰", label: t.reminders },
-    { href: "/my/family", emoji: "🔑", label: t.accessLinks },
-  ];
-  // РАБОТА — отдельная секция. Найм (работодатель) + Моё резюме (кандидат).
-  const work = [
-    { href: "/employer", emoji: "💼", label: t.hiring },
-    { href: "/my/resume", emoji: "🙋", label: t.resume },
-    { href: "/my/freelance", emoji: "🎨", label: t.freelance },
+    {
+      title: t.grpFamily,
+      emoji: "👪",
+      items: [
+        { href: "/my", emoji: "🏠", label: t.overview },
+        { href: "/my/family", emoji: "🔑", label: t.access },
+        { href: "/my/delegated", emoji: "🤝", label: t.delegated },
+      ],
+    },
+    {
+      title: t.grpDocs,
+      emoji: "📁",
+      items: [
+        { href: "/my/documents", emoji: "📄", label: t.documents },
+        { href: "/my/assets", emoji: "🚗", label: t.assets },
+        { href: "/my/reminders", emoji: "⏰", label: t.reminders },
+        { href: "/my/search", emoji: "🔍", label: t.search },
+      ],
+    },
+    {
+      title: t.grpWork,
+      emoji: "💼",
+      items: [
+        { href: "/my/work", emoji: "🧭", label: t.workHub },
+        { href: "/employer", emoji: "📣", label: t.hiring },
+        { href: "/my/applications", emoji: "🔎", label: t.myApplications },
+        { href: "/my/employment", emoji: "🧾", label: t.employment },
+        { href: "/my/career", emoji: "📈", label: t.career },
+        { href: "/my/legal", emoji: "⚖️", label: t.legal },
+        { href: "/my/resume", emoji: "🧑‍💼", label: t.resume },
+        { href: "/my/freelance", emoji: "🎨", label: t.portfolio },
+      ],
+    },
+    {
+      title: t.grpSettings,
+      emoji: "⚙️",
+      items: [
+        { href: "/my/share", emoji: "📤", label: t.sharePackage },
+        { href: "/saved", emoji: "📥", label: t.offline },
+        { href: "/my/security", emoji: "🛡️", label: t.security },
+      ],
+    },
   ];
 
   return (
-    <AppNav
+    <>
+      {!native && <IdentifyUser userId={user.id} locale={locale} />}
+      {!native && <AnalyticsEvents />}
+      <AppNav
       locale={locale}
       brand={t.brand}
       menuLabel={t.menu}
@@ -143,7 +225,6 @@ export default async function MyLayout({
       spaces={spaces}
       activeId={activeId}
       nav={nav}
-      work={work}
       search={{ href: "/my/search", label: t.search }}
       saved={{ href: "/saved", label: t.offline }}
       settings={{ href: "/my/security", label: t.security }}
@@ -161,6 +242,7 @@ export default async function MyLayout({
         <VerifyEmailBanner locale={locale} email={user.email ?? ""} />
       )}
       {children}
-    </AppNav>
+      </AppNav>
+    </>
   );
 }
