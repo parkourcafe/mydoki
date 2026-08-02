@@ -382,6 +382,47 @@ export type UpdateVacancyInput = CreateVacancyInput & { id: string };
  * отклики и их ответы не изменяются (ответы хранятся снимком в
  * application_answers). Доступ ограничен владельцем на уровне RLS.
  */
+/**
+ * Пауза / закрытие / возврат вакансии в работу. Владение проверяем явно, не
+ * полагаясь только на RLS: активные вакансии читаемы всем, поэтому без
+ * проверки чужой id прошёл бы в update.
+ */
+export async function setVacancyStatus(
+  vacancyId: string,
+  status: "active" | "paused" | "closed"
+): Promise<{ ok: true } | { error: "auth" | "not_owner" | "failed" }> {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "auth" };
+
+  const { data: prof } = await supabase
+    .from("employer_profiles")
+    .select("id")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!prof) return { error: "not_owner" };
+
+  const { data: vac } = await supabase
+    .from("vacancies")
+    .select("id, employer_id")
+    .eq("id", vacancyId)
+    .maybeSingle();
+  if (!vac || vac.employer_id !== prof.id) return { error: "not_owner" };
+
+  const { error } = await supabase
+    .from("vacancies")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", vacancyId)
+    .eq("employer_id", prof.id);
+  if (error) return { error: "failed" };
+
+  revalidatePath(`/employer/vacancies/${vacancyId}`);
+  revalidatePath("/employer");
+  return { ok: true };
+}
+
 export async function updateVacancy(
   input: UpdateVacancyInput
 ): Promise<{ id: string }> {

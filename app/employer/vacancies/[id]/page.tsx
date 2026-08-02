@@ -12,6 +12,7 @@ import { markApplicationsViewed } from "@/app/employer/actions";
 import DistributionCoach from "./DistributionCoach";
 import ApplicationsBoard, { type BoardApp } from "./ApplicationsBoard";
 import VacancyDescription from "@/components/VacancyDescription";
+import VacancyStatusActions from "./VacancyStatusActions";
 
 const M = {
   en: { statusActive: "Active", statusPaused: "Paused", statusClosed: "Closed", back: "← All vacancies", edit: "✏️ Edit", created: "Vacancy created — share the link below to start receiving applications.", updated: "Changes saved. They apply to new applications; existing ones keep their original answers." },
@@ -165,6 +166,12 @@ export default async function VacancyDashboard({
           {vacancy.location ? ` · ${vacancy.location}` : ""}
         </p>
       </div>
+
+      <VacancyStatusActions
+        locale={locale}
+        vacancyId={vacancy.id}
+        status={(vacancy.status ?? "active") as "active" | "paused" | "closed"}
+      />
 
       {created && (
         <p className="mb-3 rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
