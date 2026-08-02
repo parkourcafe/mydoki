@@ -8,6 +8,7 @@ import {
   rejectApplication,
   addApplicationNote,
   requestApplicationDocuments,
+  setApplicationStatus,
   signApplicationDoc,
   revertRejection,
 } from "@/app/employer/actions";
@@ -16,6 +17,8 @@ type Doc = { type: string; label: string; file_name: string; path: string };
 
 const M = {
   ru: {
+    boardStatus: "Статус в отборе", shortlist: "В шортлист", markHired: "Принят на работу", confirmHire: "Отметить кандидата как принятого на работу?",
+    sNew: "Новый", sViewed: "Просмотрен", sShortlisted: "Отобран", sRejected: "Отклонён", sHired: "Принят",
     undo: "Вернуть", undone: "Отклонение отменено.", undoExpired: "Окно отмены истекло.",
     err: "Не удалось выполнить. Попробуйте ещё раз.",
     decision: "Решение",
@@ -36,6 +39,8 @@ const M = {
     stageNames: { new: "Новый", review: "Рассмотрение", interview: "Интервью", assignment: "Задание", decision: "Решение" } as Record<string, string>,
   },
   en: {
+    boardStatus: "Selection status", shortlist: "Shortlist", markHired: "Mark as hired", confirmHire: "Mark this candidate as hired?",
+    sNew: "New", sViewed: "Viewed", sShortlisted: "Shortlisted", sRejected: "Rejected", sHired: "Hired",
     undo: "Undo", undone: "Rejection reverted.", undoExpired: "Undo window has expired.",
     err: "That didn't go through. Please try again.",
     decision: "Decision",
@@ -56,6 +61,8 @@ const M = {
     stageNames: { new: "New", review: "Review", interview: "Interview", assignment: "Assignment", decision: "Decision" } as Record<string, string>,
   },
   uz: {
+    boardStatus: "Tanlov holati", shortlist: "Tanlash", markHired: "Ishga qabul qilindi", confirmHire: "Nomzodni ishga qabul qilingan deb belgilaysizmi?",
+    sNew: "Yangi", sViewed: "Ko‘rilgan", sShortlisted: "Tanlangan", sRejected: "Rad etilgan", sHired: "Qabul qilingan",
     undo: "Qaytarish", undone: "Rad etish bekor qilindi.", undoExpired: "Bekor qilish vaqti tugadi.",
     err: "Bajarilmadi. Qayta urinib ko‘ring.",
     decision: "Qaror",
@@ -76,6 +83,8 @@ const M = {
     stageNames: { new: "Yangi", review: "Koʻrib chiqish", interview: "Suhbat", assignment: "Topshiriq", decision: "Qaror" } as Record<string, string>,
   },
   id: {
+    boardStatus: "Status seleksi", shortlist: "Pilih", markHired: "Tandai diterima", confirmHire: "Tandai kandidat ini sebagai diterima?",
+    sNew: "Baru", sViewed: "Dilihat", sShortlisted: "Terpilih", sRejected: "Ditolak", sHired: "Diterima",
     undo: "Batalkan", undone: "Penolakan dibatalkan.", undoExpired: "Waktu pembatalan sudah habis.",
     err: "Tidak berhasil. Silakan coba lagi.",
     decision: "Keputusan",
@@ -111,6 +120,7 @@ export default function CandidateActions({
   stages,
   currentStage,
   state,
+  status,
   docs,
   consentRevoked,
 }: {
@@ -119,6 +129,7 @@ export default function CandidateActions({
   vacancyId: string;
   stages: string[];
   currentStage: string;
+  status: string;
   state: "active" | "hired" | "rejected" | "withdrawn";
   docs: Doc[];
   consentRevoked: boolean;
@@ -162,6 +173,52 @@ export default function CandidateActions({
       {err && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{t.err}</p>
       )}
+
+      <div className="rounded-lg border border-slate-200 px-3 py-2">
+        <p className="text-xs uppercase tracking-wide text-slate-400">
+          {t.boardStatus}
+        </p>
+        <p className="mt-0.5 text-sm font-medium text-slate-700">
+          {status === "hired"
+            ? t.sHired
+            : status === "rejected"
+              ? t.sRejected
+              : status === "shortlisted"
+                ? t.sShortlisted
+                : status === "viewed"
+                  ? t.sViewed
+                  : t.sNew}
+        </p>
+        {active && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {status !== "shortlisted" && (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() =>
+                  run(() =>
+                    setApplicationStatus(applicationId, vacancyId, "shortlisted")
+                  )
+                }
+                className="btn-ghost disabled:opacity-50"
+              >
+                ★ {t.shortlist}
+              </button>
+            )}
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => {
+                if (!window.confirm(t.confirmHire)) return;
+                run(() => setApplicationStatus(applicationId, vacancyId, "hired"));
+              }}
+              className="btn-ghost disabled:opacity-50"
+            >
+              ✓ {t.markHired}
+            </button>
+          </div>
+        )}
+      </div>
       <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
         {t.decision}
       </h2>

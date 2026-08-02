@@ -355,6 +355,7 @@ export default async function CandidatePage({
         vacancyId={vacancy.id}
         stages={stages}
         currentStage={app.stage ?? "new"}
+        status={app.status ?? "new"}
         state={(app.state ?? "active") as "active" | "hired" | "rejected" | "withdrawn"}
         docs={docs}
         consentRevoked={consentRevoked}
