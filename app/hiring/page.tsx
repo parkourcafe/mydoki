@@ -1,11 +1,35 @@
+import type { Metadata } from "next";
 import Link from "next/link";
-import { getLocale } from "@/lib/i18n";
+import { getLocale, type Locale } from "@/lib/i18n";
 
-export const metadata = {
-  title: "Doki Hiring — вакансии и отклики",
-  description:
-    "Создайте вакансию, поделитесь ссылкой и получайте структурированные отклики. Кандидаты откликаются без регистрации.",
+// Корень домена doki.id переписывается сюда (см. middleware), поэтому
+// метаданные должны идти по локали, а не быть русскими для всех.
+const META: Record<Locale, { title: string; description: string }> = {
+  id: {
+    title: "Doki Hiring — lowongan dan lamaran",
+    description:
+      "Buat lowongan, bagikan tautan, dan terima lamaran yang tertata. Kandidat melamar tanpa perlu mendaftar.",
+  },
+  en: {
+    title: "Doki Hiring — vacancies and applications",
+    description:
+      "Create a vacancy, share the link, and receive structured applications. Candidates apply without registering.",
+  },
+  ru: {
+    title: "Doki Hiring — вакансии и отклики",
+    description:
+      "Создайте вакансию, поделитесь ссылкой и получайте структурированные отклики. Кандидаты откликаются без регистрации.",
+  },
+  uz: {
+    title: "Doki Hiring — vakansiya va arizalar",
+    description:
+      "Vakansiya yarating, havolani ulashing va tuzilgan arizalarni oling. Nomzodlar ro‘yxatdan o‘tmasdan ariza beradi.",
+  },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  return META[await getLocale()];
+}
 
 const M = {
   en: {
