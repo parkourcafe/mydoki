@@ -8,6 +8,9 @@ export const metadata = { robots: { index: false, follow: false } };
 
 const M = {
   en: {
+    failTitle: "Couldn't link this application",
+    failMismatch: "This application was submitted with a different email or phone number. Sign in with the contact you used when applying, then open this link again.",
+    failTaken: "This application is already linked to another account.",
     title: "Documents saved",
     copied: (n: number) => `${n} document(s) copied to your Doki vault.`,
     linkedOnly: "Your application is linked to your account. Documents will appear in your vault shortly.",
@@ -16,6 +19,9 @@ const M = {
     notify: "🔔 Notify me about the reply",
   },
   id: {
+    failTitle: "Lamaran tidak dapat ditautkan",
+    failMismatch: "Lamaran ini dikirim dengan email atau nomor yang berbeda. Masuk dengan kontak yang Anda pakai saat melamar, lalu buka tautan ini lagi.",
+    failTaken: "Lamaran ini sudah tertaut ke akun lain.",
     title: "Dokumen tersimpan",
     copied: (n: number) => `${n} dokumen disalin ke brankas Doki Anda.`,
     linkedOnly: "Lamaran Anda tertaut ke akun. Dokumen akan muncul di brankas sebentar lagi.",
@@ -24,6 +30,9 @@ const M = {
     notify: "🔔 Beri tahu saya soal balasan",
   },
   ru: {
+    failTitle: "Не удалось привязать отклик",
+    failMismatch: "Этот отклик отправлен с другого email или номера. Войдите под тем контактом, который указывали при отклике, и откройте ссылку снова.",
+    failTaken: "Этот отклик уже привязан к другому аккаунту.",
     title: "Документы сохранены",
     copied: (n: number) => `${n} документ(ов) скопировано в ваш vault Doki.`,
     linkedOnly: "Отклик привязан к аккаунту. Документы появятся в хранилище чуть позже.",
@@ -32,6 +41,9 @@ const M = {
     notify: "🔔 Уведомить об ответе",
   },
   uz: {
+    failTitle: "Arizani bog‘lab bo‘lmadi",
+    failMismatch: "Bu ariza boshqa email yoki raqam bilan yuborilgan. Ariza berishda ishlatgan kontakt bilan kiring va havolani qayta oching.",
+    failTaken: "Bu ariza allaqachon boshqa hisobga bog‘langan.",
     title: "Hujjatlar saqlandi",
     copied: (n: number) => `${n} ta hujjat Doki xotirangizga nusxalandi.`,
     linkedOnly: "Ariza akkauntingizga bog‘landi. Hujjatlar tez orada xotirada paydo bo‘ladi.",
@@ -59,12 +71,18 @@ export default async function ClaimPage({
       <div className="w-full max-w-md">
         <div className="card text-center">
           <div className="mb-2 text-4xl">{res.ok ? "📁" : "⛔"}</div>
-          <h1 className="text-lg font-semibold">{res.ok ? t.title : t.failed}</h1>
-          {res.ok && (
-            <p className="mt-1 text-sm text-slate-600">
-              {res.linkedOnly ? t.linkedOnly : t.copied(res.copied)}
-            </p>
-          )}
+          <h1 className="text-lg font-semibold">{res.ok ? t.title : t.failTitle}</h1>
+          <p className="mt-1 text-sm text-slate-600">
+            {res.ok
+              ? res.linkedOnly
+                ? t.linkedOnly
+                : t.copied(res.copied)
+              : res.reason === "identity_mismatch"
+                ? t.failMismatch
+                : res.reason === "already_claimed"
+                  ? t.failTaken
+                  : t.failed}
+          </p>
           <a href="/my" className="btn-primary mt-4 w-full">
             {t.openVault}
           </a>

@@ -7,6 +7,7 @@ import {
   requestEmployerVerification,
   confirmEmployerVerification,
 } from "@/app/employer/actions";
+import { supportWhatsappUrl, SUPPORT_EMAIL } from "@/lib/support";
 
 const M = {
   ru: {
@@ -27,8 +28,10 @@ const M = {
     errExpired: "Код истёк. Запросите новый.",
     errTooMany: "Слишком много попыток. Запросите новый код позже.",
     errNoEmail: "У профиля нет email — добавьте его в настройках компании.",
-    errNoKey: "На сайте не настроена отправка писем: нет RESEND_API_KEY в проекте doki.help. Добавьте ключ в Vercel и передеплойте.",
-    errSend: "Resend не принял письмо (вероятно, домен не подтверждён или адрес не разрешён в бесплатном режиме).",
+    errNoKey: "Не удалось отправить письмо с кодом — это на нашей стороне. Напишите нам, и мы подтвердим ваш аккаунт вручную.",
+    supportCta: "Написать в поддержку",
+    techDetails: "Технические детали",
+    errSend: "Письмо с кодом не доставлено. Проверьте адрес в настройках компании или напишите нам — подтвердим вручную.",
     errGeneric: "Что-то пошло не так. Попробуйте ещё раз.",
   },
   en: {
@@ -49,8 +52,10 @@ const M = {
     errExpired: "The code has expired. Request a new one.",
     errTooMany: "Too many attempts. Request a new code later.",
     errNoEmail: "Your profile has no email — add one in company settings.",
-    errNoKey: "Email sending isn't configured: RESEND_API_KEY is missing in the doki.help project. Add it in Vercel and redeploy.",
-    errSend: "Resend rejected the email (domain likely not verified, or recipient not allowed in free mode).",
+    errNoKey: "We couldn't send the code email — that's on our side. Message us and we'll verify your account manually.",
+    supportCta: "Contact support",
+    techDetails: "Technical details",
+    errSend: "The code email couldn't be delivered. Check the address in company settings, or message us and we'll verify manually.",
     errGeneric: "Something went wrong. Please try again.",
   },
   id: {
@@ -71,8 +76,10 @@ const M = {
     errExpired: "Kode kedaluwarsa. Minta yang baru.",
     errTooMany: "Terlalu banyak percobaan. Minta kode baru nanti.",
     errNoEmail: "Profil tak punya email — tambahkan di pengaturan perusahaan.",
-    errNoKey: "Pengiriman email belum diatur: RESEND_API_KEY tidak ada di proyek doki.help. Tambahkan di Vercel lalu redeploy.",
-    errSend: "Resend menolak email (domain mungkin belum diverifikasi, atau penerima tak diizinkan di mode gratis).",
+    errNoKey: "Kami tidak dapat mengirim email kode — ini dari sisi kami. Hubungi kami dan akun Anda akan kami verifikasi manual.",
+    supportCta: "Hubungi dukungan",
+    techDetails: "Detail teknis",
+    errSend: "Email kode tidak terkirim. Periksa alamat di pengaturan perusahaan, atau hubungi kami untuk verifikasi manual.",
     errGeneric: "Terjadi kesalahan. Coba lagi.",
   },
   uz: {
@@ -93,14 +100,20 @@ const M = {
     errExpired: "Kod muddati tugadi. Yangisini so‘rang.",
     errTooMany: "Urinishlar juda ko‘p. Keyinroq yangi kod so‘rang.",
     errNoEmail: "Profilda email yo‘q — kompaniya sozlamalarida qo‘shing.",
-    errNoKey: "Xat yuborish sozlanmagan: doki.help loyihasida RESEND_API_KEY yo‘q. Vercel'ga qo‘shing va qayta deploy qiling.",
-    errSend: "Resend xatni qabul qilmadi (domen tasdiqlanmagan yoki manzil bepul rejimda ruxsat etilmagan).",
+    errNoKey: "Kod bilan xat yuborib bo‘lmadi — bu bizning tomondan. Bizga yozing, hisobingizni qo‘lda tasdiqlaymiz.",
+    supportCta: "Qo‘llab-quvvatlashga yozish",
+    techDetails: "Texnik tafsilotlar",
+    errSend: "Kod bilan xat yetkazilmadi. Kompaniya sozlamalaridagi manzilni tekshiring yoki bizga yozing — qo‘lda tasdiqlaymiz.",
     errGeneric: "Xatolik yuz berdi. Qayta urining.",
   },
 } as const;
 
 export default function EmployerVerification({ locale }: { locale: Locale }) {
   const t = M[locale];
+  // WhatsApp, если номер задан в env; иначе — почта поддержки.
+  const supportUrl =
+    supportWhatsappUrl("Halo! Saya tidak menerima kode verifikasi doki.help.") ??
+    `mailto:${SUPPORT_EMAIL}`;
   const router = useRouter();
   const [stage, setStage] = useState<"start" | "code">("start");
   const [sentTo, setSentTo] = useState("");
@@ -210,11 +223,30 @@ export default function EmployerVerification({ locale }: { locale: Locale }) {
           </div>
         )}
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        {error && (
+          <div className="space-y-2">
+            <p className="text-sm text-red-600">{error}</p>
+            {supportUrl && (
+              <a
+                href={supportUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block text-sm font-medium text-brand-600 hover:underline"
+              >
+                💬 {t.supportCta}
+              </a>
+            )}
+          </div>
+        )}
+        {/* Ответ провайдера нужен только для диагностики — прячем под
+            раскрытие, чтобы работодатель не упирался в служебный текст. */}
         {detail && (
-          <p className="break-words rounded bg-slate-50 px-2 py-1 font-mono text-[11px] text-slate-500">
-            Resend: {detail}
-          </p>
+          <details className="text-[11px] text-slate-400">
+            <summary className="cursor-pointer">{t.techDetails}</summary>
+            <p className="mt-1 break-words rounded bg-slate-50 px-2 py-1 font-mono text-slate-500">
+              {detail}
+            </p>
+          </details>
         )}
       </div>
     </div>

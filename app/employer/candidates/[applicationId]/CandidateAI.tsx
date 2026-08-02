@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import { analyzeCandidate, reviewAiRun } from "@/app/employer/actions";
@@ -17,6 +17,7 @@ export type AiRunView = {
 
 const M = {
   ru: {
+    err: "Не удалось выполнить. Попробуйте ещё раз.",
     title: "AI-анализ",
     hint: "AI-анализ требует проверки человеком и не влияет на решение автоматически.",
     analyze: "Проанализировать",
@@ -37,6 +38,7 @@ const M = {
     empty: "Нет подтверждённых пунктов.",
   },
   en: {
+    err: "That didn't go through. Please try again.",
     title: "AI analysis",
     hint: "AI analysis requires human review and does not affect the decision automatically.",
     analyze: "Analyze",
@@ -57,6 +59,7 @@ const M = {
     empty: "No supported items.",
   },
   uz: {
+    err: "Bajarilmadi. Qayta urinib ko‘ring.",
     title: "AI tahlil",
     hint: "AI tahlil inson tekshiruvini talab qiladi va qarorga avtomatik taʼsir qilmaydi.",
     analyze: "Tahlil qilish",
@@ -77,6 +80,7 @@ const M = {
     empty: "Tasdiqlangan bandlar yoʻq.",
   },
   id: {
+    err: "Tidak berhasil. Silakan coba lagi.",
     title: "Analisis AI",
     hint: "Analisis AI memerlukan tinjauan manusia dan tidak memengaruhi keputusan secara otomatis.",
     analyze: "Analisis",
@@ -113,15 +117,32 @@ export default function CandidateAI({
   const router = useRouter();
   const [pending, start] = useTransition();
 
+  const [err, setErr] = useState(false);
+
+  // Действия могут и бросить, и вернуть { error } — раньше оба случая
+  // проглатывались, и кнопка выглядела сработавшей.
   function run(fn: () => Promise<unknown>) {
     start(async () => {
-      await fn();
+      setErr(false);
+      try {
+        const res = await fn();
+        if (res && typeof res === "object" && "error" in res && res.error) {
+          setErr(true);
+          return;
+        }
+      } catch {
+        setErr(true);
+        return;
+      }
       router.refresh();
     });
   }
 
   return (
     <section className="card space-y-4">
+      {err && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{t.err}</p>
+      )}
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
           {t.title}

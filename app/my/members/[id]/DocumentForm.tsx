@@ -32,6 +32,7 @@ async function sha256Hex(file: File): Promise<string> {
 
 const M = {
   ru: {
+    needOwnerTitle: "Укажите владельца документа и название.",
     pickFile: "📎 Выбрать файл",
     photo: "📷 Сфотографировать",
     recognizing: "Распознаю…",
@@ -81,6 +82,7 @@ const M = {
     mb: "МБ",
   },
   en: {
+    needOwnerTitle: "Choose the document owner and enter a title.",
     pickFile: "📎 Choose file",
     photo: "📷 Take a photo",
     recognizing: "Recognizing…",
@@ -130,6 +132,7 @@ const M = {
     mb: "MB",
   },
   uz: {
+    needOwnerTitle: "Hujjat egasini tanlang va nomini kiriting.",
     pickFile: "📎 Fayl tanlash",
     photo: "📷 Suratga olish",
     recognizing: "Aniqlanmoqda…",
@@ -179,6 +182,7 @@ const M = {
     mb: "MB",
   },
   id: {
+    needOwnerTitle: "Pilih pemilik dokumen dan isi judulnya.",
     pickFile: "📎 Pilih berkas",
     photo: "📷 Ambil foto",
     recognizing: "Mengenali…",
@@ -473,7 +477,9 @@ export default function DocumentForm({
     } catch (err) {
       const m = err instanceof Error ? err.message : "";
       setSaveErr(
-        m === "QUOTA_EXCEEDED"
+        m === "OWNER_AND_TITLE_REQUIRED"
+          ? t.needOwnerTitle
+          : m === "QUOTA_EXCEEDED"
           ? t.quotaExceeded
           : m === "EMAIL_NOT_VERIFIED"
             ? t.notVerified

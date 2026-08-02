@@ -23,6 +23,7 @@ import {
 
 const M = {
   ru: {
+    err: "Не удалось выполнить. Попробуйте ещё раз.",
     title: "Онбординг",
     intro: "Чек-лист оформления и контрольные точки испытательного периода (7/30/60/90 дней).",
     start: "Начать онбординг",
@@ -43,6 +44,7 @@ const M = {
     st: { done: "готово", overdue: "просрочено", soon: "скоро", upcoming: "впереди", none: "" } as Record<CheckpointState, string>,
   },
   en: {
+    err: "That didn't go through. Please try again.",
     title: "Onboarding",
     intro: "Onboarding checklist and probation check-ins (7/30/60/90 days).",
     start: "Start onboarding",
@@ -63,6 +65,7 @@ const M = {
     st: { done: "done", overdue: "overdue", soon: "soon", upcoming: "upcoming", none: "" } as Record<CheckpointState, string>,
   },
   id: {
+    err: "Tidak berhasil. Silakan coba lagi.",
     title: "Onboarding",
     intro: "Daftar onboarding dan tinjauan masa percobaan (7/30/60/90 hari).",
     start: "Mulai onboarding",
@@ -83,6 +86,7 @@ const M = {
     st: { done: "selesai", overdue: "terlambat", soon: "segera", upcoming: "mendatang", none: "" } as Record<CheckpointState, string>,
   },
   uz: {
+    err: "Bajarilmadi. Qayta urinib ko‘ring.",
     title: "Onboarding",
     intro: "Rasmiylashtirish roʻyxati va sinov davri nazoratlari (7/30/60/90 kun).",
     start: "Onboardingni boshlash",
@@ -131,9 +135,23 @@ export default function OnboardingManager({
   const [newTask, setNewTask] = useState("");
   const [notes, setNotes] = useState<Record<string, string>>({});
 
+  const [err, setErr] = useState(false);
+
+  // Действия могут и бросить, и вернуть { error } — раньше оба случая
+  // проглатывались, и кнопка выглядела сработавшей.
   function run(fn: () => Promise<unknown>) {
     start(async () => {
-      await fn();
+      setErr(false);
+      try {
+        const res = await fn();
+        if (res && typeof res === "object" && "error" in res && res.error) {
+          setErr(true);
+          return;
+        }
+      } catch {
+        setErr(true);
+        return;
+      }
       router.refresh();
     });
   }
@@ -166,6 +184,9 @@ export default function OnboardingManager({
 
   return (
     <section className="card space-y-4">
+      {err && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{t.err}</p>
+      )}
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
           {t.title}

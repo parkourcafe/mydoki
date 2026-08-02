@@ -8,13 +8,19 @@ import {
   rejectApplication,
   addApplicationNote,
   requestApplicationDocuments,
+  setApplicationStatus,
   signApplicationDoc,
+  revertRejection,
 } from "@/app/employer/actions";
 
 type Doc = { type: string; label: string; file_name: string; path: string };
 
 const M = {
   ru: {
+    boardStatus: "Статус в отборе", shortlist: "В шортлист", markHired: "Принят на работу", confirmHire: "Отметить кандидата как принятого на работу?",
+    sNew: "Новый", sViewed: "Просмотрен", sShortlisted: "Отобран", sRejected: "Отклонён", sHired: "Принят",
+    undo: "Вернуть", undone: "Отклонение отменено.", undoExpired: "Окно отмены истекло.",
+    err: "Не удалось выполнить. Попробуйте ещё раз.",
     decision: "Решение",
     moveStage: "Этап воронки",
     documents: "Документы",
@@ -33,6 +39,10 @@ const M = {
     stageNames: { new: "Новый", review: "Рассмотрение", interview: "Интервью", assignment: "Задание", decision: "Решение" } as Record<string, string>,
   },
   en: {
+    boardStatus: "Selection status", shortlist: "Shortlist", markHired: "Mark as hired", confirmHire: "Mark this candidate as hired?",
+    sNew: "New", sViewed: "Viewed", sShortlisted: "Shortlisted", sRejected: "Rejected", sHired: "Hired",
+    undo: "Undo", undone: "Rejection reverted.", undoExpired: "Undo window has expired.",
+    err: "That didn't go through. Please try again.",
     decision: "Decision",
     moveStage: "Funnel stage",
     documents: "Documents",
@@ -51,6 +61,10 @@ const M = {
     stageNames: { new: "New", review: "Review", interview: "Interview", assignment: "Assignment", decision: "Decision" } as Record<string, string>,
   },
   uz: {
+    boardStatus: "Tanlov holati", shortlist: "Tanlash", markHired: "Ishga qabul qilindi", confirmHire: "Nomzodni ishga qabul qilingan deb belgilaysizmi?",
+    sNew: "Yangi", sViewed: "Ko‘rilgan", sShortlisted: "Tanlangan", sRejected: "Rad etilgan", sHired: "Qabul qilingan",
+    undo: "Qaytarish", undone: "Rad etish bekor qilindi.", undoExpired: "Bekor qilish vaqti tugadi.",
+    err: "Bajarilmadi. Qayta urinib ko‘ring.",
     decision: "Qaror",
     moveStage: "Voronka bosqichi",
     documents: "Hujjatlar",
@@ -69,6 +83,10 @@ const M = {
     stageNames: { new: "Yangi", review: "Koʻrib chiqish", interview: "Suhbat", assignment: "Topshiriq", decision: "Qaror" } as Record<string, string>,
   },
   id: {
+    boardStatus: "Status seleksi", shortlist: "Pilih", markHired: "Tandai diterima", confirmHire: "Tandai kandidat ini sebagai diterima?",
+    sNew: "Baru", sViewed: "Dilihat", sShortlisted: "Terpilih", sRejected: "Ditolak", sHired: "Diterima",
+    undo: "Batalkan", undone: "Penolakan dibatalkan.", undoExpired: "Waktu pembatalan sudah habis.",
+    err: "Tidak berhasil. Silakan coba lagi.",
     decision: "Keputusan",
     moveStage: "Tahap corong",
     documents: "Dokumen",
@@ -102,6 +120,7 @@ export default function CandidateActions({
   stages,
   currentStage,
   state,
+  status,
   docs,
   consentRevoked,
 }: {
@@ -110,6 +129,7 @@ export default function CandidateActions({
   vacancyId: string;
   stages: string[];
   currentStage: string;
+  status: string;
   state: "active" | "hired" | "rejected" | "withdrawn";
   docs: Doc[];
   consentRevoked: boolean;
@@ -123,15 +143,82 @@ export default function CandidateActions({
 
   const active = state === "active";
 
+  const [err, setErr] = useState(false);
+  // То же окно отмены, что на доске откликов (revert_last_rejection в БД).
+  const UNDO_MS = 10 * 60 * 1000;
+  const [rejectedAt, setRejectedAt] = useState<number | null>(null);
+  const [undoMsg, setUndoMsg] = useState<string | null>(null);
+
+  // Действия могут и бросить, и вернуть { error } — раньше оба случая
+  // проглатывались, и кнопка выглядела сработавшей.
   function run(fn: () => Promise<unknown>) {
     start(async () => {
-      await fn();
+      setErr(false);
+      try {
+        const res = await fn();
+        if (res && typeof res === "object" && "error" in res && res.error) {
+          setErr(true);
+          return;
+        }
+      } catch {
+        setErr(true);
+        return;
+      }
       router.refresh();
     });
   }
 
   return (
     <section className="card space-y-5">
+      {err && (
+        <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{t.err}</p>
+      )}
+
+      <div className="rounded-lg border border-slate-200 px-3 py-2">
+        <p className="text-xs uppercase tracking-wide text-slate-400">
+          {t.boardStatus}
+        </p>
+        <p className="mt-0.5 text-sm font-medium text-slate-700">
+          {status === "hired"
+            ? t.sHired
+            : status === "rejected"
+              ? t.sRejected
+              : status === "shortlisted"
+                ? t.sShortlisted
+                : status === "viewed"
+                  ? t.sViewed
+                  : t.sNew}
+        </p>
+        {active && (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {status !== "shortlisted" && (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() =>
+                  run(() =>
+                    setApplicationStatus(applicationId, vacancyId, "shortlisted")
+                  )
+                }
+                className="btn-ghost disabled:opacity-50"
+              >
+                ★ {t.shortlist}
+              </button>
+            )}
+            <button
+              type="button"
+              disabled={pending}
+              onClick={() => {
+                if (!window.confirm(t.confirmHire)) return;
+                run(() => setApplicationStatus(applicationId, vacancyId, "hired"));
+              }}
+              className="btn-ghost disabled:opacity-50"
+            >
+              ✓ {t.markHired}
+            </button>
+          </div>
+        )}
+      </div>
       <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
         {t.decision}
       </h2>
@@ -207,14 +294,14 @@ export default function CandidateActions({
             />
             <button
               type="button"
-              disabled={pending}
+              disabled={pending || !reqNote.trim()}
               onClick={() =>
                 run(async () => {
                   await requestApplicationDocuments(applicationId, vacancyId, reqNote);
                   setReqNote("");
                 })
               }
-              className="btn-ghost mt-2"
+              className="btn-ghost mt-2 disabled:opacity-50"
             >
               {t.request}
             </button>
@@ -259,12 +346,41 @@ export default function CandidateActions({
               type="button"
               disabled={pending || !reason.trim()}
               onClick={() =>
-                run(() => rejectApplication(applicationId, vacancyId, reason))
+                run(async () => {
+                  const res = await rejectApplication(applicationId, vacancyId, reason);
+                  setRejectedAt(Date.now());
+                  setUndoMsg(null);
+                  return res;
+                })
               }
               className="btn-danger mt-2"
             >
               {t.rejectBtn}
             </button>
+            {rejectedAt !== null && Date.now() - rejectedAt < UNDO_MS && (
+              <button
+                type="button"
+                disabled={pending}
+                onClick={() =>
+                  run(async () => {
+                    const r = await revertRejection(applicationId, vacancyId);
+                    if (!r.ok) {
+                      setUndoMsg(r.error === "expired" ? t.undoExpired : t.err);
+                      return { error: true };
+                    }
+                    setRejectedAt(null);
+                    setUndoMsg(t.undone);
+                    return r;
+                  })
+                }
+                className="btn-ghost ml-2 mt-2"
+              >
+                ↩ {t.undo}
+              </button>
+            )}
+            {undoMsg && (
+              <p className="mt-2 text-sm text-slate-600">{undoMsg}</p>
+            )}
           </div>
         </>
       )}

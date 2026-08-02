@@ -28,6 +28,9 @@ type StatusData = {
 
 const M = {
   en: {
+    saveTitle: "Keep these documents",
+    saveText: "Create a free account and this application — with the documents you uploaded — is saved to your own vault for next time.",
+    saveCta: "Save to my account",
     notFoundTitle: "Application not found",
     notFoundText: "This status link is invalid or the application was deleted.",
     yourApplication: "Your application",
@@ -43,6 +46,9 @@ const M = {
     missingList: "Still needed:",
   },
   id: {
+    saveTitle: "Simpan dokumen ini",
+    saveText: "Buat akun gratis dan lamaran ini — beserta dokumen yang Anda unggah — tersimpan di brankas Anda sendiri untuk lamaran berikutnya.",
+    saveCta: "Simpan ke akun saya",
     notFoundTitle: "Lamaran tidak ditemukan",
     notFoundText: "Tautan status ini tidak valid atau lamaran telah dihapus.",
     yourApplication: "Lamaran Anda",
@@ -58,6 +64,9 @@ const M = {
     missingList: "Masih dibutuhkan:",
   },
   ru: {
+    saveTitle: "Сохранить эти документы",
+    saveText: "Заведите бесплатный аккаунт — отклик и загруженные документы сохранятся в вашем сейфе для следующего раза.",
+    saveCta: "Сохранить в свой аккаунт",
     notFoundTitle: "Отклик не найден",
     notFoundText: "Ссылка недействительна или отклик был удалён.",
     yourApplication: "Ваш отклик",
@@ -73,6 +82,9 @@ const M = {
     missingList: "Ещё нужно:",
   },
   uz: {
+    saveTitle: "Bu hujjatlarni saqlang",
+    saveText: "Bepul hisob yarating — bu ariza va yuklagan hujjatlaringiz keyingi safar uchun o‘z seyfingizda saqlanadi.",
+    saveCta: "Hisobimga saqlash",
     notFoundTitle: "Ariza topilmadi",
     notFoundText: "Havola yaroqsiz yoki ariza o‘chirilgan.",
     yourApplication: "Arizangiz",
@@ -252,6 +264,14 @@ export default async function StatusPage({
             ))}
           </ol>
         </div>
+      </div>
+
+      <div className="card mt-4">
+        <p className="text-sm font-medium text-slate-800">{t.saveTitle}</p>
+        <p className="mt-1 text-sm text-slate-500">{t.saveText}</p>
+        <Link href={`/apply/claim/${token}`} className="btn-primary mt-3 inline-block">
+          {t.saveCta}
+        </Link>
       </div>
 
       <footer className="mt-6 text-center text-xs text-slate-400">

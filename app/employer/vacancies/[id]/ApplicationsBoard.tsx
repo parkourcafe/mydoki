@@ -132,7 +132,7 @@ function VideoIntro({ path, label }: { path: string; label: string }) {
           disabled={loading}
           className="btn border border-brand-200 bg-brand-50 text-brand-700 disabled:opacity-50"
         >
-          {loading ? "…" : "▶ Video"}
+          {loading ? "…" : `▶ ${label}`}
         </button>
       )}
     </div>

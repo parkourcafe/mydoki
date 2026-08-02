@@ -335,9 +335,16 @@ export async function submitApplication(
  * поэтому копирование делаем admin-клиентом; запись в vault — сессией юзера.
  * Без service_role связь ставится, копирование пропускается.
  */
+export type ClaimReason = "identity_mismatch" | "already_claimed" | "not_found";
+
 export async function claimApplication(
   token: string
-): Promise<{ ok: boolean; copied: number; linkedOnly?: boolean }> {
+): Promise<{
+  ok: boolean;
+  copied: number;
+  linkedOnly?: boolean;
+  reason?: ClaimReason;
+}> {
   const supabase = await getSupabaseServer();
   const {
     data: { user },
@@ -345,8 +352,16 @@ export async function claimApplication(
   if (!user) return { ok: false, copied: 0 };
 
   const { data: claim } = await supabase.rpc("claim_application", { p_token: token });
-  const c = (claim ?? {}) as { ok?: boolean; application_id?: string };
-  if (!c.ok || !c.application_id) return { ok: false, copied: 0 };
+  const c = (claim ?? {}) as {
+    ok?: boolean;
+    application_id?: string;
+    reason?: ClaimReason;
+  };
+  // Причину отказа показываем кандидату: чаще всего он вошёл под другим
+  // контактом, и без подсказки это выглядит как поломка.
+  if (!c.ok || !c.application_id) {
+    return { ok: false, copied: 0, reason: c.reason ?? "not_found" };
+  }
 
   const admin = getSupabaseAdmin();
   if (!admin) return { ok: true, copied: 0, linkedOnly: true };

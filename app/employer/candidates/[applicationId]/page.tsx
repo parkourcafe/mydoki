@@ -345,6 +345,8 @@ export default async function CandidatePage({
           applicationId={app.id}
           defaultPosition={vacancy.title}
           hasAccount={!!app.user_id}
+          fullName={app.full_name}
+          whatsapp={app.whatsapp}
           existingEmploymentId={existingEmploymentId}
         />
       )}
@@ -355,6 +357,7 @@ export default async function CandidatePage({
         vacancyId={vacancy.id}
         stages={stages}
         currentStage={app.stage ?? "new"}
+        status={app.status ?? "new"}
         state={(app.state ?? "active") as "active" | "hired" | "rejected" | "withdrawn"}
         docs={docs}
         consentRevoked={consentRevoked}
