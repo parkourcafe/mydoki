@@ -100,24 +100,27 @@
 иерархия пустая (`parent_intent` = null у всех), `cannibalization_risk` = "Low"
 у всех 268 при фактическом наложении 32:1.
 
+**Статус:** A и B реализованы (см. отметки ✅ ниже). Осталось вне кода — вычитка
+BI носителем для новых страниц.
+
 **A. Новые страницы (запрос достаточно отличается от уже сидящих):**
 
 | Запрос (BI) | Интенты | Реестр | Slug | Почему отдельная страница |
 |---|---|---|---|---|
-| ijazah dan transkrip untuk lamaran kerja | ORG_059, ORG_060, TYPES_112 | `lib/checklists.ts` | `ijazah-transkrip-checklist` | Легализир ижазы/транскрипта — самостоятельная и очень частая боль индонезийского найма, в текущих чек-листах не раскрыта |
-| privasi dokumen kandidat / siapa yang melihat KTP saya | ORG_065, SAFE_074, SAFE_080, SAFE_082 | `lib/landings.ts` | `candidate-document-privacy` | Закрывает боль кандидата из §1 («кто увидит мой KTP»), питает виральную петлю; сейчас страницы нет |
-| dokumen untuk permohonan cepat | SPEED_096, DISC_028, DISC_029 | `lib/comparisons.ts` или checklist | `fast-document-submission` | Ценность «быстро подать полный пакет» — угол кандидата, а не HR; решить формат при реализации |
+| ijazah dan transkrip untuk lamaran kerja | ORG_059, ORG_060, TYPES_112 | `lib/checklists.ts` | `ijazah-transkrip-checklist` ✅ | Легализир ижазы/транскрипта — самостоятельная и очень частая боль индонезийского найма, в текущих чек-листах не раскрыта |
+| privasi dokumen kandidat / siapa yang melihat KTP saya | ORG_065, SAFE_074, SAFE_080, SAFE_082 | `lib/landings.ts` | `candidate-document-privacy` ✅ | Закрывает боль кандидата из §1 («кто увидит мой KTP»), питает виральную петлю; сейчас страницы нет |
+| dokumen untuk permohonan cepat | SPEED_096, DISC_028, DISC_029 | `lib/checklists.ts` | `fast-document-submission` ✅ | Ценность «быстро подать полный пакет» — угол кандидата, а не HR; реализовано чек-листом |
 
 **B. Дозаливка в существующие страницы (FAQ/секция, не новый URL — иначе каннибализация):**
 
 | Запрос (BI) | Интенты | Куда добавить |
 |---|---|---|
-| dokumen kadaluarsa kapan diperbarui · reminder dokumen kadaluarsa · jadwal perpanjangan · masa berlaku dokumen | TRACK_097–099, ORG_045 | `document-expiry-reminder` + HR-угол (сроки SKCK/KITAS) в `skck-checklist`, `kitas-work-permit-checklist` |
-| dokumen identitas apa saja | TYPES_100 | FAQ в `candidate-documents-requested-checklist` |
-| persyaratan dokumen administrasi · dokumen sah dan resmi | COMPLY_018, COMPLY_019 | FAQ в `employee-onboarding-11-checklist` (описательно + «cek syarat resmi») |
-| perjanjian kontrak · dokumen legal dan kontrak | ORG_062, TYPES_105 | FAQ в `employee-onboarding-11-checklist` (трудовой договор в онбординге) |
-| paspor dan visa dokumen | ORG_063 | FAQ в `kitas-work-permit-checklist` / `/for/visa-agents` |
-| fotokopi digital dokumen | ORG_048 | FAQ в `/candidate-document-collection` (скан с телефона вместо фотокопии) |
+| ✅ dokumen kadaluarsa kapan diperbarui · reminder dokumen kadaluarsa · jadwal perpanjangan · masa berlaku dokumen | TRACK_097–099, ORG_045 | `document-expiry-reminder` + HR-угол (сроки SKCK/KITAS) в `skck-checklist`, `kitas-work-permit-checklist` |
+| ✅ dokumen identitas apa saja | TYPES_100 | FAQ в `candidate-documents-requested-checklist` |
+| ✅ persyaratan dokumen administrasi · dokumen sah dan resmi | COMPLY_018, COMPLY_019 | FAQ в `employee-onboarding-11-checklist` (описательно + «cek syarat resmi») |
+| ✅ perjanjian kontrak · dokumen legal dan kontrak | ORG_062, TYPES_105 | FAQ в `employee-onboarding-11-checklist` (трудовой договор в онбординге) |
+| ✅ paspor dan visa dokumen | ORG_063 | FAQ в `kitas-work-permit-checklist` / `/for/visa-agents` |
+| ✅ fotokopi digital dokumen | ORG_048 | FAQ в `/candidate-document-collection` (скан с телефона вместо фотокопии) |
 
 **C. Исключено намеренно:**
 
