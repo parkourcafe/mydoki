@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
@@ -120,6 +121,7 @@ export default async function EmployerSettingsPage() {
   const locale = await getLocale();
   const t = M[locale];
   const user = await getUser();
+  if (!user) redirect("/login?next=/employer/settings");
   const supabase = await getSupabaseServer();
 
   const { data: prof } = await supabase
@@ -127,7 +129,7 @@ export default async function EmployerSettingsPage() {
     .select(
       "id, company_name, country, contact_whatsapp, contact_email, retention_months, default_consent_text"
     )
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .maybeSingle();
   const profile = prof as Profile | null;
 
@@ -238,8 +240,8 @@ export default async function EmployerSettingsPage() {
           {members.map((m) => (
             <li key={m.user_id} className="flex items-center justify-between py-2">
               <span>
-                {m.user_id === user!.id ? user!.email : m.user_id.slice(0, 8)}
-                {m.user_id === user!.id ? ` (${t.you})` : ""}
+                {m.user_id === user.id ? user.email : m.user_id.slice(0, 8)}
+                {m.user_id === user.id ? ` (${t.you})` : ""}
               </span>
               <span className="text-xs text-slate-500">
                 {m.role === "owner" ? t.owner : t.recruiter}
