@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
@@ -81,13 +81,14 @@ export default async function EmploymentDetailPage({
   const t = M[locale];
   const { id } = await params;
   const user = await getUser();
+  if (!user) redirect("/login");
   const supabase = await getSupabaseServer();
 
   const { data } = await supabase
     .from("employments")
     .select("*")
     .eq("id", id)
-    .eq("employee_user_id", user!.id)
+    .eq("employee_user_id", user.id)
     .maybeSingle();
   const emp = data as Employment | null;
   if (!emp) notFound();

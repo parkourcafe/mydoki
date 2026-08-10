@@ -178,6 +178,7 @@ export default async function CandidatePage({
   const t = M[locale];
   const { applicationId } = await params;
   const user = await getUser();
+  if (!user) redirect("/login");
   const supabase = await getSupabaseServer();
 
   // Гейт по владельцу: у пользователя есть employer_profile, и вакансия
@@ -186,7 +187,7 @@ export default async function CandidatePage({
   const { data: profile } = await supabase
     .from("employer_profiles")
     .select("id")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .maybeSingle();
   if (!profile) redirect("/employer");
 

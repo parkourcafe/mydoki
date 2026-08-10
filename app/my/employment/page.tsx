@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale, type Locale } from "@/lib/i18n";
@@ -53,12 +54,13 @@ export default async function MyEmploymentPage() {
   const locale: Locale = await getLocale();
   const t = M[locale];
   const user = await getUser();
+  if (!user) redirect("/login");
   const supabase = await getSupabaseServer();
 
   const { data } = await supabase
     .from("employments")
     .select("*")
-    .eq("employee_user_id", user!.id)
+    .eq("employee_user_id", user.id)
     .order("start_date", { ascending: false, nullsFirst: false })
     .order("created_at", { ascending: false });
   const items = (data ?? []) as Employment[];

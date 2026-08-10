@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale, type Locale } from "@/lib/i18n";
@@ -108,13 +109,14 @@ export default async function CareerTimelinePage() {
   const locale: Locale = await getLocale();
   const t = M[locale];
   const user = await getUser();
+  if (!user) redirect("/login");
   const supabase = await getSupabaseServer();
   const today = new Date().toISOString().slice(0, 10);
 
   const { data } = await supabase
     .from("employments")
     .select("*")
-    .eq("employee_user_id", user!.id);
+    .eq("employee_user_id", user.id);
   const items = sortByStartDesc((data ?? []) as Employment[]);
   const { current, archive } = splitCurrentArchive(items);
   const totalMonths = totalExperienceMonths(items, today);
