@@ -53,7 +53,7 @@ export function checksum(value: unknown): string {
 // ---------------------------- Версия профиля --------------------------
 
 /** Поля, образующие неизменяемую версию профессионального профиля. */
-const PROFILE_VERSION_FIELDS: (keyof CandidatePassport)[] = [
+export const PROFILE_SNAPSHOT_FIELDS: (keyof CandidatePassport)[] = [
   "profession",
   "role_taxonomy_code",
   "role_free_text",
@@ -92,7 +92,7 @@ export function buildProfileVersion(
   createdAt: string,
 ): ProfileVersion {
   const fields: Partial<CandidatePassport> = {};
-  for (const key of PROFILE_VERSION_FIELDS) {
+  for (const key of PROFILE_SNAPSHOT_FIELDS) {
     (fields as Record<string, unknown>)[key] = passport[key];
   }
   // Версия профиля не содержит ни балла, ни истории реакций на приглашения.

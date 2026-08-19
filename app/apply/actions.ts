@@ -16,7 +16,10 @@ import {
   normalizeVisibilityMode,
   type VisibilityPolicy,
 } from "@/lib/passportVisibility";
-import { buildApplicationSnapshot } from "@/lib/passportSnapshot";
+import {
+  PROFILE_SNAPSHOT_FIELDS,
+  buildApplicationSnapshot,
+} from "@/lib/passportSnapshot";
 
 // ---------------------------- Report ----------------------------------
 
@@ -406,6 +409,12 @@ async function recordApplicationSnapshot(input: {
       }
     : defaultVisibilityPolicy();
 
+  // Поля, скрытые кандидатом в настройках видимости, не попадают в снимок:
+  // работодатель читает снимок отклика, а field-level скрытие действует и здесь.
+  const shared = PROFILE_SNAPSHOT_FIELDS.filter(
+    (field) => !policy.hidden_fields.includes(field),
+  );
+
   const snapshot = buildApplicationSnapshot({
     passport,
     criteria,
@@ -420,7 +429,7 @@ async function recordApplicationSnapshot(input: {
       : null,
     policy,
     reveal_level: "shared",
-    shared_fields: [],
+    shared_fields: shared,
     timestamp: now,
   });
 

@@ -10,7 +10,9 @@
 --   5. после принятия появляется ограниченный профиль без контактов;
 --   6. `Share & apply` создаёт отклик, разрешение и неизменяемый снимок;
 --   7. повторный `Share & apply` не плодит отклики и не переписывает снимок;
---   8. отказ не оставляет следа в профиле кандидата.
+--   8. отказ не оставляет следа в профиле кандидата;
+--   9. объяснение по критериям в снимок пишет БД из match_assessments,
+--      а не кандидат (подделать «покрытие требований» нельзя).
 
 begin;
 
@@ -36,7 +38,9 @@ values ('55555555-5555-5555-5555-555555555555', 'Sari Dewi', '+62811111111',
         'open', 14, '["hybrid"]'::jsonb, 'Собрала операционную команду с нуля',
         'ready', now());
 
-select set_profile_visibility('confidential_pool', true, '[]'::jsonb, '[]'::jsonb);
+-- Кандидат прячет зарплатные ожидания на уровне поля.
+select set_profile_visibility('confidential_pool', true, '[]'::jsonb,
+  '["salary_expectation"]'::jsonb);
 select grant_purpose_authorization(
   'talent_pool_discovery', 'consent', 'talent-pool-2026-08',
   '["profession","seniority","current_location"]'::jsonb,
@@ -84,6 +88,10 @@ select set_config('test.invite',
     'Расскажем про роль', null, null) ->> 'invite_id'), true);
 
 -- 3–4. До принятия знакомства профиля нет, идентификаторов нет.
+-- Прямое чтение таблицы приглашений работодателю недоступно: user_id
+-- кандидата не должен утекать через PostgREST.
+select count(*) as employer_direct_table_reads from opportunity_invites; -- ожидается 0
+
 select
   (get_employer_invites() -> 0 ->> 'state')        as state,        -- ожидается sent
   (get_employer_invites() -> 0 ->> 'blind')        as blind,        -- ожидается true
@@ -105,6 +113,10 @@ select
   (get_employer_invites() -> 0 ->> 'state')                    as state_after,  -- accepted
   (get_employer_invites() -> 0 -> 'profile' ->> 'profession')  as sees_role,    -- Operations manager
   (get_employer_invites() -> 0 -> 'profile' ? 'contact')       as sees_contact, -- ожидается f
+  -- поле скрыто кандидатом → не выдаётся даже внутри разрешённого уровня
+  (get_employer_invites() -> 0 -> 'profile' ? 'salary_expectation') as sees_hidden_salary, -- f
+  -- вне scope гранта: кандидат передал только profession/seniority/location/languages
+  (get_employer_invites() -> 0 -> 'profile' ? 'key_achievements')   as sees_out_of_scope,  -- f
   (get_employer_invites()::text like '%Sari Dewi%')            as leaks_name;   -- ожидается f
 
 -- 6. `Share & apply` создаёт отклик, разрешение и снимок.
@@ -118,7 +130,6 @@ select set_config('test.app',
      'application-2026-08',
      '{"fields":{"profession":"Operations manager"}}'::jsonb,
      '{"hard":{"location":"Bali"}}'::jsonb,
-     '{"criteria":[],"coverage":{}}'::jsonb,
      '{"mode":"confidential_pool","reveal_level":"shared"}'::jsonb,
      'checksum-1') ->> 'application_id'), true);
 
@@ -139,7 +150,7 @@ select share_and_apply(
   current_setting('test.invite')::uuid,
   '["profession"]'::jsonb,
   'Повторная попытка.', 'application-2026-08',
-  '{"fields":{"profession":"ДРУГОЕ"}}'::jsonb, '{}'::jsonb, null,
+  '{"fields":{"profession":"ДРУГОЕ"}}'::jsonb, '{}'::jsonb,
   '{"mode":"confidential_pool"}'::jsonb, 'checksum-2');
 
 select

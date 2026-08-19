@@ -143,7 +143,8 @@ export async function shareAndApply(input: {
     p_notice_version: input.notice_version,
     p_profile: snapshot.candidate_profile_snapshot,
     p_requirements: snapshot.vacancy_requirements_snapshot,
-    p_match_explanation: snapshot.match_explanation_snapshot,
+    // Объяснение по критериям в снимок пишет сама RPC — из match_assessments,
+    // куда его записал серверный код Doki. Клиентское значение не принимается.
     p_visibility_state: snapshot.visibility_state_snapshot,
     p_checksum: snapshot.checksum,
   });

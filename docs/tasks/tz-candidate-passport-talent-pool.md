@@ -247,8 +247,14 @@ CV можно приложить, но интерфейс прямо говор�
 
 Границу «личность не раскрывается» держит БД: `talent_pool_candidates` и
 `get_employer_invites` физически не возвращают имя, контакты, CV, ссылки и
-`user_id`; работодатель оперирует псевдонимом `ref`. Field-level скрытие
-применяется в SQL (вычитание ключей) и повторно в TS-проекции.
+`user_id`; работодатель оперирует псевдонимом `ref`. Прямого SELECT на
+`opportunity_invites` у работодателя нет (иначе `user_id` кандидата утёк бы
+через PostgREST до принятия знакомства) — только RPC.
+
+Field-level скрытие применяется в SQL: `talent_pool_candidates` вычитает
+`hidden_fields` из выдачи пула, `private.invite_profile()` — из профиля по
+принятому знакомству, и там же применяется `scope_fields` гранта. Снимок
+обычного отклика тоже собирается без скрытых кандидатом полей.
 
 Guardrails в коде: `assertNoIdentityLeak`, `assertNoAggregateScore`,
 `assertNoInviteHistorySignal`.

@@ -24,7 +24,8 @@
 --   • bulk export пула невозможен: выдача ограничена лимитом и логируется.
 --
 -- План отката (rollback):
---   drop function if exists share_and_apply(uuid,jsonb,text,text,jsonb,jsonb,jsonb,jsonb,text);
+--   drop function if exists share_and_apply(uuid,jsonb,text,text,jsonb,jsonb,jsonb,text);
+--   drop function if exists private.invite_profile(uuid);
 --   drop function if exists get_employer_invites();
 --   drop function if exists get_my_opportunity_invites();
 --   drop function if exists respond_to_opportunity_invite(uuid,text,jsonb);
@@ -178,16 +179,13 @@ do $$ begin
     using (user_id = (select auth.uid()));
 exception when duplicate_object then null; end $$;
 
--- Работодатель читает свои приглашения. Колонка user_id остаётся в таблице,
--- но наружу отдаётся только через RPC, которые её не возвращают.
-do $$ begin
-  create policy "invites employer read" on opportunity_invites for select
-    using (
-      employer_id in (
-        select id from employer_profiles where user_id = (select auth.uid())
-      )
-    );
-exception when duplicate_object then null; end $$;
+-- Работодателю прямое чтение таблицы НЕ выдаётся: строка содержит
+-- `user_id` кандидата, и SELECT-политика открыла бы его через PostgREST
+-- ещё до принятия знакомства — это сломало бы blind-модель (§8.8.3) и
+-- позволило бы связать кандидата с его прошлыми откликами по user_id.
+-- Работодатель читает свои приглашения только через get_employer_invites(),
+-- которая user_id не возвращает.
+drop policy if exists "invites employer read" on opportunity_invites;
 
 -- ── 6. ProfileAccessGrant (§8.8.6) ──────────────────────────────────
 create table if not exists profile_access_grants (
@@ -365,6 +363,65 @@ begin
   end if;
 
   return null;
+end; $$;
+
+-- Проекция профиля по принятому знакомству. Единственное место, где
+-- employer-facing данные собираются из `resumes`:
+--   • только поля разрешённого уровня (прямых идентификаторов нет вообще);
+--   • только то, что кандидат передал в scope гранта (если он не пуст);
+--   • минус field-level `hidden_fields` кандидата — вычитаются всегда.
+create or replace function private.invite_profile(p_invite uuid)
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+declare
+  g profile_access_grants;
+  r resumes;
+  v_scope text[];
+  v_hidden text[];
+  v_payload jsonb;
+begin
+  select * into g from profile_access_grants
+   where invite_id = p_invite and revoked_at is null
+     and (expires_at is null or expires_at > now())
+   order by granted_at desc limit 1;
+  if not found then return null; end if;
+
+  select * into r from resumes where user_id = g.user_id;
+  if not found then return null; end if;
+
+  v_payload := jsonb_build_object(
+    'level', g.level,
+    'profession', r.profession,
+    'role_taxonomy_code', r.role_taxonomy_code,
+    'seniority', r.seniority,
+    'years_of_experience', r.years_of_experience,
+    'current_location', r.current_location,
+    'languages', r.languages,
+    'salary_expectation', r.salary_expectation,
+    'notice_period_days', r.notice_period_days,
+    'work_format_preference', r.work_format_preference,
+    'work_authorization', r.work_authorization,
+    'key_achievements', r.key_achievements,
+    'management_experience', r.management_experience,
+    'team_size', r.team_size
+  );
+
+  select coalesce(array_agg(t.val), '{}') into v_scope
+    from jsonb_array_elements_text(coalesce(g.scope_fields, '[]'::jsonb)) as t(val);
+  if array_length(v_scope, 1) is not null then
+    select coalesce(jsonb_object_agg(e.key, e.value), '{}'::jsonb) into v_payload
+      from jsonb_each(v_payload) as e
+     where e.key = 'level' or e.key = any(v_scope);
+  end if;
+
+  select coalesce(array_agg(t.val), '{}') into v_hidden
+    from jsonb_array_elements_text(
+      coalesce((select hidden_fields from profile_visibility_policies
+                 where user_id = g.user_id), '[]'::jsonb)) as t(val);
+  if array_length(v_hidden, 1) is not null then
+    v_payload := v_payload - v_hidden;
+  end if;
+
+  return v_payload;
 end; $$;
 
 -- Псевдоним «кандидат × организация» (создаётся лениво).
@@ -716,31 +773,10 @@ begin
     'created_at', i.created_at,
     'responded_at', i.responded_at,
     'vacancy_id', i.vacancy_id,
-    -- Профиль появляется только после принятого знакомства и в объёме гранта.
-    'profile', case when i.state = 'accepted' then (
-        select jsonb_build_object(
-          'level', g.level,
-          'scope_fields', g.scope_fields,
-          'hidden_fields', coalesce(p.hidden_fields, '[]'::jsonb),
-          'profession', r.profession,
-          'seniority', r.seniority,
-          'years_of_experience', r.years_of_experience,
-          'current_location', r.current_location,
-          'languages', r.languages,
-          'salary_expectation', r.salary_expectation,
-          'notice_period_days', r.notice_period_days,
-          'key_achievements', r.key_achievements,
-          'management_experience', r.management_experience,
-          'team_size', r.team_size
-        )
-        from profile_access_grants g
-        join resumes r on r.user_id = g.user_id
-        left join profile_visibility_policies p on p.user_id = g.user_id
-        where g.invite_id = i.id and g.revoked_at is null
-          and (g.expires_at is null or g.expires_at > now())
-        order by g.granted_at desc
-        limit 1
-      ) else null end,
+    -- Профиль появляется только после принятого знакомства и строго в
+    -- объёме гранта минус поля, скрытые кандидатом (§8.5).
+    'profile', case when i.state = 'accepted'
+                    then private.invite_profile(i.id) else null end,
     'match_explanation', (
       select m.explanation from match_assessments m
       where m.employer_id = i.employer_id and m.user_id = i.user_id
@@ -856,6 +892,10 @@ grant execute on function respond_to_opportunity_invite(uuid,text,jsonb) to auth
 
 -- Отдельное явное действие: `Share & apply`. Создаёт application-purpose
 -- authorization, Application и неизменяемый снимок профиля (§8.8.6).
+-- ВАЖНО: объяснение по критериям НЕ принимается от кандидата. Оно
+-- копируется из `match_assessments`, куда его записал серверный код Doki
+-- при отправке приглашения. Иначе кандидат мог бы вызвать RPC напрямую и
+-- подсунуть работодателю выдуманное «покрытие требований».
 create or replace function share_and_apply(
   p_invite_id uuid,
   p_shared_fields jsonb,
@@ -863,7 +903,6 @@ create or replace function share_and_apply(
   p_notice_version text,
   p_profile jsonb,
   p_requirements jsonb,
-  p_match_explanation jsonb,
   p_visibility_state jsonb,
   p_checksum text
 ) returns jsonb language plpgsql volatile security definer set search_path = public as $$
@@ -871,6 +910,7 @@ declare
   v_invite opportunity_invites;
   v_app uuid;
   v_name text; v_contact text; v_email text;
+  v_explanation jsonb;
 begin
   if auth.uid() is null then raise exception 'not authenticated'; end if;
 
@@ -923,12 +963,18 @@ begin
     coalesce(p_shared_fields,'[]'::jsonb), null
   );
 
+  select m.explanation into v_explanation
+    from match_assessments m
+   where m.employer_id = v_invite.employer_id and m.user_id = auth.uid()
+     and m.vacancy_version_id is not distinct from v_invite.vacancy_version_id
+   order by m.evaluated_at desc limit 1;
+
   insert into application_profile_snapshots(
     application_id, user_id, candidate_profile_snapshot,
     vacancy_requirements_snapshot, match_explanation_snapshot,
     visibility_state_snapshot, checksum
   )
-  select v_app, auth.uid(), p_profile, p_requirements, p_match_explanation,
+  select v_app, auth.uid(), p_profile, p_requirements, v_explanation,
          p_visibility_state, p_checksum
   where not exists (
     select 1 from application_profile_snapshots where application_id = v_app
@@ -940,5 +986,5 @@ begin
 
   return jsonb_build_object('application_id', v_app);
 end; $$;
-grant execute on function share_and_apply(uuid,jsonb,text,text,jsonb,jsonb,jsonb,jsonb,text)
+grant execute on function share_and_apply(uuid,jsonb,text,text,jsonb,jsonb,jsonb,text)
   to authenticated;
