@@ -12,6 +12,8 @@ const SUPPORT_EMAIL = "doki.help@gmail.com";
 
 const M = {
   ru: {
+    freeSlot: "Или закройте неактуальную вакансию — освободится место на бесплатном тарифе.",
+    myVacancies: "Мои вакансии",
     title: "Достигнут лимит бесплатных вакансий",
     body: (n: number) =>
       `На бесплатном тарифе можно ${n} активных вакансий. Хотите разместить ещё — напишите нам, включим за пару минут.`,
@@ -21,6 +23,8 @@ const M = {
     back: "← Назад к вакансиям",
   },
   en: {
+    freeSlot: "Or close a vacancy you no longer need — that frees a slot on the free plan.",
+    myVacancies: "My vacancies",
     title: "Free vacancy limit reached",
     body: (n: number) =>
       `Your free plan includes ${n} active vacancies. Want to post more — message us and we'll enable it in a couple of minutes.`,
@@ -30,6 +34,8 @@ const M = {
     back: "← Back to vacancies",
   },
   id: {
+    freeSlot: "Atau tutup lowongan yang sudah tidak perlu — slot paket gratis akan kosong.",
+    myVacancies: "Lowongan saya",
     title: "Batas lowongan gratis tercapai",
     body: (n: number) =>
       `Paket gratis mencakup ${n} lowongan aktif. Ingin memasang lebih — hubungi kami, kami aktifkan dalam beberapa menit.`,
@@ -39,6 +45,8 @@ const M = {
     back: "← Kembali ke lowongan",
   },
   uz: {
+    freeSlot: "Yoki keraksiz vakansiyani yoping — bepul tarifda joy bo‘shaydi.",
+    myVacancies: "Mening vakansiyalarim",
     title: "Bepul vakansiya limiti tugadi",
     body: (n: number) =>
       `Bepul tarifda ${n} ta faol vakansiya mumkin. Ko‘proq joylashtirmoqchimisiz — bizga yozing, bir necha daqiqada yoqamiz.`,
@@ -89,6 +97,18 @@ export default function VacancyLimitReached({
             ✉️ {t.email}
           </a>
         </div>
+        {/* Раньше единственным выходом была поддержка — теперь слот можно
+            освободить самому, закрыв неактуальную вакансию. */}
+        <div className="rounded-lg bg-slate-50 px-3 py-2 text-sm text-slate-600">
+          <p>{t.freeSlot}</p>
+          <Link
+            href="/employer"
+            className="mt-1 inline-block font-medium text-brand-600 hover:underline"
+          >
+            {t.myVacancies} →
+          </Link>
+        </div>
+
         <Link
           href="/employer"
           className="block text-sm text-brand-600 hover:underline"

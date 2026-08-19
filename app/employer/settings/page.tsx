@@ -8,6 +8,7 @@ import SubmitButton from "@/components/SubmitButton";
 
 const M = {
   ru: {
+    savedOk: "Настройки сохранены.", savedName: "Укажите название компании — без него настройки не сохранены.",
     title: "Настройки компании",
     subtitle: "Данные компании, срок хранения данных кандидатов и текст согласия.",
     company: "Компания",
@@ -34,6 +35,7 @@ const M = {
     setup: "Создать вакансию",
   },
   en: {
+    savedOk: "Settings saved.", savedName: "Enter a company name — settings weren't saved without it.",
     title: "Company settings",
     subtitle: "Company details, candidate data retention and consent text.",
     company: "Company",
@@ -58,6 +60,7 @@ const M = {
     setup: "Create a vacancy",
   },
   uz: {
+    savedOk: "Sozlamalar saqlandi.", savedName: "Kompaniya nomini kiriting — usiz sozlamalar saqlanmadi.",
     title: "Kompaniya sozlamalari",
     subtitle: "Kompaniya maʼlumotlari, nomzod maʼlumotlarini saqlash va rozilik matni.",
     company: "Kompaniya",
@@ -82,6 +85,7 @@ const M = {
     setup: "Vakansiya yaratish",
   },
   id: {
+    savedOk: "Pengaturan tersimpan.", savedName: "Isi nama perusahaan — tanpa itu pengaturan tidak tersimpan.",
     title: "Pengaturan perusahaan",
     subtitle: "Detail perusahaan, retensi data kandidat, dan teks persetujuan.",
     company: "Perusahaan",
@@ -117,7 +121,12 @@ type Profile = {
   default_consent_text: string | null;
 };
 
-export default async function EmployerSettingsPage() {
+export default async function EmployerSettingsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ saved?: string }>;
+}) {
+  const saved = (await searchParams).saved;
   const locale = await getLocale();
   const t = M[locale];
   const user = await getUser();
@@ -159,6 +168,17 @@ export default async function EmployerSettingsPage() {
         <h1 className="mt-2 text-2xl font-semibold">{t.title}</h1>
         <p className="mt-1 text-sm text-slate-500">{t.subtitle}</p>
       </div>
+
+      {saved === "1" && (
+        <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700">
+          ✓ {t.savedOk}
+        </p>
+      )}
+      {saved === "name" && (
+        <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800">
+          {t.savedName}
+        </p>
+      )}
 
       <form action={saveCompanySettings} className="card space-y-4">
         <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">

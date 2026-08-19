@@ -55,7 +55,7 @@
 | Landing | kumpulkan dokumen kandidat | `lib/landings.ts` | `/candidate-document-collection` ✅ |
 | Landing | checklist dokumen hr | `lib/landings.ts` | `/hr-document-checklist` ✅ |
 
-✅ = засижено и в проде. Все записи календаря §3 (#1–#17) реализованы; #18–20 — кейсы (через `doki-id-casestudy`), #21+ — GSC-driven расширение. title/meta приведены к ≤60/≤155 через `doki-id-seo-optimizer`.
+✅ = засижено и в проде. Все записи календаря §3 (#1–#20) реализованы, включая кейс-блоки на трёх HR-сегментах (`caseStudy` в `lib/segments.ts`, рендерится в `app/for/[segment]/page.tsx`); #21+ — GSC-driven расширение. title/meta приведены к ≤60/≤155 через `doki-id-seo-optimizer`.
 
 ## 3. Контент-календарь (первые 30 дней, порядок публикации)
 
@@ -80,9 +80,9 @@
 | 15 | /candidate-document-collection | Landing | kumpulkan dokumen kandidat satu link |
 | 16 | /hr-document-checklist | Landing | checklist dokumen hr |
 | 17 | /vs/spreadsheet-tracker | Comparison | lacak dokumen kandidat excel |
-| 18 | Case: агентство виллы | Case → блок на /for/hospitality | — |
-| 19 | Case: KITAS-релокация | Case → блок на /for/visa-agents | — |
-| 20 | Case: массовый F&B-найм | Case → блок на /for/recruitment-agencies | — |
+| 18 | Case: агентство виллы | Case → блок на /for/hospitality ✅ | — |
+| 19 | Case: KITAS-релокация | Case → блок на /for/visa-agents ✅ | — |
+| 20 | Case: массовый F&B-найм | Case → блок на /for/recruitment-agencies ✅ | — |
 | 21–30 | GSC-driven: расширение по реальным запросам из Search Console | — | из GSC |
 
 С 21-го дня — только GSC-driven (см. §7): берём запросы с показами, но низким CTR / позицией 8–30 и усиливаем.

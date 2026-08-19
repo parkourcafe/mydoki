@@ -85,10 +85,13 @@ export async function POST(request: Request) {
     const result = await classifyDocument(base64, mediaType);
     return NextResponse.json(result);
   } catch (e) {
-    const msg = e instanceof Error ? e.message : t.failed;
+    const msg = e instanceof Error ? e.message : "";
     if (msg === "NO_API_KEY") {
       return NextResponse.json({ error: t.unavailable }, { status: 503 });
     }
-    return NextResponse.json({ error: msg }, { status: 502 });
+    // Внутренние сообщения провайдера наружу не отдаём: они не локализованы
+    // и пользователю ничего не говорят. Детали — только в логах.
+    console.error("classify failed", msg);
+    return NextResponse.json({ error: t.failed }, { status: 502 });
   }
 }
