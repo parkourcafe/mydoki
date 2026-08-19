@@ -13,6 +13,8 @@ data behind.
 | `document_versions.sql` | Versions are immutable and not visible across accounts |
 | `invitations.sql` | Invitations grant access only after acceptance, with the right role |
 | `claim_application.sql` | Only the candidate can attach an application to an account |
+| `talent_pool_visibility.sql` | A confidential profile is not discoverable by a blocked or current employer, and never leaks identity |
+| `opportunity_invite_flow.sql` | A blind invitation reveals nothing until the candidate accepts, and `Share & apply` writes exactly one immutable snapshot |
 
 ## Running them
 
