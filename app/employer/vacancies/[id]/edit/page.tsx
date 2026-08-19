@@ -1,8 +1,17 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getLocale } from "@/lib/i18n";
 import type { Vacancy } from "@/lib/career";
 import VacancyForm from "../../new/VacancyForm";
+
+// Из формы редактирования не было выхода — только «Сохранить».
+const BACK = {
+  ru: "Назад к вакансии",
+  en: "Back to the vacancy",
+  id: "Kembali ke lowongan",
+  uz: "Vakansiyaga qaytish",
+} as const;
 
 export default async function EditVacancyPage({
   params,
@@ -36,7 +45,14 @@ export default async function EditVacancyPage({
   if (!profile || vacancy.employer_id !== profile.id) notFound();
 
   return (
-    <VacancyForm
+    <div className="space-y-4">
+      <Link
+        href={`/employer/vacancies/${vacancy.id}`}
+        className="text-sm text-slate-500 hover:underline"
+      >
+        ← {BACK[locale]}
+      </Link>
+      <VacancyForm
       locale={locale}
       defaultCompany={vacancy.company_name}
       mode="edit"
@@ -55,6 +71,7 @@ export default async function EditVacancyPage({
         video_screening: vacancy.video_screening ?? "off",
         video_question: vacancy.video_question ?? null,
       }}
-    />
+      />
+    </div>
   );
 }

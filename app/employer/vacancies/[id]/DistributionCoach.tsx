@@ -12,6 +12,7 @@ const M = {
     wa: "Send via WhatsApp",
     copy: "Copy link",
     copied: "Copied",
+    copyFailed: "Couldn't copy — select the link and copy it manually.",
     qrShow: "Show QR",
     qrHide: "Hide QR",
     qrDownload: "Download QR",
@@ -33,6 +34,7 @@ const M = {
     wa: "Kirim via WhatsApp",
     copy: "Salin tautan",
     copied: "Tersalin",
+    copyFailed: "Tidak bisa menyalin — pilih tautannya lalu salin manual.",
     qrShow: "Tampilkan QR",
     qrHide: "Sembunyikan QR",
     qrDownload: "Unduh QR",
@@ -54,6 +56,7 @@ const M = {
     wa: "Отправить в WhatsApp",
     copy: "Скопировать ссылку",
     copied: "Скопировано",
+    copyFailed: "Не удалось скопировать — выделите ссылку и скопируйте вручную.",
     qrShow: "Показать QR",
     qrHide: "Скрыть QR",
     qrDownload: "Скачать QR",
@@ -75,6 +78,7 @@ const M = {
     wa: "WhatsApp orqali yuborish",
     copy: "Havolani nusxalash",
     copied: "Nusxalandi",
+    copyFailed: "Nusxalab bo‘lmadi — havolani belgilab, qo‘lda nusxalang.",
     qrShow: "QR ko‘rsatish",
     qrHide: "QR yashirish",
     qrDownload: "QR yuklab olish",
@@ -119,6 +123,7 @@ export default function DistributionCoach({
   const [showQr, setShowQr] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
+  const [copyError, setCopyError] = useState(false);
   const copiedTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const waHref = `https://wa.me/?text=${encodeURIComponent(
@@ -135,11 +140,16 @@ export default function DistributionCoach({
   async function copy(text: string, key: string) {
     try {
       await navigator.clipboard.writeText(text);
+      setCopyError(false);
       setCopied(key);
       if (copiedTimer.current) clearTimeout(copiedTimer.current);
       copiedTimer.current = setTimeout(() => setCopied(null), 1800);
     } catch {
-      /* clipboard заблокирован — молча */
+      // Clipboard API заблокирован (нет https / отказ в разрешении) — говорим
+      // об этом, иначе кнопка выглядит сломанной.
+      setCopyError(true);
+      if (copiedTimer.current) clearTimeout(copiedTimer.current);
+      copiedTimer.current = setTimeout(() => setCopyError(false), 4000);
     }
   }
 
@@ -190,6 +200,9 @@ export default function DistributionCoach({
         </button>
       </div>
       {copied === "ig" && <p className="mt-1 text-xs text-slate-500">{t.igHint}</p>}
+      {copyError && (
+        <p className="mt-1 text-xs text-amber-700">{t.copyFailed}</p>
+      )}
 
       {showQr && (
         <div className="mt-3 flex flex-col items-center gap-2">

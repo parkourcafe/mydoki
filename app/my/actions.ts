@@ -207,7 +207,7 @@ export async function createDocumentMeta(input: {
   const asset_id = input.asset_id || null;
   const title = (input.title ?? "").trim();
   if ((!member_id && !asset_id) || !title)
-    throw new Error("Нужен владелец (человек или объект) и название");
+    throw new Error("OWNER_AND_TITLE_REQUIRED");
 
   const clean = (v?: string) => {
     const s = (v ?? "").trim();
