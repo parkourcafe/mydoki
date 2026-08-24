@@ -1,6 +1,7 @@
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale, type Locale } from "@/lib/i18n";
+import { parseSections } from "@/lib/resume";
 import ResumeForm, { type ResumeData } from "./ResumeForm";
 
 export default async function ResumePage() {
@@ -11,12 +12,15 @@ export default async function ResumePage() {
   const { data } = await supabase
     .from("resumes")
     .select(
-      "full_name, headline, location, contact, email, about, experience, custom_fields",
+      "full_name, headline, location, contact, email, about, experience, custom_fields, sections",
     )
     .eq("user_id", user?.id ?? "")
     .maybeSingle();
 
-  const initial = (data ?? null) as ResumeData | null;
+  // Секции разбираем на сервере: в форму приходит уже нормализованная структура.
+  const initial: ResumeData | null = data
+    ? { ...(data as Omit<ResumeData, "sections">), sections: parseSections((data as { sections?: unknown }).sections) }
+    : null;
 
   return (
     <ResumeForm
