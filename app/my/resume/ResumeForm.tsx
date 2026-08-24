@@ -15,6 +15,13 @@ import {
   type ResumeSections,
 } from "@/lib/resume";
 import { checkResume, type ResumeWarningId } from "@/lib/resumeQuality";
+import {
+  importedCounts,
+  mergeImportedResume,
+  parseImportedResume,
+  type ImportedResume,
+} from "@/lib/resumeImport";
+import { fromJsonResume } from "@/lib/jsonResume";
 
 export type ResumeData = {
   full_name: string | null;
@@ -45,6 +52,17 @@ const M = {
     about: "О себе",
     aboutPh: "Пара предложений о себе и что ищете",
     readyTitle: "Готовность профиля",
+    importTitle: "Импорт",
+    importHint:
+      "Загрузите старое CV — заполним профиль автоматически. Ничего не затрём: пустые поля заполним, новые записи добавим.",
+    importCv: "Заполнить из файла CV",
+    importJson: "Импорт JSON Resume",
+    exportJson: "Скачать JSON Resume",
+    importBusy: "Разбираю файл…",
+    importOk: "Готово. Проверьте, что получилось, и сохраните.",
+    importNothing: "В файле не нашлось того, чего ещё нет в профиле.",
+    importFailed: "Не удалось разобрать файл.",
+    importSettings: "Настройки распознавания",
     readyAllGood: "Всё заполнено — профиль готов.",
     expTitle: "Опыт работы",
     expHint:
@@ -106,6 +124,17 @@ const M = {
     about: "About you",
     aboutPh: "A couple of sentences about you and what you're looking for",
     readyTitle: "Profile readiness",
+    importTitle: "Import",
+    importHint:
+      "Upload your old CV and we'll fill the profile in. Nothing is overwritten: empty fields get filled, new entries get added.",
+    importCv: "Fill in from a CV file",
+    importJson: "Import JSON Resume",
+    exportJson: "Download JSON Resume",
+    importBusy: "Reading the file…",
+    importOk: "Done. Check the result and save.",
+    importNothing: "The file had nothing your profile doesn't already have.",
+    importFailed: "Couldn't read the file.",
+    importSettings: "Recognition settings",
     readyAllGood: "Everything is filled in — your profile is ready.",
     expTitle: "Work experience",
     expHint:
@@ -167,6 +196,17 @@ const M = {
     about: "Tentang Anda",
     aboutPh: "Beberapa kalimat tentang Anda dan yang Anda cari",
     readyTitle: "Kesiapan profil",
+    importTitle: "Impor",
+    importHint:
+      "Unggah resume lama Anda — profil akan terisi otomatis. Tidak ada yang ditimpa: kolom kosong diisi, entri baru ditambahkan.",
+    importCv: "Isi dari berkas CV",
+    importJson: "Impor JSON Resume",
+    exportJson: "Unduh JSON Resume",
+    importBusy: "Membaca berkas…",
+    importOk: "Selesai. Periksa hasilnya lalu simpan.",
+    importNothing: "Tidak ada hal baru di berkas itu untuk profil Anda.",
+    importFailed: "Gagal membaca berkas.",
+    importSettings: "Pengaturan pengenalan",
     readyAllGood: "Semua terisi — profil Anda siap.",
     expTitle: "Pengalaman kerja",
     expHint:
@@ -228,6 +268,17 @@ const M = {
     about: "O‘zingiz haqingizda",
     aboutPh: "O‘zingiz va nima izlayotganingiz haqida bir necha gap",
     readyTitle: "Profil tayyorligi",
+    importTitle: "Import",
+    importHint:
+      "Eski CV faylingizni yuklang — profil avtomatik to‘ldiriladi. Hech narsa o‘chirilmaydi: bo‘sh maydonlar to‘ldiriladi, yangi yozuvlar qo‘shiladi.",
+    importCv: "CV faylidan to‘ldirish",
+    importJson: "JSON Resume importi",
+    exportJson: "JSON Resume yuklab olish",
+    importBusy: "Fayl o‘qilmoqda…",
+    importOk: "Tayyor. Natijani tekshiring va saqlang.",
+    importNothing: "Faylda profilingizda hali yo‘q narsa topilmadi.",
+    importFailed: "Faylni o‘qib bo‘lmadi.",
+    importSettings: "Aniqlash sozlamalari",
     readyAllGood: "Hammasi to‘ldirilgan — profilingiz tayyor.",
     expTitle: "Ish tajribasi",
     expHint:
@@ -372,6 +423,13 @@ export default function ResumeForm({
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [importBusy, setImportBusy] = useState(false);
+  const [importNote, setImportNote] = useState<string | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  // Самая частая причина отказа — распознавание выключено в настройках;
+  // только в этом случае показываем ссылку туда.
+  const [importNeedsSettings, setImportNeedsSettings] = useState(false);
+
   // Дата нужна только для замечания «период в будущем»; берём один раз.
   const [today] = useState(() => new Date().toISOString().slice(0, 10));
 
@@ -391,6 +449,95 @@ export default function ResumeForm({
       ),
     [fullName, headline, location, contact, email, experience, sections, today],
   );
+
+  // --- импорт ---
+  function currentProfile(): ImportedResume {
+    return { full_name: fullName, headline, location, contact, email, about, sections };
+  }
+
+  /** Кладёт разобранный профиль поверх текущего: пустое заполняем, записи добавляем. */
+  function applyImport(imported: ImportedResume) {
+    const before = currentProfile();
+    const merged = mergeImportedResume(before, imported);
+
+    setFullName(merged.full_name);
+    setHeadline(merged.headline);
+    setLocation(merged.location);
+    setContact(merged.contact);
+    setEmail(merged.email);
+    setAbout(merged.about);
+    setSections(merged.sections);
+
+    const added = importedCounts(before, merged);
+    const basicsChanged = (
+      [
+        [before.full_name, merged.full_name],
+        [before.headline, merged.headline],
+        [before.location, merged.location],
+        [before.contact, merged.contact],
+        [before.email, merged.email],
+        [before.about, merged.about],
+      ] as [string, string][]
+    ).some(([was, now]) => was !== now);
+
+    const anythingNew =
+      basicsChanged ||
+      added.experience + added.education + added.skills + added.languages > 0;
+    setImportNote(anythingNew ? t.importOk : t.importNothing);
+  }
+
+  function resetImportState() {
+    setImportNote(null);
+    setImportError(null);
+    setImportNeedsSettings(false);
+  }
+
+  /** Старое CV файлом: разбирает провайдер на сервере (нужно согласие на ИИ). */
+  async function onCvFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = ""; // чтобы тот же файл можно было выбрать повторно
+    if (!file) return;
+
+    resetImportState();
+    setImportBusy(true);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const res = await fetch("/api/resume-parse", { method: "POST", body });
+      const data = (await res.json().catch(() => null)) as
+        | { error?: string }
+        | Record<string, unknown>
+        | null;
+      if (!res.ok) {
+        const message =
+          data && typeof (data as { error?: string }).error === "string"
+            ? (data as { error: string }).error
+            : t.importFailed;
+        setImportError(message);
+        setImportNeedsSettings(res.status === 403);
+        return;
+      }
+      applyImport(parseImportedResume(data));
+    } catch {
+      setImportError(t.importFailed);
+    } finally {
+      setImportBusy(false);
+    }
+  }
+
+  /** JSON Resume: открытый формат, разбираем прямо в браузере — без сервера. */
+  async function onJsonFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+
+    resetImportState();
+    try {
+      applyImport(fromJsonResume(JSON.parse(await file.text())));
+    } catch {
+      setImportError(t.importFailed);
+    }
+  }
 
   // --- места работы ---
   const addExperience = () =>
@@ -501,6 +648,52 @@ export default function ResumeForm({
       </div>
 
       <div className="space-y-4">
+        {/* Импорт: заполнить профиль из готового файла */}
+        <div className="card space-y-3">
+          <div>
+            <h2 className="font-medium">{t.importTitle}</h2>
+            <p className="mt-0.5 text-sm text-slate-500">{t.importHint}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <label className={`btn-ghost ${importBusy ? "opacity-60" : "cursor-pointer"}`}>
+              {importBusy ? t.importBusy : t.importCv}
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp,application/pdf"
+                className="hidden"
+                disabled={importBusy}
+                onChange={onCvFile}
+              />
+            </label>
+            <label className="btn-ghost cursor-pointer">
+              {t.importJson}
+              <input
+                type="file"
+                accept="application/json,.json"
+                className="hidden"
+                onChange={onJsonFile}
+              />
+            </label>
+            <a href="/my/resume/json" className="btn-ghost">
+              {t.exportJson}
+            </a>
+          </div>
+          {importNote && <p className="text-sm text-green-600">{importNote}</p>}
+          {importError && (
+            <p className="text-sm text-red-600">
+              {importError}
+              {importNeedsSettings && (
+                <>
+                  {" "}
+                  <a href="/my/security" className="underline">
+                    {t.importSettings}
+                  </a>
+                </>
+              )}
+            </p>
+          )}
+        </div>
+
         {/* Готовность профиля — считается на лету, ничего не блокирует */}
         <div className="card space-y-2">
           <div className="flex items-baseline justify-between">
