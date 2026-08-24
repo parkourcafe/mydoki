@@ -28,6 +28,7 @@ const M = {
     noAnswers: "Ответов нет.",
     resumeTitle: "Резюме кандидата",
     resumeSent: "Снимок на момент отклика",
+    resumeDownload: "Скачать CV (PDF)",
     expTitle: "Опыт",
     eduTitle: "Обучение",
     skillsTitle: "Навыки",
@@ -68,6 +69,7 @@ const M = {
     noAnswers: "No answers.",
     resumeTitle: "Candidate resume",
     resumeSent: "A snapshot taken when they applied",
+    resumeDownload: "Download CV (PDF)",
     expTitle: "Experience",
     eduTitle: "Education",
     skillsTitle: "Skills",
@@ -108,6 +110,7 @@ const M = {
     noAnswers: "Javoblar yoʻq.",
     resumeTitle: "Nomzod rezyumesi",
     resumeSent: "Ariza berilgan paytdagi nusxa",
+    resumeDownload: "CV yuklab olish (PDF)",
     expTitle: "Tajriba",
     eduTitle: "Ta’lim",
     skillsTitle: "Ko‘nikmalar",
@@ -148,6 +151,7 @@ const M = {
     noAnswers: "Tidak ada jawaban.",
     resumeTitle: "Resume kandidat",
     resumeSent: "Cuplikan saat melamar",
+    resumeDownload: "Unduh CV (PDF)",
     expTitle: "Pengalaman",
     eduTitle: "Pendidikan",
     skillsTitle: "Keterampilan",
@@ -464,11 +468,19 @@ export default async function CandidatePage({
 
       {resume && (
         <section className="card space-y-4">
-          <div>
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
-              {t.resumeTitle}
-            </h2>
-            <p className="mt-0.5 text-xs text-slate-400">{t.resumeSent}</p>
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                {t.resumeTitle}
+              </h2>
+              <p className="mt-0.5 text-xs text-slate-400">{t.resumeSent}</p>
+            </div>
+            <a
+              href={`/employer/candidates/${app.id}/resume-pdf`}
+              className="shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"
+            >
+              {t.resumeDownload}
+            </a>
           </div>
 
           {(resume.headline || resume.location) && (

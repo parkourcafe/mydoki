@@ -44,6 +44,15 @@ const NOINDEX_SOURCES = [
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // PDF-документы (CV, справка о работе) рендерятся на сервере через
+  // @react-pdf/renderer, который читает TTF с диска. Без этого файлы шрифтов
+  // не попадут в serverless-бандл и кириллица отвалится уже в проде.
+  outputFileTracingIncludes: {
+    "/my/resume/pdf": ["./assets/fonts/**"],
+    "/my/employment/[id]/letter": ["./assets/fonts/**"],
+    "/employer/candidates/[applicationId]/resume-pdf": ["./assets/fonts/**"],
+    "/employer/employees/[id]/letter": ["./assets/fonts/**"],
+  },
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },

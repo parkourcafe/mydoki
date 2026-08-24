@@ -85,6 +85,7 @@ const M = {
     remove: "Удалить",
     entry: "Запись",
     save: "Сохранить резюме",
+    downloadPdf: "Скачать CV (PDF)",
     saving: "Сохраняю…",
     saved: "Сохранено ✓",
     failed: "Не удалось сохранить. Попробуйте ещё раз.",
@@ -145,6 +146,7 @@ const M = {
     remove: "Remove",
     entry: "Entry",
     save: "Save resume",
+    downloadPdf: "Download CV (PDF)",
     saving: "Saving…",
     saved: "Saved ✓",
     failed: "Couldn't save. Please try again.",
@@ -205,6 +207,7 @@ const M = {
     remove: "Hapus",
     entry: "Entri",
     save: "Simpan resume",
+    downloadPdf: "Unduh CV (PDF)",
     saving: "Menyimpan…",
     saved: "Tersimpan ✓",
     failed: "Gagal menyimpan. Coba lagi.",
@@ -265,6 +268,7 @@ const M = {
     remove: "O‘chirish",
     entry: "Yozuv",
     save: "Rezyumeni saqlash",
+    downloadPdf: "CV yuklab olish (PDF)",
     saving: "Saqlanmoqda…",
     saved: "Saqlandi ✓",
     failed: "Saqlab bo‘lmadi. Yana urinib ko‘ring.",
@@ -920,6 +924,11 @@ export default function ResumeForm({
           >
             {busy ? t.saving : t.save}
           </button>
+          {/* Скачивание берёт последнюю СОХРАНЁННУЮ версию — обычная ссылка,
+              чтобы работал и «сохранить как» в мобильном браузере. */}
+          <a href="/my/resume/pdf" className="btn-ghost">
+            {t.downloadPdf}
+          </a>
           {done && (
             <span className="text-sm font-medium text-green-600">{t.saved}</span>
           )}
