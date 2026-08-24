@@ -75,6 +75,10 @@ const M = {
     start: "Начало",
     end: "Окончание",
     currentJob: "Работаю здесь сейчас",
+    verified: "✓ Подтверждено работодателем",
+    verifiedHint:
+      "Должность, место и период взяты из оформления у работодателя — здесь они не редактируются.",
+    unlink: "Открепить",
     duties: "Обязанности",
     dutiesPh: "Что входило в вашу работу",
     legacyTitle: "Опыт одним текстом",
@@ -147,6 +151,10 @@ const M = {
     start: "Start",
     end: "End",
     currentJob: "I work here now",
+    verified: "✓ Verified by the employer",
+    verifiedHint:
+      "Role, place and period come from the employer's record — they aren't edited here.",
+    unlink: "Unlink",
     duties: "Duties",
     dutiesPh: "What your work involved",
     legacyTitle: "Experience as plain text",
@@ -219,6 +227,10 @@ const M = {
     start: "Mulai",
     end: "Selesai",
     currentJob: "Saya masih bekerja di sini",
+    verified: "✓ Terverifikasi oleh pemberi kerja",
+    verifiedHint:
+      "Posisi, tempat dan masa kerja berasal dari catatan pemberi kerja — tidak diubah di sini.",
+    unlink: "Lepaskan",
     duties: "Tugas",
     dutiesPh: "Apa saja pekerjaan Anda",
     legacyTitle: "Pengalaman dalam bentuk teks",
@@ -291,6 +303,10 @@ const M = {
     start: "Boshlanishi",
     end: "Tugashi",
     currentJob: "Hozir shu yerda ishlayman",
+    verified: "✓ Ish beruvchi tasdiqlagan",
+    verifiedHint:
+      "Lavozim, joy va davr ish beruvchi yozuvidan olingan — bu yerda tahrirlanmaydi.",
+    unlink: "Uzish",
     duties: "Vazifalar",
     dutiesPh: "Ishingiz nimalardan iborat edi",
     legacyTitle: "Tajriba matn ko‘rinishida",
@@ -551,6 +567,14 @@ export default function ResumeForm({
       ...s,
       experience: s.experience.map((e, idx) => (idx === i ? { ...e, ...patch } : e)),
     }));
+  /** Открепить строку от трудовых отношений: дальше это обычная запись. */
+  const unlinkExperience = (i: number) =>
+    setSections((s) => ({
+      ...s,
+      experience: s.experience.map((e, idx) =>
+        idx === i ? { ...e, employment_id: null, verified: false } : e
+      ),
+    }));
   const removeExperience = (i: number) =>
     setSections((s) => ({
       ...s,
@@ -806,25 +830,47 @@ export default function ResumeForm({
             <ul className="space-y-3">
               {sections.experience.map((e, i) => (
                 <li key={e.id} className="rounded-xl border border-slate-200 p-3">
-                  <div className="mb-2 flex items-center justify-between">
+                  <div className="mb-2 flex items-center justify-between gap-2">
                     <span className="text-xs uppercase tracking-wide text-slate-400">
                       {t.entry} {i + 1}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => removeExperience(i)}
-                      aria-label={t.remove}
-                      className="rounded-lg border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-50"
-                    >
-                      ✕
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {e.verified && (
+                        <button
+                          type="button"
+                          onClick={() => unlinkExperience(i)}
+                          className="rounded-lg border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-50"
+                        >
+                          {t.unlink}
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeExperience(i)}
+                        aria-label={t.remove}
+                        className="rounded-lg border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-50"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Подтверждённая строка приходит из оформления у работодателя:
+                      её факты не редактируем, иначе отметка перестанет быть правдой. */}
+                  {e.verified && (
+                    <div className="mb-2 rounded-lg bg-green-50 px-3 py-2">
+                      <p className="text-xs font-medium text-green-700">{t.verified}</p>
+                      <p className="mt-0.5 text-xs text-green-800/70">{t.verifiedHint}</p>
+                    </div>
+                  )}
+
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
                       <label className="label">{t.position}</label>
                       <input
                         className="input"
                         value={e.position}
+                        disabled={e.verified}
                         onChange={(ev) => updateExperience(i, { position: ev.target.value })}
                         placeholder={t.positionPh}
                       />
@@ -834,6 +880,7 @@ export default function ResumeForm({
                       <input
                         className="input"
                         value={e.company}
+                        disabled={e.verified}
                         onChange={(ev) => updateExperience(i, { company: ev.target.value })}
                         placeholder={t.companyPh}
                       />
@@ -844,6 +891,7 @@ export default function ResumeForm({
                         className="input"
                         type="month"
                         value={e.start}
+                        disabled={e.verified}
                         onChange={(ev) => updateExperience(i, { start: ev.target.value })}
                       />
                     </div>
@@ -853,7 +901,7 @@ export default function ResumeForm({
                         className="input"
                         type="month"
                         value={e.end}
-                        disabled={e.current}
+                        disabled={e.current || e.verified}
                         onChange={(ev) => updateExperience(i, { end: ev.target.value })}
                       />
                     </div>
@@ -862,6 +910,7 @@ export default function ResumeForm({
                     <input
                       type="checkbox"
                       checked={e.current}
+                      disabled={e.verified}
                       onChange={(ev) =>
                         updateExperience(i, {
                           current: ev.target.checked,

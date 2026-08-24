@@ -2,6 +2,7 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { parseSections } from "@/lib/resume";
+import { withVerifiedExperience } from "@/lib/resumeLinks";
 import { ResumePdf } from "@/lib/pdf/ResumePdf";
 import { pdfFileName, pdfHeaders, renderPdf } from "@/lib/pdf/render";
 
@@ -50,7 +51,7 @@ export async function GET() {
         email: row.email ?? user.email ?? "",
         about: row.about ?? "",
         legacyExperience: row.experience ?? "",
-        sections: parseSections(row.sections),
+        sections: await withVerifiedExperience(supabase, user.id, parseSections(row.sections)),
         customFields: row.custom_fields ?? [],
       },
     }),

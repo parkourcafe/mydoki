@@ -3,7 +3,13 @@
 import { revalidatePath } from "next/cache";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
-import { parseSections, type ResumeSections } from "@/lib/resume";
+import {
+  clearVerified,
+  linkedEmploymentIds,
+  parseSections,
+  type ResumeSections,
+} from "@/lib/resume";
+import { checkEmploymentLinks } from "@/lib/resumeLinks";
 
 export type ResumeCustomField = { label: string; value: string };
 
@@ -42,9 +48,25 @@ export async function saveResume(
 
   // Секции приводим к канону на сервере: клиенту тут не доверяем. parseSections
   // терпим к мусору и к отсутствию поля (старая вкладка со старым бандлом).
-  const sections = parseSections(input.sections);
+  const parsed = parseSections(input.sections);
 
   const supabase = await getSupabaseServer();
+
+  // Ссылку на трудовые отношения оставляем, только если запись действительно
+  // принадлежит этому человеку. Отметку «подтверждено» не храним вовсе: она
+  // вычисляется при чтении, иначе её можно было бы себе приписать.
+  const { own } = await checkEmploymentLinks(
+    supabase,
+    user.id,
+    linkedEmploymentIds(parsed)
+  );
+  const sections: ResumeSections = clearVerified({
+    ...parsed,
+    experience: parsed.experience.map((e) => ({
+      ...e,
+      employment_id: e.employment_id && own.has(e.employment_id) ? e.employment_id : null,
+    })),
+  });
   const { error } = await supabase.from("resumes").upsert(
     {
       user_id: user.id,

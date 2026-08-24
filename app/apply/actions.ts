@@ -10,6 +10,7 @@ import { sendNewApplicationEmail, sendAdminReportAlert } from "@/lib/email";
 import { sendPushToUser } from "@/lib/push";
 import { getLocale } from "@/lib/i18n";
 import { hasStructuredContent, parseSections } from "@/lib/resume";
+import { withVerifiedExperience } from "@/lib/resumeLinks";
 
 // ---------------------------- Report ----------------------------------
 
@@ -154,7 +155,14 @@ async function attachResumeSnapshot(
     about: string | null;
     sections: unknown;
   };
-  const sections = parseSections(row.sections);
+  // Отметку «подтверждено работодателем» считаем здесь и кладём в снимок:
+  // работодатель чужие employments по RLS не прочитает, а проверить строку
+  // ему нужно уже в момент просмотра отклика.
+  const sections = await withVerifiedExperience(
+    supabase,
+    user.id,
+    parseSections(row.sections)
+  );
   // Пустое резюме прикладывать нечего.
   if (!hasStructuredContent(sections) && !(row.about ?? "").trim()) return;
 

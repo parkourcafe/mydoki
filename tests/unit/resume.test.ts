@@ -4,6 +4,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  clearVerified,
+  experienceFromEmployment,
+  linkedEmploymentIds,
+  markVerifiedExperience,
   parseSections,
   normalizeSections,
   emptySections,
@@ -22,6 +26,8 @@ const exp = (o: Partial<ResumeExperience>): ResumeExperience => ({
   id: "x",
   position: "Nanny",
   company: "Villa Bali",
+  employment_id: null,
+  verified: false,
   start: "2023-01",
   end: "",
   current: true,
@@ -198,4 +204,85 @@ test("checkResume: у текущего места работы пустой ко
     TODAY
   );
   assert.equal(ids(r).includes("reversed_period"), false);
+});
+
+// ------------------- связь с трудовыми отношениями -------------------
+
+test("parseSections: читает ссылку на employments и отметку", () => {
+  const s = parseSections({
+    experience: [
+      { position: "Няня", employment_id: "emp-1", verified: true },
+      { position: "Повар", employment_id: 42 },
+    ],
+  });
+  assert.equal(s.experience[0].employment_id, "emp-1");
+  assert.equal(s.experience[0].verified, true);
+  assert.equal(s.experience[1].employment_id, null); // не строка → нет ссылки
+  assert.equal(s.experience[1].verified, false);
+});
+
+test("linkedEmploymentIds: только непустые, без повторов", () => {
+  const sections = {
+    ...emptySections(),
+    experience: [
+      exp({ id: "a", employment_id: "emp-1" }),
+      exp({ id: "b", employment_id: "emp-1" }),
+      exp({ id: "c", employment_id: null }),
+    ],
+  };
+  assert.deepEqual(linkedEmploymentIds(sections), ["emp-1"]);
+});
+
+test("markVerifiedExperience: отметку даёт только сервер и только по списку", () => {
+  const sections = {
+    ...emptySections(),
+    experience: [
+      exp({ id: "a", employment_id: "emp-1", verified: false }),
+      // Запись пытается принести отметку с клиента — её сбрасываем.
+      exp({ id: "b", employment_id: "emp-2", verified: true }),
+      exp({ id: "c", employment_id: null, verified: true }),
+    ],
+  };
+  const marked = markVerifiedExperience(sections, ["emp-1"]);
+  assert.deepEqual(marked.experience.map((e) => e.verified), [true, false, false]);
+
+  const cleared = clearVerified(marked);
+  assert.deepEqual(cleared.experience.map((e) => e.verified), [false, false, false]);
+});
+
+test("experienceFromEmployment: даты обрезаются до месяца, активная — текущая", () => {
+  const active = experienceFromEmployment({
+    id: "emp-1",
+    position: "Няня",
+    company_name: "Вилла",
+    start_date: "2023-04-01",
+    end_date: null,
+    status: "active",
+  });
+  assert.equal(active.employment_id, "emp-1");
+  assert.equal(active.start, "2023-04");
+  assert.equal(active.end, "");
+  assert.equal(active.current, true);
+  assert.equal(active.verified, false); // отметку ставит только сервер при чтении
+
+  const ended = experienceFromEmployment({
+    id: "emp-2",
+    position: "Повар",
+    company_name: "Кафе",
+    start_date: "2020-02-10",
+    end_date: "2022-12-31",
+    status: "ended",
+  });
+  assert.equal(ended.end, "2022-12");
+  assert.equal(ended.current, false);
+});
+
+test("normalizeSections: запись со ссылкой не считается пустой", () => {
+  const s = normalizeSections({
+    ...emptySections(),
+    experience: [
+      { id: "z", position: "", company: "", employment_id: "emp-1", verified: false, start: "", end: "", current: false, description: "" },
+    ],
+  });
+  assert.equal(s.experience.length, 1);
 });
