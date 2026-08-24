@@ -4,8 +4,10 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { userWantsAi } from "@/lib/classify";
 import {
   parseResumeFile,
+  parseResumeText,
   resumeParsingConfigured,
   resumeParsingModel,
+  RESUME_TEXT_LIMIT,
 } from "@/lib/ai/parseResumeFile";
 import { getPrompt } from "@/lib/ai/prompts";
 import type { ImportedResume } from "@/lib/resumeImport";
@@ -123,6 +125,31 @@ export async function POST(request: Request) {
   }
 
   const form = await request.formData();
+
+  // Текстовый вход — разбор старого поля «Опыт работы» в записи. Файла тут
+  // нет, поэтому проверки размера и типа к нему не применяются.
+  const text = form.get("text");
+  if (typeof text === "string" && text.trim()) {
+    const trimmed = text.trim().slice(0, RESUME_TEXT_LIMIT);
+    const digest = createHash("sha256").update(trimmed).digest("hex");
+    try {
+      const parsed = await parseResumeText(trimmed);
+      await logRun(supabase, user.id, digest, { state: "completed", parsed });
+      return NextResponse.json(parsed);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "";
+      await logRun(supabase, user.id, digest, {
+        state: "failed",
+        reason: msg.split(":")[0].slice(0, 40) || "unknown",
+      });
+      if (msg === "NO_API_KEY") {
+        return NextResponse.json({ error: t.unavailable }, { status: 503 });
+      }
+      console.error("resume text parse failed", msg);
+      return NextResponse.json({ error: t.failed }, { status: 502 });
+    }
+  }
+
   const file = form.get("file");
   if (!(file instanceof File) || file.size === 0) {
     return NextResponse.json({ error: t.noFile }, { status: 400 });
