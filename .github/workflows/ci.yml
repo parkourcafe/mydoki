@@ -21,7 +21,7 @@ on:
 
 jobs:
   typecheck:
-    name: Typecheck
+    name: Typecheck + lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +31,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      # Линт живёт здесь, а не отдельной job: он занимает секунды и логически
+      # относится к тому же слою «статические проверки», что и tsc.
+      - run: npm run lint
 
   unit:
     name: Unit tests + lexicon
