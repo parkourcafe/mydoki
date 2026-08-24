@@ -5,11 +5,11 @@ name: perf-budget
 # — опциональная job, включается только если задан секрет/переменная LHCI_URL
 # (обычно — preview-URL Vercel с сид-вакансией). См. perf/README.md.
 
+# Фильтра по ветке нет намеренно: ветка по умолчанию в этом репозитории не
+# называется main, и с фильтром [main] воркфлоу молча не запускался ни на
+# одном PR — бюджет не проверялся вообще.
 on:
   pull_request:
-    branches: [main]
-  push:
-    branches: [main]
   workflow_dispatch:
 
 jobs:

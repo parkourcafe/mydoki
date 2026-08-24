@@ -32,7 +32,7 @@ async function viaAnthropic(base64: string, mediaType: string): Promise<unknown>
   const apiKey = process.env.ANTHROPIC_API_KEY as string;
   // Ту же переменную читает классификатор документов; здесь свой запасной
   // вариант, потому что разбор резюме заметно сложнее вытаскивания полей.
-  const model = process.env.ANTHROPIC_MODEL || "claude-opus-5";
+  const model = resumeParsingModel();
   const isPdf = mediaType === "application/pdf";
 
   const block = isPdf
@@ -74,7 +74,7 @@ async function viaGlm(base64: string, mediaType: string): Promise<unknown> {
   if (mediaType === "application/pdf") throw new Error("PDF_UNSUPPORTED");
 
   const base = process.env.GLM_BASE_URL || "https://api.z.ai/api/paas/v4";
-  const model = process.env.GLM_VISION_MODEL || "glm-4v";
+  const model = resumeParsingModel();
 
   const res = await fetch(`${base}/chat/completions`, {
     method: "POST",
@@ -108,6 +108,15 @@ async function viaGlm(base64: string, mediaType: string): Promise<unknown> {
     choices?: { message?: { content?: string } }[];
   };
   return pickJson(data.choices?.[0]?.message?.content ?? "");
+}
+
+/** Какая модель отработала — уходит в журнал прогонов (ai_runs.model). */
+export function resumeParsingModel(): string {
+  if (process.env.ANTHROPIC_API_KEY) {
+    return process.env.ANTHROPIC_MODEL || "claude-opus-5";
+  }
+  if (process.env.GLM_API_KEY) return process.env.GLM_VISION_MODEL || "glm-4v";
+  return "";
 }
 
 /**

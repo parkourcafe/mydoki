@@ -1,7 +1,14 @@
 import { NextResponse } from "next/server";
+import { createHash } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { userWantsAi } from "@/lib/classify";
-import { parseResumeFile, resumeParsingConfigured } from "@/lib/ai/parseResumeFile";
+import {
+  parseResumeFile,
+  resumeParsingConfigured,
+  resumeParsingModel,
+} from "@/lib/ai/parseResumeFile";
+import { getPrompt } from "@/lib/ai/prompts";
+import type { ImportedResume } from "@/lib/resumeImport";
 import { allowAiCall } from "@/lib/ratelimit";
 import { getLocale } from "@/lib/i18n";
 
@@ -55,6 +62,44 @@ const M = {
   },
 } as const;
 
+/**
+ * Журнал прогона (v1.1 §11.5): что за промпт, какая модель, чем кончилось.
+ * Ни файла, ни разобранных данных не храним — только хеш входа и счётчики,
+ * иначе журнал сам стал бы копилкой персональных данных.
+ */
+async function logRun(
+  supabase: Awaited<ReturnType<typeof getSupabaseServer>>,
+  userId: string,
+  inputDigest: string,
+  outcome: { state: "completed"; parsed: ImportedResume } | { state: "failed"; reason: string }
+): Promise<void> {
+  const output =
+    outcome.state === "completed"
+      ? {
+          experience: outcome.parsed.sections.experience.length,
+          education: outcome.parsed.sections.education.length,
+          skills: outcome.parsed.sections.skills.length,
+          languages: outcome.parsed.sections.languages.length,
+          basics_filled: (
+            ["full_name", "headline", "location", "contact", "email", "about"] as const
+          ).filter((k) => outcome.parsed[k].length > 0).length,
+        }
+      : { reason: outcome.reason };
+
+  // Журнал не должен ломать сам разбор: при ошибке записи просто идём дальше.
+  await supabase.from("ai_runs").insert({
+    kind: "resume_import",
+    subject_type: "resume",
+    subject_id: userId,
+    prompt_version: getPrompt("resume_import").version,
+    model: resumeParsingModel(),
+    input_digest: inputDigest,
+    output,
+    state: outcome.state,
+    created_by: userId,
+  });
+}
+
 /** Загруженный файл CV → структурный профиль для предзаполнения формы. */
 export async function POST(request: Request) {
   const supabase = await getSupabaseServer();
@@ -90,12 +135,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: t.unsupported }, { status: 415 });
   }
 
+  const base64 = Buffer.from(await file.arrayBuffer()).toString("base64");
+  const digest = createHash("sha256").update(base64).digest("hex");
+
   try {
-    const base64 = Buffer.from(await file.arrayBuffer()).toString("base64");
     const parsed = await parseResumeFile(base64, mediaType);
+    await logRun(supabase, user.id, digest, { state: "completed", parsed });
     return NextResponse.json(parsed);
   } catch (e) {
     const msg = e instanceof Error ? e.message : "";
+    // Код ошибки провайдера, без его текста: в журнале не должно быть ни
+    // фрагментов файла, ни чужих сообщений.
+    await logRun(supabase, user.id, digest, {
+      state: "failed",
+      reason: msg.split(":")[0].slice(0, 40) || "unknown",
+    });
     if (msg === "NO_API_KEY") {
       return NextResponse.json({ error: t.unavailable }, { status: 503 });
     }

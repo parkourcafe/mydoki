@@ -13,6 +13,7 @@ import type { OnboardingTask } from "@/lib/onboarding";
 import { type EmploymentDocument, expiryStatus } from "@/lib/employmentDocs";
 import type { Amendment } from "@/lib/amendments";
 import type { OffboardingTask } from "@/lib/offboarding";
+import SaveLetter from "./SaveLetter";
 import EmployeeEditForm from "./EmployeeEditForm";
 import OnboardingManager from "./OnboardingManager";
 import EmploymentDocs from "./EmploymentDocs";
@@ -154,12 +155,12 @@ export default async function EmployeeDetailPage({
         </Link>
         <h1 className="mt-2 text-2xl font-semibold">{name || emp.position}</h1>
         {name && <p className="text-sm text-slate-500">{emp.position}</p>}
-        <a
-          href={`/employer/employees/${emp.id}/letter`}
-          className="btn-ghost mt-3 inline-block"
-        >
-          {t.letter}
-        </a>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <a href={`/employer/employees/${emp.id}/letter`} className="btn-ghost">
+            {t.letter}
+          </a>
+          <SaveLetter locale={locale} employmentId={emp.id} />
+        </div>
       </div>
 
       <section className="card">
