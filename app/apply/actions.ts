@@ -9,6 +9,7 @@ import { currentIpHash, verifyTurnstile } from "@/lib/antispam";
 import { sendNewApplicationEmail, sendAdminReportAlert } from "@/lib/email";
 import { sendPushToUser } from "@/lib/push";
 import { getLocale } from "@/lib/i18n";
+import { hasStructuredContent, parseSections } from "@/lib/resume";
 
 // ---------------------------- Report ----------------------------------
 
@@ -118,7 +119,54 @@ export type SubmitApplicationInput = {
   documents: { type: string; label: string; path: string; name: string; size: number }[];
   docsComplete: number;
   docsTotal: number;
+  /** Приложить к отклику снимок резюме (только для вошедшего кандидата). */
+  attachResume?: boolean;
 };
+
+/**
+ * Кладёт к отклику снимок резюме кандидата — именно снимок, а не ссылку на
+ * живую таблицу: работодатель видит то, что ему отправили, а поздние правки
+ * резюме в его копию не протекают. Пишем от лица пользователя, RLS проверяет,
+ * что отклик действительно его.
+ *
+ * Отклик к этому моменту уже создан, поэтому неудача здесь его не отменяет:
+ * человек не должен потерять отправленную заявку из-за необязательного блока.
+ */
+async function attachResumeSnapshot(
+  supabase: Awaited<ReturnType<typeof getSupabaseServer>>,
+  applicationId: string
+): Promise<void> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return;
+
+  const { data } = await supabase
+    .from("resumes")
+    .select("headline, location, about, sections")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (!data) return;
+
+  const row = data as {
+    headline: string | null;
+    location: string | null;
+    about: string | null;
+    sections: unknown;
+  };
+  const sections = parseSections(row.sections);
+  // Пустое резюме прикладывать нечего.
+  if (!hasStructuredContent(sections) && !(row.about ?? "").trim()) return;
+
+  await supabase.from("application_resumes").insert({
+    application_id: applicationId,
+    user_id: user.id,
+    headline: row.headline,
+    location: row.location,
+    about: row.about,
+    sections,
+  });
+}
 
 // Обезличенный хеш IP для анти-спама (не храним сам IP; §2.1). Соль — из env,
 // с запасным значением, чтобы IPv4 нельзя было тривиально перебрать.
@@ -279,6 +327,10 @@ export async function submitApplication(
     vacancy_title?: string;
     company_name?: string;
   };
+
+  if (!res.duplicate && input.attachResume) {
+    await attachResumeSnapshot(supabase, input.applicationId);
+  }
 
   if (!res.duplicate && res.employer_email) {
     const locale = await getLocale();

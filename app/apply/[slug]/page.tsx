@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getSupabaseServer } from "@/lib/supabase/server";
+import { hasStructuredContent, parseSections } from "@/lib/resume";
 import { getPublicHiringLocale } from "@/lib/i18n";
 import {
   filterApplicationStageDocuments,
@@ -143,12 +144,14 @@ export default async function ApplyPage({
   } = await supabase.auth.getUser();
   let vaultDocs: { id: string; title: string; category: string }[] = [];
   let prefill: { fullName: string; whatsapp: string; email: string } | null = null;
+  // Есть ли что прикладывать: пустое резюме предлагать бессмысленно.
+  let canAttachResume = false;
   if (user) {
     const [{ data: docs }, { data: resume }] = await Promise.all([
       supabase.from("documents").select("id, title, category, document_files(id)"),
       supabase
         .from("resumes")
-        .select("full_name, contact, email")
+        .select("full_name, contact, email, about, sections")
         .eq("user_id", user.id)
         .maybeSingle(),
     ]);
@@ -160,6 +163,9 @@ export default async function ApplyPage({
       whatsapp: resume?.contact ?? "",
       email: resume?.email ?? user.email ?? "",
     };
+    canAttachResume =
+      hasStructuredContent(parseSections(resume?.sections)) ||
+      Boolean((resume?.about ?? "").trim());
   }
 
   // Публичная мета: статус (виден и для paused) + verified-бейдж.
@@ -259,6 +265,7 @@ export default async function ApplyPage({
           videoQuestion={vacancy.video_question ?? null}
           vaultDocs={vaultDocs}
           prefill={prefill}
+          canAttachResume={canAttachResume}
         />
       </div>
 
