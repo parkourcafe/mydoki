@@ -16,9 +16,12 @@ test.describe("phase 1 public pages", () => {
   test("home shows three entrances (en)", async ({ page, context, baseURL }) => {
     await useLocale(context, baseURL, "en");
     await page.goto("/");
-    await expect(page.getByRole("link", { name: /For people/ })).toBeVisible();
+    // Продукт сместился на найм: EN/ID теперь ведут на работодателя,
+    // кандидата и объединённый поток hiring & onboarding (app/page.tsx),
+    // а не на старые "For people / For families" из семейного сейфа.
     await expect(page.getByRole("link", { name: /For employers/ })).toBeVisible();
-    await expect(page.getByRole("link", { name: /For families/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: /For candidates/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: /Hiring & onboarding flow/ })).toBeVisible();
   });
 
   test("/about renders (en)", async ({ page, context, baseURL }) => {
