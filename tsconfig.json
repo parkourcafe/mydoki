@@ -9,6 +9,10 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
+    // Разрешаем указывать .ts в относительных импортах: так модули из lib/,
+    // покрытые юнит-тестами (node --test --experimental-strip-types), резолвятся
+    // и в Node ESM, и в сборке Next.
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",

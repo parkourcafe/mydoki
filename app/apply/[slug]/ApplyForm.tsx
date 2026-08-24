@@ -68,6 +68,10 @@ const M = {
     errVideoReq: "Please record or upload your video answer.",
     vaultTitle: "Attach from your vault",
     vaultHint: "You're signed in — attach documents you already keep in Doki instead of re-uploading.",
+    resumeTitle: "Attach your resume",
+    resumeHint:
+      "The employer receives a snapshot of your resume as it is now. Later edits on your side won't change their copy.",
+    resumeAttach: "Attach my resume: experience, education, skills",
     errConsent: "Please agree to the consent to continue.",
     errFileType: "Only PDF, JPG or PNG files are allowed.",
     errFileSize: "File is too large (max 10MB).",
@@ -123,6 +127,10 @@ const M = {
     errVideoReq: "Rekam atau unggah jawaban video Anda.",
     vaultTitle: "Lampirkan dari brankas",
     vaultHint: "Anda sudah masuk — lampirkan dokumen yang sudah tersimpan di Doki tanpa unggah ulang.",
+    resumeTitle: "Lampirkan resume Anda",
+    resumeHint:
+      "Pemberi kerja menerima cuplikan resume Anda saat ini. Perubahan Anda setelahnya tidak mengubah salinan mereka.",
+    resumeAttach: "Lampirkan resume saya: pengalaman, pendidikan, keterampilan",
     errConsent: "Setujui persetujuan untuk melanjutkan.",
     errFileType: "Hanya berkas PDF, JPG, atau PNG.",
     errFileSize: "Berkas terlalu besar (maks 10MB).",
@@ -178,6 +186,10 @@ const M = {
     errVideoReq: "Запишите или загрузите видео-ответ.",
     vaultTitle: "Прикрепить из сейфа",
     vaultHint: "Вы вошли в аккаунт — прикрепите документы, которые уже хранятся в Doki, вместо повторной загрузки.",
+    resumeTitle: "Приложить резюме",
+    resumeHint:
+      "Работодатель получит снимок резюме на сейчас. Ваши поздние правки в его копию не попадут.",
+    resumeAttach: "Приложить моё резюме: опыт, обучение, навыки",
     errConsent: "Подтвердите согласие, чтобы продолжить.",
     errFileType: "Только PDF, JPG или PNG.",
     errFileSize: "Файл слишком большой (макс. 10 МБ).",
@@ -233,6 +245,10 @@ const M = {
     errVideoReq: "Video javobingizni yozing yoki yuklang.",
     vaultTitle: "Seyfdan biriktirish",
     vaultHint: "Siz tizimga kirgansiz — qayta yuklamasdan Doki'dagi hujjatlaringizni biriktiring.",
+    resumeTitle: "Rezyumeni biriktirish",
+    resumeHint:
+      "Ish beruvchi rezyumeningizning hozirgi nusxasini oladi. Keyingi tahrirlaringiz uning nusxasini o‘zgartirmaydi.",
+    resumeAttach: "Rezyumemni biriktirish: tajriba, ta’lim, ko‘nikmalar",
     errConsent: "Davom etish uchun rozilikni tasdiqlang.",
     errFileType: "Faqat PDF, JPG yoki PNG.",
     errFileSize: "Fayl juda katta (maks 10MB).",
@@ -278,6 +294,7 @@ export default function ApplyForm({
   videoQuestion,
   vaultDocs,
   prefill,
+  canAttachResume,
 }: {
   locale: Locale;
   vacancyId: string;
@@ -290,6 +307,8 @@ export default function ApplyForm({
   videoQuestion: string | null;
   vaultDocs: { id: string; title: string; category: string }[];
   prefill: { fullName: string; whatsapp: string; email: string } | null;
+  /** У вошедшего кандидата есть непустое резюме — можно предложить приложить. */
+  canAttachResume: boolean;
 }) {
   const t = M[locale];
   // Displayed consent = base agreement + explicit sensitive-data statement.
@@ -311,6 +330,7 @@ export default function ApplyForm({
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [vaultPicked, setVaultPicked] = useState<Record<string, boolean>>({});
+  const [attachResume, setAttachResume] = useState(canAttachResume);
   const errorRef = useRef<HTMLDivElement>(null);
   // Форма показывает список ошибок валидации; для одиночных ошибок отправки
   // (лимит, размер файла) используем ту же ленту.
@@ -534,6 +554,7 @@ export default function ApplyForm({
         documents: uploaded,
         docsComplete: uploaded.length,
         docsTotal: requiredDocuments.length,
+        attachResume: canAttachResume && attachResume,
       });
 
       if (!result.ok) {
@@ -713,6 +734,27 @@ export default function ApplyForm({
               );
             })}
           </ul>
+        </div>
+      )}
+
+      {canAttachResume && (
+        <div className="space-y-2">
+          <div>
+            <p className="label">📄 {t.resumeTitle}</p>
+            <p className="text-xs text-slate-500">{t.resumeHint}</p>
+          </div>
+          <label className="flex cursor-pointer items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm">
+            <input
+              type="checkbox"
+              className="h-4 w-4"
+              checked={attachResume}
+              onChange={(e) => {
+                markStarted();
+                setAttachResume(e.target.checked);
+              }}
+            />
+            <span>{t.resumeAttach}</span>
+          </label>
         </div>
       )}
 

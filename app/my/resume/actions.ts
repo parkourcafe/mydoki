@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
+import { parseSections, type ResumeSections } from "@/lib/resume";
 
 export type ResumeCustomField = { label: string; value: string };
 
@@ -15,6 +16,7 @@ export type ResumeInput = {
   about: string;
   experience: string;
   custom_fields: ResumeCustomField[];
+  sections: ResumeSections;
 };
 
 /** Сохранить (создать или обновить) резюме текущего пользователя. */
@@ -38,6 +40,10 @@ export async function saveResume(
     .filter((f) => f.label || f.value)
     .slice(0, 30);
 
+  // Секции приводим к канону на сервере: клиенту тут не доверяем. parseSections
+  // терпим к мусору и к отсутствию поля (старая вкладка со старым бандлом).
+  const sections = parseSections(input.sections);
+
   const supabase = await getSupabaseServer();
   const { error } = await supabase.from("resumes").upsert(
     {
@@ -50,6 +56,7 @@ export async function saveResume(
       about: clean(input.about),
       experience: clean(input.experience),
       custom_fields: custom,
+      sections,
       updated_at: new Date().toISOString(),
     },
     { onConflict: "user_id" },

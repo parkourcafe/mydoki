@@ -4,6 +4,12 @@ import { getSupabaseServer } from "@/lib/supabase/server";
 import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import { waLink, type RequiredDocument } from "@/lib/career";
+import {
+  formatPeriod,
+  parseSections,
+  sortExperienceDesc,
+  type ResumeSections,
+} from "@/lib/resume";
 import type { Offer } from "@/lib/offer";
 import CandidateActions from "./CandidateActions";
 import CandidateAI, { type AiRunView } from "./CandidateAI";
@@ -20,6 +26,14 @@ const M = {
     email: "Email",
     answers: "Ответы",
     noAnswers: "Ответов нет.",
+    resumeTitle: "Резюме кандидата",
+    resumeSent: "Снимок на момент отклика",
+    resumeDownload: "Скачать CV (PDF)",
+    expTitle: "Опыт",
+    eduTitle: "Обучение",
+    skillsTitle: "Навыки",
+    langsTitle: "Языки",
+    present: "сейчас",
     history: "История",
     noHistory: "Событий пока нет.",
     consents: "Согласия",
@@ -53,6 +67,14 @@ const M = {
     email: "Email",
     answers: "Answers",
     noAnswers: "No answers.",
+    resumeTitle: "Candidate resume",
+    resumeSent: "A snapshot taken when they applied",
+    resumeDownload: "Download CV (PDF)",
+    expTitle: "Experience",
+    eduTitle: "Education",
+    skillsTitle: "Skills",
+    langsTitle: "Languages",
+    present: "now",
     history: "History",
     noHistory: "No events yet.",
     consents: "Consents",
@@ -86,6 +108,14 @@ const M = {
     email: "Email",
     answers: "Javoblar",
     noAnswers: "Javoblar yoʻq.",
+    resumeTitle: "Nomzod rezyumesi",
+    resumeSent: "Ariza berilgan paytdagi nusxa",
+    resumeDownload: "CV yuklab olish (PDF)",
+    expTitle: "Tajriba",
+    eduTitle: "Ta’lim",
+    skillsTitle: "Ko‘nikmalar",
+    langsTitle: "Tillar",
+    present: "hozir",
     history: "Tarix",
     noHistory: "Hozircha voqealar yoʻq.",
     consents: "Roziliklar",
@@ -119,6 +149,14 @@ const M = {
     email: "Email",
     answers: "Jawaban",
     noAnswers: "Tidak ada jawaban.",
+    resumeTitle: "Resume kandidat",
+    resumeSent: "Cuplikan saat melamar",
+    resumeDownload: "Unduh CV (PDF)",
+    expTitle: "Pengalaman",
+    eduTitle: "Pendidikan",
+    skillsTitle: "Keterampilan",
+    langsTitle: "Bahasa",
+    present: "sekarang",
     history: "Riwayat",
     noHistory: "Belum ada peristiwa.",
     consents: "Persetujuan",
@@ -234,6 +272,36 @@ export default async function CandidatePage({
         file_name: d.file_name as string,
         path: d.file_path as string,
       }));
+
+  // Снимок резюме, приложенный кандидатом. Отозванное согласие прячет его
+  // так же, как документы отклика.
+  let resume: {
+    headline: string | null;
+    location: string | null;
+    about: string | null;
+    sections: ResumeSections;
+  } | null = null;
+  if (!consentRevoked) {
+    const { data: resumeRow } = await supabase
+      .from("application_resumes")
+      .select("headline, location, about, sections")
+      .eq("application_id", app.id)
+      .maybeSingle();
+    if (resumeRow) {
+      const r = resumeRow as {
+        headline: string | null;
+        location: string | null;
+        about: string | null;
+        sections: unknown;
+      };
+      resume = {
+        headline: r.headline,
+        location: r.location,
+        about: r.about,
+        sections: parseSections(r.sections),
+      };
+    }
+  }
 
   const [{ data: answerData }, { data: eventData }, { data: runData }] =
     await Promise.all([
@@ -397,6 +465,121 @@ export default async function CandidatePage({
           )}
         </dl>
       </section>
+
+      {resume && (
+        <section className="card space-y-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+                {t.resumeTitle}
+              </h2>
+              <p className="mt-0.5 text-xs text-slate-400">{t.resumeSent}</p>
+            </div>
+            <a
+              href={`/employer/candidates/${app.id}/resume-pdf`}
+              className="shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50"
+            >
+              {t.resumeDownload}
+            </a>
+          </div>
+
+          {(resume.headline || resume.location) && (
+            <p className="text-sm text-slate-700">
+              {resume.headline}
+              {resume.headline && resume.location ? " · " : ""}
+              {resume.location}
+            </p>
+          )}
+          {resume.about && (
+            <p className="whitespace-pre-line text-sm text-slate-600">{resume.about}</p>
+          )}
+
+          {resume.sections.experience.length > 0 && (
+            <div>
+              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                {t.expTitle}
+              </h3>
+              <ul className="space-y-3">
+                {sortExperienceDesc(resume.sections.experience).map((e) => (
+                  <li key={e.id}>
+                    <p className="text-sm font-medium text-slate-800">
+                      {e.position}
+                      {e.position && e.company ? " · " : ""}
+                      {e.company}
+                    </p>
+                    {formatPeriod(e, t.present) && (
+                      <p className="text-xs text-slate-400">{formatPeriod(e, t.present)}</p>
+                    )}
+                    {e.description && (
+                      <p className="mt-0.5 whitespace-pre-line text-sm text-slate-600">
+                        {e.description}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {resume.sections.education.length > 0 && (
+            <div>
+              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                {t.eduTitle}
+              </h3>
+              <ul className="space-y-2">
+                {resume.sections.education.map((e) => (
+                  <li key={e.id}>
+                    <p className="text-sm text-slate-800">
+                      {e.institution}
+                      {e.institution && e.program ? " · " : ""}
+                      {e.program}
+                    </p>
+                    {formatPeriod({ ...e, current: false }, t.present) && (
+                      <p className="text-xs text-slate-400">
+                        {formatPeriod({ ...e, current: false }, t.present)}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {resume.sections.skills.length > 0 && (
+            <div>
+              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                {t.skillsTitle}
+              </h3>
+              <ul className="flex flex-wrap gap-2">
+                {resume.sections.skills.map((skill, i) => (
+                  <li
+                    key={`${skill}-${i}`}
+                    className="rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700"
+                  >
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {resume.sections.languages.length > 0 && (
+            <div>
+              <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+                {t.langsTitle}
+              </h3>
+              <ul className="space-y-1">
+                {resume.sections.languages.map((l) => (
+                  <li key={l.id} className="text-sm text-slate-700">
+                    {l.name}
+                    {l.level && <span className="text-slate-400"> · {l.level}</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="card">
         <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
