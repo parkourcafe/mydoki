@@ -9,6 +9,11 @@ name: ci
 # Три отдельные job вместо одной: typecheck и unit падают за секунды и не
 # должны ждать e2e с поднятым dev-сервером; при провале видно сразу, какой
 # слой сломан.
+#
+# Node 22, не 20: test:unit запускает .ts-файлы тестов через
+# `node --experimental-strip-types` (см. package.json), а этот флаг появился
+# в Node 22.6 — на Node 20 команда падает с «bad option» ещё до первого
+# теста. Требование зафиксировано и в package.json (engines.node).
 
 on:
   pull_request:
@@ -22,7 +27,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run typecheck
@@ -34,7 +39,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run test:unit
@@ -47,7 +52,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - name: Install Playwright browser
