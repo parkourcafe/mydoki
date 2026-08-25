@@ -789,40 +789,47 @@ const DATA: Record<string, Checklist> = {
           },
         ],
       },
+      // RU читают не работодатели, а русскоязычные экспаты: SKCK им нужен
+      // при оформлении рабочего статуса и в отдельных наймах на острове.
       ru: {
-        navLabel: "Чек-лист SKCK",
-        title: "Чек-лист документов SKCK для найма | Doki.help",
+        navLabel: "Справка SKCK",
+        title: "SKCK для иностранца: зачем и что готовить | doki.help",
         metaDescription:
-          "Что такое SKCK, какие документы обычно нужны для оформления и как HR собирает его у кандидатов по одной ссылке-чек-листу.",
-        h1: "Чек-лист документов SKCK для найма",
+          "Зачем справка SKCK иностранцу в Индонезии, какие документы обычно просят при оформлении и как хранить её скан с напоминанием о сроке.",
+        h1: "SKCK для иностранца: когда нужна и что готовить",
         intro:
-          "SKCK (справка о несудимости) — документ, который многие индонезийские работодатели запрашивают при найме. Чек-лист собирает то, что обычно нужно кандидату для оформления, и как аккуратно всё получить. Актуальные требования уточняйте в полиции (Polri) или на официальном портале SKCK.",
-        ctaPrimary: "Собрать эти документы по одной ссылке",
+          "SKCK — индонезийская справка об отсутствии судимости. Её чаще всего спрашивают при оформлении рабочего статуса, иногда — работодатели или лицензируемые сферы. Набор документов зависит от категории заявителя и отделения; актуальные требования уточняйте в Polri или у вашего агента.",
+        ctaPrimary: "Хранить SKCK с напоминанием о сроке",
         groups: [
           {
-            h2: "Что обычно нужно для оформления SKCK",
+            h2: "Когда справку обычно просят у иностранца",
             items: [
-              "Действующий KTP",
-              "Семейная карта (KK)",
-              "Свежие фото на красном фоне",
-              "Свидетельство о рождении или диплом (зависит от отделения)",
-              "Заявление в отделении полиции или онлайн",
+              "Оформление рабочего статуса через работодателя",
+              "Найм в сферах, где проверка обязательна по правилам отрасли",
+              "Продление или смена миграционного статуса, если этого требует процесс",
             ],
           },
           {
-            h2: "Что HR обычно собирает у кандидата",
+            h2: "Что часто запрашивают при оформлении",
             items: [
-              "Копию готового SKCK",
-              "Дату выдачи и срок действия",
-              "KTP для сверки личности",
+              "Паспорт и копии ключевых страниц",
+              "Документ о текущем статусе пребывания (KITAS/KITAP), если есть",
+              "Спонсорское письмо — обычно от компании",
+              "Фото на документы (требования к фону зависят от категории)",
             ],
           },
           {
-            h2: "Соберите без переписки",
+            h2: "После получения — два простых шага",
             items: [
-              "Отправьте одну ссылку-чек-лист — кандидат загружает без регистрации",
-              "Статус «полный / не хватает» по каждому",
-              "Напоминание до истечения срока SKCK",
+              "Сохраните скан в сейф: справка понадобится не один раз за годы на острове",
+              "Поставьте напоминание о дате истечения — письмо придёт за 30, 7 и 1 день",
+            ],
+          },
+          {
+            h2: "Как безопасно передать SKCK работодателю или агенту",
+            items: [
+              "Отправьте ссылку с истекающим сроком вместо файла в чат навсегда",
+              "При необходимости ограничьте число просмотров — журнал открытий ведётся",
             ],
           },
         ],
@@ -830,19 +837,19 @@ const DATA: Record<string, Checklist> = {
         faq: [
           {
             q: "Сколько действует SKCK?",
-            a: "У SKCK ограниченный срок действия, обычно требуется продление через период, установленный Polri. Точный срок смотрите на справке или официальном портале SKCK.",
+            a: "Срок действия ограничен и указывается на самой справке. Зафиксируйте дату выдачи в сейфе и поставьте напоминание — продлевать обычно проще до истечения срока. Точные правила уточняйте на официальном портале Polri.",
           },
           {
-            q: "Должен ли кандидат загружать SKCK до собеседования?",
-            a: "Чувствительные документы лучше собирать после оффера, а не у каждого соискателя. Doki по умолчанию откладывает ID и медицинские документы на пост-офферный этап.",
+            q: "Нужен ли SKCK именно в моём случае?",
+            a: "Зависит от типа статуса и требований работодателя. Это не универсальное требование для всех виз — уточняйте в иммиграции (imigrasi.go.id) или у лицензированного агента, который ведёт ваш процесс.",
           },
           {
-            q: "Можно собрать SKCK у многих кандидатов сразу?",
-            a: "Да — отправьте каждому одну и ту же ссылку-чек-лист; каждый загружает свой файл, и вы сразу видите, кто укомплектован.",
+            q: "Чем SKCK отличается от справки о несудимости из России?",
+            a: "Это разные документы: индонезийская справка выдаётся местной полицией и подтверждает отсутствие записей в её юрисдикции. Российская справка может понадобиться отдельно — например, для других целей дома. Уточняйте требования у принимающей стороны.",
           },
           {
-            q: "Когда нужно продлевать SKCK?",
-            a: "У SKCK ограниченный срок действия. Зафиксируйте дату выдачи при сборе и поставьте напоминание — письмо придёт за 30, 7 и 1 день до указанной даты. Точный срок уточняйте на официальном портале SKCK.",
+            q: "Как хранить и отправлять справку безопасно?",
+            a: "В doki.help документы лежат в приватном хранилище с доступом только для вашей семьи, а нужный файл можно отправить ссылкой с истекающим сроком и лимитом просмотров — без «вечных» вложений в чатах.",
           },
         ],
       },
@@ -2608,6 +2615,271 @@ const DATA: Record<string, Checklist> = {
         { href: "/checklists/candidate-documents-requested-checklist", label: "HR so‘raydigan hujjatlar" },
         { href: "/checklists/ijazah-transkrip-checklist", label: "Diplom va transkript ro‘yxati" },
         { href: "/security", label: "Hujjatlaringiz qanday himoyalanadi" },
+      ],
+    },
+  },
+
+  // Чек-лист-магнит под запрос «какие документы нужны россиянину для
+  // долгосрочной жизни на Бали». RU — приоритетная локаль, остальные —
+  // рабочие переводы. Правила правдивости: без конкретных визовых сроков,
+  // требования — «уточняйте в официальных источниках».
+  "bali-relocation-checklist": {
+    slug: "bali-relocation-checklist",
+    emoji: "🌴",
+    locales: {
+      ru: {
+        navLabel: "Чек-лист переезда на Бали",
+        title: "Документы для жизни на Бали: чек-лист | doki.help",
+        metaDescription:
+          "Практичный список документов для долгосрочной жизни на Бали: паспорт и визы, страховки, аренда, дети, связь с Россией. Соберите всё до переезда.",
+        h1: "Какие документы нужны для долгосрочной жизни на Бали",
+        intro:
+          "Спокойный чек-лист для тех, кто уезжает на Бали надолго: что собрать до переезда, что держать под рукой на острове и как ничего не потерять. Требования к визам меняются — актуальные условия уточняйте в официальных источниках (imigrasi.go.id) или у лицензированного агента.",
+        ctaPrimary: "Собрать документы в один сейф",
+        groups: [
+          {
+            h2: "Личность и въезд",
+            items: [
+              "Загранпаспорт с запасом срока действия (для многих виз просят действующий минимум 6 месяцев)",
+              "Сканы всех страниц паспорта — отдельно от галереи телефона",
+              "Цифровые и бумажные фото на документы (требования зависят от типа визы)",
+              "Действующая виза или KITAS и подтверждения прошлых продлений",
+            ],
+          },
+          {
+            h2: "Деньги и работа",
+            items: [
+              "Банковские карты, которыми реально можно платить в Индонезии",
+              "Выписки и подтверждение дохода — часто просят для счёта, аренды или визы",
+              "Трудовой договор или контракт с заказчиками (для удалённой работы)",
+              "Реквизиты и ИНН — для налоговых вопросов дома",
+            ],
+          },
+          {
+            h2: "Медицина",
+            items: [
+              "Медицинская страховка, покрывающая Индонезию и активный отдых, если занимаетесь им",
+              "Полис и контакты страховой — офлайн, не только в почте",
+              "Рецепты и заключения врача по хроническим вопросам",
+              "Записи о прививках — иногда просят школа или работодатель",
+            ],
+          },
+          {
+            h2: "Дети",
+            items: [
+              "Свидетельства о рождении (с переводом, если потребуют)",
+              "Документы для школы: академическая справка, прививки, фото",
+              "Согласия на выезд, если ребёнок едет с одним родителем",
+            ],
+          },
+          {
+            h2: "Жильё и транспорт",
+            items: [
+              "Договор аренды жилья — храните скан подписанной версии",
+              "Международное водительское удостоверение или местные права по статусу",
+              "Документы на байк/машину и страховка транспорта",
+              "Опись имущества при заселении — пригодится при выезде",
+            ],
+          },
+          {
+            h2: "Связь с Россией",
+            items: [
+              "Копии внутреннего паспорта и ИНН — многие вопросы решают дистанционно",
+              "Свежие сканы для нотариуса, если нужна доверенность",
+              "Электронная почта и резервный способ доступа к госуслугам",
+            ],
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Что оцифровать в первую очередь?",
+            a: "Паспорты всех членов семьи, визы и штампы о въезде, страховки, договор аренды и свидетельства детей. Это набор, который чаще всего просят показать: на границе, в школе, клинике или агентстве.",
+          },
+          {
+            q: "Где хранить сканы, чтобы они были под рукой?",
+            a: "В одном месте, а не в галерее и чатах. В doki.help документы раскладываются по членам семьи, открываются офлайн как установленное приложение (PWA), а нужный файл можно отправить школе или агенту ссылкой с истекающим сроком.",
+          },
+          {
+            q: "Как не пропустить продление визы?",
+            a: "Заведите напоминания на все даты: виза, KITAS, паспорт, страховка. В doki.help письмо приходит за 30, 7 и 1 день до срока — этого обычно достаточно, чтобы спокойно начать процесс.",
+          },
+          {
+            q: "Что делать, если паспорт потерялся на острове?",
+            a: "Обратитесь в консульство; заранее сохранённые сканы заметно упрощают идентификацию. Копии не заменяют оригинал, но экономят время и нервы. Держите оригиналы при себе, а сканы — в доступе близких.",
+          },
+        ],
+      },
+      en: {
+        navLabel: "Bali relocation checklist",
+        title: "Documents for Long-Term Life in Bali | Doki.help",
+        metaDescription:
+          "A practical checklist for long-term life in Bali: passport and visas, insurance, rental papers, kids' documents and home-country paperwork — gathered before you move.",
+        h1: "Documents you need for long-term life in Bali",
+        intro:
+          "A calm checklist for moving to Bali long-term: what to gather before the move, what to keep at hand on the island, and how not to lose any of it. Visa requirements change — always confirm current rules via official sources (imigrasi.go.id) or a licensed agent.",
+        ctaPrimary: "Gather your documents in one vault",
+        groups: [
+          {
+            h2: "Identity and entry",
+            items: [
+              "Passport with plenty of validity left (many visa routes ask for 6+ months)",
+              "Scans of all passport pages — kept separately from your phone gallery",
+              "Digital and printed photos for documents (requirements vary by visa type)",
+              "Your current visa or stay permit and confirmations of past extensions",
+            ],
+          },
+          {
+            h2: "Money and work",
+            items: [
+              "Bank cards that actually work in Indonesia",
+              "Statements or proof of income — often asked for banking, rentals or visas",
+              "Employment or client contract if you work remotely",
+              "Tax ID details for paperwork back home",
+            ],
+          },
+          {
+            h2: "Healthcare",
+            items: [
+              "Health insurance that covers Indonesia (and action sports, if you do them)",
+              "Policy number and insurer contacts — offline, not only in your inbox",
+              "Prescriptions and doctor letters for ongoing conditions",
+              "Vaccination records — schools and employers sometimes ask",
+            ],
+          },
+          {
+            h2: "Children",
+            items: [
+              "Birth certificates (with translations if requested)",
+              "School enrolment papers: academic records, vaccinations, photos",
+              "Travel consent letters when a child travels with one parent",
+            ],
+          },
+          {
+            h2: "Housing and transport",
+            items: [
+              "Rental agreement — keep a scan of the signed version",
+              "International driving permit or local licence per your status",
+              "Bike/car papers and vehicle insurance",
+              "Move-in inventory list — useful when you leave",
+            ],
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "Which documents should I digitise first?",
+            a: "Passports for everyone in the family, visas and entry stamps, insurance policies, the rental agreement and children's certificates. That's the set most often asked for at borders, schools, clinics and agencies.",
+          },
+          {
+            q: "Where should I keep the scans?",
+            a: "In one place rather than a gallery or chats. In doki.help documents are organised per person, open offline as an installable app (PWA), and a single file can be shared with a school or agent via an expiring link.",
+          },
+          {
+            q: "How do I avoid missing a renewal date?",
+            a: "Set reminders for every date: visas, permits, passports, insurance. In doki.help an email arrives 30, 7 and 1 day before the deadline — usually enough time to start calmly.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Ceklis pindah ke Bali",
+        title: "Dokumen untuk Hidup Jangka Panjang di Bali | Doki.help",
+        metaDescription:
+          "Ceklis praktis untuk hidup jangka panjang di Bali: paspor dan visa, asuransi, kontrak sewa, dokumen anak — siapkan sebelum pindah.",
+        h1: "Dokumen yang perlu disiapkan untuk hidup lama di Bali",
+        intro:
+          "Ceklis tenang untuk yang merencanakan tinggal lama di Bali: apa yang dikumpulkan sebelum pindah, apa yang dipegang selama di pulau. Aturan visa berubah — cek sumber resmi (imigrasi.go.id) atau agen berlisensi.",
+        ctaPrimary: "Kumpulkan dokumen dalam satu brankas",
+        groups: [
+          {
+            h2: "Identitas dan masuk",
+            items: [
+              "Paspor dengan masa berlaku cukup (banyak jalur visa minta 6+ bulan)",
+              "Salinan semua halaman paspor — terpisah dari galeri ponsel",
+              "Visa atau izin tinggal aktif beserta bukti perpanjangan",
+            ],
+          },
+          {
+            h2: "Uang, kesehatan, keluarga",
+            items: [
+              "Kartu bank yang bisa dipakai di Indonesia dan bukti penghasilan",
+              "Asuransi kesehatan yang mencakup Indonesia, nomor polis offline",
+              "Akta kelahiran anak, dokumen sekolah, surat izin orang tua bila perlu",
+              "Kontrak sewa rumah, SIM sesuai status, dokumen kendaraan",
+            ],
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Dokumen apa yang paling perlu didigitalkan?",
+            a: "Paspor seluruh keluarga, visa dan cap masuk, polis asuransi, kontrak sewa, akta anak. Itu set yang paling sering diminta di imigrasi, sekolah, klinik dan agen.",
+          },
+          {
+            q: "Bagaimana cara tidak melewatkan perpanjangan?",
+            a: "Pasang pengingat untuk setiap tanggal. Di doki.help email datang 30, 7 dan 1 hari sebelum tenggat.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Baliga ko‘chish ro‘yxati",
+        title: "Balida uzoq muddatli hayot uchun hujjatlar | Doki.help",
+        metaDescription:
+          "Balida uzoq yashash uchun amaliy ro‘yxat: pasport va vizalar, sug‘urta, ijara shartnomalari, bolalar hujjatlari.",
+        h1: "Balida uzoq muddatli hayot uchun hujjatlar",
+        intro:
+          "Baliga uzoq vaqtga ko‘chayotganlar uchun xotirjam ro‘yxat: nimalarni oldindan yig‘ish kerak. Viza qoidalari o‘zgarishi mumkin — rasmiy manbalarda tekshiring.",
+        ctaPrimary: "Hujjatlarni bitta seyfga yig‘ing",
+        groups: [
+          {
+            h2: "Shaxs va kirish",
+            items: [
+              "Muddati yetarli bo‘lgan pasport (ko‘p viza yo‘llari 6+ oy so‘raydi)",
+              "Pasport barcha sahifalarining skaneri — telefon galereyasidan alohida",
+              "Amaldagi viza yoki yashash ruxsatnomasi va avvalgi uzaytirishlar",
+            ],
+          },
+          {
+            h2: "Pul, sog‘liq, oila",
+            items: [
+              "Indonziyada ishlaydigan bank kartalari va daromadni tasdiqlovchi hujjatlar",
+              "Indonziyani qamrovchi tibbiy sug‘urta, polis raqami oflayn saqlangan",
+              "Bolalar tug‘ilganlik guvohnomalari, maktab hujjatlari",
+              "Ijara shartnomasi, haydash guvohnomasi, transport hujjatlari",
+            ],
+          },
+        ],
+        faqHeading: "Ko‘p so‘raladigan savollar",
+        faq: [
+          {
+            q: "Qaysi hujjatlarni birinchi navbatda raqamlashtirish kerak?",
+            a: "Oiladagi hamma pasportlari, vizalar va kirish shtampalari, sug‘urma polislari, ijara shartnomasi va bolalar guvohnomalari.",
+          },
+          {
+            q: "Uzaytirish sanasini qanday o‘tkazib yubormaslik kerak?",
+            a: "Har bir sana uchun eslatma qo‘ying. doki.help da xat muddatdan 30, 7 va 1 kun oldin keladi.",
+          },
+        ],
+      },
+    },
+    related: {
+      ru: [
+        { href: "/visa-expiry-reminder", label: "Напоминание о сроке визы" },
+        { href: "/passport-expiry-reminder", label: "Напоминание о сроке паспорта" },
+        { href: "/for/expats", label: "Документы для жизни на Бали" },
+      ],
+      en: [
+        { href: "/visa-expiry-reminder", label: "Visa expiry reminder" },
+        { href: "/passport-expiry-reminder", label: "Passport expiry reminder" },
+        { href: "/secure-document-sharing", label: "Secure document sharing" },
+      ],
+      id: [
+        { href: "/visa-expiry-reminder", label: "Pengingat masa berlaku visa" },
+        { href: "/passport-expiry-reminder", label: "Pengingat masa berlaku paspor" },
+      ],
+      uz: [
+        { href: "/visa-expiry-reminder", label: "Viza muddati eslatmasi" },
+        { href: "/passport-expiry-reminder", label: "Pasport muddati eslatmasi" },
       ],
     },
   },

@@ -34,6 +34,10 @@ const DOC = `# doki.help
 ## Family vault (RU/UZ)
 
 - [Семейный сейф](${u("/ru")}): все документы семьи в одном месте с напоминаниями о сроках
+- [Жизнь на Бали](${u("/ru/for/expats")}): документы для русскоязычных экспатов и долгосрочных жителей острова
+- [Чек-лист переезда на Бали](${u("/checklists/bali-relocation-checklist")}): паспорт и визы, страховки, аренда, дети, связь с Россией
+- [Визаран из Бали](${u("/blog/visa-run-bali")}): планирование поездки и подготовка документов
+- [Продление KITAS](${u("/blog/kitas-extension-timeline")}): календарь подготовки и напоминания о датах
 - [Passport expiry reminder](${u("/passport-expiry-reminder")}): never miss a passport renewal date
 - [Document expiry reminder](${u("/document-expiry-reminder")}): track validity dates for any document
 - [Secure document sharing](${u("/secure-document-sharing")}): expiring links with view limits and watermark

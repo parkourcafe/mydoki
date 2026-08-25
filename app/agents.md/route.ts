@@ -24,7 +24,10 @@ by category. Families can also create their own custom sections.
 
 Parents and families who want one calm, private place for every important
 paper — and to find it fast when it is needed: renewals, travel, school,
-doctors, government offices.
+doctors, government offices. A large RU-audience segment is Russian-speaking
+expats living abroad long-term (for example in Indonesia/Bali): visas and
+stay permits, insurance, rental contracts and children's documents in one
+place, with renewal reminders.
 
 ## Key features
 
