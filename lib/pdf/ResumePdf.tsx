@@ -31,6 +31,7 @@ const M: Record<Locale, Record<string, string>> = {
     about: "О себе",
     other: "Дополнительно",
     present: "по настоящее время",
+    verified: "подтверждено в doki",
     footer: "Резюме составлено на doki.help",
   },
   en: {
@@ -41,6 +42,7 @@ const M: Record<Locale, Record<string, string>> = {
     about: "About",
     other: "Other",
     present: "present",
+    verified: "verified in doki",
     footer: "Resume made on doki.help",
   },
   id: {
@@ -51,6 +53,7 @@ const M: Record<Locale, Record<string, string>> = {
     about: "Tentang",
     other: "Lainnya",
     present: "sekarang",
+    verified: "terverifikasi di doki",
     footer: "Resume dibuat di doki.help",
   },
   uz: {
@@ -61,6 +64,7 @@ const M: Record<Locale, Record<string, string>> = {
     about: "O‘zim haqimda",
     other: "Qo‘shimcha",
     present: "hozirgacha",
+    verified: "doki’da tasdiqlangan",
     footer: "Rezyume doki.help’da tuzilgan",
   },
 };
@@ -114,7 +118,13 @@ export function ResumePdf({ locale, data }: { locale: Locale; data: ResumePdfDat
                   <Text style={styles.entryTitle}>
                     {[e.position, e.company].filter(Boolean).join(" · ")}
                   </Text>
-                  {period ? <Text style={styles.entryMeta}>{period}</Text> : null}
+                  {period || e.verified ? (
+                    <Text style={styles.entryMeta}>
+                      {period}
+                      {period && e.verified ? "  ·  " : ""}
+                      {e.verified ? t.verified : ""}
+                    </Text>
+                  ) : null}
                   {e.description ? <Text style={styles.body}>{e.description}</Text> : null}
                 </View>
               );

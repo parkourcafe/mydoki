@@ -29,6 +29,7 @@ const M = {
     resumeTitle: "Резюме кандидата",
     resumeSent: "Снимок на момент отклика",
     resumeDownload: "Скачать CV (PDF)",
+    verified: "✓ Подтверждено в doki",
     expTitle: "Опыт",
     eduTitle: "Обучение",
     skillsTitle: "Навыки",
@@ -70,6 +71,7 @@ const M = {
     resumeTitle: "Candidate resume",
     resumeSent: "A snapshot taken when they applied",
     resumeDownload: "Download CV (PDF)",
+    verified: "✓ Verified in doki",
     expTitle: "Experience",
     eduTitle: "Education",
     skillsTitle: "Skills",
@@ -111,6 +113,7 @@ const M = {
     resumeTitle: "Nomzod rezyumesi",
     resumeSent: "Ariza berilgan paytdagi nusxa",
     resumeDownload: "CV yuklab olish (PDF)",
+    verified: "✓ doki’da tasdiqlangan",
     expTitle: "Tajriba",
     eduTitle: "Ta’lim",
     skillsTitle: "Ko‘nikmalar",
@@ -152,6 +155,7 @@ const M = {
     resumeTitle: "Resume kandidat",
     resumeSent: "Cuplikan saat melamar",
     resumeDownload: "Unduh CV (PDF)",
+    verified: "✓ Terverifikasi di doki",
     expTitle: "Pengalaman",
     eduTitle: "Pendidikan",
     skillsTitle: "Keterampilan",
@@ -506,6 +510,13 @@ export default async function CandidatePage({
                       {e.position}
                       {e.position && e.company ? " · " : ""}
                       {e.company}
+                      {/* Строка связана с оформлением у работодателя внутри doki:
+                          это не самодекларация кандидата. */}
+                      {e.verified && (
+                        <span className="ml-2 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
+                          {t.verified}
+                        </span>
+                      )}
                     </p>
                     {formatPeriod(e, t.present) && (
                       <p className="text-xs text-slate-400">{formatPeriod(e, t.present)}</p>

@@ -77,6 +77,10 @@ export function parseImportedResume(raw: unknown): ImportedResume {
         id: newEntryId(),
         position: text(x.position),
         company: text(x.company),
+        // Импорт — всегда самодекларация: связи с трудовыми отношениями
+        // внутри doki у чужого файла быть не может.
+        employment_id: null,
+        verified: false,
         start: importMonth(x.start),
         end: importMonth(x.end),
         current: x.current === true,

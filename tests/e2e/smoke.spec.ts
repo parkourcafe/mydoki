@@ -26,8 +26,13 @@ test.describe("public pages", () => {
     ).toBeVisible();
 
     await page.getByRole("button", { name: "Sign up" }).click();
-    await expect(page.locator('input[name="accept_terms"]')).toBeVisible();
-    await expect(page.locator('input[type="checkbox"]')).toHaveCount(1);
+    // Форма регистрации несёт два несвязанных чекбокса без name (LoginForm.tsx):
+    // обязательное согласие с условиями/приватностью и необязательное
+    // согласие на медицинские данные — раньше был один именованный
+    // accept_terms, структура сменилась вместе с формой.
+    const consentCheckbox = page.locator('input[type="checkbox"][required]');
+    await expect(consentCheckbox).toBeVisible();
+    await expect(page.locator('input[type="checkbox"]')).toHaveCount(2);
   });
 
   test("native iOS login uses first-party email auth only", async ({

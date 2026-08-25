@@ -28,11 +28,14 @@ function pickJson(text: string): unknown {
 
 const USER_TEXT = "Извлеки данные этого резюме. Ответ — только JSON.";
 
+/** Потолок текста, который отправляем в модель (символы). */
+export const RESUME_TEXT_LIMIT = 20000;
+
 async function viaAnthropic(base64: string, mediaType: string): Promise<unknown> {
   const apiKey = process.env.ANTHROPIC_API_KEY as string;
   // Ту же переменную читает классификатор документов; здесь свой запасной
   // вариант, потому что разбор резюме заметно сложнее вытаскивания полей.
-  const model = process.env.ANTHROPIC_MODEL || "claude-opus-5";
+  const model = resumeParsingModel();
   const isPdf = mediaType === "application/pdf";
 
   const block = isPdf
@@ -69,12 +72,89 @@ async function viaAnthropic(base64: string, mediaType: string): Promise<unknown>
   return pickJson(text);
 }
 
+/** Тот же разбор, но вход — обычный текст (старое поле «Опыт работы»). */
+async function textViaAnthropic(text: string): Promise<unknown> {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "x-api-key": process.env.ANTHROPIC_API_KEY as string,
+      "anthropic-version": "2023-06-01",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      model: resumeParsingModel(),
+      max_tokens: 4000,
+      system: getPrompt("resume_import").system,
+      messages: [
+        { role: "user", content: `${USER_TEXT}\n\n---\n${text}` },
+      ],
+    }),
+  });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new Error(`ANTHROPIC_${res.status}: ${detail.slice(0, 200)}`);
+  }
+  const data = (await res.json()) as { content?: { type: string; text?: string }[] };
+  return pickJson(
+    (data.content ?? [])
+      .filter((c) => c.type === "text")
+      .map((c) => c.text ?? "")
+      .join("")
+  );
+}
+
+async function textViaGlm(text: string): Promise<unknown> {
+  const base = process.env.GLM_BASE_URL || "https://api.z.ai/api/paas/v4";
+  const res = await fetch(`${base}/chat/completions`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      Authorization: `Bearer ${process.env.GLM_API_KEY as string}`,
+    },
+    body: JSON.stringify({
+      // Текст разбирает обычная модель, зрение тут ни при чём.
+      model: process.env.GLM_MODEL || "glm-4.6",
+      temperature: 0,
+      max_tokens: 4000,
+      messages: [
+        { role: "system", content: getPrompt("resume_import").system },
+        { role: "user", content: `${USER_TEXT}\n\n---\n${text}` },
+      ],
+    }),
+  });
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new Error(`GLM_${res.status}: ${detail.slice(0, 200)}`);
+  }
+  const data = (await res.json()) as { choices?: { message?: { content?: string } }[] };
+  return pickJson(data.choices?.[0]?.message?.content ?? "");
+}
+
+/**
+ * Разбирает старое текстовое поле «Опыт работы» в структурные записи.
+ * @throws NO_API_KEY | ошибка провайдера.
+ */
+export async function parseResumeText(text: string): Promise<ImportedResume> {
+  const trimmed = text.trim().slice(0, RESUME_TEXT_LIMIT);
+  if (!trimmed) return parseImportedResume(null);
+
+  const raw = process.env.ANTHROPIC_API_KEY
+    ? await textViaAnthropic(trimmed)
+    : process.env.GLM_API_KEY
+      ? await textViaGlm(trimmed)
+      : (() => {
+          throw new Error("NO_API_KEY");
+        })();
+
+  return parseImportedResume(raw);
+}
+
 async function viaGlm(base64: string, mediaType: string): Promise<unknown> {
   // У GLM в нашей обвязке только vision-модель: PDF она не принимает.
   if (mediaType === "application/pdf") throw new Error("PDF_UNSUPPORTED");
 
   const base = process.env.GLM_BASE_URL || "https://api.z.ai/api/paas/v4";
-  const model = process.env.GLM_VISION_MODEL || "glm-4v";
+  const model = resumeParsingModel();
 
   const res = await fetch(`${base}/chat/completions`, {
     method: "POST",
@@ -108,6 +188,15 @@ async function viaGlm(base64: string, mediaType: string): Promise<unknown> {
     choices?: { message?: { content?: string } }[];
   };
   return pickJson(data.choices?.[0]?.message?.content ?? "");
+}
+
+/** Какая модель отработала — уходит в журнал прогонов (ai_runs.model). */
+export function resumeParsingModel(): string {
+  if (process.env.ANTHROPIC_API_KEY) {
+    return process.env.ANTHROPIC_MODEL || "claude-opus-5";
+  }
+  if (process.env.GLM_API_KEY) return process.env.GLM_VISION_MODEL || "glm-4v";
+  return "";
 }
 
 /**

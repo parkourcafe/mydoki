@@ -14,6 +14,18 @@ export type ResumeExperience = {
   id: string;
   position: string;
   company: string;
+  /**
+   * Ссылка на запись трудовых отношений (employments.id), если строка взята
+   * из карьерного таймлайна, а не набрана руками. Ставит только сервер,
+   * проверив, что запись действительно принадлежит этому человеку.
+   */
+  employment_id: string | null;
+  /**
+   * Оформлено работодателем внутри doki (employments.manual === false).
+   * Вычисляется на сервере при чтении и при отправке отклика; в резюме
+   * пользователя не хранится, чтобы это нельзя было себе приписать.
+   */
+  verified: boolean;
   /** YYYY-MM либо пустая строка. */
   start: string;
   /** YYYY-MM либо пустая строка. При current === true игнорируется. */
@@ -106,6 +118,8 @@ export function parseSections(raw: unknown): ResumeSections {
         id: id(x.id),
         position: str(x.position, RESUME_LIMITS.shortText),
         company: str(x.company, RESUME_LIMITS.shortText),
+        employment_id: str(x.employment_id, 64) || null,
+        verified: x.verified === true,
         start: month(x.start),
         end: month(x.end),
         current: x.current === true,
@@ -135,7 +149,7 @@ export function parseSections(raw: unknown): ResumeSections {
 }
 
 const experienceEmpty = (e: ResumeExperience) =>
-  !e.position && !e.company && !e.description && !e.start && !e.end;
+  !e.position && !e.company && !e.description && !e.start && !e.end && !e.employment_id;
 
 const educationEmpty = (e: ResumeEducation) =>
   !e.institution && !e.program && !e.start && !e.end;
@@ -151,6 +165,8 @@ export function normalizeSections(input: ResumeSections): ResumeSections {
       id: id(e.id),
       position: str(e.position, RESUME_LIMITS.shortText),
       company: str(e.company, RESUME_LIMITS.shortText),
+      employment_id: str(e.employment_id, 64) || null,
+      verified: e.verified === true,
       start: month(e.start),
       end: e.current === true ? "" : month(e.end),
       current: e.current === true,
@@ -233,9 +249,64 @@ export function blankExperience(): ResumeExperience {
     id: newEntryId(),
     position: "",
     company: "",
+    employment_id: null,
+    verified: false,
     start: "",
     end: "",
     current: false,
+    description: "",
+  };
+}
+
+/** Идентификаторы трудовых отношений, на которые ссылается резюме. */
+export function linkedEmploymentIds(sections: ResumeSections): string[] {
+  const ids = new Set<string>();
+  for (const e of sections.experience) if (e.employment_id) ids.add(e.employment_id);
+  return [...ids];
+}
+
+/**
+ * Проставляет отметку «подтверждено работодателем» по списку записей, которые
+ * сервер уже проверил (принадлежат человеку и оформлены не вручную). Всё
+ * остальное явно сбрасывается: отметку нельзя принести с клиента.
+ */
+export function markVerifiedExperience(
+  sections: ResumeSections,
+  verifiedEmploymentIds: Iterable<string>
+): ResumeSections {
+  const verified = new Set(verifiedEmploymentIds);
+  return {
+    ...sections,
+    experience: sections.experience.map((e) => ({
+      ...e,
+      verified: Boolean(e.employment_id) && verified.has(e.employment_id as string),
+    })),
+  };
+}
+
+/** Снимает отметку подтверждения со всех записей (перед записью в resumes). */
+export function clearVerified(sections: ResumeSections): ResumeSections {
+  return markVerifiedExperience(sections, []);
+}
+
+/** Запись резюме из трудовых отношений: даты в employments — YYYY-MM-DD. */
+export function experienceFromEmployment(employment: {
+  id: string;
+  position: string;
+  company_name: string;
+  start_date: string | null;
+  end_date: string | null;
+  status: string;
+}): ResumeExperience {
+  return {
+    id: newEntryId(),
+    position: employment.position ?? "",
+    company: employment.company_name ?? "",
+    employment_id: employment.id,
+    verified: false,
+    start: (employment.start_date ?? "").slice(0, 7),
+    end: employment.status === "ended" ? (employment.end_date ?? "").slice(0, 7) : "",
+    current: employment.status !== "ended",
     description: "",
   };
 }

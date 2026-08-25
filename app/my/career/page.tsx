@@ -8,6 +8,8 @@ import {
   employmentTypeLabel,
   formatPeriod,
 } from "@/lib/employment";
+import { linkedEmploymentIds, parseSections } from "@/lib/resume";
+import AddToResume from "./AddToResume";
 import {
   splitCurrentArchive,
   sortByStartDesc,
@@ -29,6 +31,7 @@ const M = {
     manual: "Ручная",
     open: "Открыть →",
     approx: "ориентировочно",
+    resumeHint: "Записи от работодателя можно добавить в резюме — там они получат отметку «подтверждено».",
   },
   en: {
     title: "Career timeline",
@@ -42,6 +45,7 @@ const M = {
     manual: "Manual",
     open: "Open →",
     approx: "approx.",
+    resumeHint: "Employer records can be added to your resume, where they carry a \u00abverified\u00bb mark.",
   },
   id: {
     title: "Linimasa karier",
@@ -55,6 +59,7 @@ const M = {
     manual: "Manual",
     open: "Buka →",
     approx: "perkiraan",
+    resumeHint: "Catatan dari perusahaan bisa ditambahkan ke resume dan mendapat tanda \u00abterverifikasi\u00bb.",
   },
   uz: {
     title: "Karyera tarixi",
@@ -68,6 +73,7 @@ const M = {
     manual: "Qo‘lda",
     open: "Ochish →",
     approx: "taxminan",
+    resumeHint: "Ish beruvchi yozuvlarini rezyumega qo‘shsangiz bo‘ladi — u yerda «tasdiqlangan» belgisi bo‘ladi.",
   },
 } as const;
 
@@ -76,31 +82,31 @@ function Entry({
   locale,
   today,
   labels,
+  linked,
 }: {
   e: Employment;
   locale: Locale;
   today: string;
   labels: (typeof M)[Locale];
+  linked: boolean;
 }) {
   const months = employmentDurationMonths(e.start_date, e.end_date, today);
   return (
-    <li>
-      <Link
-        href={`/my/employment/${e.id}`}
-        className="card flex items-center justify-between gap-3 hover:shadow-md"
-      >
-        <div className="min-w-0">
-          <p className="truncate font-medium">{e.position}</p>
-          <p className="truncate text-sm text-slate-500">{e.company_name}</p>
-          <p className="mt-1 text-xs text-slate-400">
-            {employmentTypeLabel(locale, e.employment_type)} ·{" "}
-            {formatPeriod(locale, e.start_date, e.end_date)} · {formatDuration(months, locale)}
-          </p>
-        </div>
-        <span className="shrink-0 text-xs text-slate-400">
+    <li className="card flex items-center justify-between gap-3">
+      <Link href={`/my/employment/${e.id}`} className="min-w-0 flex-1">
+        <p className="truncate font-medium">{e.position}</p>
+        <p className="truncate text-sm text-slate-500">{e.company_name}</p>
+        <p className="mt-1 text-xs text-slate-400">
+          {employmentTypeLabel(locale, e.employment_type)} ·{" "}
+          {formatPeriod(locale, e.start_date, e.end_date)} · {formatDuration(months, locale)}
+        </p>
+      </Link>
+      <div className="flex shrink-0 flex-col items-end gap-1.5">
+        <span className="text-xs text-slate-400">
           {e.manual ? labels.manual : labels.fromEmployer}
         </span>
-      </Link>
+        <AddToResume locale={locale} employmentId={e.id} linked={linked} />
+      </div>
     </li>
   );
 }
@@ -113,11 +119,15 @@ export default async function CareerTimelinePage() {
   const supabase = await getSupabaseServer();
   const today = new Date().toISOString().slice(0, 10);
 
-  const { data } = await supabase
-    .from("employments")
-    .select("*")
-    .eq("employee_user_id", user.id);
+  const [{ data }, { data: resumeRow }] = await Promise.all([
+    supabase.from("employments").select("*").eq("employee_user_id", user.id),
+    supabase.from("resumes").select("sections").eq("user_id", user.id).maybeSingle(),
+  ]);
   const items = sortByStartDesc((data ?? []) as Employment[]);
+  // Что уже перенесено в резюме — чтобы не предлагать добавить повторно.
+  const linkedIds = new Set(
+    linkedEmploymentIds(parseSections((resumeRow as { sections?: unknown } | null)?.sections))
+  );
   const { current, archive } = splitCurrentArchive(items);
   const totalMonths = totalExperienceMonths(items, today);
 
@@ -126,6 +136,7 @@ export default async function CareerTimelinePage() {
       <div className="mb-4">
         <h1 className="text-2xl font-semibold">{t.title}</h1>
         <p className="mt-1 text-sm text-slate-500">{t.subtitle}</p>
+        <p className="mt-1 text-xs text-slate-400">{t.resumeHint}</p>
       </div>
 
       {items.length === 0 ? (
@@ -153,7 +164,14 @@ export default async function CareerTimelinePage() {
               </h2>
               <ul className="space-y-3">
                 {current.map((e) => (
-                  <Entry key={e.id} e={e} locale={locale} today={today} labels={t} />
+                  <Entry
+                    key={e.id}
+                    e={e}
+                    locale={locale}
+                    today={today}
+                    labels={t}
+                    linked={linkedIds.has(e.id)}
+                  />
                 ))}
               </ul>
             </div>
@@ -166,7 +184,14 @@ export default async function CareerTimelinePage() {
               </h2>
               <ul className="space-y-3">
                 {archive.map((e) => (
-                  <Entry key={e.id} e={e} locale={locale} today={today} labels={t} />
+                  <Entry
+                    key={e.id}
+                    e={e}
+                    locale={locale}
+                    today={today}
+                    labels={t}
+                    linked={linkedIds.has(e.id)}
+                  />
                 ))}
               </ul>
             </div>

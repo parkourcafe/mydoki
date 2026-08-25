@@ -231,7 +231,7 @@ export function docTypeLabel(locale: Locale, type: DocType | string): string {
 export function normalizeWhatsapp(raw: string): string {
   const trimmed = (raw ?? "").trim();
   const hasPlus = trimmed.startsWith("+");
-  let digits = trimmed.replace(/\D/g, "");
+  const digits = trimmed.replace(/\D/g, "");
   if (!digits) return "";
   if (hasPlus) return "+" + digits;
   if (digits.startsWith("0")) return "+62" + digits.slice(1);

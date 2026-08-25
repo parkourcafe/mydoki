@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { Locale } from "@/lib/i18n";
-import { saveResume, type ResumeCustomField } from "./actions";
+import { saveResume, saveResumeToVault, type ResumeCustomField } from "./actions";
 import {
   blankEducation,
   blankExperience,
@@ -75,6 +75,10 @@ const M = {
     start: "Начало",
     end: "Окончание",
     currentJob: "Работаю здесь сейчас",
+    verified: "✓ Подтверждено работодателем",
+    verifiedHint:
+      "Должность, место и период взяты из оформления у работодателя — здесь они не редактируются.",
+    unlink: "Открепить",
     duties: "Обязанности",
     dutiesPh: "Что входило в вашу работу",
     legacyTitle: "Опыт одним текстом",
@@ -104,6 +108,17 @@ const M = {
     entry: "Запись",
     save: "Сохранить резюме",
     downloadPdf: "Скачать CV (PDF)",
+    vaultSave: "Сохранить в сейф",
+    vaultBusy: "Сохраняю…",
+    vaultDone: "CV в сейфе ✓",
+    vaultEmpty: "Резюме пока пустое.",
+    vaultEmail: "Сначала подтвердите email.",
+    vaultQuota: "В хранилище не хватает места.",
+    vaultFailed: "Не удалось сохранить в сейф.",
+    savedVersionNote:
+      "Скачивание и сохранение в сейф берут последнюю сохранённую версию. В сейфе CV получает ссылку с ограниченным сроком, отзывом и аудитом.",
+    parseLegacy: "Разобрать в записи",
+    parseLegacyBusy: "Разбираю…",
     saving: "Сохраняю…",
     saved: "Сохранено ✓",
     failed: "Не удалось сохранить. Попробуйте ещё раз.",
@@ -147,6 +162,10 @@ const M = {
     start: "Start",
     end: "End",
     currentJob: "I work here now",
+    verified: "✓ Verified by the employer",
+    verifiedHint:
+      "Role, place and period come from the employer's record — they aren't edited here.",
+    unlink: "Unlink",
     duties: "Duties",
     dutiesPh: "What your work involved",
     legacyTitle: "Experience as plain text",
@@ -176,6 +195,17 @@ const M = {
     entry: "Entry",
     save: "Save resume",
     downloadPdf: "Download CV (PDF)",
+    vaultSave: "Save to vault",
+    vaultBusy: "Saving…",
+    vaultDone: "CV is in the vault ✓",
+    vaultEmpty: "The resume is still empty.",
+    vaultEmail: "Confirm your email first.",
+    vaultQuota: "Not enough storage space left.",
+    vaultFailed: "Couldn't save to the vault.",
+    savedVersionNote:
+      "Download and vault saving use the last saved version. In the vault a CV gets a link with an expiry, a revoke and an access log.",
+    parseLegacy: "Turn into entries",
+    parseLegacyBusy: "Reading…",
     saving: "Saving…",
     saved: "Saved ✓",
     failed: "Couldn't save. Please try again.",
@@ -219,6 +249,10 @@ const M = {
     start: "Mulai",
     end: "Selesai",
     currentJob: "Saya masih bekerja di sini",
+    verified: "✓ Terverifikasi oleh pemberi kerja",
+    verifiedHint:
+      "Posisi, tempat dan masa kerja berasal dari catatan pemberi kerja — tidak diubah di sini.",
+    unlink: "Lepaskan",
     duties: "Tugas",
     dutiesPh: "Apa saja pekerjaan Anda",
     legacyTitle: "Pengalaman dalam bentuk teks",
@@ -248,6 +282,17 @@ const M = {
     entry: "Entri",
     save: "Simpan resume",
     downloadPdf: "Unduh CV (PDF)",
+    vaultSave: "Simpan ke brankas",
+    vaultBusy: "Menyimpan…",
+    vaultDone: "CV ada di brankas ✓",
+    vaultEmpty: "Resume masih kosong.",
+    vaultEmail: "Konfirmasi email Anda dulu.",
+    vaultQuota: "Ruang penyimpanan tidak cukup.",
+    vaultFailed: "Gagal menyimpan ke brankas.",
+    savedVersionNote:
+      "Unduhan dan penyimpanan memakai versi tersimpan terakhir. Di brankas CV mendapat tautan dengan masa berlaku, pencabutan, dan catatan akses.",
+    parseLegacy: "Ubah jadi entri",
+    parseLegacyBusy: "Membaca…",
     saving: "Menyimpan…",
     saved: "Tersimpan ✓",
     failed: "Gagal menyimpan. Coba lagi.",
@@ -291,6 +336,10 @@ const M = {
     start: "Boshlanishi",
     end: "Tugashi",
     currentJob: "Hozir shu yerda ishlayman",
+    verified: "✓ Ish beruvchi tasdiqlagan",
+    verifiedHint:
+      "Lavozim, joy va davr ish beruvchi yozuvidan olingan — bu yerda tahrirlanmaydi.",
+    unlink: "Uzish",
     duties: "Vazifalar",
     dutiesPh: "Ishingiz nimalardan iborat edi",
     legacyTitle: "Tajriba matn ko‘rinishida",
@@ -320,6 +369,17 @@ const M = {
     entry: "Yozuv",
     save: "Rezyumeni saqlash",
     downloadPdf: "CV yuklab olish (PDF)",
+    vaultSave: "Seyfga saqlash",
+    vaultBusy: "Saqlanmoqda…",
+    vaultDone: "CV seyfda ✓",
+    vaultEmpty: "Rezyume hozircha bo‘sh.",
+    vaultEmail: "Avval emailni tasdiqlang.",
+    vaultQuota: "Xotirada joy yetmayapti.",
+    vaultFailed: "Seyfga saqlab bo‘lmadi.",
+    savedVersionNote:
+      "Yuklab olish va seyfga saqlash oxirgi saqlangan versiyani oladi. Seyfda CV muddatli, bekor qilinadigan va jurnalga yoziladigan havola oladi.",
+    parseLegacy: "Yozuvlarga ajratish",
+    parseLegacyBusy: "O‘qilmoqda…",
     saving: "Saqlanmoqda…",
     saved: "Saqlandi ✓",
     failed: "Saqlab bo‘lmadi. Yana urinib ko‘ring.",
@@ -423,6 +483,10 @@ export default function ResumeForm({
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const [vaultState, setVaultState] = useState<
+    "idle" | "busy" | "done" | "empty" | "email" | "quota" | "failed"
+  >("idle");
+  const [legacyBusy, setLegacyBusy] = useState(false);
   const [importBusy, setImportBusy] = useState(false);
   const [importNote, setImportNote] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
@@ -525,6 +589,36 @@ export default function ResumeForm({
     }
   }
 
+  /** Разобрать старое текстовое поле в структурные записи (тот же контур ИИ). */
+  async function onParseLegacy() {
+    if (!experience.trim()) return;
+    resetImportState();
+    setLegacyBusy(true);
+    try {
+      const body = new FormData();
+      body.append("text", experience);
+      const res = await fetch("/api/resume-parse", { method: "POST", body });
+      const data = (await res.json().catch(() => null)) as
+        | { error?: string }
+        | Record<string, unknown>
+        | null;
+      if (!res.ok) {
+        const message =
+          data && typeof (data as { error?: string }).error === "string"
+            ? (data as { error: string }).error
+            : t.importFailed;
+        setImportError(message);
+        setImportNeedsSettings(res.status === 403);
+        return;
+      }
+      applyImport(parseImportedResume(data));
+    } catch {
+      setImportError(t.importFailed);
+    } finally {
+      setLegacyBusy(false);
+    }
+  }
+
   /** JSON Resume: открытый формат, разбираем прямо в браузере — без сервера. */
   async function onJsonFile(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
@@ -550,6 +644,14 @@ export default function ResumeForm({
     setSections((s) => ({
       ...s,
       experience: s.experience.map((e, idx) => (idx === i ? { ...e, ...patch } : e)),
+    }));
+  /** Открепить строку от трудовых отношений: дальше это обычная запись. */
+  const unlinkExperience = (i: number) =>
+    setSections((s) => ({
+      ...s,
+      experience: s.experience.map((e, idx) =>
+        idx === i ? { ...e, employment_id: null, verified: false } : e
+      ),
     }));
   const removeExperience = (i: number) =>
     setSections((s) => ({
@@ -806,25 +908,47 @@ export default function ResumeForm({
             <ul className="space-y-3">
               {sections.experience.map((e, i) => (
                 <li key={e.id} className="rounded-xl border border-slate-200 p-3">
-                  <div className="mb-2 flex items-center justify-between">
+                  <div className="mb-2 flex items-center justify-between gap-2">
                     <span className="text-xs uppercase tracking-wide text-slate-400">
                       {t.entry} {i + 1}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => removeExperience(i)}
-                      aria-label={t.remove}
-                      className="rounded-lg border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-50"
-                    >
-                      ✕
-                    </button>
+                    <div className="flex items-center gap-2">
+                      {e.verified && (
+                        <button
+                          type="button"
+                          onClick={() => unlinkExperience(i)}
+                          className="rounded-lg border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-50"
+                        >
+                          {t.unlink}
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => removeExperience(i)}
+                        aria-label={t.remove}
+                        className="rounded-lg border border-slate-200 px-2 py-1 text-xs text-slate-500 hover:bg-slate-50"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Подтверждённая строка приходит из оформления у работодателя:
+                      её факты не редактируем, иначе отметка перестанет быть правдой. */}
+                  {e.verified && (
+                    <div className="mb-2 rounded-lg bg-green-50 px-3 py-2">
+                      <p className="text-xs font-medium text-green-700">{t.verified}</p>
+                      <p className="mt-0.5 text-xs text-green-800/70">{t.verifiedHint}</p>
+                    </div>
+                  )}
+
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
                       <label className="label">{t.position}</label>
                       <input
                         className="input"
                         value={e.position}
+                        disabled={e.verified}
                         onChange={(ev) => updateExperience(i, { position: ev.target.value })}
                         placeholder={t.positionPh}
                       />
@@ -834,6 +958,7 @@ export default function ResumeForm({
                       <input
                         className="input"
                         value={e.company}
+                        disabled={e.verified}
                         onChange={(ev) => updateExperience(i, { company: ev.target.value })}
                         placeholder={t.companyPh}
                       />
@@ -844,6 +969,7 @@ export default function ResumeForm({
                         className="input"
                         type="month"
                         value={e.start}
+                        disabled={e.verified}
                         onChange={(ev) => updateExperience(i, { start: ev.target.value })}
                       />
                     </div>
@@ -853,7 +979,7 @@ export default function ResumeForm({
                         className="input"
                         type="month"
                         value={e.end}
-                        disabled={e.current}
+                        disabled={e.current || e.verified}
                         onChange={(ev) => updateExperience(i, { end: ev.target.value })}
                       />
                     </div>
@@ -862,6 +988,7 @@ export default function ResumeForm({
                     <input
                       type="checkbox"
                       checked={e.current}
+                      disabled={e.verified}
                       onChange={(ev) =>
                         updateExperience(i, {
                           current: ev.target.checked,
@@ -904,6 +1031,14 @@ export default function ResumeForm({
               value={experience}
               onChange={(e) => setExperience(e.target.value)}
             />
+            <button
+              type="button"
+              onClick={onParseLegacy}
+              disabled={legacyBusy}
+              className="btn-ghost disabled:opacity-60"
+            >
+              {legacyBusy ? t.parseLegacyBusy : t.parseLegacy}
+            </button>
           </div>
         )}
 
@@ -1122,11 +1257,48 @@ export default function ResumeForm({
           <a href="/my/resume/pdf" className="btn-ghost">
             {t.downloadPdf}
           </a>
+          <button
+            type="button"
+            disabled={vaultState === "busy"}
+            onClick={async () => {
+              setVaultState("busy");
+              const res = await saveResumeToVault();
+              if ("ok" in res) {
+                setVaultState("done");
+                return;
+              }
+              // «auth» и «save» человеку объясняют одно и то же: не вышло.
+              setVaultState(
+                res.error === "empty" || res.error === "email" || res.error === "quota"
+                  ? res.error
+                  : "failed",
+              );
+            }}
+            className="btn-ghost disabled:opacity-60"
+          >
+            {vaultState === "busy" ? t.vaultBusy : t.vaultSave}
+          </button>
           {done && (
             <span className="text-sm font-medium text-green-600">{t.saved}</span>
           )}
           {error && <span className="text-sm text-red-600">{error}</span>}
+          {vaultState === "done" && (
+            <span className="text-sm font-medium text-green-600">{t.vaultDone}</span>
+          )}
+          {vaultState !== "idle" && vaultState !== "busy" && vaultState !== "done" && (
+            <span className="text-sm text-red-600">
+              {vaultState === "empty"
+                ? t.vaultEmpty
+                : vaultState === "email"
+                  ? t.vaultEmail
+                  : vaultState === "quota"
+                    ? t.vaultQuota
+                    : t.vaultFailed}
+            </span>
+          )}
         </div>
+
+        <p className="text-xs text-slate-400">{t.savedVersionNote}</p>
       </div>
     </div>
   );
