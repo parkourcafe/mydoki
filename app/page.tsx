@@ -541,7 +541,14 @@ function buildJsonLd(t: Dict, locale: Locale, appUrl: string) {
         operatingSystem: "Web",
         description: t.hero.subtitle,
         url: appUrl,
-        offers: { "@type": "Offer", price: "0", priceCurrency: "RUB" },
+        // Валюта оффера: RU-рынок считает в рублях, остальные — в долларах
+        // (как на /pricing). Ранее RUB был захардкожен и противоречил
+        // EN/ID-страницам с ценами в $.
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: locale === "ru" ? "RUB" : "USD",
+        },
       },
       {
         "@type": "FAQPage",
