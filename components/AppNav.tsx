@@ -54,16 +54,20 @@ export default function AppNav({
   const [collapsed, setCollapsed] = useState<Record<number, boolean>>({});
   const pathname = usePathname();
 
+  // Закрываем выезжающее меню при смене маршрута. Корректировка состояния
+  // во время рендера — документированный паттерн вместо setState-в-эффекте
+  // (react-hooks/set-state-in-effect); покрывает и навигацию кнопкой «назад».
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
+    if (open) setOpen(false);
+  }
+
   const activeGroupIndex = nav.findIndex((g) =>
     g.items.some((it) =>
       it.href === "/my" ? pathname === "/my" : pathname.startsWith(it.href),
     ),
   );
-
-  // Закрываем выезжающее меню при смене маршрута.
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   // Блокируем прокрутку фона, пока открыто выезжающее меню (мобильный).
   useEffect(() => {

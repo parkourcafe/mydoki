@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale, type Locale } from "@/lib/i18n";
 
-// Корень домена doki.id переписывается сюда (см. middleware), поэтому
+// Корень домена doki.id переписывается сюда (см. proxy), поэтому
 // метаданные должны идти по локали, а не быть русскими для всех.
 const META: Record<Locale, { title: string; description: string }> = {
   id: {

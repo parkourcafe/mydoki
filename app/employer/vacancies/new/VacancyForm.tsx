@@ -323,12 +323,18 @@ export default function VacancyForm({
   const [showAi, setShowAi] = useState(false);
 
   // Аналитика §10: событие started фиксируем один раз с первым источником;
-  // время до публикации — от монтирования формы.
+  // время до публикации — от монтирования формы. Запись в ref и Date.now()
+  // недопустимы в рендере (react-hooks/purity, react-hooks/refs), поэтому
+  // стартовое время фиксируется эффектом после монтирования.
   const startedRef = useRef(false);
   const publishedRef = useRef(false);
   const sourceRef = useRef<CreateSource>("manual");
   const stepRef = useRef<string>("open");
-  const startTimeRef = useRef<number>(Date.now());
+  const startTimeRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (startTimeRef.current === 0) startTimeRef.current = Date.now();
+  }, []);
 
   function markStarted(source: CreateSource) {
     if (isEdit || startedRef.current) return;
@@ -536,7 +542,7 @@ export default function VacancyForm({
         track("vacancy_published", {
           source: sourceRef.current,
           time_to_publish_seconds: Math.round(
-            (Date.now() - startTimeRef.current) / 1000
+            (Date.now() - (startTimeRef.current || Date.now())) / 1000
           ),
           fields_completed_count: fieldsCompleted,
           clarity_score: quality.clarityScore,

@@ -1,6 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
+
+// Подписка не нужна: локаль не меняется без перезагрузки страницы.
+const emptySubscribe = () => () => {};
 import Link from "next/link";
 import {
   clearAll,
@@ -204,8 +207,10 @@ function FileView({
 }
 
 export default function SavedPage() {
-  const [mounted, setMounted] = useState(false);
-  const [locale, setLocale] = useState<Locale>("ru");
+  // Локаль — клиентское значение: useSyncExternalStore вместо mounted-флага
+  // и setState-в-эффекте. Серверный снапшот «ru» совпадает с прежним
+  // дефолтом, гидратация не ломается.
+  const locale = useSyncExternalStore(emptySubscribe, readLocale, () => "ru" as Locale);
   const [docs, setDocs] = useState<OfflineMeta[]>([]);
   const [openId, setOpenId] = useState<string | null>(null);
   const [used, setUsed] = useState<number | null>(null);
@@ -216,12 +221,17 @@ export default function SavedPage() {
   }, []);
 
   useEffect(() => {
-    setMounted(true);
-    setLocale(readLocale());
-    reload();
+    // Через микротаску: эффект не должен звать setState синхронно
+    // (react-hooks/set-state-in-effect).
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (!cancelled) void reload();
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [reload]);
 
-  if (!mounted) return null;
   const t = M[locale];
 
   async function onRemove(id: string) {

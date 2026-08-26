@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import type { Locale } from "@/lib/i18n";
+
+// Подписка не нужна: локаль не меняется без перезагрузки страницы.
+const emptySubscribe = () => () => {};
 
 const M: Record<Locale, { title: string; body: string; cta: string }> = {
   ru: {
@@ -38,9 +41,11 @@ function detectLocale(): Locale {
 }
 
 export default function OfflineMessage() {
-  // Default to EN for SSR/first paint; refine to the user's locale on mount.
-  const [locale, setLocale] = useState<Locale>("en");
-  useEffect(() => setLocale(detectLocale()), []);
+  // Локаль известна только на клиенте (cookie/navigator). Читаем её через
+  // useSyncExternalStore: серверный снапшот «en» гарантирует совпадение
+  // гидратации, клиентский уточняет локаль сразу после — без setState
+  // в эффекте (react-hooks/set-state-in-effect).
+  const locale = useSyncExternalStore(emptySubscribe, detectLocale, () => "en" as Locale);
   const t = M[locale];
 
   return (

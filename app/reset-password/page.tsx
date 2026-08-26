@@ -1,9 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
 import type { Locale } from "@/lib/i18n";
+
+// Подписка не нужна: локаль не меняется без перезагрузки страницы.
+const emptySubscribe = () => () => {};
+
+// Локаль известна только на клиенте (cookie → язык браузера).
+function detectLocale(): Locale {
+  const fromCookie = /(?:^|;\s*)locale=(ru|en|id|uz)/.exec(document.cookie)?.[1] as
+    | Locale
+    | undefined;
+  if (fromCookie) return fromCookie;
+  const lang = navigator.language.toLowerCase();
+  if (lang.startsWith("ru")) return "ru";
+  if (lang.startsWith("id")) return "id";
+  if (lang.startsWith("uz")) return "uz";
+  return "en";
+}
 
 const M = {
   ru: {
@@ -59,7 +75,9 @@ const M = {
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [supabase] = useState(() => getSupabaseBrowser());
-  const [locale, setLocale] = useState<Locale>("en");
+  // Серверный снапшот «en» совпадает с дефолтом и не ломает гидратацию;
+  // клиентский уточняет локаль сразу после неё — без setState-в-эффекте.
+  const locale = useSyncExternalStore(emptySubscribe, detectLocale, () => "en" as Locale);
   const t = M[locale];
   const [ready, setReady] = useState(false);
   const [pw, setPw] = useState("");
@@ -67,21 +85,6 @@ export default function ResetPasswordPage() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [done, setDone] = useState(false);
-
-  useEffect(() => {
-    const fromCookie = /(?:^|;\s*)locale=(ru|en|id|uz)/.exec(document.cookie)?.[1] as
-      | Locale
-      | undefined;
-    if (fromCookie) {
-      setLocale(fromCookie);
-      return;
-    }
-    const lang = navigator.language.toLowerCase();
-    if (lang.startsWith("ru")) setLocale("ru");
-    else if (lang.startsWith("id")) setLocale("id");
-    else if (lang.startsWith("uz")) setLocale("uz");
-    else setLocale("en");
-  }, []);
 
   useEffect(() => {
     // Ссылка из письма содержит recovery-токен — клиент сам обменяет его на сессию.

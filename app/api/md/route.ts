@@ -1,5 +1,5 @@
 // Markdown-версия публичных страниц для ИИ-агентов (Markdown negotiation).
-// Сюда переписывает middleware, когда агент запрашивает Accept: text/markdown.
+// Сюда переписывает proxy, когда агент запрашивает Accept: text/markdown.
 import { getLocale } from "@/lib/i18n";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";

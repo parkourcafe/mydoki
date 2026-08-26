@@ -1,30 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { listDocs } from "@/lib/offlineDb";
+
+function subscribeOnline(onStoreChange: () => void) {
+  window.addEventListener("online", onStoreChange);
+  window.addEventListener("offline", onStoreChange);
+  return () => {
+    window.removeEventListener("online", onStoreChange);
+    window.removeEventListener("offline", onStoreChange);
+  };
+}
 
 /**
  * Пилюля статуса в шапке: онлайн/офлайн (navigator.onLine) + число сохранённых
  * офлайн-документов. Ведёт на /saved. Заменяет пункт «Офлайн» в меню (T8).
  */
 export default function OfflinePill({ href, label }: { href: string; label: string }) {
-  const [online, setOnline] = useState(true);
+  // navigator.onLine — внешний источник истины: useSyncExternalStore вместо
+  // setState-в-эффекте (react-hooks/set-state-in-effect). Классический пример
+  // из документации React.
+  const online = useSyncExternalStore(
+    subscribeOnline,
+    () => navigator.onLine,
+    () => true
+  );
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    setOnline(navigator.onLine);
-    const on = () => setOnline(true);
-    const off = () => setOnline(false);
-    window.addEventListener("online", on);
-    window.addEventListener("offline", off);
     listDocs()
       .then((d) => setCount(d.length))
       .catch(() => {});
-    return () => {
-      window.removeEventListener("online", on);
-      window.removeEventListener("offline", off);
-    };
   }, []);
 
   return (

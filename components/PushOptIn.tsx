@@ -31,21 +31,31 @@ export default function PushOptIn({ locale, label }: { locale: Locale; label?: s
   const vapid = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
 
   useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      !("serviceWorker" in navigator) ||
-      !("PushManager" in window) ||
-      !vapid
-    ) {
-      setState("unsupported");
-      return;
-    }
-    navigator.serviceWorker.ready
-      .then(async (reg) => {
+    // Проверка поддержки и подписки — асинхронная цепочка: ни один setState
+    // не выполняется синхронно в теле эффекта
+    // (react-hooks/set-state-in-effect).
+    let cancelled = false;
+    void Promise.resolve().then(async () => {
+      if (
+        typeof window === "undefined" ||
+        !("serviceWorker" in navigator) ||
+        !("PushManager" in window) ||
+        !vapid
+      ) {
+        if (!cancelled) setState("unsupported");
+        return;
+      }
+      try {
+        const reg = await navigator.serviceWorker.ready;
         const sub = await reg.pushManager.getSubscription();
-        setState(sub ? "on" : "off");
-      })
-      .catch(() => setState("off"));
+        if (!cancelled) setState(sub ? "on" : "off");
+      } catch {
+        if (!cancelled) setState("off");
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [vapid]);
 
   async function enable() {

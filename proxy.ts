@@ -17,7 +17,9 @@ const LOCALE_RE = /^\/(ru|en|id|uz)(\/.*)?$/;
 // Пути карьерного модуля, которые обслуживает домен doki.id.
 const CAREER_PREFIXES = ["/apply", "/applications", "/employer", "/login", "/auth", "/hiring"];
 
-export async function middleware(request: NextRequest) {
+// Next 16: файловая конвенция middleware переименована в proxy — функция
+// обязана называться proxy (или быть default export), логика прежняя.
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // 0) Домен doki.id — второй домен на том же деплое, отдаёт только карьерные
