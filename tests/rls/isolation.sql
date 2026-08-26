@@ -21,4 +21,34 @@ select
   (select count(*) from members)       as b_sees_members,    -- ожидается 0
   (select count(*) from households)    as b_sees_households;  -- ожидается 0
 
+-- Тот же результат, но как проверка: при нарушении транзакция падает с
+-- ошибкой. Нужно, чтобы тест давал вердикт сам, а не требовал сверки глазами,
+-- и чтобы psql вернул ненулевой код для CI. В Supabase SQL Editor нарушение
+-- тоже видно — красной ошибкой вместо таблицы.
+do $$
+declare
+  a_members    int := current_setting('test.a_members')::int;
+  a_households int := current_setting('test.a_households')::int;
+  b_members    int;
+  b_households int;
+begin
+  select count(*) into b_members    from members;
+  select count(*) into b_households from households;
+
+  if a_members <> 1 then
+    raise exception 'RLS isolation: A видит % своих членов семьи, ожидалась 1', a_members;
+  end if;
+  if a_households <> 1 then
+    raise exception 'RLS isolation: A видит % своих семей, ожидалась 1', a_households;
+  end if;
+  if b_members <> 0 then
+    raise exception 'RLS ISOLATION НАРУШЕНА: B видит % членов семьи A, ожидалось 0', b_members;
+  end if;
+  if b_households <> 0 then
+    raise exception 'RLS ISOLATION НАРУШЕНА: B видит % семей A, ожидалось 0', b_households;
+  end if;
+
+  raise notice 'PASS isolation';
+end $$;
+
 rollback;

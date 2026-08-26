@@ -67,4 +67,38 @@ select
   (select count(*) from document_checks
      where document_version_id = current_setting('test.vid')::uuid) as other_sees_check; -- 0
 
+-- Те же ожидания, но как проверка: при нарушении транзакция падает, psql
+-- возвращает ненулевой код, и тест годится для CI без сверки глазами.
+do $$
+declare
+  owner_sees   int := current_setting('test.owner_sees_version')::int;
+  updated_rows int := current_setting('test.updated_rows')::int;
+  deleted_rows int := current_setting('test.deleted_rows')::int;
+  other_ver    int;
+  other_chk    int;
+begin
+  select count(*) into other_ver from document_versions
+    where id = current_setting('test.vid')::uuid;
+  select count(*) into other_chk from document_checks
+    where document_version_id = current_setting('test.vid')::uuid;
+
+  if owner_sees <> 1 then
+    raise exception 'document_versions: владелец видит % своих версий, ожидалась 1', owner_sees;
+  end if;
+  if updated_rows <> 0 then
+    raise exception 'НЕИЗМЕНЯЕМОСТЬ НАРУШЕНА: UPDATE версии затронул % строк, ожидалось 0', updated_rows;
+  end if;
+  if deleted_rows <> 0 then
+    raise exception 'НЕИЗМЕНЯЕМОСТЬ НАРУШЕНА: DELETE версии затронул % строк, ожидалось 0', deleted_rows;
+  end if;
+  if other_ver <> 0 then
+    raise exception 'ИЗОЛЯЦИЯ НАРУШЕНА: чужой видит % версий, ожидалось 0', other_ver;
+  end if;
+  if other_chk <> 0 then
+    raise exception 'ИЗОЛЯЦИЯ НАРУШЕНА: чужой видит % проверок, ожидалось 0', other_chk;
+  end if;
+
+  raise notice 'PASS document_versions';
+end $$;
+
 rollback;

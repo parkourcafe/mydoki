@@ -48,6 +48,39 @@ jobs:
       - run: npm run test:unit
       - run: npm run test:lexicon
 
+  rls:
+    name: RLS policies
+    runs-on: ubuntu-latest
+    # Единственная job, которой нужна настоящая база: RLS проверяется только
+    # исполнением, а не чтением политик. Схема поднимается с нуля из миграций
+    # на одноразовый контейнер — боевой проект не задействован никак.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      # На образах GitHub psql обычно есть, но версия и наличие не
+      # гарантированы контрактом — ставим явно, если его нет.
+      - name: Ensure psql
+        run: command -v psql >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client)
+      - name: Apply schema and run RLS tests
+        run: npm run test:rls
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
+          PGDATABASE: postgres
+
   e2e:
     name: E2E (Playwright)
     runs-on: ubuntu-latest
