@@ -1,5 +1,5 @@
 // Markdown-версия публичных страниц для ИИ-агентов (Markdown negotiation).
-// Сюда переписывает middleware, когда агент запрашивает Accept: text/markdown.
+// Сюда переписывает proxy, когда агент запрашивает Accept: text/markdown.
 import { getLocale } from "@/lib/i18n";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
@@ -43,80 +43,92 @@ doki хранит документы семьи в одном месте и ра
 
 Бесплатный аккаунт: ${APP_URL}/login
 `,
-  en: `# doki — Family Vault
+  // EN/ID — карьерный продукт для Индонезии (лендинг /en и /id).
+  en: `# doki.help — collect candidate and employee documents with one link
 
-One calm, private place for all of your family's important documents.
+doki.help helps companies in Indonesia collect candidate and employee
+documents through a checklist link shared over WhatsApp — with clear status
+tracking instead of messy chats and spreadsheets.
 
 ## What it is
 
-doki keeps your family's documents in one place, organized by person, by asset
-(car, apartment) and by section: identity, education, work, medical, finance,
-taxes, legal — plus sections you create yourself.
+A web app for document collection during hiring and onboarding. The company
+defines a checklist of required documents (KTP, CV, certificates,
+contracts), sends one WhatsApp-ready link, and the candidate uploads files
+through that link without creating an account. HR sees per-person status:
+what arrived, what is missing, what needs updating.
 
-## Why
+## How it works
 
-So every important paper is found in seconds — renewing a passport, getting a
-child ready for school, travelling, or visiting a doctor.
+1. Create a document checklist for a role or onboarding stage
+2. Send one link to the candidate (WhatsApp, email, or your workflow)
+3. The candidate uploads files and sees what is still missing
+4. HR tracks completion status without chasing individual chats
 
-## Features
+## Who uses it
 
-- Per-person and per-asset folders, grouped by category
-- Custom sections your family defines
-- Expiry reminders for documents with a validity date
-- Secure expiring links with optional view limits and watermark
-- Multiple family spaces with role-based access
-- Two-factor authentication (TOTP)
+HR teams, business owners and admins, recruitment agencies, visa agents,
+candidates and new employees — hospitality, villas, F&B, retail, drivers,
+domestic staff and other teams in Indonesia.
 
 ## Privacy
 
-Documents live in your family's private storage; files open only through
-short-lived signed links. We do not allow AI model training on our content.
+Files open only through controlled links; access is restricted to authorized
+team members. Candidate data is not sold or shared for advertising. We do
+not allow AI model training on this site's content (see robots.txt,
+the Content-Signal directive).
 
 ## Languages
 
-Russian, English, Indonesian, Uzbek.
+Hiring flows: English and Indonesian. The family vault product is available
+in Russian, English, Indonesian and Uzbek.
 
 ## Get started
 
-Free account: ${APP_URL}/login
+Create a free checklist: ${APP_URL}/login
 `,
-  id: `# doki — Brankas Keluarga
+  id: `# doki.help — kumpulkan dokumen kandidat & karyawan lewat satu link
 
-Satu tempat tenang dan pribadi untuk semua dokumen penting keluarga Anda.
+doki.help membantu perusahaan di Indonesia mengumpulkan dokumen kandidat dan
+karyawan melalui tautan checklist yang dibagikan lewat WhatsApp — dengan
+status yang jelas tanpa chat berantakan atau spreadsheet.
 
 ## Apa ini
 
-doki menyimpan dokumen keluarga di satu tempat, ditata per orang, per aset
-(mobil, apartemen) dan per bagian: identitas, pendidikan, pekerjaan, medis,
-keuangan, pajak, hukum — plus bagian yang Anda buat sendiri.
+Aplikasi web untuk pengumpulan dokumen saat rekrutmen dan onboarding.
+Perusahaan menyusun checklist dokumen yang diminta (KTP, CV, sertifikat,
+kontrak), mengirim satu tautan siap-WhatsApp, dan kandidat mengunggah berkas
+lewat tautan itu tanpa membuat akun. HR memantau status per orang: apa yang
+sudah masuk, kurang, atau perlu diperbarui.
 
-## Mengapa
+## Cara kerja
 
-Agar setiap dokumen penting ditemukan dalam hitungan detik — memperpanjang
-paspor, menyiapkan anak ke sekolah, bepergian, atau ke dokter.
+1. Buat checklist dokumen untuk posisi atau tahap onboarding
+2. Kirim satu tautan ke kandidat (WhatsApp, email, atau alur internal)
+3. Kandidat mengunggah berkas dan melihat apa yang masih kurang
+4. HR memantau kelengkapan tanpa mengejar tiap chat
 
-## Fitur
+## Siapa penggunanya
 
-- Folder per orang dan per aset, dikelompokkan menurut kategori
-- Bagian khusus yang keluarga tentukan sendiri
-- Pengingat masa berlaku dokumen
-- Tautan berbagi aman dengan batas waktu dan tampilan
-- Beberapa ruang keluarga dengan akses berbasis peran
-- Autentikasi dua faktor (TOTP)
+Tim HR, pemilik bisnis dan admin, agen rekrutmen, agen visa, kandidat dan
+karyawan baru — hospitality, vila, F&B, ritel, pengemudi, staf rumah tangga
+dan tim lainnya di Indonesia.
 
 ## Privasi
 
-Dokumen tersimpan di penyimpanan pribadi keluarga; berkas hanya terbuka lewat
-tautan bertanda tangan yang berumur pendek. Kami tidak mengizinkan pelatihan
-model AI pada konten kami.
+Berkas hanya terbuka lewat tautan terkontrol; akses dibatasi untuk anggota
+tim yang berwenang. Data kandidat tidak dijual atau dibagikan untuk iklan.
+Kami tidak mengizinkan pelatihan model AI pada konten situs ini (lihat
+robots.txt, direktif Content-Signal).
 
 ## Bahasa
 
-Rusia, Inggris, Indonesia, Uzbek.
+Alur rekrutmen: bahasa Inggris dan Indonesia. Produk brankas keluarga
+tersedia dalam bahasa Rusia, Inggris, Indonesia dan Uzbek.
 
 ## Mulai
 
-Akun gratis: ${APP_URL}/login
+Buat checklist gratis: ${APP_URL}/login
 `,
   uz: `# doki — Oilaviy seyf
 

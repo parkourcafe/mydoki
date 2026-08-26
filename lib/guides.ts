@@ -4439,6 +4439,752 @@ const DATA: Record<string, Guide> = {
       ],
     },
   },
+
+  // ── Бали-серия для RU-рынка (экспаты и долгосрочные жители острова). ──
+  // Правила правдивости бренда: без конкретных визовых сроков и пошлин,
+  // без юридических гарантий; актуальные правила — «уточняйте в
+  // официальных источниках».
+
+  "visa-run-bali": {
+    slug: "visa-run-bali",
+    emoji: "🛫",
+    locales: {
+      ru: {
+        navLabel: "Визаран с Бали",
+        title: "Визаран из Бали: планирование и документы | doki.help",
+        metaDescription:
+          "Что такое визаран, кто его делает и как подготовиться спокойно: набор документов, сроки, напоминания. Правила меняются — проверяйте официальные источники.",
+        h1: "Визаран из Бали: как планировать поездку и что подготовить",
+        intro:
+          "Визаран — короткая поездка в другую страну, чтобы обновить право на пребывание в Индонезии. Часть экспатов до сих пор так делают, часть выбирает продления без выезда. В любом случае это логистика, которую удобно готовить заранее: мы разберём документы и тайминг, а не миграционные правила. Актуальные условия всегда уточняйте в иммиграции (imigrasi.go.id) или у лицензированного агента.",
+        ctaPrimary: "Подготовить документы к поездке",
+        sections: [
+          {
+            h2: "Что такое визаран и почему вокруг столько слухов",
+            body: "Идея простая: когда текущий срок пребывания подходит к концу, человек ненадолго улетает в соседнюю страну (часто Сингапур или Куала-Лумпур) и въезжает обратно на новых условиях. Правила въезда, лимиты и отношение миграционной службы к частым «кругам» периодически меняются, поэтому опираться на чужой опыт двухлетней давности — плохая стратегия. Единственный надёжный источник — официальные правила и агент, который ведёт ваш статус.",
+          },
+          {
+            h2: "Альтернатива вылету: продление на месте",
+            body: "Многие типы пребывания позволяют продлеваться без выезда — через иммиграционный офис или онлайн. Это часто спокойнее, чем короткая поездка, но требует подготовки документов к конкретной дате. Что выбрать — зависит от вашего типа визы, планов и правил на момент вопроса. Мы не даём миграционных консультаций: наша часть — чтобы документы и сроки были под контролем при любом сценарии.",
+          },
+          {
+            h2: "Документы, которые нужны в любой поездке",
+            bullets: [
+              "Паспорт с запасом срока действия — проверьте дату до покупки билетов",
+              "Текущая виза/штампы: сканы всех страниц с отметками",
+              "Билеты и брони — туда и обратно, по требованиям вашего маршрута",
+              "Страховка, действующая в стране поездки",
+              "Финансовые подтверждения, если ваш маршрут их предполагает",
+            ],
+          },
+          {
+            h2: "Тайминг без нервотрёпки",
+            body: "Визаран срывается не из-за правил, а из-за бытовой мелочи: билеты не на те даты, страховка не покрывает страну, паспорт «вдруг» заканчивается раньше, чем вы думали. Спокойный план выглядит так: дата конца пребывания известна → за несколько недель проверены актуальные правила → куплены билеты → документы собраны в одном месте → офлайн-копии сохранены в телефон. Напоминание о дате — за 30 дней, а не накануне.",
+          },
+          {
+            h2: "Чем помогает doki.help",
+            body: "Все документы семьи лежат в приватном сейфе по HTTPS, разложенные по членам семьи. Даты истечения виз и паспорта превращаются в напоминания (письмо за 30, 7 и 1 день). Перед поездкой откройте нужные файлы в приложении — они останутся доступны офлайн, даже если в аэропорту будет плохая связь. А показать документ агенту можно ссылкой с истекающим сроком вместо «вечного» вложения в чате.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Как часто можно делать визаран?",
+            a: "Это вопрос миграционных правил, а не техники, и они меняются. Частые поездки могут вызвать вопросы у пограничников — актуальные ограничения уточняйте в официальных источниках перед каждой поездкой.",
+          },
+          {
+            q: "Какие документы брать с собой в визаран?",
+            a: "Минимум одинаковый: паспорт с запасом срока, подтверждение дальнейших планов, страховка, финансы по требованиям маршрута. Точный список зависит от вашего статуса и страны поездки.",
+          },
+          {
+            q: "Стоит ли вообще делать визаран или лучше продление?",
+            a: "Мы сознательно не советуем: это зависит от типа вашего пребывания и правил на момент вопроса. Решение принимайте с лицензированным агентом или по официальным источникам, а наша задача — чтобы документы были собраны и сроки не пропущены.",
+          },
+        ],
+      },
+      en: {
+        navLabel: "Bali visa run",
+        title: "Bali Visa Run: Planning and Documents | Doki.help",
+        metaDescription:
+          "What a visa run is, who does them and how to prepare calmly: document set, timing and reminders. Rules change — always check official sources.",
+        h1: "Bali visa run: planning the trip and getting documents ready",
+        intro:
+          "A visa run is a short trip abroad to refresh your right to stay in Indonesia. Some residents still do them; others prefer onshore extensions. Either way it's logistics you can prepare calmly. We cover documents and timing — not migration rules, which you should confirm via official sources (imigrasi.go.id) or a licensed agent.",
+        ctaPrimary: "Get trip-ready documents",
+        sections: [
+          {
+            h2: "Why people do visa runs",
+            body: "When a stay period is ending, some travellers fly to a nearby country (often Singapore or Kuala Lumpur) briefly and re-enter under fresh conditions. Entry rules, limits and how officers view frequent runs change over time — so second-hand experience from years ago is a poor guide. Official rules and your agent are the reliable sources.",
+          },
+          {
+            h2: "The alternative: extending without leaving",
+            body: "Many stay types allow onshore extensions via an immigration office or online. That's often calmer than a short trip but requires documents ready by a specific date. Which route fits depends on your status and current rules — we don't advise on migration; our part is keeping your documents and deadlines in order either way.",
+          },
+          {
+            h2: "Documents any such trip needs",
+            bullets: [
+              "Passport with plenty of validity — check before booking flights",
+              "Current visa/stamps: scans of every marked page",
+              "Tickets and bookings per your route's requirements",
+              "Insurance valid in the country you're visiting",
+              "Financial proof if your route expects it",
+            ],
+          },
+          {
+            h2: "How doki.help helps",
+            body: "Family documents live in one private vault over HTTPS, organised per person. Expiry dates become reminders (email 30, 7 and 1 day before). Open the files you need in the app before travelling and they stay available offline at the airport. Share any single document with an agent via an expiring link instead of a permanent chat attachment.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "How often can I do a visa run?",
+            a: "That's a migration-rules question, and the rules change. Frequent runs may draw questions at the border — check current restrictions in official sources before each trip.",
+          },
+          {
+            q: "Should I do a run or extend onshore instead?",
+            a: "We deliberately don't advise: it depends on your status and the rules at the time. Decide with a licensed agent or official sources — while doki.help keeps your paperwork complete and deadlines visible.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Visa run dari Bali",
+        title: "Visa Run Bali: Persiapan dan Dokumen | Doki.help",
+        metaDescription:
+          "Apa itu visa run dan cara menyiapkannya dengan tenang: set dokumen, waktu, pengingat. Aturan berubah — cek sumber resmi.",
+        h1: "Visa run dari Bali: persiapan perjalanan dan dokumen",
+        intro:
+          "Visa run adalah perjalanan singkat ke luar negeri untuk memperbarui hak tinggal di Indonesia. Kami membahas dokumen dan waktunya — bukan aturan imigrasi; cek aturan terbaru di sumber resmi atau agen berlisensi.",
+        ctaPrimary: "Siapkan dokumen perjalanan",
+        sections: [
+          {
+            h2: "Dokumen yang selalu dibutuhkan",
+            bullets: [
+              "Paspor dengan masa berlaku cukup",
+              "Visa/cap terkini: salinan semua halaman bertanda",
+              "Tiket dan bukti lanjutan sesuai rute",
+              "Asuransi yang berlaku di negara tujuan",
+            ],
+          },
+          {
+            h2: "Waktu tanpa drama",
+            body: "Rencana tenang: tanggal habis masa tinggal diketahui → aturan terbaru dicek beberapa minggu sebelumnya → tiket dibeli → dokumen lengkap di satu tempat → salinan oflayn disimpan. Pengingat 30 hari lebih baik daripada H-1.",
+          },
+          {
+            h2: "Bagaimana doki.help membantu",
+            body: "Dokumen keluarga tersimpan dalam satu brankas privat, tanggal kedaluwarsa menjadi pengingat email 30/7/1 hari, dan file bisa dibuka oflayn lewat aplikasi (PWA).",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Seberapa sering visa run boleh dilakukan?",
+            a: "Itu soal aturan imigrasi yang berubah-ubah. Cek batas terkini di sumber resmi sebelum setiap perjalanan.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Balidan viza-run",
+        title: "Balidan viza-run: tayyorgarlik va hujjatlar | Doki.help",
+        metaDescription:
+          "Viza-run nima va uni qanday xotirjam tayyorlash kerak: hujjatlar to‘plami, muddatlar, eslatmalar. Qoidalar o‘zgaradi — rasmiy manbalarni tekshiring.",
+        h1: "Balidan viza-run: safar va hujjatlarga tayyorgarlik",
+        intro:
+          "Viza-run — Indonziyada bo‘lish huquqini yangilash uchun qisqa safar. Biz hujjatlar va muddatlar haqida gapiramiz; migratsiya qoidalarini rasmiy manbalarda tekshiring.",
+        ctaPrimary: "Safar hujjatlarini tayyorlang",
+        sections: [
+          {
+            h2: "Har bir safarda kerak bo‘ladigan hujjatlar",
+            bullets: [
+              "Muddati yetarli pasport",
+              "Joriy viza/shtampalar skaneri",
+              "Chiptalar va davomiylikni tasdiqlovchi hujjatlar",
+              "Yo‘nalish davlatida amal qiladigan sug‘urta",
+            ],
+          },
+          {
+            h2: "doki.help qanday yordam beradi",
+            body: "Oilaviy hujjatlar bitta shaxsiy seyfda, muddat sanalari eslatmaga aylanadi (30/7/1 kun oldin xat), kerakli fayllar ilovada oflayn ochiladi.",
+          },
+        ],
+        faqHeading: "Ko‘p so‘raladigan savollar",
+        faq: [
+          {
+            q: "Viza-runni qanchalik tez-tez qilish mumkin?",
+            a: "Bu migratsiya qoidalari masalasi va ular o‘zgarib turadi. Har safardan oldin rasmiy manbalarda tekshiring.",
+          },
+        ],
+      },
+    },
+    related: {
+      ru: [
+        { href: "/checklists/bali-relocation-checklist", label: "Чек-лист документов для жизни на Бали" },
+        { href: "/visa-expiry-reminder", label: "Напоминание о сроке визы" },
+        { href: "/for/expats", label: "Жизнь на Бали: все документы в одном месте" },
+      ],
+      en: [
+        { href: "/checklists/bali-relocation-checklist", label: "Long-term Bali relocation checklist" },
+        { href: "/visa-expiry-reminder", label: "Visa expiry reminder" },
+      ],
+      id: [
+        { href: "/visa-expiry-reminder", label: "Pengingat masa berlaku visa" },
+      ],
+      uz: [
+        { href: "/visa-expiry-reminder", label: "Viza muddati eslatmasi" },
+      ],
+    },
+  },
+
+  "villa-rental-bali-documents": {
+    slug: "villa-rental-bali-documents",
+    emoji: "🏡",
+    locales: {
+      ru: {
+        navLabel: "Аренда виллы",
+        title: "Аренда виллы на Бали: документы сделки | doki.help",
+        metaDescription:
+          "Какие документы проверить при аренде виллы на Бали: договор, стороны, платежи, опись. Что сохранить и как отправить нужный файл безопасно.",
+        h1: "Аренда виллы на Бали: какие документы проверить и что хранить",
+        intro:
+          "Долгосрочная аренда на острове — это пакет документов, который живёт весь год: договор, платёжки, переписка, опись вещей. Разберём, что проверить до подписания и что сохранить после, чтобы выезд или спорный момент не превратились в поиск по чатам. Юридическую сторону сделки при сомнениях обсуждайте с юристом.",
+        ctaPrimary: "Сохранить документы аренды",
+        sections: [
+          {
+            h2: "До подписания: кого вы вообще снимаете у",
+            body: "Базовая проверка сторон экономит месяцы нервов: кто собственник (или официальный управляющий), совпадает ли имя в договоре с тем, кто получает оплату, есть ли право сдавать объект. Не стесняйтесь просить документы — нормальный владелец относится к этому спокойно. Если сделка идёт через агента, убедитесь, кто он и от чьего имени работает.",
+          },
+          {
+            h2: "Договор: на что смотреть глазами жильца",
+            body: "Ключевые пункты обычно одни и те же: срок и условия продления, депозит и порядок его возврата, кто платит за коммуналку и интернет, правила повышения цены, условия досрочного выезда. Просите версию на понятном вам языке или перевод — подписывать то, чего вы не понимаете, плохая идея даже на райском острове.",
+          },
+          {
+            h2: "Оплата: следы важнее доверия",
+            bullets: [
+              "Платите способом, который оставляет запись: перевод, а не наличные «без ничего»",
+              "Каждому платежу — подтверждение: скриншот, чек, квитанция",
+              "Депозит фиксируйте отдельной строкой с суммой и условиями возврата",
+              "Сохраняйте переписку об обещаниях («починим кондиционер до заезда»)",
+            ],
+          },
+          {
+            h2: "Заселение: опись и фото",
+            body: "В день заезда снимите видео-обход жилья: техника, мебель, счётчики, существующие дефекты. Приложите опись к договору или хотя бы отправьте её владельцу в переписке, чтобы был след с датой. Через год, при возврате депозита, эти файлы стоят дороже самой красивой веранды.",
+          },
+          {
+            h2: "Где держать документы аренды весь год",
+            body: "Договор, платёжки, опись и контакты владельца — в одном месте, доступном и вам, и партнёру. В doki.help это отдельная секция: сканы хранятся приватно, открываются офлайн (пригодится, если свет отключат), а нужный документ отправляется владельцу или агенту ссылкой с истекающим сроком — вместо пересылки файлов, которые остаются в чате навсегда.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Обязательно ли заверять договор аренды у нотариуса?",
+            a: "Практика различается, и мы не даём юридических консультаций. Если сумма и срок большие, обзор договора юристом обычно стоит дешевле возможных проблем. Самое важное — иметь подписанную обеими сторонами версию и сохранять её скан.",
+          },
+          {
+            q: "Владелец просит только фото паспорта — это нормально?",
+            a: "Копия паспорта для договора — обычная практика, но отправляйте её адресно: ссылка с истекающим сроком и лимитом просмотров оставляет контроль у вас, а не файл, живущий в чужом чате вечно.",
+          },
+          {
+            q: "Что делать при споре о депозите?",
+            a: "Помогают именно записи: договор с пунктом о депозите, подтверждения платежей, опись при заезде, переписка. Собранные в одном месте, они превращают разговор «на эмоциях» в предметное обсуждение.",
+          },
+        ],
+      },
+      en: {
+        navLabel: "Bali villa rental papers",
+        title: "Renting a Villa in Bali: Documents | Doki.help",
+        metaDescription:
+          "Which documents to check when renting a villa in Bali: contract, parties, payments, inventory. What to keep and how to share files safely.",
+        h1: "Renting a villa in Bali: what to check and what to keep",
+        intro:
+          "A long-term rental on the island is a bundle of documents that lives for a year: contract, payment proofs, inventory, correspondence. What to check before signing and what to save after. For legal questions, consult a lawyer.",
+        ctaPrimary: "Save your rental documents",
+        sections: [
+          {
+            h2: "Before signing: who are you renting from",
+            body: "Checking the parties saves months of stress: who owns the property (or manages it officially), whether the name in the contract matches who receives payment, and whether they have the right to rent it out. Asking for documents is normal — a legitimate owner won't be offended.",
+          },
+          {
+            h2: "Contract points tenants care about",
+            body: "Typical items: term and renewal conditions, deposit and refund process, who pays utilities and internet, price-increase rules, early-exit terms. Ask for a version or translation in a language you actually understand — signing what you can't read is a bad idea anywhere.",
+          },
+          {
+            h2: "Payments: leave traces",
+            bullets: [
+              "Pay in ways that leave records — transfer, not unmarked cash",
+              "Every payment gets a confirmation: screenshot, receipt, invoice",
+              "Record the deposit separately with amount and refund terms",
+              "Keep correspondence about promises ('we'll fix the AC before move-in')",
+            ],
+          },
+          {
+            h2: "Move-in inventory and photos",
+            body: "Film a walkthrough on day one: appliances, furniture, meters, existing damage. Attach an inventory list to the contract or at least send it to the owner in writing so there's a dated trail. When the deposit comes back a year later, those files matter more than the prettiest veranda.",
+          },
+          {
+            h2: "Where to keep rental documents all year",
+            body: "Contract, payment proofs, inventory and contacts in one place accessible to both partners. In doki.help that's its own section: private storage, offline access via the app, and any single document shared with the owner or agent through an expiring link rather than a permanent chat attachment.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "Does the rental contract need notarisation?",
+            a: "Practice varies and we don't give legal advice. For large sums or long terms, a lawyer's review usually costs less than potential problems. The essential part: a version signed by both parties, scanned and saved.",
+          },
+          {
+            q: "The owner asks for a passport photo — is that normal?",
+            a: "An ID copy for the contract is common practice. Share it in a controlled way: an expiring link with a view limit keeps you in charge, instead of a file living forever in someone's chat.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Sewa villa Bali",
+        title: "Menyewa Villa di Bali: Dokumen | Doki.help",
+        metaDescription:
+          "Dokumen yang dicek saat menyewa villa di Bali: kontrak, para pihak, pembayaran, inventaris. Yang disimpan dan cara membagikannya dengan aman.",
+        h1: "Menyewa villa di Bali: apa yang dicek dan disimpan",
+        intro:
+          "Sewa jangka panjang menghasilkan tumpukan dokumen: kontrak, bukti bayar, inventaris. Cek sebelum tanda tangan, simpan setelahnya. Untuk hal hukum, konsultasikan dengan lawyer.",
+        ctaPrimary: "Simpan dokumen sewa Anda",
+        sections: [
+          {
+            h2: "Sebelum tanda tangan",
+            body: "Cek pemilik atau pengelola resminya, kesesuaian nama di kontrak dengan penerima pembayaran, dan hak menyewakan. Meminta dokumen itu wajar.",
+          },
+          {
+            h2: "Pembayaran meninggalkan jejak",
+            bullets: [
+              "Bayar lewat jalur yang meninggalkan catatan",
+              "Setiap pembayaran punya bukti",
+              "Deposit dicatat terpisah beserta syarat pengembaliannya",
+              "Simpan percakapan tentang janji perbaikan",
+            ],
+          },
+          {
+            h2: "Inventaris hari pertama",
+            body: "Rekam kondisi rumah saat masuk: perabot, meteran, cacat yang ada. Kirim daftarnya ke pemilik secara tertulis agar ada jejak bertanggal.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Apakah kontrak sewa harus dinotariskan?",
+            a: "Praktiknya bervariasi dan kami tidak memberi nasihat hukum. Yang penting: versi bertanda tangan dua pihak, discan dan disimpan.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Balida villa ijaresi",
+        title: "Balida villa ijaresi: hujjatlar | Doki.help",
+        metaDescription:
+          "Balida villa ijaresi paytida tekshiriladigan hujjatlar: shartnoma, tomonlar, to‘lovlar, inventar. Nimalarni saqlash kerak.",
+        h1: "Balida villa ijaresi: nimalarni tekshirish va saqlash",
+        intro:
+          "Uzoq muddatli ijara yil davom etadigan hujjatlar to‘plami: shartnoma, to‘lov dalolatnomalari, inventar. Huquqiy savollar uchun yuristga murojaat qiling.",
+        ctaPrimary: "Ijara hujjatlarini saqlang",
+        sections: [
+          {
+            h2: "Imzo qo‘yishdan oldin",
+            body: "Egasi yoki rasmiy boshqaruvchi kimligini, shartnomadagi ism to‘lovni oluvchi ismiga mosligini tekshiring. Hujjat so‘rash odatiy hol.",
+          },
+          {
+            h2: "To‘lovlar iz qoldirsin",
+            bullets: [
+              "Iz qoldiradigan usulda to‘lang",
+              "Har bir to‘lovga tasdiq saqlang",
+              "Depozitni alohida qator sifatida qayd eting",
+            ],
+          },
+        ],
+        faqHeading: "Ko‘p so‘raladigan savollar",
+        faq: [
+          {
+            q: "Ijara shartnomasini notarial tasdiqlash kerakmi?",
+            a: "Amaliyot har xil va biz yuridik maslahat bermaymiz. Muhimi: har ikki tomon imzolagan, skaner qilingan versiya saqlangan bo‘lsin.",
+          },
+        ],
+      },
+    },
+    related: {
+      ru: [
+        { href: "/checklists/bali-relocation-checklist", label: "Чек-лист документов для жизни на Бали" },
+        { href: "/secure-document-sharing", label: "Безопасная отправка документов" },
+        { href: "/for/expats", label: "Жизнь на Бали: все документы в одном месте" },
+      ],
+      en: [
+        { href: "/checklists/bali-relocation-checklist", label: "Long-term Bali relocation checklist" },
+        { href: "/secure-document-sharing", label: "Secure document sharing" },
+      ],
+      id: [
+        { href: "/secure-document-sharing", label: "Berbagi dokumen aman" },
+      ],
+      uz: [
+        { href: "/secure-document-sharing", label: "Hujjatlarni xavfsiz ulashish" },
+      ],
+    },
+  },
+
+  "power-of-attorney-from-abroad": {
+    slug: "power-of-attorney-from-abroad",
+    emoji: "✍️",
+    locales: {
+      ru: {
+        navLabel: "Доверенность из-за границы",
+        title: "Доверенность из-за границы: сбор документов | doki.help",
+        metaDescription:
+          "Как подготовить доверенность, находясь в Индонезии: какие данные собрать, как передать нотариусу или юристу и где хранить сканы.",
+        h1: "Доверенность из-за границы: спокойно, по шагам",
+        intro:
+          "Продать машину или квартиру, оформить документ за родителей, решить банковский вопрос — всё это можно из Индонезии через доверенность. Форму и порядок удостоверения определяет закон и нотариус, поэтому здесь — только организационная часть: что собрать, как передать и где хранить. Юридические детали согласуйте с нотариусом.",
+        ctaPrimary: "Организовать документы доверенности",
+        sections: [
+          {
+            h2: "Шаг первый: позвонить нотариусу, а не в интернет",
+            body: "Содержание и форму доверенности определяет нотариус, который будет её оформлять, — требования зависят от типа сделки и страны. Один звонок отвечает на вопросы, которые в форумах спорят неделями: какой вид доверенности нужен, какое заверение требуется, сколько это занимает. Запишите ответы — это станет вашим личным чек-листом.",
+          },
+          {
+            h2: "Что обычно просят собрать",
+            bullets: [
+              "Паспорт: сканы всех значимых страниц, иногда — переводы",
+              "Точные данные представителя (паспортные) и полномочия списком",
+              "Документы об объекте: выписки, свидетельства, реквизиты",
+              "Для сделок с недвижимостью часто нужны свежие справки — их закажет представитель",
+            ],
+          },
+          {
+            h2: "Как передать документы нотариусу или юристу",
+            body: "Почта и мессенджеры работают, но у них неприятная особенность: файл уходит навсегда и остаётся у получателя. Ссылка с истекающим сроком решает это: нотариус скачивает нужное сегодня, а завтра доступ уже закрыт. Лимит просмотров и журнал открытий показывают, когда документ забрали. Так передают сканы для проверки, а оригиналы или подписанные бланки едут почтой или с доверенным лицом.",
+          },
+          {
+            h2: "Где хранить всё, что связано с доверенностью",
+            body: "Сканы отправленных документов, переписка с нотариусом, номер и дата готовой доверенности — в одной папке сейфа. Когда представитель через месяц спросит «а какой там пункт про квартиру», ответ найдётся за минуту, а не в раскопках почты. А после использования документа его копию удобно пометить как использованную, чтобы не путаться в версиях.",
+          },
+          {
+            h2: "Про сроки и напоминания",
+            body: "У доверенности бывает срок действия; у сделок — свои дедлайны; у справок — ограниченная свежесть. Заведите напоминания на каждую дату сразу, как она стала известна: письмо за 30, 7 и 1 день снимает необходимость держать всё в голове. Это особенно ценно, когда между вами и событием семь часовых поясов.",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "Можно ли оформить российскую доверенность из Индонезии?",
+            a: "Обычно — да, варианты бывают разные (консульство, местное заверение с апостилем и переводом), но правильный путь зависит от типа сделки и требований принимающего нотариуса. Уточните порядок у своего нотариуса до сбора документов.",
+          },
+          {
+            q: "Безопасно ли отправлять скан паспорта нотариусу?",
+            a: "Передать данные нотариусу нужно — вопрос в способе. Ссылка с истекающим сроком и лимитом просмотров оставляет контроль у вас: документ скачан, доступ закрылся, факт зафиксирован в журнале.",
+          },
+          {
+            q: "Сколько времени это займёт?",
+            a: "Зависит от типа доверенности и способа заверения. Практичный ориентир: закладывайте запас и начинайте, когда дата сделки уже известна, а не за три дня до неё. Напоминания в doki.help помогают не съехать со сроков.",
+          },
+        ],
+      },
+      en: {
+        navLabel: "Power of attorney abroad",
+        title: "Power of Attorney From Abroad | Doki.help",
+        metaDescription:
+          "Preparing a power of attorney while living in Indonesia: which data to gather, how to send it to your notary safely, where to keep scans.",
+        h1: "Power of attorney from abroad, step by step",
+        intro:
+          "Selling property back home or handling paperwork for parents is possible through a power of attorney even while living in Indonesia. The legal form is decided by law and your notary — this guide covers only the logistics: what to gather, how to send it and where to keep everything.",
+        ctaPrimary: "Organise POA documents",
+        sections: [
+          {
+            h2: "Step one: call the notary, not a forum",
+            body: "The content and certification requirements come from the notary handling it, and they depend on the transaction type. One call answers what forums argue about for weeks: which kind of POA, which certification, how long it takes. Write the answers down — that becomes your personal checklist.",
+          },
+          {
+            h2: "What's usually asked for",
+            bullets: [
+              "Passport scans of all meaningful pages, sometimes with translations",
+              "Representative's exact details and a list of powers",
+              "Property or case documents: extracts, certificates, account details",
+              "Fresh statements for property deals — usually ordered by the representative",
+            ],
+          },
+          {
+            h2: "Sending documents safely",
+            body: "Email and messengers work, but the file stays with the recipient forever. An expiring link fixes this: the notary downloads what they need today, access closes tomorrow, and the view log shows when it was picked up. Originals still travel by post or with a trusted person.",
+          },
+          {
+            h2: "Reminders for every date",
+            body: "POAs can have validity periods, deals have deadlines, statements go stale. Set reminders as soon as each date is known — an email 30, 7 and 1 day ahead means nothing lives only in your head across seven time zones.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "Can I arrange a home-country POA from Indonesia?",
+            a: "Usually yes, via several routes (consulate, local certification with apostille and translation) — the right path depends on the transaction and the receiving notary's requirements. Confirm the process before gathering anything.",
+          },
+          {
+            q: "Is it safe to send my passport scan?",
+            a: "Notaries need your data — the question is how. An expiring link with a view limit keeps control on your side: downloaded once, access closed, the fact recorded.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Kuasa dari luar negeri",
+        title: "Surat Kuasa dari Luar Negeri | Doki.help",
+        metaDescription:
+          "Menyiapkan surat kuasa sambil tinggal di Indonesia: data yang dikumpulkan, cara mengirim ke notaris dengan aman, penyimpanan scan.",
+        h1: "Surat kuasa dari luar negeri, langkah demi langkah",
+        intro:
+          "Isu properti atau dokumen keluarga di negara asal bisa diselesaikan lewat surat kuasa. Bentuk hukumnya ditentukan notaris — panduan ini hanya soal logistik: apa yang dikumpulkan dan cara mengirimnya.",
+        ctaPrimary: "Rapikan dokumen kuasa",
+        sections: [
+          {
+            h2: "Langkah pertama: hubungi notaris",
+            body: "Jenis dan syarat pengesahan ditentukan notaris yang menangani. Satu panggilan menjawab pertanyaan yang di forum diperdebatkan berminggu-minggu.",
+          },
+          {
+            h2: "Mengirim dokumen dengan aman",
+            body: "Tautan dengan masa berlaku membuat notaris mengunduh yang perlu hari ini, akses tertutup besok, dan log pencatatan menunjukkan kapan diambil. Ori tetap dikirim via pos.",
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Apakah aman mengirim scan paspor ke notaris?",
+            a: "Data memang perlu dikirim — pertanyaannya caranya. Tautan berbatas waktu dan jumlah lihat menjaga kendali di sisi Anda.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "Chet eldan vekalet",
+        title: "Chet eldan ishonchnoma | Doki.help",
+        metaDescription:
+          "Indonziyada yashab ishonchnoma tayyorlash: qanday ma’lumot yig‘ish, notariusga qanday xavfsiz yuborish, skanerlarni qayerda saqlash.",
+        h1: "Chet eldan ishonchnoma: bosqichma-bosqich",
+        intro:
+          "Uydagi mulk yoki hujjat masalalarini ishonchnoma orqali hal qilish mumkin. Yuridik shaklni notarius belgilaydi — bu yerda faqat tashkiloiy qismi.",
+        ctaPrimary: "Ishonchnoma hujjatlarini tartibga soling",
+        sections: [
+          {
+            h2: "Birinchi qadam: notariusga qo‘ng‘iroq",
+            body: "Turi va tasdiqlash talablarini ish yuritayotgan notarius belgilaydi. Bitta qo‘ng‘iroq forumlarda haftalar tortishuvchi savollarga javob beradi.",
+          },
+          {
+            h2: "Xavfsiz yuborish",
+            body: "Muddatli havola notariushga bugun keraklini yuklab olishga, erta esa kirishni yopishga imkon beradi; ko‘rish jurnali factni qayd etadi.",
+          },
+        ],
+        faqHeading: "Ko‘p so‘raladigan savollar",
+        faq: [
+          {
+            q: "Pasport skanerini notariusga yuborish xavfsizmi?",
+            a: "Ma’lumot yuborish kerak — savol yo‘lda. Muddat va ko‘rish limiti bor havola nazorat sizning qo‘lingizda qoldiradi.",
+          },
+        ],
+      },
+    },
+    related: {
+      ru: [
+        { href: "/blog/how-to-send-a-document-securely", label: "Как отправить документ безопасно" },
+        { href: "/secure-document-sharing", label: "Ссылки с истекающим сроком" },
+        { href: "/checklists/bali-relocation-checklist", label: "Чек-лист документов для жизни на Бали" },
+      ],
+      en: [
+        { href: "/blog/how-to-send-a-document-securely", label: "How to send a document securely" },
+        { href: "/secure-document-sharing", label: "Expiring share links" },
+      ],
+      id: [
+        { href: "/blog/how-to-send-a-document-securely", label: "Cara mengirim dokumen dengan aman" },
+      ],
+      uz: [
+        { href: "/secure-document-sharing", label: "Muddatli havolalar" },
+      ],
+    },
+  },
+
+  "kitas-extension-timeline": {
+    slug: "kitas-extension-timeline",
+    emoji: "📅",
+    locales: {
+      ru: {
+        navLabel: "Продление KITAS",
+        title: "Продление KITAS: календарь подготовки | doki.help",
+        metaDescription:
+          "За сколько начинать продление KITAS и из каких шагов состоит подготовка: календарь действий, набор документов и напоминания о датах.",
+        h1: "Продление KITAS: календарь, чтобы не пропустить сроки",
+        intro:
+          "KITAS — разрешение на временное пребывание, и его продление — процесс с несколькими этапами и датами. Конкретные сроки зависят от типа KITAS, региона и загруженности офисов, поэтому здесь мы разбираем каркас подготовки: за сколько начинать думать, какие документы держать наготове и как не собрать всё в последнюю неделю. Правила уточняйте в иммиграции (imigrasi.go.id) или у вашего агента.",
+        ctaPrimary: "Поставить напоминания о сроках",
+        sections: [
+          {
+            h2: "Почему «начну за неделю до» — плохой план",
+            body: "В процессе продления участвует несколько сторон: вы, спонсор или агент, иммиграционный офис. Каждая может добавить своих дней: спонсору нужны подписи, агенту — полный комплект сразу, офис работает по своим слотам. Люди, которые начинают заранее, почти всегда проходят процесс спокойнее тех, кто собирает документы в последнюю неделю.",
+          },
+          {
+            h2: "Примерный каркас подготовки",
+            bullets: [
+              "За пару месяцев: проверить дату окончания KITAS и паспорт (запас срока!), понять, меняется ли тип статуса",
+              "Заранее: связаться с агентом/спонсором, уточнить состав комплекта и записаться на подачу",
+              "Недели за две–три: собрать документы, сделать свежие фото, проверить платёжные требования",
+              "По ходу: биометрия и визиты по назначенным датам, подтверждения — сохранять сразу",
+              "После: новое разрешение и штампы — в сейф, новая дата — в напоминания",
+            ],
+          },
+          {
+            h2: "Комплект документов: что держать наготове",
+            body: "Состав зависит от типа KITAS и требований на момент подачи, но базовый набор стабилен: паспорт и текущий KITAS, предыдущие подтверждения продлений, фото на документы, документы спонсора, заполненные формы. Если что-то из этого уже отсканировано и разложено по папкам — любая подача становится заметно проще.",
+          },
+          {
+            h2: "Напоминания важнее памяти",
+            body: "Дата окончания KITAS — не единственная: у паспорта свой срок, у справок — свежесть, у агента — свои внутренние дедлайны. Практичная схема: напоминание за 60 дней («проверить правила и связаться с агентом») и за 30 («комплект должен быть собран»). В doki.help письма приходят за 30, 7 и 1 день до каждой даты, которую вы отметили.",
+          },
+          {
+            h2: "После продления: пять минут порядка",
+            body: "Когда новое разрешение на руках, потратите пять минут: загрузите сканы нового KITAS и штампов, поставьте дату следующего цикла. Следующее продление тогда начнётся с готового комплекта, а не с поиска «где же тот файл».",
+          },
+        ],
+        faqHeading: "Частые вопросы",
+        faq: [
+          {
+            q: "За сколько до окончания KITAS начинать продление?",
+            a: "Точные окна подачи зависят от типа KITAS и правил на момент обращения — их подскажет иммиграция или ваш агент. Организационно комфортно начинать подготовку за один-два месяца: хватает времени и на документы, и на непредвиденные паузы.",
+          },
+          {
+            q: "Можно продлить KITAS без агента?",
+            a: "Часть процессов доступна самостоятельно через официальные каналы, часть ведут спонсоры или агенты. Это вопрос правил и вашего удобства — наш совет один: какой бы путь вы ни выбрали, держите комплект документов и даты под контролем.",
+          },
+          {
+            q: "Что делать, если паспорт скоро истекает, а KITAS ещё действует?",
+            a: "Проверьте требования к остатку срока паспорта для вашей процедуры — это частый подводный камень. Если паспорт пора менять, начните с него: сначала новый паспорт, затем перенос/обновление статуса. Оба процесса выигрывают от заранее расставленных напоминаний.",
+          },
+        ],
+      },
+      en: {
+        navLabel: "KITAS renewal timeline",
+        title: "KITAS Renewal: Preparation Timeline | Doki.help",
+        metaDescription:
+          "How early to start a KITAS renewal and what the preparation looks like: action calendar, document set and reminders for every date.",
+        h1: "KITAS renewal: a timeline so deadlines don't sneak up",
+        intro:
+          "A KITAS renewal involves several stages and dates, and exact windows depend on your permit type, region and office load. Here we cover the frame of preparation: when to start thinking, which documents to keep ready and how not to cram everything into the last week. Always confirm rules via immigration (imigrasi.go.id) or your agent.",
+        ctaPrimary: "Set reminders for the dates",
+        sections: [
+          {
+            h2: "Why 'a week before' is a bad plan",
+            body: "Several parties take part: you, your sponsor or agent, the immigration office. Each adds their own days — signatures, full document sets, appointment slots. People who start early almost always pass through more calmly than last-week collectors.",
+          },
+          {
+            h2: "A rough preparation frame",
+            bullets: [
+              "~2 months out: check the KITAS end date and passport validity; note if your status type changes",
+              "Early: contact agent/sponsor, confirm the document set, book submission",
+              "2–3 weeks out: gather documents, fresh photos, payment requirements",
+              "Along the way: biometrics and visits per assigned dates — save confirmations immediately",
+              "After: new permit and stamps into the vault, new date into reminders",
+            ],
+          },
+          {
+            h2: "The document set to keep ready",
+            body: "Composition varies by permit type and current requirements, but the base is stable: passport and current KITAS, previous extension confirmations, photos, sponsor documents, forms. If these are already scanned and filed, every submission gets easier.",
+          },
+          {
+            h2: "How doki.help helps",
+            body: "Marked dates turn into emails 30, 7 and 1 day ahead. Scans live in a private vault organised per person and open offline via the app — useful at offices where connection is unreliable.",
+          },
+        ],
+        faqHeading: "FAQ",
+        faq: [
+          {
+            q: "How early should I start a KITAS renewal?",
+            a: "Exact filing windows depend on permit type and current rules — immigration or your agent will say. Organisationally, starting one-two months ahead gives room for paperwork and surprises alike.",
+          },
+          {
+            q: "My passport expires soon but the KITAS is still valid?",
+            a: "Check the passport-validity requirement for your procedure — a classic snag. If renewal is due, do the passport first, then update the status. Both benefit from reminders set in advance.",
+          },
+        ],
+      },
+      id: {
+        navLabel: "Perpanjangan KITAS",
+        title: "Perpanjangan KITAS: Linimasa Persiapan | Doki.help",
+        metaDescription:
+          "Seberapa awal memulai perpanjangan KITAS dan seperti apa persiapannya: kalender aksi, set dokumen, pengingat tiap tanggal.",
+        h1: "Perpanjangan KITAS: linimasa agar tenggat tak lolos",
+        intro:
+          "Perpanjangan KITAS punya beberapa tahap dan tanggal; jendela pastinya bergantung pada jenis izin dan kantor. Di sini kami bahas kerangka persiapannya. Konfirmasi aturan di imigrasi (imigrasi.go.id) atau agen Anda.",
+        ctaPrimary: "Pasang pengingat tenggat",
+        sections: [
+          {
+            h2: "Kenapa 'minggu sebelumnya' rencana buruk",
+            body: "Ada beberapa pihak: Anda, sponsor/agen, kantor imigrasi. Masing-masing menambah hari sendiri. Yang mulia lebih awal hampir selalu lebih tenang.",
+          },
+          {
+            h2: "Kerangka persiapan kasar",
+            bullets: [
+              "~2 bulan: cek tanggal habis masa berlaku KITAS dan paspor",
+              "Awal: hubungi agen/sponsor, konfirmasi set dokumen",
+              "2–3 minggu: kumpulkan dokumen, foto baru, ketentuan pembayaran",
+              "Setelahnya: izin baru dan cap masuk ke brankas, tanggal baru ke pengingat",
+            ],
+          },
+        ],
+        faqHeading: "Pertanyaan umum",
+        faq: [
+          {
+            q: "Seberapa awal harus mulai perpanjangan?",
+            a: "Jendela pengajuan tepatnya tergantung jenis izin dan aturan saat itu — tanya imigrasi atau agen. Secara organisasi, satu-dua bulan lebih nyaman.",
+          },
+        ],
+      },
+      uz: {
+        navLabel: "KITAS uzaytirish",
+        title: "KITAS uzaytirish: tayyorgarlik jadvali | Doki.help",
+        metaDescription:
+          "KITAS uzaytirishni qachon boshlash kerak va tayyorgarlik qanday ko‘rinadi: harakatlar kalendari, hujjatlar to‘plami, eslatmalar.",
+        h1: "KITAS uzaytirish: muddatlar qochib ketmasligi uchun jadval",
+        intro:
+          "KITAS uzaytirish bir necha bosqich va sanadan iborat; aniq muddatlar turiga va ofis yuklamasiga bog‘liq. Bu yerda tayyorgarlik tuzilmasi. Qoidalarni imigratsiya yoki agentingizda tekshiring.",
+        ctaPrimary: "Muddatlarga eslatma qo‘ying",
+        sections: [
+          {
+            h2: "Nega 'bir hafta qolganda' — yomon reja",
+            body: "Jarayonda bir necha tomon ishtirok etadi: siz, sponsor yoki agent, immigratsiya ofisi. Har biri o‘z kunlarini qo‘shadi. Erta boshlaganlar deyarli doim tinchroq o‘tadi.",
+          },
+          {
+            h2: "Taxminiy tayyorgarlik ramkasi",
+            bullets: [
+              "~2 oy oldin: KITAS va pasport muddatini tekshirish",
+              "Erta: agent/sponsor bilan bog‘lanish, hujjatlar ro‘yxatini tasdiqlash",
+              "2–3 hafta: hujjatlarni yig‘ish, yangi fotosuratlari",
+              "Keyin: yangi ruxsatnomani seyfga, yangi sanani eslatmaga",
+            ],
+          },
+        ],
+        faqHeading: "Ko‘p so‘raladigan savollar",
+        faq: [
+          {
+            q: "KITAS tugashidan qancha oldin boshlash kerak?",
+            a: "Aniq oynalar turiga va amaldagi qoidalarga bog‘liq. Tashkiliy jihatdan bir-ikki oy oldin boshlash qulay.",
+          },
+        ],
+      },
+    },
+    related: {
+      ru: [
+        { href: "/checklists/kitas-work-permit-checklist", label: "Чек-лист документов KITAS" },
+        { href: "/visa-expiry-reminder", label: "Напоминание о сроке визы" },
+        { href: "/checklists/bali-relocation-checklist", label: "Чек-лист документов для жизни на Бали" },
+      ],
+      en: [
+        { href: "/checklists/kitas-work-permit-checklist", label: "KITAS & work permit checklist" },
+        { href: "/visa-expiry-reminder", label: "Visa expiry reminder" },
+      ],
+      id: [
+        { href: "/checklists/kitas-work-permit-checklist", label: "Ceklis KITAS & izin kerja" },
+      ],
+      uz: [
+        { href: "/visa-expiry-reminder", label: "Viza muddati eslatmasi" },
+      ],
+    },
+  },
 };
 
 export const GUIDE_KEYS = Object.keys(DATA);

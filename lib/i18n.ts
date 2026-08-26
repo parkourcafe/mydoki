@@ -30,7 +30,7 @@ export async function getLocale(): Promise<Locale> {
   const ua = requestHeaders.get("user-agent") || "";
   if (isNativeUserAgent(ua)) return "en";
 
-  // Языковой префикс в URL (/ru, /en…) — middleware кладёт его в заголовок.
+   // Языковой префикс в URL (/ru, /en…) — proxy кладёт его в заголовок.
   const fromPath = requestHeaders.get("x-locale") as Locale | undefined;
   if (fromPath && LOCALES.includes(fromPath)) return fromPath;
 

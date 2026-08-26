@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n";
 import {
@@ -147,7 +147,18 @@ export default function CandidateActions({
   // То же окно отмены, что на доске откликов (revert_last_rejection в БД).
   const UNDO_MS = 10 * 60 * 1000;
   const [rejectedAt, setRejectedAt] = useState<number | null>(null);
+  // «Сейчас» — состояние, обновляемое таймером до конца окна: Date.now()
+  // в рендере запрещён (react-hooks/purity).
+  const [nowTs, setNowTs] = useState<number | null>(null);
   const [undoMsg, setUndoMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (rejectedAt === null || nowTs === null) return;
+    const remain = UNDO_MS - (nowTs - rejectedAt);
+    if (remain <= 0) return;
+    const t = setTimeout(() => setNowTs(Date.now()), remain + 20);
+    return () => clearTimeout(t);
+  }, [rejectedAt, nowTs, UNDO_MS]);
 
   // Действия могут и бросить, и вернуть { error } — раньше оба случая
   // проглатывались, и кнопка выглядела сработавшей.
@@ -348,7 +359,9 @@ export default function CandidateActions({
               onClick={() =>
                 run(async () => {
                   const res = await rejectApplication(applicationId, vacancyId, reason);
-                  setRejectedAt(Date.now());
+                  const ts = Date.now();
+                  setRejectedAt(ts);
+                  setNowTs(ts);
                   setUndoMsg(null);
                   return res;
                 })
@@ -357,7 +370,7 @@ export default function CandidateActions({
             >
               {t.rejectBtn}
             </button>
-            {rejectedAt !== null && Date.now() - rejectedAt < UNDO_MS && (
+            {rejectedAt !== null && nowTs !== null && nowTs - rejectedAt < UNDO_MS && (
               <button
                 type="button"
                 disabled={pending}
@@ -369,6 +382,7 @@ export default function CandidateActions({
                       return { error: true };
                     }
                     setRejectedAt(null);
+                    setNowTs(null);
                     setUndoMsg(t.undone);
                     return r;
                   })

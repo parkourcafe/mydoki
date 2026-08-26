@@ -13,6 +13,7 @@ import type { OnboardingTask } from "@/lib/onboarding";
 import { type EmploymentDocument, expiryStatus } from "@/lib/employmentDocs";
 import type { Amendment } from "@/lib/amendments";
 import type { OffboardingTask } from "@/lib/offboarding";
+import SaveLetter from "./SaveLetter";
 import EmployeeEditForm from "./EmployeeEditForm";
 import OnboardingManager from "./OnboardingManager";
 import EmploymentDocs from "./EmploymentDocs";
@@ -23,6 +24,7 @@ import ProcessGuideHint from "@/components/ProcessGuideHint";
 const M = {
   ru: {
     back: "← К сотрудникам",
+    letter: "Справка о работе (PDF)",
     type: "Тип занятости",
     period: "Период",
     status: "Статус",
@@ -36,6 +38,7 @@ const M = {
   },
   en: {
     back: "← Back to employees",
+    letter: "Employment letter (PDF)",
     type: "Employment type",
     period: "Period",
     status: "Status",
@@ -49,6 +52,7 @@ const M = {
   },
   id: {
     back: "← Kembali ke karyawan",
+    letter: "Surat keterangan kerja (PDF)",
     type: "Jenis kerja",
     period: "Periode",
     status: "Status",
@@ -62,6 +66,7 @@ const M = {
   },
   uz: {
     back: "← Xodimlarga",
+    letter: "Ish haqida ma’lumotnoma (PDF)",
     type: "Bandlik turi",
     period: "Davr",
     status: "Holat",
@@ -150,6 +155,12 @@ export default async function EmployeeDetailPage({
         </Link>
         <h1 className="mt-2 text-2xl font-semibold">{name || emp.position}</h1>
         {name && <p className="text-sm text-slate-500">{emp.position}</p>}
+        <div className="mt-3 flex flex-wrap gap-2">
+          <a href={`/employer/employees/${emp.id}/letter`} className="btn-ghost">
+            {t.letter}
+          </a>
+          <SaveLetter locale={locale} employmentId={emp.id} />
+        </div>
       </div>
 
       <section className="card">

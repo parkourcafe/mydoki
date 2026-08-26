@@ -30,8 +30,15 @@ export default function NativeGate() {
 
   useEffect(() => {
     if (!native) return;
-    void initNativeShell();
-    void tryUnlock();
+    // initNativeShell/tryUnlock начинают с setState — вызываем их через
+    // микротаску, чтобы эффект не делал setState синхронно
+    // (react-hooks/set-state-in-effect).
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (cancelled) return;
+      initNativeShell();
+      void tryUnlock();
+    });
 
     let remove: (() => void) | undefined;
     (async () => {
@@ -54,7 +61,10 @@ export default function NativeGate() {
       }
     })();
 
-    return () => remove?.();
+    return () => {
+      cancelled = true;
+      remove?.();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [native]);
 

@@ -24,6 +24,7 @@ import ProcessGuideHint from "@/components/ProcessGuideHint";
 const M = {
   ru: {
     back: "← К трудовым отношениям",
+    letter: "Скачать справку о работе (PDF)",
     company: "Компания",
     position: "Должность",
     type: "Тип занятости",
@@ -36,6 +37,7 @@ const M = {
   },
   en: {
     back: "← Back to employment",
+    letter: "Download employment letter (PDF)",
     company: "Company",
     position: "Position",
     type: "Employment type",
@@ -48,6 +50,7 @@ const M = {
   },
   id: {
     back: "← Kembali",
+    letter: "Unduh surat keterangan kerja (PDF)",
     company: "Perusahaan",
     position: "Posisi",
     type: "Jenis kerja",
@@ -60,6 +63,7 @@ const M = {
   },
   uz: {
     back: "← Ortga",
+    letter: "Ma’lumotnomani yuklab olish (PDF)",
     company: "Kompaniya",
     position: "Lavozim",
     type: "Bandlik turi",
@@ -145,6 +149,12 @@ export default async function EmploymentDetailPage({
         </Link>
         <h1 className="mt-2 text-2xl font-semibold">{emp.position}</h1>
         <p className="text-sm text-slate-500">{emp.company_name}</p>
+        <a
+          href={`/my/employment/${emp.id}/letter`}
+          className="btn-ghost mt-3 inline-block"
+        >
+          {t.letter}
+        </a>
       </div>
 
       <section className="card">

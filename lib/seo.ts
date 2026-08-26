@@ -8,7 +8,7 @@ const LOCALES = ["ru", "en", "id", "uz"] as const;
 /**
  * Канонический URL + hreflang-кластер для текущей страницы.
  *
- * middleware кладёт в заголовок x-pathname путь без языкового префикса
+  * proxy (бывший middleware) кладёт в заголовок x-pathname путь без языкового префикса
  * (база для hreflang). Без-префиксный путь (/pricing) отдаёт контент по
  * getLocale() (cookie → Accept-Language) — он ИДЕНТИЧЕН своей префиксной
  * версии (/en/pricing), поэтому canonical всегда = префиксная форма

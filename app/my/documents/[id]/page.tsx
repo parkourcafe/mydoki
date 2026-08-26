@@ -365,6 +365,10 @@ export default async function DocumentPage({
     [t.validUntil, doc.expires_at],
   ];
 
+  // Серверный компонент: рендер выполняется один раз на запрос, поэтому
+  // «нечистота» Date.now() между рендерами не имеет последствий — а свежее
+  // время нужно именно здесь, чтобы классифицировать активные share-ссылки.
+  // eslint-disable-next-line react-hooks/purity
   const now = Date.now();
   const isActive = (s: (typeof shares)[number]) =>
     !s.revoked_at &&

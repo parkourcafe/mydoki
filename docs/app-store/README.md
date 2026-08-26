@@ -33,4 +33,6 @@
 5. Заполнить карточку и **App Privacy**, залить скриншоты, указать демо-аккаунт,
    отправить на ревью.
 
-Требуется: macOS + Xcode + активный Apple Developer Program.
+Требуется: macOS + **Xcode 26.0+** (жёсткое требование Capacitor 8) + Node 22+
+и активный Apple Developer Program. Подробности и приёмка после обновления
+Capacitor — в `RUNBOOK.md`.

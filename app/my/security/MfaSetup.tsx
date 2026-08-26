@@ -87,7 +87,16 @@ export default function MfaSetup({ locale }: { locale: Locale }) {
   }, [supabase]);
 
   useEffect(() => {
-    refresh();
+    // refresh() синхронно делает setLoading(true); вызываем его через
+    // микротаску, чтобы эффект не делал setState синхронно
+    // (react-hooks/set-state-in-effect). Порядок и результат те же.
+    let cancelled = false;
+    void Promise.resolve().then(() => {
+      if (!cancelled) void refresh();
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [refresh]);
 
   async function startEnroll() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n";
 import {
@@ -165,6 +165,18 @@ export default function ApplicationsBoard({
   const [undoId, setUndoId] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [rejectedAt, setRejectedAt] = useState<Record<string, number>>({});
+  // Какие Undo-кнопки сейчас видимы. Date.now() в рендере запрещён
+  // (react-hooks/purity), поэтому окно открывает обработчик отклонения,
+  // а закрывает таймер; таймеры чистятся при размонтировании.
+  const [undoVisible, setUndoVisible] = useState<Record<string, true>>({});
+  const undoTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
+  useEffect(() => {
+    const timers = undoTimers.current;
+    return () => {
+      Object.values(timers).forEach(clearTimeout);
+    };
+  }, []);
 
   // Тост «Отклонено — Вернуть» держим 7 секунд.
   useEffect(() => {
@@ -234,6 +246,15 @@ export default function ApplicationsBoard({
     try {
       await setApplicationStatus(id, vacancyId, "rejected");
       setRejectedAt((p) => ({ ...p, [id]: Date.now() }));
+      setUndoVisible((p) => ({ ...p, [id]: true }));
+      clearTimeout(undoTimers.current[id]);
+      undoTimers.current[id] = setTimeout(() => {
+        setUndoVisible((p) => {
+          const n = { ...p };
+          delete n[id];
+          return n;
+        });
+      }, UNDO_MS + 50);
       setInfo(null);
       setUndoId(id);
     } catch {
@@ -254,6 +275,13 @@ export default function ApplicationsBoard({
       delete n[id];
       return n;
     });
+    setUndoVisible((p) => {
+      const n = { ...p };
+      delete n[id];
+      return n;
+    });
+    clearTimeout(undoTimers.current[id]);
+    delete undoTimers.current[id];
     if (res.ok) {
       setApps((p) => p.map((a) => (a.id === id ? { ...a, status: res.status } : a)));
       setInfo(t.restored);
@@ -441,8 +469,7 @@ export default function ApplicationsBoard({
                     {t.reject}
                   </button>
                 ) : (
-                  rejectedAt[a.id] &&
-                  Date.now() - rejectedAt[a.id] < UNDO_MS && (
+                  undoVisible[a.id] && (
                     <button
                       type="button"
                       disabled={pending[a.id]}

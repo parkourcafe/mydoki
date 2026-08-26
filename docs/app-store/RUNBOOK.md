@@ -14,9 +14,15 @@ WebView грузит живой сайт (`server.url = https://www.doki.help`).
 
 ## 0. Предпосылки (один раз)
 
-- macOS + **Xcode** (последняя из App Store) + Command Line Tools.
-- **CocoaPods**: `sudo gem install cocoapods` (или `brew install cocoapods`).
-- Node 20+ и `npm ci` в корне репозитория.
+- macOS + **Xcode 26.0 или новее** + Command Line Tools. Это жёсткое
+  требование Capacitor 8, а не пожелание: на Xcode 25 и старше проект не
+  соберётся. Проверить: `xcodebuild -version`.
+- Node **22+** (`node -v`). Требование Capacitor 8; в `package.json` уже
+  зафиксировано через `engines`.
+- **CocoaPods больше не нужен** для обычного пути — с Capacitor 8
+  `npx cap add ios` создаёт проект на Swift Package Manager. Ставьте
+  CocoaPods (`brew install cocoapods`), только если сознательно выбираете
+  старый формат (см. шаг 1).
 - **Apple Developer Program** (активная подписка, $99/год).
 - Bundle ID: **`help.doki.app`** (значение `appId` в `capacitor.config.ts`).
   Если меняете — меняйте в обоих местах (конфиг + Xcode target → Signing).
@@ -25,8 +31,12 @@ WebView грузит живой сайт (`server.url = https://www.doki.help`).
 
 ```bash
 npm ci
-npx cap add ios          # создаёт папку ios/ (Xcode-проект из шаблона)
+npx cap add ios          # создаёт папку ios/ (Xcode-проект из шаблона, SPM)
 ```
+
+> С Capacitor 8 проект создаётся на **Swift Package Manager**. Если нужен
+> старый формат на CocoaPods: `npx cap add ios --packagemanager CocoaPods`
+> (тогда после каждого `cap sync ios` понадобится ещё `pod install`).
 
 > `ios/` намеренно НЕ в гите (см. `.gitignore`) — это генерируемый нативный
 > проект. Пересоздаётся из `capacitor.config.ts` командой выше.
@@ -49,8 +59,12 @@ npx capacitor-assets generate --ios
 
 ```bash
 npx cap sync ios
-cd ios/App && pod install && cd ../..
 ```
+
+> На SPM-проекте (по умолчанию с Capacitor 8) `cap sync` подтягивает
+> зависимости сам — отдельный `pod install` не нужен. Он нужен только если
+> вы создавали проект с `--packagemanager CocoaPods`:
+> `cd ios/App && pod install && cd ../..`
 
 ## 4. Настроить проект в Xcode
 
@@ -75,7 +89,10 @@ npx cap open ios
      your photo library.»
    - `NSFaceIDUsageDescription` — «doki.help uses Face ID to lock your
      documents.»
-3. **Deployment target**: iOS 14+ (Capacitor 6 min iOS 14).
+3. **Deployment target**: **iOS 15.0** (минимум Capacitor 8). Столько же
+   требует podspec плагина Face ID (`@aparajita/capacitor-biometric-auth`),
+   так что ниже опуститься нельзя. Раньше здесь стояло iOS 14 под
+   Capacitor 6 — устройства на iOS 14 после обновления не поддерживаются.
 4. **App Transport Security**: не отключайте. Весь трафик — HTTPS.
 5. Версия/сборка: *General → Identity* → Version `1.0.0`, Build `1`.
 
@@ -144,3 +161,32 @@ ATS-исключение (не коммитить).
 сразу после деплоя `www.doki.help`** — без нового билда App Store. Новый билд
 нужен только при изменении нативной части (плагины, иконки, capabilities,
 Info.plist, версия).
+
+## Приёмка после обновления Capacitor 6 → 8
+
+Пакеты обновлены и проверены на CI (типы, тесты, веб-сборка), но **нативную
+часть автоматика проверить не может** — для неё нужен macOS с Xcode. Пройдите
+этот список один раз после апгрейда, до отправки билда в App Store.
+
+- [ ] `xcodebuild -version` → **26.0 или новее**. Если старше, дальше идти
+      нельзя: Capacitor 8 не соберётся.
+- [ ] `node -v` → **22+**.
+- [ ] Удалить старую папку `ios/` и создать заново: `rm -rf ios && npx cap add ios`.
+      Пересоздание обязательно — проект переходит с CocoaPods на SPM, и
+      обновить старый шаблон на месте нельзя.
+- [ ] `npx cap sync ios` проходит без ошибок, `pod install` НЕ требуется.
+- [ ] Проект открывается в Xcode 26 (`npx cap open ios`), Deployment target
+      выставлен в **iOS 15.0**.
+- [ ] Заново проставить в Xcode то, что живёт в native-проекте и потому
+      потерялось при пересоздании: Signing (Bundle ID `help.doki.app`),
+      capability **Push Notifications**, строки `NSCameraUsageDescription`,
+      `NSPhotoLibraryAddUsageDescription`, `NSFaceIDUsageDescription`
+      (см. раздел 4).
+- [ ] Сборка на реальном устройстве проходит.
+- [ ] Живыми остались все плагины: **Face ID**-замок, **APNs-push**,
+      **камера/сканер**, **сплэш**, **статус-бар**.
+- [ ] User-Agent приложения содержит `dokiNativeApp`. Это влияет на
+      App Privacy: по метке сервер не отдаёт приложению сторонние аналитики
+      (см. `lib/isNativeRequest.ts`). В Capacitor 8 исправлен баг с лишним
+      пробелом в `appendUserAgent`; наша проверка ищет подстроку и потому
+      не зависит от пробелов, но убедиться на живом билде стоит.

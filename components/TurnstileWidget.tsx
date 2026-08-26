@@ -31,7 +31,12 @@ export default function TurnstileWidget({
   const boxRef = useRef<HTMLDivElement | null>(null);
   const widgetId = useRef<string | null>(null);
   const cb = useRef(onToken);
-  cb.current = onToken;
+
+  // Свежий колбэк — запись в ref после коммита, не во время рендера
+  // (react-hooks/refs). Без массива зависимостей: зеркалим каждый рендер.
+  useEffect(() => {
+    cb.current = onToken;
+  });
 
   useEffect(() => {
     if (!SITE_KEY) return;

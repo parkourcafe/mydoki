@@ -24,7 +24,7 @@ export async function getSupabaseServer() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // вызвано из RSC, где set недоступен — обновление сессии делает middleware
+             // вызвано из RSC, где set недоступен — обновление сессии делает proxy
           }
         },
       },
