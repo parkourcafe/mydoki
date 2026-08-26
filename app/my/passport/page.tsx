@@ -71,6 +71,9 @@ export default async function PassportPage() {
     membershipState === "active" &&
     membershipRow?.expires_at !== null &&
     membershipRow?.expires_at !== undefined &&
+    // Серверный компонент: рендер один раз на запрос, свежее время нужно
+    // именно здесь для проверки срока членства в talent pool.
+    // eslint-disable-next-line react-hooks/purity
     Date.parse(membershipRow.expires_at) <= Date.now();
 
   return (

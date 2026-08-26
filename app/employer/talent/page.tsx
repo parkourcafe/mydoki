@@ -52,6 +52,9 @@ export default async function EmployerTalentPage() {
     !!employer?.verified_at &&
     !employer?.verification_revoked_at &&
     (!employer?.verification_expires_at ||
+      // Серверный компонент: рендер один раз на запрос, свежее время
+      // нужно именно здесь для проверки срока верификации.
+      // eslint-disable-next-line react-hooks/purity
       Date.parse(employer.verification_expires_at) > Date.now());
 
   if (!verified) {
