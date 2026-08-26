@@ -53,3 +53,14 @@ create table if not exists storage.buckets (
 create or replace function storage.foldername(name text) returns text[] language sql immutable as $$
   select string_to_array(name, '/')
 $$;
+
+-- Полная цепочка миграций заполняет в storage расширенные колонки
+-- (20260701000000_career_mvp.sql регистрирует bucket `applications`).
+alter table storage.buckets add column if not exists file_size_limit bigint;
+alter table storage.buckets add column if not exists allowed_mime_types text[];
+alter table storage.buckets add column if not exists created_at timestamptz default now();
+alter table storage.objects add column if not exists metadata jsonb;
+alter table storage.objects add column if not exists created_at timestamptz default now();
+alter table storage.objects add column if not exists updated_at timestamptz default now();
+alter table storage.objects add column if not exists last_accessed_at timestamptz default now();
+alter table storage.objects enable row level security;

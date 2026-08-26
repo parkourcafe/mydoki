@@ -9,8 +9,22 @@ import { currentIpHash, verifyTurnstile } from "@/lib/antispam";
 import { sendNewApplicationEmail, sendAdminReportAlert } from "@/lib/email";
 import { sendPushToUser } from "@/lib/push";
 import { getLocale } from "@/lib/i18n";
+// Снимок резюме (cool-volta) и снимок паспорта с сопоставлением (passport):
+// фичи независимые, при мерже оставлены ОБЕ — см. attachResumeSnapshot и
+// recordApplicationSnapshot ниже.
 import { hasStructuredContent, parseSections } from "@/lib/resume";
 import { withVerifiedExperience } from "@/lib/resumeLinks";
+import { passportFromRow } from "@/lib/passport";
+import { evaluateCriteria, type VacancyCriteria } from "@/lib/matching";
+import {
+  defaultVisibilityPolicy,
+  normalizeVisibilityMode,
+  type VisibilityPolicy,
+} from "@/lib/passportVisibility";
+import {
+  PROFILE_SNAPSHOT_FIELDS,
+  buildApplicationSnapshot,
+} from "@/lib/passportSnapshot";
 
 // ---------------------------- Report ----------------------------------
 
@@ -383,7 +397,114 @@ export async function submitApplication(
     }
   }
 
+  // Неизменяемый снимок профиля на момент отклика (архитектура v1.2 §10,
+  // фаза 1B). Ошибка снимка НЕ роняет подачу отклика.
+  if (!res.duplicate) {
+    await recordApplicationSnapshot({
+      applicationId: input.applicationId,
+      accessToken: res.access_token,
+      slug: input.slug,
+    }).catch(() => {});
+  }
+
   return { ok: true, duplicate: res.duplicate, accessToken: res.access_token };
+}
+
+/**
+ * Снимок фиксирует, какой профиль, какие требования вакансии, какое
+ * объяснение по критериям и какое состояние видимости действовали в момент
+ * отклика. Последующие правки паспорта его не переписывают (§17.13).
+ *
+ * Отклик может быть анонимным (career MVP): тогда структурированного
+ * паспорта нет, и снимок честно фиксирует пустой профиль, а не выдумывает
+ * данные. Авторизация — по секретному токену отклика.
+ */
+async function recordApplicationSnapshot(input: {
+  applicationId: string;
+  accessToken: string;
+  slug: string;
+}): Promise<void> {
+  const supabase = await getSupabaseServer();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const [vacancy, resume, visibility] = await Promise.all([
+    supabase
+      .from("vacancies")
+      .select("id, hard_criteria, soft_signals")
+      .eq("slug", input.slug)
+      .maybeSingle(),
+    user
+      ? supabase.from("resumes").select("*").eq("user_id", user.id).maybeSingle()
+      : Promise.resolve({ data: null }),
+    user
+      ? supabase
+          .from("profile_visibility_policies")
+          .select("mode, hide_current_employer, current_employer_names, hidden_fields")
+          .eq("user_id", user.id)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
+  ]);
+
+  const now = new Date().toISOString();
+  const passport = passportFromRow((resume.data ?? null) as Record<string, unknown> | null);
+  const criteria: VacancyCriteria = {
+    vacancy_version_id: ((vacancy.data as { id?: string } | null)?.id ?? input.slug) as string,
+    hard: ((vacancy.data as { hard_criteria?: unknown })?.hard_criteria ?? {}) as never,
+    soft: ((vacancy.data as { soft_signals?: unknown })?.soft_signals ?? {}) as never,
+  };
+
+  const policyRow = visibility.data as {
+    mode: string;
+    hide_current_employer: boolean;
+    current_employer_names: string[] | null;
+    hidden_fields: string[] | null;
+  } | null;
+
+  const policy: VisibilityPolicy = policyRow
+    ? {
+        ...defaultVisibilityPolicy(),
+        mode: normalizeVisibilityMode(policyRow.mode),
+        hide_current_employer: policyRow.hide_current_employer,
+        current_employer_names: policyRow.current_employer_names ?? [],
+        hidden_fields: policyRow.hidden_fields ?? [],
+      }
+    : defaultVisibilityPolicy();
+
+  // Поля, скрытые кандидатом в настройках видимости, не попадают в снимок:
+  // работодатель читает снимок отклика, а field-level скрытие действует и здесь.
+  const shared = PROFILE_SNAPSHOT_FIELDS.filter(
+    (field) => !policy.hidden_fields.includes(field),
+  );
+
+  const snapshot = buildApplicationSnapshot({
+    passport,
+    criteria,
+    // Без структурированного профиля объяснения по критериям не существует.
+    explanation: user
+      ? evaluateCriteria({
+          criteria,
+          passport,
+          profile_version_id: user.id,
+          now,
+        })
+      : null,
+    policy,
+    reveal_level: "shared",
+    shared_fields: shared,
+    timestamp: now,
+  });
+
+  await supabase.rpc("record_application_profile_snapshot", {
+    p_application_id: input.applicationId,
+    p_access_token: input.accessToken,
+    p_profile: snapshot.candidate_profile_snapshot,
+    p_requirements: snapshot.vacancy_requirements_snapshot,
+    p_match_explanation: snapshot.match_explanation_snapshot,
+    p_visibility_state: snapshot.visibility_state_snapshot,
+    p_checksum: snapshot.checksum,
+  });
 }
 
 // ---------------------------- Claim -----------------------------------

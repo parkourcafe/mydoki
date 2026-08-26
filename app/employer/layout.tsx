@@ -9,10 +9,10 @@ import AnalyticsEvents from "@/components/AnalyticsEvents";
 import { isNativeRequest } from "@/lib/isNativeRequest";
 
 const M = {
-  en: { brand: "Doki for employers", newVacancy: "+ New vacancy", vacancies: "Vacancies", employees: "Employees", settings: "Settings", signOut: "Sign out" },
-  id: { brand: "Doki untuk perusahaan", newVacancy: "+ Lowongan baru", vacancies: "Lowongan", employees: "Karyawan", settings: "Pengaturan", signOut: "Keluar" },
-  ru: { brand: "Doki для работодателей", newVacancy: "+ Новая вакансия", vacancies: "Вакансии", employees: "Сотрудники", settings: "Настройки", signOut: "Выйти" },
-  uz: { brand: "Ish beruvchilar uchun Doki", newVacancy: "+ Yangi vakansiya", vacancies: "Vakansiyalar", employees: "Xodimlar", settings: "Sozlamalar", signOut: "Chiqish" },
+  en: { brand: "Doki for employers", newVacancy: "+ New vacancy", vacancies: "Vacancies", employees: "Employees", talent: "Talent Pool", settings: "Settings", signOut: "Sign out" },
+  id: { brand: "Doki untuk perusahaan", newVacancy: "+ Lowongan baru", vacancies: "Lowongan", employees: "Karyawan", talent: "Talent Pool", settings: "Pengaturan", signOut: "Keluar" },
+  ru: { brand: "Doki для работодателей", newVacancy: "+ Новая вакансия", vacancies: "Вакансии", employees: "Сотрудники", talent: "Talent Pool", settings: "Настройки", signOut: "Выйти" },
+  uz: { brand: "Ish beruvchilar uchun Doki", newVacancy: "+ Yangi vakansiya", vacancies: "Vakansiyalar", employees: "Xodimlar", talent: "Talent Pool", settings: "Sozlamalar", signOut: "Chiqish" },
 } as const;
 
 export default async function EmployerLayout({
@@ -38,6 +38,9 @@ export default async function EmployerLayout({
           <div className="flex items-center gap-2">
             <Link href="/employer/employees" className="btn-ghost">
               {t.employees}
+            </Link>
+            <Link href="/employer/talent" className="btn-ghost">
+              {t.talent}
             </Link>
             <Link href="/employer/settings" className="btn-ghost">
               {t.settings}

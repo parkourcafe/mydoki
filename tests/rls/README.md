@@ -19,6 +19,8 @@ anywhere.
 | `invitations.sql` | Invitations grant access only after acceptance, with the right role |
 | `claim_application.sql` | Only the candidate can attach an application to an account |
 | `write_roles.sql` | A viewer cannot write; an editor cannot change household membership; employment records stay private |
+| `talent_pool_visibility.sql` | A confidential profile is not discoverable by a blocked or current employer, and never leaks identity |
+| `opportunity_invite_flow.sql` | A blind invitation reveals nothing until the candidate accepts, and `Share & apply` writes exactly one immutable snapshot |
 
 `write_roles.sql` exists because `20260824140000_dedupe_rls_policies` split
 `FOR ALL` policies into separate `INSERT`/`UPDATE`/`DELETE` ones on 18 tables.
