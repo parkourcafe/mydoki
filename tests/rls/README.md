@@ -1,9 +1,14 @@
 # RLS / security tests
 
-SQL tests that check row-level security and privilege boundaries. They cannot
-run under `npm test` — they need a Postgres instance with the schema applied.
-Each file wraps everything in `begin … rollback`, so running them leaves no
-data behind.
+SQL tests that check row-level security and privilege boundaries. They need a
+Postgres instance with the schema applied, so they are a separate CI job
+(`RLS policies`) rather than part of `npm test`. Each file wraps everything in
+`begin … rollback`, so running them leaves no data behind.
+
+Every file ends with a `do $$ … $$` block that **raises on a violation**, so a
+run either exits 0 or fails loudly. Earlier these files only printed values and
+a human had to compare them against the header — which is why they never ran
+anywhere.
 
 ## Files
 
@@ -13,35 +18,39 @@ data behind.
 | `document_versions.sql` | Versions are immutable and not visible across accounts |
 | `invitations.sql` | Invitations grant access only after acceptance, with the right role |
 | `claim_application.sql` | Only the candidate can attach an application to an account |
+| `write_roles.sql` | A viewer cannot write; an editor cannot change household membership; employment records stay private |
+
+`write_roles.sql` exists because `20260824140000_dedupe_rls_policies` split
+`FOR ALL` policies into separate `INSERT`/`UPDATE`/`DELETE` ones on 18 tables.
+A mistake there would not show up as "sees too much" but as "writes without the
+right", and nothing covered that.
 
 ## Running them
 
-**Against Supabase:** paste a file into the SQL Editor and compare the output
-with the expected values in that file's header.
-
-**Locally**, without touching any real data:
-
 ```bash
-# 1. a throwaway cluster
-initdb -D /var/tmp/pgtest -U postgres --auth=trust     # run as a non-root user
-pg_ctl -D /var/tmp/pgtest -o '-p 55432 -k /var/tmp' -l /var/tmp/pg.log start
-
-# 2. Supabase shims (auth.uid/email, roles, storage helpers) + schema
-psql -h /var/tmp -p 55432 -U postgres -f tests/rls/_local_shim.sql
-for f in supabase/migrations/*.sql; do
-  psql -h /var/tmp -p 55432 -U postgres -q -f "$f"
-done
-psql -h /var/tmp -p 55432 -U postgres \
-  -c "grant select,insert,update,delete on all tables in schema public to authenticated, anon;"
-
-# 3. the tests
-for t in isolation document_versions invitations claim_application; do
-  echo "== $t"; psql -h /var/tmp -p 55432 -U postgres -tAq -f "tests/rls/$t.sql"
-done
+# any empty database, addressed through the standard PG* variables
+PGHOST=localhost PGPORT=5432 PGUSER=postgres PGPASSWORD=postgres \
+PGDATABASE=postgres npm run test:rls
 ```
 
-A few migrations fail with "already exists" on a clean run — they are
-superseded by later ones and it does not affect these tests.
+The script applies `_local_shim.sql`, then every migration in order, then the
+grants PostgREST would normally issue, then each test. It stops at the first
+failed migration: an incomplete schema would make the tests answer the wrong
+question.
+
+**Never point it at the live project** — it applies the schema to whatever
+`PG*` resolves to.
+
+**Against Supabase**, one file at a time: paste it into the SQL Editor. A
+violation shows up as a red error instead of a result table.
+
+**A throwaway local cluster**, if you have no Postgres to hand:
+
+```bash
+initdb -D /var/tmp/pgtest -U postgres --auth=trust     # run as a non-root user
+pg_ctl -D /var/tmp/pgtest -o '-p 55432 -k /var/tmp' -l /var/tmp/pg.log start
+PGHOST=/var/tmp PGPORT=55432 PGUSER=postgres PGDATABASE=postgres npm run test:rls
+```
 
 The shim only approximates Supabase (`auth.uid()`, `auth.email()`, the
 `authenticated`/`anon` roles, `storage.foldername`). It is close enough to

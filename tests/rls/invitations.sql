@@ -24,4 +24,30 @@ select
      where household_id = current_setting('test.hid')::uuid
        and user_id = auth.uid())      as b_role;                   -- ожидается editor
 
+-- Те же ожидания, но как проверка: при нарушении транзакция падает, psql
+-- возвращает ненулевой код, и тест годится для CI без сверки глазами.
+do $$
+declare
+  b_before int := current_setting('test.b_before')::int;
+  b_after  int;
+  b_role   text;
+begin
+  select count(*) into b_after from members;
+  select role into b_role from household_members
+    where household_id = current_setting('test.hid')::uuid
+      and user_id = auth.uid();
+
+  if b_before <> 0 then
+    raise exception 'ИЗОЛЯЦИЯ НАРУШЕНА: B видел % членов семьи ДО принятия приглашения, ожидалось 0', b_before;
+  end if;
+  if b_after <> 2 then
+    raise exception 'invitations: после принятия и записи B видит % членов семьи, ожидалось 2', b_after;
+  end if;
+  if b_role is distinct from 'editor' then
+    raise exception 'invitations: роль B = %, ожидалась editor', coalesce(b_role, 'NULL');
+  end if;
+
+  raise notice 'PASS invitations';
+end $$;
+
 rollback;

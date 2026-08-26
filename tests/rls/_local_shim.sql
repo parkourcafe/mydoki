@@ -39,7 +39,17 @@ create table if not exists storage.objects (
   name text,
   owner uuid
 );
-create table if not exists storage.buckets (id text primary key, name text, public boolean default false);
+-- Колонки те же, что у настоящей storage.buckets в Supabase. file_size_limit
+-- и allowed_mime_types обязательны: миграции их и вставляют, и обновляют
+-- (20260701000000_career_mvp.sql, 20260824120000_vault_files_bucket_limits.sql),
+-- и без них применение схемы обрывается на середине.
+create table if not exists storage.buckets (
+  id text primary key,
+  name text,
+  public boolean default false,
+  file_size_limit bigint,
+  allowed_mime_types text[]
+);
 create or replace function storage.foldername(name text) returns text[] language sql immutable as $$
   select string_to_array(name, '/')
 $$;
