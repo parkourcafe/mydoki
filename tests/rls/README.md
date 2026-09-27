@@ -21,6 +21,10 @@ anywhere.
 | `write_roles.sql` | A viewer cannot write; an editor cannot change household membership; employment records stay private |
 | `talent_pool_visibility.sql` | A confidential profile is not discoverable by a blocked or current employer, and never leaks identity |
 | `opportunity_invite_flow.sql` | A blind invitation reveals nothing until the candidate accepts, and `Share & apply` writes exactly one immutable snapshot |
+| `hiring_flow.sql` | An unverified employer cannot publish; a verified one publishes, an anonymous candidate applies once, and the application reaches that employer's board and no one else's |
+
+`talent_pool_visibility.sql` and `opportunity_invite_flow.sql` still print
+values for a human to compare instead of raising, so `run.sh` does not run them.
 
 `write_roles.sql` exists because `20260824140000_dedupe_rls_policies` split
 `FOR ALL` policies into separate `INSERT`/`UPDATE`/`DELETE` ones on 18 tables.
