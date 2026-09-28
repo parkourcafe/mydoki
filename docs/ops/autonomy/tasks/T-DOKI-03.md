@@ -3,7 +3,7 @@
 - **task_id:** T-DOKI-03 (T-DOKI-03a, T-DOKI-03b)
 - **repo:** parkourcafe/mydoki (DOKI.help)
 - **base:** `claude/autonomy-doki-01` @ `2bb04a7` (head draft PR #116; база #116 — `claude/cool-volta-pdpl4t`)
-- **branch / PR:** `claude/doki-talent-pool-employer-match` → draft PR (база `claude/autonomy-doki-01`, сливать после #116)
+- **branch / PR:** `claude/doki-talent-pool-employer-match` → draft PR #117 (база `claude/autonomy-doki-01`, сливать после #116); ответ на №37 — комментарий в #117
 - **Doki.id (только чтение):** `parkourcafe/Doki.id` @ `18438f627b75a793b099f2b5e3b239c8ee52a1be`, клон в scratchpad, ничего не менялось и не пушилось
 - **дата прогона:** 2026-09-28, локально, синтетические данные, одноразовая PostgreSQL 16 (базы `postgres`, `t2`, с нуля)
 - **статус:** 03a — DONE (анализ + локальная симуляция); 03b — TESTED_LOCAL (частично), остаток — BLOCKED_DECISION
