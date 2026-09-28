@@ -3,9 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getLocale, type Locale } from "@/lib/i18n";
-import { altLangs } from "@/lib/seo";
+import { localizedAlternates } from "@/lib/seoAlternates";
 import LangSwitcher from "@/components/LangSwitcher";
-import { getComparison } from "@/lib/comparisons";
+import { comparisonLocales, getComparison } from "@/lib/comparisons";
 import { segmentLinks } from "@/lib/segments";
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
@@ -75,20 +75,18 @@ export async function generateMetadata({
   if (!cmp) return {};
   const loc = await getLocale();
   const c = cmp.locales[loc] ?? cmp.locales.ru;
-  const ruOnly = slug === "gosuslugi";
+  const description = c.metaDescription ?? c.subtitle;
+  // hreflang — только языки с собственным текстом; на языке без перевода
+  // страница показывает ru, и canonical ведёт на /ru/vs/…, а не на дубль.
+  const alternates = localizedAlternates(`/vs/${slug}`, comparisonLocales(slug), loc);
   return {
     title: c.title,
-    description: c.subtitle,
-    alternates: ruOnly
-      ? {
-          canonical: `${APP_URL}/ru/vs/${slug}`,
-          languages: { ru: `${APP_URL}/ru/vs/${slug}` },
-        }
-      : await altLangs(),
+    description,
+    alternates,
     openGraph: {
       title: c.title,
-      description: c.subtitle,
-      url: ruOnly ? `${APP_URL}/ru/vs/${slug}` : `${APP_URL}/vs/${slug}`,
+      description,
+      url: alternates.canonical,
     },
   };
 }
@@ -121,7 +119,7 @@ export default async function ComparisonPage({
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "doki.help", item: APP_URL },
-      { "@type": "ListItem", position: 2, name: c.title, item: `${APP_URL}/vs/${slug}` },
+      { "@type": "ListItem", position: 2, name: c.title, item: `${APP_URL}/${contentLocale}/vs/${slug}` },
     ],
   };
 

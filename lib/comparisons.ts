@@ -24,6 +24,8 @@ export type ComparisonContent = {
   altName: string; // как называем альтернативу в таблице
   title: string;
   subtitle: string;
+  /** meta description (≤155), если subtitle слишком короткий для сниппета. */
+  metaDescription?: string;
   intro: string;
   rows: ComparisonRow[];
   verdict: string;
@@ -1387,6 +1389,14 @@ const DATA: Record<ComparisonKey, Comparison> = {
 
 export function getComparison(key: string): Comparison | null {
   return (DATA as Record<string, Comparison>)[key] ?? null;
+}
+
+const ALL_LOCALES: Locale[] = ["ru", "en", "id", "uz"];
+
+/** Локали, на которых у сравнения есть собственный текст (для sitemap/hreflang). */
+export function comparisonLocales(key: string): Locale[] {
+  const cmp = getComparison(key);
+  return cmp ? ALL_LOCALES.filter((l) => cmp.locales[l]) : [];
 }
 
 /** Короткие ссылки на сравнения для внутренней перелинковки.
