@@ -13,7 +13,8 @@
 --   8. работодатель не получает user_id — только псевдоним `ref`;
 --   9. снимок отклика неизменяем.
 --
--- Ожидаемые значения указаны в комментариях к каждому SELECT.
+-- Каждая проверка — do-блок, который бросает исключение при нарушении,
+-- поэтому файл входит в tests/rls/run.sh.
 
 begin;
 
@@ -47,18 +48,29 @@ select set_config('request.jwt.claims',
 insert into employer_profiles(user_id, company_name, contact_email, domains)
 values ('44444444-4444-4444-4444-444444444444', 'PT Pencari Kerja',
         'hr@pencari.example', '["pencari.example"]'::jsonb);
+-- Подтверждение в продукте ставит сервер (confirm_employer_verification),
+-- не сам работодатель, поэтому отметка — под ролью владельца схемы.
+reset role;
 update employer_profiles set verified_at = now()
  where user_id = '44444444-4444-4444-4444-444444444444';
+set local role authenticated;
 select set_config('test.employer',
   (select id from employer_profiles
     where user_id = '44444444-4444-4444-4444-444444444444')::text, true);
 
 -- 1. Работодатель не читает чужие `resumes` напрямую (RLS owner-only).
-select count(*) as employer_sees_resumes   -- ожидается 0
-from resumes;
+do $$ begin
+  if (select count(*) from resumes) <> 0 then
+    raise exception 'FAIL: работодатель читает resumes напрямую';
+  end if;
+end $$;
 
 -- 2. Дефолт: политики видимости нет → профиль приватен, выдача пустая.
-select jsonb_array_length(talent_pool_candidates(50)) as pool_default; -- ожидается 0
+do $$ begin
+  if jsonb_array_length(talent_pool_candidates(50)) <> 0 then
+    raise exception 'FAIL: приватный профиль (дефолт) виден в Talent Pool';
+  end if;
+end $$;
 
 -- ── Кандидат включает confidential-пул ──────────────────────────────
 select set_config('request.jwt.claims',
@@ -78,17 +90,33 @@ select set_talent_pool_membership('active', now() + interval '180 days');
 select set_config('request.jwt.claims',
   '{"sub":"44444444-4444-4444-4444-444444444444"}', true);
 
-select
-  jsonb_array_length(talent_pool_candidates(50)) as pool_confidential,   -- ожидается 1
-  (talent_pool_candidates(50) -> 0 ->> 'reveal_level')  as level,        -- ожидается blind
-  (talent_pool_candidates(50) -> 0 ? 'ref')             as has_ref,      -- ожидается t
-  (talent_pool_candidates(50) -> 0 ? 'user_id')         as has_user_id,  -- ожидается f
-  (talent_pool_candidates(50) -> 0 ? 'full_name')       as has_name,     -- ожидается f
-  (talent_pool_candidates(50) -> 0 ? 'contact')         as has_contact,  -- ожидается f
-  (talent_pool_candidates(50) -> 0 ? 'email')           as has_email,    -- ожидается f
-  (talent_pool_candidates(50) -> 0 ? 'cv_file_path')    as has_cv,       -- ожидается f
-  (talent_pool_candidates(50) -> 0 ? 'linkedin_url')    as has_linkedin, -- ожидается f
-  (talent_pool_candidates(50) -> 0 ? 'key_achievements') as has_achievements; -- ожидается f
+do $$
+declare
+  pool jsonb := talent_pool_candidates(50);
+  k text;
+begin
+  if jsonb_array_length(pool) <> 1 then
+    raise exception 'FAIL: confidential-профиль не найден (%)', jsonb_array_length(pool);
+  end if;
+  if pool -> 0 ->> 'reveal_level' is distinct from 'blind' then
+    raise exception 'FAIL: reveal_level = %, ожидался blind', pool -> 0 ->> 'reveal_level';
+  end if;
+  if not (pool -> 0 ? 'ref') then
+    raise exception 'FAIL: нет псевдонима ref';
+  end if;
+  foreach k in array array['user_id','full_name','contact','email',
+                           'cv_file_path','linkedin_url','key_achievements'] loop
+    if pool -> 0 ? k then
+      raise exception 'FAIL: выдача Talent Pool содержит %', k;
+    end if;
+  end loop;
+  -- Значения тоже не должны просачиваться под другими ключами.
+  if pool::text like '%Ivan Petrov%' or pool::text like '%+62800000000%'
+     or pool::text like '%ivan@example.test%' or pool::text like '%u/3/cv.pdf%'
+     or pool::text like '%33333333-3333-3333-3333-333333333333%' then
+    raise exception 'FAIL: идентификатор кандидата утёк в выдачу Talent Pool';
+  end if;
+end $$;
 
 -- 4. Блокировка организации закрывает обнаружение.
 select set_config('request.jwt.claims',
@@ -97,7 +125,11 @@ select block_organization(current_setting('test.employer')::uuid, null);
 
 select set_config('request.jwt.claims',
   '{"sub":"44444444-4444-4444-4444-444444444444"}', true);
-select jsonb_array_length(talent_pool_candidates(50)) as pool_blocked; -- ожидается 0
+do $$ begin
+  if jsonb_array_length(talent_pool_candidates(50)) <> 0 then
+    raise exception 'FAIL: заблокированная организация видит профиль';
+  end if;
+end $$;
 
 -- Снимаем блокировку для следующих проверок.
 select set_config('request.jwt.claims',
@@ -112,7 +144,11 @@ select set_profile_visibility('confidential_pool', true,
 
 select set_config('request.jwt.claims',
   '{"sub":"44444444-4444-4444-4444-444444444444"}', true);
-select jsonb_array_length(talent_pool_candidates(50)) as pool_current_employer; -- ожидается 0
+do $$ begin
+  if jsonb_array_length(talent_pool_candidates(50)) <> 0 then
+    raise exception 'FAIL: текущий работодатель видит профиль';
+  end if;
+end $$;
 
 -- 6. `unavailable` останавливает новые показы, членство сохраняется.
 select set_config('request.jwt.claims',
@@ -122,29 +158,43 @@ select set_search_intent('unavailable');
 
 select set_config('request.jwt.claims',
   '{"sub":"44444444-4444-4444-4444-444444444444"}', true);
-select jsonb_array_length(talent_pool_candidates(50)) as pool_unavailable; -- ожидается 0
+do $$ begin
+  if jsonb_array_length(talent_pool_candidates(50)) <> 0 then
+    raise exception 'FAIL: профиль со статусом unavailable показывается';
+  end if;
+end $$;
 
 select set_config('request.jwt.claims',
   '{"sub":"33333333-3333-3333-3333-333333333333"}', true);
 select set_search_intent('open');
-select
-  (select state from talent_pool_memberships
-    where user_id = '33333333-3333-3333-3333-333333333333') as membership_kept; -- ожидается active
+do $$ begin
+  if (select state from talent_pool_memberships
+       where user_id = '33333333-3333-3333-3333-333333333333')
+     is distinct from 'active' then
+    raise exception 'FAIL: unavailable сбросил членство в Talent Pool';
+  end if;
+end $$;
 
 -- 7. Организация без действующей верификации не получает выдачу.
 select set_config('request.jwt.claims',
   '{"sub":"44444444-4444-4444-4444-444444444444"}', true);
+reset role;
 update employer_profiles set verification_revoked_at = now()
  where id = current_setting('test.employer')::uuid;
--- ожидается исключение 'verified employer required'
+set local role authenticated;
 do $$ begin
-  perform talent_pool_candidates(50);
-  raise notice 'FAIL: выдача без действующей верификации';
-exception when others then
-  raise notice 'OK: %', sqlerrm;
+  begin
+    perform talent_pool_candidates(50);
+  exception when others then
+    if sqlerrm <> 'verified employer required' then raise; end if;
+    return;
+  end;
+  raise exception 'FAIL: выдача без действующей верификации';
 end $$;
+reset role;
 update employer_profiles set verification_revoked_at = null
  where id = current_setting('test.employer')::uuid;
+set local role authenticated;
 
 -- 8. Отзыв разрешения прекращает новые показы.
 select set_config('request.jwt.claims',
@@ -153,7 +203,11 @@ select revoke_purpose_authorization('talent_pool_discovery');
 
 select set_config('request.jwt.claims',
   '{"sub":"44444444-4444-4444-4444-444444444444"}', true);
-select jsonb_array_length(talent_pool_candidates(50)) as pool_revoked; -- ожидается 0
+do $$ begin
+  if jsonb_array_length(talent_pool_candidates(50)) <> 0 then
+    raise exception 'FAIL: профиль виден после отзыва разрешения';
+  end if;
+end $$;
 
 -- 9. Снимок отклика неизменяем: update и delete запрещены триггером.
 select set_config('request.jwt.claims',
@@ -166,19 +220,27 @@ values (null, '33333333-3333-3333-3333-333333333333',
         '{"fields":{"profession":"Operations manager"}}'::jsonb,
         '{"hard":{}}'::jsonb, '{"mode":"confidential_pool"}'::jsonb, 'test');
 
+-- Проверка под владельцем схемы: RLS его не ограничивает, остаётся только
+-- триггер, то есть проверяется именно он.
 do $$ begin
-  update application_profile_snapshots set checksum = 'tampered'
-   where checksum = 'test';
-  raise notice 'FAIL: снимок изменился';
-exception when others then
-  raise notice 'OK: %', sqlerrm;   -- ожидается 'snapshot is immutable'
+  begin
+    update application_profile_snapshots set checksum = 'tampered'
+     where checksum = 'test';
+  exception when others then
+    if sqlerrm not like 'snapshot is immutable%' then raise; end if;
+    return;
+  end;
+  raise exception 'FAIL: снимок изменился';
 end $$;
 
 do $$ begin
-  delete from application_profile_snapshots where checksum = 'test';
-  raise notice 'FAIL: снимок удалён';
-exception when others then
-  raise notice 'OK: %', sqlerrm;
+  begin
+    delete from application_profile_snapshots where checksum = 'test';
+  exception when others then
+    if sqlerrm not like 'snapshot is immutable%' then raise; end if;
+    return;
+  end;
+  raise exception 'FAIL: снимок удалён';
 end $$;
 
 rollback;
