@@ -1,9 +1,9 @@
 # T-DOKI-D3 — SEO существующих страниц (Индонезия, HR) + техника sitemap/robots
 
 - **task_id:** T-DOKI-D3
-- **repo / base:** parkourcafe/mydoki, ветка `claude/autonomy-doki-01` от 52d9de5 (PR #116 → `claude/cool-volta-pdpl4t`)
+- **repo / base:** parkourcafe/mydoki, ветка `claude/autonomy-doki-01` от 4724e0e (PR #116 → `claude/cool-volta-pdpl4t`)
 - **статус:** TESTED_LOCAL (unit + локальная сборка `next build` / `next start`). Прод не проверен: BLOCKED_EXTERNAL
-- **коммиты:** ff7fd71 (техника), 6168929 (meta descriptions)
+- **коммиты:** 353e67c (техника), ec808ff (meta descriptions)
 - **скиллы:** `doki-id-seo-optimizer`, `doki-seo-optimizer`, `doki-id-brand-voice`
 
 ## Пробелы из задачи оркестратора: проверка и исправление

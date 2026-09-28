@@ -44,7 +44,7 @@
 
 Все маршруты реальные: реестры `lib/checklists.ts`, `lib/segments.ts`, `lib/comparisons.ts`,
 `lib/landings.ts`; все URL с префиксом языка и совпадают со своим canonical (после
-коммита ff7fd71 в этой ветке). Схема UTM: `utm_source` — площадка, `utm_medium` — формат,
+коммита 353e67c в этой ветке). Схема UTM: `utm_source` — площадка, `utm_medium` — формат,
 `utm_campaign=id_hr_seed_2026q4`, `utm_content` — номер текста.
 
 | Для | Landing URL |
