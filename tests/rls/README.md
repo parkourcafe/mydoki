@@ -20,6 +20,7 @@ anywhere.
 | `claim_application.sql` | Only the candidate can attach an application to an account |
 | `write_roles.sql` | A viewer cannot write; an editor cannot change household membership; employment records stay private |
 | `talent_pool_visibility.sql` | A confidential profile is not discoverable by a blocked or current employer, and never leaks identity |
+| `talent_pool_current_employer.sql` | "Hide from current employer" does not depend on fields the employer edits: renaming after verification does not reveal the candidate, the name snapshot taken at verification cannot be changed by the employer, and an active `employments` record with that organization hides the candidate even without a typed name |
 | `opportunity_invite_flow.sql` | A blind invitation reveals nothing until the candidate accepts, and `Share & apply` writes exactly one immutable snapshot |
 | `hiring_flow.sql` | An unverified employer cannot publish; a verified one publishes, an anonymous candidate applies once, and the application reaches that employer's board and no one else's |
 | `employer_verification.sql` | An employer cannot verify themselves, raise `vacancy_limit` or reset code attempts through PostgREST; the email-code flow still verifies, and Talent Pool access does not expire with the 15-minute code |
