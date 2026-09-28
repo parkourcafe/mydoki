@@ -137,8 +137,8 @@ select count(*) from public.profile_visibility_policies
 
 ### Не проверено
 - Живые Supabase-проекты, реальная общность БД с Doki.id — BLOCKED_EXTERNAL (запрет на запросы к production).
-- CI на этой ветке — после push (здесь не утверждается).
+- CI #117 на `a7396e0`: `Typecheck + lint`, `Unit tests + lexicon`, `RLS policies`, `E2E (Playwright)`, `First Load JS budget` — success; `Lighthouse CI (preview)`, `Supabase Preview` — skipped (GitHub check runs).
 
 ### next_step
-- Дождаться CI draft PR; при красном — чинить в этой ветке.
+- CI зелёный; PR ждёт слияния #116 и решения владельца.
 - Решения владельца по пп. 1–3 BLOCKED_DECISION; после п. 2 — заполнение `domains` отдельной задачей.
