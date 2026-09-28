@@ -3,7 +3,7 @@
 - **task_id:** T-DOKI-04
 - **repo:** parkourcafe/mydoki (DOKI.help)
 - **base:** `claude/doki-talent-pool-employer-match` @ `0fae7d55bd9e0239c1d74e02d69ffd84a353d8bb` (head draft PR #117, поверх #116)
-- **branch / PR:** `claude/doki-employer-trust` → draft PR (база `claude/doki-talent-pool-employer-match`; **сливать после #116 и #117**)
+- **branch / PR:** `claude/doki-employer-trust` → draft PR #118 (база `claude/doki-talent-pool-employer-match`; **сливать после #116 и #117**)
 - **дата прогона:** 2026-09-28, локально, синтетические данные, одноразовая PostgreSQL 16 (`/var/tmp`, базы `base0`, `t1`, `t2`, с нуля)
 - **статус:** анализ 52–54 — DONE; исправления — DONE_CODE, TESTED_LOCAL; применение к Supabase — не выполнялось (только владелец)
 
