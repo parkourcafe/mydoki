@@ -3,23 +3,30 @@ import webpush from "web-push";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
 // Локализованные шаблоны уведомлений. Строки собираются по locale подписки.
-type NotifType = "new_application" | "shortlisted";
+// employment_ended — работодатель отметил завершение трудовых отношений
+// (T-DOKI-04, в. 54): человек узнаёт об этом сразу, а не при случайном
+// заходе в «Мои трудовые отношения».
+type NotifType = "new_application" | "shortlisted" | "employment_ended";
 const TEMPLATES: Record<string, Record<NotifType, (v: Record<string, string>) => { title: string; body: string }>> = {
   en: {
     new_application: (v) => ({ title: `New application: ${v.vacancy}`, body: v.name }),
     shortlisted: (v) => ({ title: `You're shortlisted: ${v.vacancy}`, body: "Open to see details." }),
+    employment_ended: (v) => ({ title: `Employment marked as ended: ${v.company}`, body: "Open to see the record and its history." }),
   },
   id: {
     new_application: (v) => ({ title: `Lamaran baru: ${v.vacancy}`, body: v.name }),
     shortlisted: (v) => ({ title: `Anda terpilih: ${v.vacancy}`, body: "Buka untuk detail." }),
+    employment_ended: (v) => ({ title: `Hubungan kerja ditandai selesai: ${v.company}`, body: "Buka untuk melihat catatan dan riwayatnya." }),
   },
   ru: {
     new_application: (v) => ({ title: `Новый отклик: ${v.vacancy}`, body: v.name }),
     shortlisted: (v) => ({ title: `Вас пригласили: ${v.vacancy}`, body: "Откройте, чтобы посмотреть." }),
+    employment_ended: (v) => ({ title: `Работодатель отметил завершение: ${v.company}`, body: "Откройте запись и историю изменений." }),
   },
   uz: {
     new_application: (v) => ({ title: `Yangi ariza: ${v.vacancy}`, body: v.name }),
     shortlisted: (v) => ({ title: `Sizni tanlashdi: ${v.vacancy}`, body: "Batafsil ko‘rish uchun oching." }),
+    employment_ended: (v) => ({ title: `Ish beruvchi yakunlanganini belgiladi: ${v.company}`, body: "Yozuv va tarixini ko‘rish uchun oching." }),
   },
 };
 

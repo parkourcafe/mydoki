@@ -47,7 +47,7 @@ say "▸ Тесты"
 failed=()
 for t in isolation document_versions invitations claim_application write_roles hiring_flow \
          talent_pool_visibility talent_pool_current_employer opportunity_invite_flow \
-         employer_verification; do
+         employer_verification employer_verified_domain employment_status_log; do
   file="$ROOT/tests/rls/$t.sql"
   if out=$("${PSQL[@]}" -tA -f "$file" 2>&1); then
     say "  ✓ $t"

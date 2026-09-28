@@ -5,6 +5,7 @@ import { getUser } from "@/lib/queries";
 import { getLocale } from "@/lib/i18n";
 import {
   type Employment,
+  type EmploymentStatusEvent,
   employmentTypeLabel,
   employmentStatusLabel,
   formatPeriod,
@@ -19,6 +20,7 @@ import EmploymentDocs from "@/app/employer/employees/[id]/EmploymentDocs";
 import AmendmentsPanel from "./AmendmentsPanel";
 import OffboardingProgress from "./OffboardingProgress";
 import VerificationBox from "./VerificationBox";
+import StatusHistory from "./StatusHistory";
 import ProcessGuideHint from "@/components/ProcessGuideHint";
 
 const M = {
@@ -103,9 +105,17 @@ export default async function EmploymentDetailPage({
   let employmentDocs: EmploymentDocument[] = [];
   let amendments: Amendment[] = [];
   let offboardingTasks: OffboardingTask[] = [];
+  let statusEvents: EmploymentStatusEvent[] = [];
   let verifToken: string | null = null;
   if (!emp.manual) {
-    const [{ data: onbData }, { data: edData }, { data: amData }, { data: obData }, { data: verifData }] = await Promise.all([
+    const [
+      { data: onbData },
+      { data: edData },
+      { data: amData },
+      { data: obData },
+      { data: verifData },
+      { data: logData },
+    ] = await Promise.all([
       supabase
         .from("onboarding_tasks")
         .select("*")
@@ -132,12 +142,19 @@ export default async function EmploymentDetailPage({
         .eq("employment_id", emp.id)
         .is("revoked_at", null)
         .maybeSingle(),
+      // Журнал смены статуса: кто и когда отметил завершение (в. 54).
+      supabase
+        .from("employment_status_log")
+        .select("*")
+        .eq("employment_id", emp.id)
+        .order("created_at", { ascending: false }),
     ]);
     onboardingTasks = (onbData ?? []) as OnboardingTask[];
     employmentDocs = (edData ?? []) as EmploymentDocument[];
     amendments = (amData ?? []) as Amendment[];
     offboardingTasks = (obData ?? []) as OffboardingTask[];
     verifToken = (verifData?.token as string) ?? null;
+    statusEvents = (logData ?? []) as EmploymentStatusEvent[];
   }
   const today = new Date().toISOString().slice(0, 10);
 
@@ -222,6 +239,10 @@ export default async function EmploymentDetailPage({
           lastWorkingDay={emp.last_working_day}
           tasks={offboardingTasks}
         />
+      )}
+
+      {!emp.manual && (emp.status === "ended" || statusEvents.length > 0) && (
+        <StatusHistory locale={locale} events={statusEvents} />
       )}
 
       {!emp.manual && (
