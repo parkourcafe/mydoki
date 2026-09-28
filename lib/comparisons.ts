@@ -1226,6 +1226,8 @@ const DATA: Record<ComparisonKey, Comparison> = {
         altName: "Collecting in WhatsApp",
         title: "Collecting documents in WhatsApp vs one Doki link",
         subtitle: "Chat is great for talking, but documents get lost in it.",
+        metaDescription:
+          "Collecting candidate documents in WhatsApp? Files get lost in chats. Send one Doki checklist link: no candidate account, and you see what's missing.",
         intro:
           "Collecting candidate documents in WhatsApp threads means scrolling chats, losing files, and counting by hand who is missing what. Doki leaves WhatsApp for talking and collects documents via one link with a ready status.",
         rows: [
@@ -1245,6 +1247,8 @@ const DATA: Record<ComparisonKey, Comparison> = {
         altName: "Kumpulkan di WhatsApp",
         title: "Kumpulkan dokumen di WhatsApp vs satu tautan Doki",
         subtitle: "Chat bagus untuk ngobrol, tapi dokumen mudah hilang di dalamnya.",
+        metaDescription:
+          "Kumpulkan dokumen kandidat lewat WhatsApp? Berkas tercecer di chat. Kirim satu tautan ceklis Doki: kandidat unggah tanpa akun, status lengkap / kurang.",
         intro:
           "Mengumpulkan dokumen kandidat di chat WhatsApp berarti menggulir chat, kehilangan berkas, dan menghitung manual siapa yang kurang apa. Doki membiarkan WhatsApp untuk ngobrol dan mengumpulkan dokumen lewat satu tautan dengan status siap.",
         rows: [
@@ -1288,6 +1292,8 @@ const DATA: Record<ComparisonKey, Comparison> = {
         altName: "Documents by email",
         title: "Collecting documents by email vs one Doki link",
         subtitle: "Email attachments pile up, get lost, and don't show completeness.",
+        metaDescription:
+          "Collecting candidate documents by email means hunting attachments across threads. One Doki checklist link gives a package status and expiry reminders.",
         intro:
           "Collecting candidate documents by email means hunting for attachments across threads and counting by hand what's missing. Doki replaces that with one checklist link and a package status.",
         rows: [
@@ -1307,6 +1313,8 @@ const DATA: Record<ComparisonKey, Comparison> = {
         altName: "Dokumen lewat email",
         title: "Kumpulkan dokumen lewat email vs satu tautan Doki",
         subtitle: "Lampiran email menumpuk, hilang, dan tidak menunjukkan kelengkapan.",
+        metaDescription:
+          "Kirim dokumen lamaran lewat email berarti lampiran tercecer di banyak thread. Satu tautan ceklis Doki memberi status paket dan pengingat masa berlaku.",
         intro:
           "Mengumpulkan dokumen kandidat lewat email berarti mencari lampiran di banyak thread dan menghitung manual apa yang kurang. Doki menggantinya dengan satu tautan ceklis dan status paket.",
         rows: [

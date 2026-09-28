@@ -33,6 +33,8 @@ export type SegmentContent = {
   navLabel: string;
   title: string;
   subtitle: string;
+  /** meta description (≤155), если subtitle длиннее сниппета. */
+  metaDescription?: string;
   pains: string[];
   solutions: string[];
   docs: string[];
@@ -595,6 +597,8 @@ const DATA: Record<SegmentKey, Segment> = {
         title: "Send one checklist — get the full document package back",
         subtitle:
           "For HR teams and recruiting agencies: one list of required documents → a link to the candidate → a complete package, a “what's missing” status, and deadline reminders.",
+        metaDescription:
+          "HR teams and recruiting agencies: send candidates one checklist link, get the complete document package, a “what's missing” status and expiry reminders.",
         pains: [
           "Candidates send documents in pieces over WhatsApp and email",
           "There's a resume, but no required certificates, KTP or ID",
@@ -925,6 +929,8 @@ const DATA: Record<SegmentKey, Segment> = {
         title: "Collect candidate documents in batches — from one link",
         subtitle:
           "For recruiting and staffing agencies: one checklist → a link to every candidate → complete packages, a “what's missing” status, and deadline reminders, all in one dashboard.",
+        metaDescription:
+          "Recruiting and staffing agencies: one checklist link per candidate, complete packages, a “what's missing” status and deadline reminders in one dashboard.",
         pains: [
           "Dozens of candidates send documents in pieces over WhatsApp",
           "No clarity on who is missing what, or what has expired",
@@ -946,6 +952,8 @@ const DATA: Record<SegmentKey, Segment> = {
         title: "Kumpulkan dokumen kandidat sekaligus — dari satu tautan",
         subtitle:
           "Untuk agensi rekrutmen dan staffing: satu ceklis → tautan ke setiap kandidat → paket lengkap, status “apa yang kurang”, dan pengingat tenggat, semua di satu dasbor.",
+        metaDescription:
+          "Untuk agensi rekrutmen dan staffing: satu tautan ceklis per kandidat, paket lengkap, status “apa yang kurang”, dan pengingat tenggat di satu dasbor.",
         pains: [
           "Puluhan kandidat mengirim dokumen sepotong-sepotong lewat WhatsApp",
           "Tidak jelas siapa yang kurang apa, atau apa yang sudah kedaluwarsa",
