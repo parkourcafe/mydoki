@@ -45,13 +45,14 @@ values ('33333333-3333-3333-3333-333333333333', 'Ivan Petrov', '+62800000000',
 -- Работодатель (verified) заводится под своим пользователем.
 select set_config('request.jwt.claims',
   '{"sub":"44444444-4444-4444-4444-444444444444"}', true);
-insert into employer_profiles(user_id, company_name, contact_email, domains)
+insert into employer_profiles(user_id, company_name, contact_email)
 values ('44444444-4444-4444-4444-444444444444', 'PT Pencari Kerja',
-        'hr@pencari.example', '["pencari.example"]'::jsonb);
+        'hr@pencari.example');
 -- Подтверждение в продукте ставит сервер (confirm_employer_verification),
 -- не сам работодатель, поэтому отметка — под ролью владельца схемы.
 reset role;
-update employer_profiles set verified_at = now()
+update employer_profiles
+   set verified_at = now(), domains = '["pencari.example"]'::jsonb
  where user_id = '44444444-4444-4444-4444-444444444444';
 set local role authenticated;
 select set_config('test.employer',

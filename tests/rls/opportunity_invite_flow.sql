@@ -54,12 +54,13 @@ select set_talent_pool_membership('active', now() + interval '180 days');
 -- Работодатель: verified-профиль и вакансия.
 select set_config('request.jwt.claims',
   '{"sub":"66666666-6666-6666-6666-666666666666"}', true);
-insert into employer_profiles(user_id, company_name, contact_email, domains)
+insert into employer_profiles(user_id, company_name, contact_email)
 values ('66666666-6666-6666-6666-666666666666', 'PT Pencari Dua',
-        'hr@pencari2.example', '["pencari2.example"]'::jsonb);
+        'hr@pencari2.example');
 -- Подтверждение ставит сервер, не сам работодатель (см. hiring_flow.sql).
 reset role;
-update employer_profiles set verified_at = now()
+update employer_profiles
+   set verified_at = now(), domains = '["pencari2.example"]'::jsonb
  where user_id = '66666666-6666-6666-6666-666666666666';
 set local role authenticated;
 

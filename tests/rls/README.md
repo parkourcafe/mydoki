@@ -22,6 +22,7 @@ anywhere.
 | `talent_pool_visibility.sql` | A confidential profile is not discoverable by a blocked or current employer, and never leaks identity |
 | `opportunity_invite_flow.sql` | A blind invitation reveals nothing until the candidate accepts, and `Share & apply` writes exactly one immutable snapshot |
 | `hiring_flow.sql` | An unverified employer cannot publish; a verified one publishes, an anonymous candidate applies once, and the application reaches that employer's board and no one else's |
+| `employer_verification.sql` | An employer cannot verify themselves, raise `vacancy_limit` or reset code attempts through PostgREST; the email-code flow still verifies, and Talent Pool access does not expire with the 15-minute code |
 
 `talent_pool_visibility.sql` and `opportunity_invite_flow.sql` used to print
 values for a human to compare; they now raise like the rest and run in
