@@ -795,6 +795,19 @@ export async function updateEmployment(formData: FormData) {
   const next_review_date = String(formData.get("next_review_date") ?? "").trim() || null;
   const status = String(formData.get("status") ?? "active") === "ended" ? "ended" : "active";
 
+  // Прежний статус — чтобы уведомить человека именно о переходе в «ended»
+  // (T-DOKI-04, в. 54). Смену статуса/дат записывает в employment_status_log
+  // триггер БД, независимо от того, откуда пришёл update.
+  const { data: before } = await supabase
+    .from("employments")
+    .select("status, employee_user_id, company_name")
+    .eq("id", id)
+    .eq("manual", false)
+    .maybeSingle();
+  const prev = before as
+    | { status?: string; employee_user_id?: string; company_name?: string }
+    | null;
+
   const { error } = await supabase
     .from("employments")
     .update({
@@ -809,6 +822,14 @@ export async function updateEmployment(formData: FormData) {
     .eq("id", id)
     .eq("manual", false); // работодатель правит только записи «от работодателя»
   if (error) throw error;
+
+  if (status === "ended" && prev?.status !== "ended" && prev?.employee_user_id) {
+    await sendPushToUser(prev.employee_user_id, {
+      type: "employment_ended",
+      vars: { company: prev.company_name ?? "" },
+      url: `/my/employment/${id}`,
+    });
+  }
   revalidatePath(`/employer/employees/${id}`);
   revalidatePath("/employer/employees");
 }
@@ -1048,10 +1069,28 @@ export async function completeOffboarding(
   employmentId: string
 ): Promise<{ error?: string }> {
   const supabase = await getSupabaseServer();
+  const { data: before } = await supabase
+    .from("employments")
+    .select("status, employee_user_id, company_name")
+    .eq("id", employmentId)
+    .maybeSingle();
+  const prev = before as
+    | { status?: string; employee_user_id?: string; company_name?: string }
+    | null;
+
   const { error } = await supabase.rpc("complete_offboarding", {
     p_employment_id: employmentId,
   });
   if (error) return { error: error.message };
+
+  // Уведомление человеку о завершении (журнал пишет триггер БД).
+  if (prev?.status !== "ended" && prev?.employee_user_id) {
+    await sendPushToUser(prev.employee_user_id, {
+      type: "employment_ended",
+      vars: { company: prev.company_name ?? "" },
+      url: `/my/employment/${employmentId}`,
+    });
+  }
   revalidatePath(`/employer/employees/${employmentId}`);
   return {};
 }

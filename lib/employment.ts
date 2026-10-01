@@ -110,6 +110,55 @@ export function employmentStatusLabel(
   return map[status as EmploymentStatus] ?? String(status);
 }
 
+// ====================== Журнал смены статуса ==========================
+// employment_status_log (миграция 20260928150000): каждую смену status /
+// end_date у записи «от работодателя» пишет триггер БД — кто, когда, что
+// было и что стало. Человек видит журнал в «Мои трудовые отношения».
+
+export type EmploymentStatusActor = "company" | "employee" | "system";
+
+export type EmploymentStatusEvent = {
+  id: string;
+  employment_id: string;
+  old_status: EmploymentStatus | string | null;
+  new_status: EmploymentStatus | string;
+  old_end_date: string | null;
+  new_end_date: string | null;
+  changed_by: string | null;
+  actor_role: EmploymentStatusActor | string;
+  created_at: string;
+};
+
+const ACTOR_LABELS: Record<Locale, Record<EmploymentStatusActor, string>> = {
+  ru: { company: "работодатель", employee: "вы", system: "система" },
+  en: { company: "employer", employee: "you", system: "system" },
+  id: { company: "perusahaan", employee: "Anda", system: "sistem" },
+  uz: { company: "ish beruvchi", employee: "siz", system: "tizim" },
+};
+
+export function employmentActorLabel(
+  locale: Locale,
+  actor: EmploymentStatusActor | string
+): string {
+  return ACTOR_LABELS[locale][actor as EmploymentStatusActor] ?? String(actor);
+}
+
+/**
+ * Одна строка журнала: «Работает → Завершено (до 2026-09-30) — работодатель».
+ * Если статус не менялся (сдвинули только дату), показывается только дата.
+ */
+export function describeStatusEvent(
+  locale: Locale,
+  e: Pick<EmploymentStatusEvent, "old_status" | "new_status" | "new_end_date" | "actor_role">
+): string {
+  const statusPart =
+    e.old_status && e.old_status !== e.new_status
+      ? `${employmentStatusLabel(locale, e.old_status)} → ${employmentStatusLabel(locale, e.new_status)}`
+      : employmentStatusLabel(locale, e.new_status);
+  const datePart = e.new_end_date ? ` (${e.new_end_date})` : "";
+  return `${statusPart}${datePart} — ${employmentActorLabel(locale, e.actor_role)}`;
+}
+
 /** Человекочитаемый период «start — end» (или «start — н. в.»). */
 export function formatPeriod(
   locale: Locale,

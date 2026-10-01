@@ -54,7 +54,9 @@ const M = {
     salary: "Salary",
     poweredBy: "Powered by",
     home: "doki.help",
-    verified: "Verified",
+    // Что подтверждено на самом деле — почта работодателя, не компания
+    // (T-DOKI-04, в. 52). Рядом показывается подтверждённый домен, если он есть.
+    verified: "Email verified",
     pausedTitle: "Vacancy under review",
     pausedText: "This vacancy is temporarily under review. Please check back later.",
   },
@@ -66,7 +68,7 @@ const M = {
     salary: "Gaji",
     poweredBy: "Didukung oleh",
     home: "doki.help",
-    verified: "Terverifikasi",
+    verified: "Email terverifikasi",
     pausedTitle: "Lowongan sedang ditinjau",
     pausedText: "Lowongan ini sementara sedang ditinjau. Silakan cek kembali nanti.",
   },
@@ -78,7 +80,7 @@ const M = {
     salary: "Зарплата",
     poweredBy: "Работает на",
     home: "doki.help",
-    verified: "Проверен",
+    verified: "Email подтверждён",
     pausedTitle: "Вакансия на проверке",
     pausedText: "Эта вакансия временно на проверке. Загляните позже.",
   },
@@ -90,7 +92,7 @@ const M = {
     salary: "Maosh",
     poweredBy: "Ishlaydi",
     home: "doki.help",
-    verified: "Tasdiqlangan",
+    verified: "Email tasdiqlangan",
     pausedTitle: "Vakansiya tekshiruvda",
     pausedText: "Bu vakansiya vaqtincha tekshiruvda. Keyinroq qaytib keling.",
   },
@@ -168,11 +170,16 @@ export default async function ApplyPage({
       Boolean((resume?.about ?? "").trim());
   }
 
-  // Публичная мета: статус (виден и для paused) + verified-бейдж.
+  // Публичная мета: статус (виден и для paused) + бейдж. verified = почта
+  // подтверждена, подтверждение не отозвано и название в вакансии совпадает
+  // с названием профиля; verified_domain — домен организации из
+  // подтверждённой почты (null для публичных почтовых сервисов).
   const { data: metaRaw } = await supabase.rpc("apply_vacancy_meta", {
     p_slug: slug,
   });
-  const meta = metaRaw as { status?: string; verified?: boolean } | null;
+  const meta = metaRaw as
+    | { status?: string; verified?: boolean; verified_domain?: string | null }
+    | null;
 
   if (!vacancy) {
     // Вакансия на автопаузе по жалобам — нейтральная страница, без обвинений.
@@ -215,6 +222,7 @@ export default async function ApplyPage({
               {meta?.verified && (
                 <span className="rounded-full bg-green-100 px-1.5 py-0.5 text-[10px] font-medium text-green-700">
                   ✓ {t.verified}
+                  {meta.verified_domain ? ` · ${meta.verified_domain}` : ""}
                 </span>
               )}
             </p>

@@ -24,6 +24,8 @@ anywhere.
 | `opportunity_invite_flow.sql` | A blind invitation reveals nothing until the candidate accepts, and `Share & apply` writes exactly one immutable snapshot |
 | `hiring_flow.sql` | An unverified employer cannot publish; a verified one publishes, an anonymous candidate applies once, and the application reaches that employer's board and no one else's |
 | `employer_verification.sql` | An employer cannot verify themselves, raise `vacancy_limit` or reset code attempts through PostgREST; the email-code flow still verifies, and Talent Pool access does not expire with the 15-minute code |
+| `employer_verified_domain.sql` | Confirming the email code records the domain of the address the code went to (public mail providers excluded) so "hide from" and "block" by domain work in Talent Pool; a public-mail employer stays verified without a domain; the apply-page badge is not shown for a revoked employer or next to a company name that is not the profile's |
+| `employment_status_log.sql` | An employer marking an employment `ended` leaves a journal row (who, when, from → to) that the employee can read and a third organization cannot; the mark deletes neither the candidate's account nor their application documents; the employer cannot reassign the record (`employee_user_id`, `application_id`, `manual`, `company_name`); `complete_offboarding` is journaled too; manual records are untouched |
 
 `talent_pool_visibility.sql` and `opportunity_invite_flow.sql` used to print
 values for a human to compare; they now raise like the rest and run in

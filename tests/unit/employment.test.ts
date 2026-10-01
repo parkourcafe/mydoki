@@ -9,6 +9,8 @@ import {
   employmentTypeLabel,
   employmentStatusLabel,
   formatPeriod,
+  describeStatusEvent,
+  employmentActorLabel,
   EMPLOYMENT_TYPES,
 } from "../../lib/employment.ts";
 
@@ -54,4 +56,48 @@ test("formatPeriod: открытый период показывает 'present'
   const closed = formatPeriod("en", "2026-01-01", "2026-06-01");
   assert.ok(!closed.includes("present"));
   assert.ok(closed.includes("—"));
+});
+
+// Журнал смены статуса (T-DOKI-04, в. 54): строка называет переход, дату
+// окончания и автора — человек видит, что увольнение отметил работодатель.
+test("describeStatusEvent: переход, дата окончания и автор", () => {
+  assert.equal(
+    describeStatusEvent("en", {
+      old_status: "active",
+      new_status: "ended",
+      new_end_date: "2026-09-30",
+      actor_role: "company",
+    }),
+    "Active → Ended (2026-09-30) — employer"
+  );
+  // Сдвинули только дату: статус один, без стрелки.
+  assert.equal(
+    describeStatusEvent("ru", {
+      old_status: "ended",
+      new_status: "ended",
+      new_end_date: "2026-10-15",
+      actor_role: "company",
+    }),
+    "Завершено (2026-10-15) — работодатель"
+  );
+  // Без даты окончания и с неизвестным автором — не падает.
+  assert.equal(
+    describeStatusEvent("en", {
+      old_status: null,
+      new_status: "active",
+      new_end_date: null,
+      actor_role: "robot",
+    }),
+    "Active — robot"
+  );
+});
+
+test("employmentActorLabel: все роли имеют метку во всех локалях", () => {
+  for (const loc of ["ru", "en", "id", "uz"] as const) {
+    for (const a of ["company", "employee", "system"] as const) {
+      assert.ok(employmentActorLabel(loc, a), `пустая метка для ${loc}/${a}`);
+    }
+  }
+  // Неизвестная роль возвращается как есть, без падения.
+  assert.equal(employmentActorLabel("en", "robot"), "robot");
 });
