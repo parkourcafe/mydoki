@@ -756,7 +756,7 @@ export default async function Home({
 
               <div className="p-6 sm:p-8 lg:col-span-7 lg:p-10">
                 <div className="mb-4 inline-flex rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#f6b17e]">
-                  {locale === "id" ? "Alur nyata" : "Real workflow"}
+                  {locale === "id" ? "Contoh alur (data fiktif)" : "Example workflow (sample data)"}
                 </div>
                 <h2 className="heading-font max-w-2xl text-3xl tracking-tight sm:text-4xl">
                   {locale === "id"
@@ -805,7 +805,7 @@ export default async function Home({
                         <div className="text-sm text-[#bfae9b]">{locale === "id" ? "Board perusahaan" : "Employer board"}</div>
                         <div className="text-xl font-semibold">{locale === "id" ? "Status kandidat" : "Candidate status"}</div>
                       </div>
-                      <div className="rounded-full bg-white/10 px-3 py-1 text-xs text-[#d8c9b8]">{locale === "id" ? "live" : "live"}</div>
+                      <div className="rounded-full bg-white/10 px-3 py-1 text-xs text-[#d8c9b8]">{locale === "id" ? "contoh" : "sample"}</div>
                     </div>
                     <div className="space-y-3">
                       {[
