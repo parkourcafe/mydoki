@@ -12,7 +12,11 @@
 --   7. повторный `Share & apply` не плодит отклики и не переписывает снимок;
 --   8. отказ не оставляет следа в профиле кандидата;
 --   9. объяснение по критериям в снимок пишет БД из match_assessments,
---      а не кандидат (подделать «покрытие требований» нельзя).
+--      а не кандидат (подделать «покрытие требований» нельзя) — здесь
+--      не проверяется, см. tests/rls/README.md.
+--
+-- Каждая проверка — do-блок, который бросает исключение при нарушении,
+-- поэтому файл входит в tests/rls/run.sh.
 
 begin;
 
@@ -50,11 +54,15 @@ select set_talent_pool_membership('active', now() + interval '180 days');
 -- Работодатель: verified-профиль и вакансия.
 select set_config('request.jwt.claims',
   '{"sub":"66666666-6666-6666-6666-666666666666"}', true);
-insert into employer_profiles(user_id, company_name, contact_email, domains)
+insert into employer_profiles(user_id, company_name, contact_email)
 values ('66666666-6666-6666-6666-666666666666', 'PT Pencari Dua',
-        'hr@pencari2.example', '["pencari2.example"]'::jsonb);
-update employer_profiles set verified_at = now()
+        'hr@pencari2.example');
+-- Подтверждение ставит сервер, не сам работодатель (см. hiring_flow.sql).
+reset role;
+update employer_profiles
+   set verified_at = now(), domains = '["pencari2.example"]'::jsonb
  where user_id = '66666666-6666-6666-6666-666666666666';
+set local role authenticated;
 
 select set_config('test.vacancy',
   (create_vacancy('Operations manager', 'PT Pencari Dua', 'Bali',
@@ -64,19 +72,28 @@ select set_config('test.vacancy',
 select set_config('test.ref',
   (talent_pool_candidates(50) -> 0 ->> 'ref'), true);
 
-select
-  (talent_pool_candidates(50) -> 0 ? 'ref') as has_ref,          -- ожидается t
-  (talent_pool_candidates(50) -> 0 ? 'user_id') as has_user_id;  -- ожидается f
+do $$ begin
+  if current_setting('test.ref', true) is null
+     or current_setting('test.ref', true) = '' then
+    raise exception 'FAIL: у кандидата нет псевдонима ref в Talent Pool';
+  end if;
+  if talent_pool_candidates(50) -> 0 ? 'user_id' then
+    raise exception 'FAIL: Talent Pool отдаёт работодателю user_id';
+  end if;
+end $$;
 
 -- 1. Приглашение без компенсации и цели отправить нельзя.
 do $$ begin
-  perform send_opportunity_invite(
-    current_setting('test.ref')::uuid, current_setting('test.vacancy')::uuid, null,
-    'Operations manager', 'Bali', 'hybrid', '', '', now() + interval '14 days',
-    null, null, null);
-  raise notice 'FAIL: приглашение без раскрытия условий отправлено';
-exception when others then
-  raise notice 'OK: %', sqlerrm;   -- ожидается 'invite disclosures incomplete'
+  begin
+    perform send_opportunity_invite(
+      current_setting('test.ref')::uuid, current_setting('test.vacancy')::uuid, null,
+      'Operations manager', 'Bali', 'hybrid', '', '', now() + interval '14 days',
+      null, null, null);
+  exception when others then
+    if sqlerrm <> 'invite disclosures incomplete' then raise; end if;
+    return;
+  end;
+  raise exception 'FAIL: приглашение без раскрытия условий отправлено';
 end $$;
 
 -- 2. Полное приглашение отправляется по псевдониму.
@@ -90,15 +107,31 @@ select set_config('test.invite',
 -- 3–4. До принятия знакомства профиля нет, идентификаторов нет.
 -- Прямое чтение таблицы приглашений работодателю недоступно: user_id
 -- кандидата не должен утекать через PostgREST.
-select count(*) as employer_direct_table_reads from opportunity_invites; -- ожидается 0
-
-select
-  (get_employer_invites() -> 0 ->> 'state')        as state,        -- ожидается sent
-  (get_employer_invites() -> 0 ->> 'blind')        as blind,        -- ожидается true
-  (get_employer_invites() -> 0 -> 'profile')       as profile,      -- ожидается null
-  (get_employer_invites() -> 0 ? 'user_id')        as has_user_id,  -- ожидается f
-  (get_employer_invites()::text like '%Sari Dewi%')   as leaks_name, -- ожидается f
-  (get_employer_invites()::text like '%+62811111111%') as leaks_contact; -- ожидается f
+do $$
+declare
+  inv jsonb := get_employer_invites();
+begin
+  if (select count(*) from opportunity_invites) <> 0 then
+    raise exception 'FAIL: работодатель читает opportunity_invites напрямую';
+  end if;
+  if inv -> 0 ->> 'state' is distinct from 'sent' then
+    raise exception 'FAIL: состояние приглашения %, ожидалось sent', inv -> 0 ->> 'state';
+  end if;
+  if inv -> 0 ->> 'blind' is distinct from 'true' then
+    raise exception 'FAIL: приглашение до принятия не blind';
+  end if;
+  if coalesce(inv -> 0 -> 'profile', 'null'::jsonb) <> 'null'::jsonb then
+    raise exception 'FAIL: профиль виден до принятия знакомства';
+  end if;
+  if inv -> 0 ? 'user_id'
+     or inv::text like '%55555555-5555-5555-5555-555555555555%' then
+    raise exception 'FAIL: user_id кандидата утёк работодателю';
+  end if;
+  if inv::text like '%Sari Dewi%' or inv::text like '%+62811111111%'
+     or inv::text like '%sari@example.test%' then
+    raise exception 'FAIL: имя или контакты кандидата утекли до принятия';
+  end if;
+end $$;
 
 -- 5. Кандидат принимает знакомство: появляется ограниченный профиль.
 select set_config('request.jwt.claims',
@@ -109,15 +142,31 @@ select respond_to_opportunity_invite(
 
 select set_config('request.jwt.claims',
   '{"sub":"66666666-6666-6666-6666-666666666666"}', true);
-select
-  (get_employer_invites() -> 0 ->> 'state')                    as state_after,  -- accepted
-  (get_employer_invites() -> 0 -> 'profile' ->> 'profession')  as sees_role,    -- Operations manager
-  (get_employer_invites() -> 0 -> 'profile' ? 'contact')       as sees_contact, -- ожидается f
+do $$
+declare
+  inv jsonb := get_employer_invites();
+begin
+  if inv -> 0 ->> 'state' is distinct from 'accepted' then
+    raise exception 'FAIL: после принятия состояние %', inv -> 0 ->> 'state';
+  end if;
+  if inv -> 0 -> 'profile' ->> 'profession' is distinct from 'Operations manager' then
+    raise exception 'FAIL: после принятия работодатель не видит разрешённое поле';
+  end if;
+  if inv -> 0 -> 'profile' ? 'contact' then
+    raise exception 'FAIL: контакт виден после знакомства без Share & apply';
+  end if;
   -- поле скрыто кандидатом → не выдаётся даже внутри разрешённого уровня
-  (get_employer_invites() -> 0 -> 'profile' ? 'salary_expectation') as sees_hidden_salary, -- f
+  if inv -> 0 -> 'profile' ? 'salary_expectation' then
+    raise exception 'FAIL: скрытое кандидатом поле salary_expectation выдано';
+  end if;
   -- вне scope гранта: кандидат передал только profession/seniority/location/languages
-  (get_employer_invites() -> 0 -> 'profile' ? 'key_achievements')   as sees_out_of_scope,  -- f
-  (get_employer_invites()::text like '%Sari Dewi%')            as leaks_name;   -- ожидается f
+  if inv -> 0 -> 'profile' ? 'key_achievements' then
+    raise exception 'FAIL: выдано поле вне scope разрешения';
+  end if;
+  if inv::text like '%Sari Dewi%' or inv::text like '%+62811111111%' then
+    raise exception 'FAIL: имя или контакт утекли после знакомства';
+  end if;
+end $$;
 
 -- 6. `Share & apply` создаёт отклик, разрешение и снимок.
 select set_config('request.jwt.claims',
@@ -133,39 +182,63 @@ select set_config('test.app',
      '{"mode":"confidential_pool","reveal_level":"shared"}'::jsonb,
      'checksum-1') ->> 'application_id'), true);
 
-select
-  (select count(*) from applications
-    where id = current_setting('test.app')::uuid)              as application_created, -- 1
-  (select count(*) from application_profile_snapshots
-    where application_id = current_setting('test.app')::uuid)  as snapshot_created,    -- 1
-  (select count(*) from purpose_authorizations
-    where user_id = '55555555-5555-5555-5555-555555555555'
-      and purpose = 'application')                             as app_authorization,   -- 1
-  (select count(*) from profile_access_grants
-    where user_id = '55555555-5555-5555-5555-555555555555'
-      and level = 'shared')                                    as shared_grant;        -- 1
+do $$ begin
+  if (select count(*) from applications
+       where id = current_setting('test.app')::uuid) <> 1 then
+    raise exception 'FAIL: Share & apply не создал отклик';
+  end if;
+  if (select count(*) from application_profile_snapshots
+       where application_id = current_setting('test.app')::uuid) <> 1 then
+    raise exception 'FAIL: Share & apply не создал ровно один снимок';
+  end if;
+  if (select count(*) from purpose_authorizations
+       where user_id = '55555555-5555-5555-5555-555555555555'
+         and purpose = 'application') <> 1 then
+    raise exception 'FAIL: нет ровно одного разрешения purpose=application';
+  end if;
+  if (select count(*) from profile_access_grants
+       where user_id = '55555555-5555-5555-5555-555555555555'
+         and level = 'shared') <> 1 then
+    raise exception 'FAIL: нет ровно одного доступа уровня shared';
+  end if;
+end $$;
 
 -- 7. Повторный вызов не плодит отклики и не переписывает снимок.
-select share_and_apply(
+select set_config('test.app2', (share_and_apply(
   current_setting('test.invite')::uuid,
   '["profession"]'::jsonb,
   'Повторная попытка.', 'application-2026-08',
   '{"fields":{"profession":"ДРУГОЕ"}}'::jsonb, '{}'::jsonb,
-  '{"mode":"confidential_pool"}'::jsonb, 'checksum-2');
+  '{"mode":"confidential_pool"}'::jsonb, 'checksum-2') ->> 'application_id'), true);
 
-select
-  (select count(*) from applications
-    where vacancy_id = current_setting('test.vacancy')::uuid)  as applications_total, -- 1
-  (select count(*) from application_profile_snapshots
-    where application_id = current_setting('test.app')::uuid)  as snapshots_total,    -- 1
-  (select checksum from application_profile_snapshots
-    where application_id = current_setting('test.app')::uuid)  as checksum_kept;      -- checksum-1
+do $$ begin
+  if current_setting('test.app2') <> current_setting('test.app') then
+    raise exception 'FAIL: повторный Share & apply вернул другой отклик';
+  end if;
+  if (select count(*) from applications
+       where vacancy_id = current_setting('test.vacancy')::uuid) <> 1 then
+    raise exception 'FAIL: повторный Share & apply создал второй отклик';
+  end if;
+  if (select count(*) from application_profile_snapshots
+       where application_id = current_setting('test.app')::uuid) <> 1 then
+    raise exception 'FAIL: повторный Share & apply создал второй снимок';
+  end if;
+  if (select checksum from application_profile_snapshots
+       where application_id = current_setting('test.app')::uuid)
+     is distinct from 'checksum-1' then
+    raise exception 'FAIL: повторный Share & apply переписал снимок';
+  end if;
+end $$;
 
 -- 8. Отказ не оставляет следа в профиле кандидата.
-select jsonb_object_keys(to_jsonb(r.*)) as resume_keys
-from resumes r
-where r.user_id = '55555555-5555-5555-5555-555555555555'
-  and to_jsonb(r.*) ?| array['declined_count','decline_rate','response_rate','reputation'];
--- ожидается 0 строк
+do $$ begin
+  if exists (
+    select 1 from resumes r
+     where r.user_id = '55555555-5555-5555-5555-555555555555'
+       and to_jsonb(r.*) ?| array['declined_count','decline_rate','response_rate','reputation']
+  ) then
+    raise exception 'FAIL: в профиле кандидата появился счётчик отказов/репутации';
+  end if;
+end $$;
 
 rollback;

@@ -21,6 +21,18 @@ anywhere.
 | `write_roles.sql` | A viewer cannot write; an editor cannot change household membership; employment records stay private |
 | `talent_pool_visibility.sql` | A confidential profile is not discoverable by a blocked or current employer, and never leaks identity |
 | `opportunity_invite_flow.sql` | A blind invitation reveals nothing until the candidate accepts, and `Share & apply` writes exactly one immutable snapshot |
+| `hiring_flow.sql` | An unverified employer cannot publish; a verified one publishes, an anonymous candidate applies once, and the application reaches that employer's board and no one else's |
+| `employer_verification.sql` | An employer cannot verify themselves, raise `vacancy_limit` or reset code attempts through PostgREST; the email-code flow still verifies, and Talent Pool access does not expire with the 15-minute code |
+
+`talent_pool_visibility.sql` and `opportunity_invite_flow.sql` used to print
+values for a human to compare; they now raise like the rest and run in
+`run.sh`. Not covered yet: item 9 of `opportunity_invite_flow.sql` (the
+criteria explanation in a snapshot comes from `match_assessments`, not from
+the candidate).
+
+Employer verification in these tests is set as the schema owner, not as the
+employer: in the product it is the server that confirms an employer, so the
+tests must not depend on an employer being able to verify themselves.
 
 `write_roles.sql` exists because `20260824140000_dedupe_rls_policies` split
 `FOR ALL` policies into separate `INSERT`/`UPDATE`/`DELETE` ones on 18 tables.

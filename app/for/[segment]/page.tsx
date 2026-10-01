@@ -70,11 +70,11 @@ export async function generateMetadata({
   const c = seg.locales[await getLocale()];
   return {
     title: c.title,
-    description: c.subtitle,
+    description: c.metaDescription ?? c.subtitle,
     alternates: await altLangs(),
     openGraph: {
       title: c.title,
-      description: c.subtitle,
+      description: c.metaDescription ?? c.subtitle,
       url: `${APP_URL}/for/${segment}`,
     },
   };

@@ -1,6 +1,8 @@
 // llms.txt — LLM-ориентированный индекс публичных страниц (llmstxt.org).
 // Держим ссылки вручную: это кураторский список ~25 ключевых URL для
 // агентов и LLM, а не полная карта сайта (для этого есть /sitemap.xml).
+// Страницы — только префиксные (self-canonical) URL: без-префиксный путь
+// отдаёт язык по cookie и каноникалом указывает на /{locale}/… .
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
@@ -35,22 +37,22 @@ const DOC = `# doki.help
 
 - [Семейный сейф](${u("/ru")}): все документы семьи в одном месте с напоминаниями о сроках
 - [Жизнь на Бали](${u("/ru/for/expats")}): документы для русскоязычных экспатов и долгосрочных жителей острова
-- [Чек-лист переезда на Бали](${u("/checklists/bali-relocation-checklist")}): паспорт и визы, страховки, аренда, дети, связь с Россией
-- [Визаран из Бали](${u("/blog/visa-run-bali")}): планирование поездки и подготовка документов
-- [Продление KITAS](${u("/blog/kitas-extension-timeline")}): календарь подготовки и напоминания о датах
-- [Passport expiry reminder](${u("/passport-expiry-reminder")}): never miss a passport renewal date
-- [Document expiry reminder](${u("/document-expiry-reminder")}): track validity dates for any document
-- [Secure document sharing](${u("/secure-document-sharing")}): expiring links with view limits and watermark
-- [Family document organizer](${u("/family-document-organizer")}): organize papers by person, asset and category
-- [Travel documents](${u("/travel-documents")}): what to prepare before a family trip abroad
+- [Чек-лист переезда на Бали](${u("/ru/checklists/bali-relocation-checklist")}): паспорт и визы, страховки, аренда, дети, связь с Россией
+- [Визаран из Бали](${u("/ru/blog/visa-run-bali")}): планирование поездки и подготовка документов
+- [Продление KITAS](${u("/ru/blog/kitas-extension-timeline")}): календарь подготовки и напоминания о датах
+- [Passport expiry reminder](${u("/en/passport-expiry-reminder")}): never miss a passport renewal date
+- [Document expiry reminder](${u("/en/document-expiry-reminder")}): track validity dates for any document
+- [Secure document sharing](${u("/en/secure-document-sharing")}): expiring links with view limits and watermark
+- [Family document organizer](${u("/en/family-document-organizer")}): organize papers by person, asset and category
+- [Travel documents](${u("/en/travel-documents")}): what to prepare before a family trip abroad
 
 ## Trust & legal
 
-- [Pricing](${u("/pricing")}): free tier, no credit card to start
-- [Security](${u("/security")}): encryption in transit, database-level access rules, 2FA
-- [Privacy policy](${u("/privacy")})
-- [Terms](${u("/terms")})
-- [About](${u("/about")})
+- [Pricing](${u("/en/pricing")}): free tier, no credit card to start
+- [Security](${u("/en/security")}): encryption in transit, database-level access rules, 2FA
+- [Privacy policy](${u("/en/privacy")})
+- [Terms](${u("/en/terms")})
+- [About](${u("/en/about")})
 
 ## For AI agents
 
