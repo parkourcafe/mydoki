@@ -922,7 +922,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["CV кандидата", "KTP / ID", "Сертификаты", "SKCK", "KITAS", "Медсправка"],
         ctaLabel: "Создать первый чек-лист",
-        caseStudy: { role: "Типичный сценарий", quote: "При массовом найме в F&B рекрутинговое агентство раньше собирало документы с 20+ кандидатов вручную по WhatsApp. С чек-лист-ссылкой команда сразу видит, кто укомплектован." },
+        caseStudy: { role: "Типичный сценарий — иллюстрация, не отзыв клиента", quote: "При массовом найме в F&B рекрутинговое агентство раньше собирало документы с 20+ кандидатов вручную по WhatsApp. С чек-лист-ссылкой команда сразу видит, кто укомплектован." },
       },
       en: {
         navLabel: "Agencies",
@@ -945,7 +945,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["Candidate CV", "KTP / ID", "Certificates", "SKCK", "KITAS", "Health certificate"],
         ctaLabel: "Create your first checklist",
-        caseStudy: { role: "Typical scenario", quote: "During high-volume F&B hiring, a recruiting agency used to collect documents from 20+ candidates manually over WhatsApp. With a checklist link, the team sees who is complete within minutes." },
+        caseStudy: { role: "Typical scenario — an illustration, not a customer review", quote: "During high-volume F&B hiring, a recruiting agency used to collect documents from 20+ candidates manually over WhatsApp. With a checklist link, the team sees right away who is complete." },
       },
       id: {
         navLabel: "Agensi",
@@ -968,7 +968,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["CV kandidat", "KTP / ID", "Sertifikat", "SKCK", "KITAS", "Surat sehat"],
         ctaLabel: "Buat checklist pertama",
-        caseStudy: { role: "Skenario umum", quote: "Saat rekrutmen F&B dalam jumlah besar, agensi rekrutmen biasanya mengumpulkan dokumen dari 20+ kandidat secara manual lewat WhatsApp. Dengan tautan ceklis, tim langsung tahu siapa yang lengkap." },
+        caseStudy: { role: "Skenario umum — ilustrasi, bukan ulasan klien", quote: "Saat rekrutmen F&B dalam jumlah besar, agensi rekrutmen biasanya mengumpulkan dokumen dari 20+ kandidat secara manual lewat WhatsApp. Dengan tautan ceklis, tim langsung tahu siapa yang lengkap." },
       },
       uz: {
         navLabel: "Agentliklarga",
@@ -989,7 +989,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["Nomzod CV", "KTP / ID", "Sertifikatlar", "SKCK", "KITAS", "Tibbiy ma’lumotnoma"],
         ctaLabel: "Birinchi ro‘yxatni yaratish",
-        caseStudy: { role: "Odatiy holat", quote: "F&B sohasida ommaviy yollashda rekruting agentligi 20+ nomzoddan hujjatlarni WhatsAppda qo‘lda yig‘ardi. Ro‘yxat-havola bilan jamoa kim to‘liq ekanini bir zumda ko‘radi." },
+        caseStudy: { role: "Odatiy holat — misol, mijoz sharhi emas", quote: "F&B sohasida ommaviy yollashda rekruting agentligi 20+ nomzoddan hujjatlarni WhatsAppda qo‘lda yig‘ardi. Ro‘yxat-havola bilan jamoa kim to‘liq ekanini darhol ko‘radi." },
       },
     },
   },
@@ -1016,7 +1016,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["CV", "KTP / ID", "SKCK", "Медсправка", "Сертификаты", "Референсы"],
         ctaLabel: "Создать первый чек-лист",
-        caseStudy: { role: "Типичный сценарий", quote: "Управляющая компания вилл на Бали раньше собирала документы заново при каждой смене персонала. С шаблоном пака и напоминаниями о сроках процесс стал заметно быстрее." },
+        caseStudy: { role: "Типичный сценарий — иллюстрация, не отзыв клиента", quote: "Управляющая компания вилл на Бали раньше собирала документы заново при каждой смене персонала. С шаблоном пака и напоминаниями о сроках каждый новый сотрудник проходит по одному списку, а сроки справок остаются на виду." },
       },
       en: {
         navLabel: "Hospitality",
@@ -1037,7 +1037,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["CV", "KTP / ID", "SKCK", "Health certificate", "Certificates", "References"],
         ctaLabel: "Create your first checklist",
-        caseStudy: { role: "Typical scenario", quote: "A villa management team in Bali used to re-collect documents every time staff turned over. With a pack template and expiry reminders, the process got noticeably faster." },
+        caseStudy: { role: "Typical scenario — an illustration, not a customer review", quote: "A villa management team in Bali used to re-collect documents every time staff turned over. With a pack template and expiry reminders, every new hire follows the same list and certificate deadlines stay in view." },
       },
       id: {
         navLabel: "Hospitality",
@@ -1058,7 +1058,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["CV", "KTP / ID", "SKCK", "Surat sehat", "Sertifikat", "Referensi"],
         ctaLabel: "Buat checklist pertama",
-        caseStudy: { role: "Skenario umum", quote: "Manajemen vila di Bali dulu mengumpulkan ulang dokumen setiap kali staf berganti. Dengan template paket dan pengingat masa berlaku, prosesnya jadi jauh lebih cepat." },
+        caseStudy: { role: "Skenario umum — ilustrasi, bukan ulasan klien", quote: "Manajemen vila di Bali dulu mengumpulkan ulang dokumen setiap kali staf berganti. Dengan template paket dan pengingat masa berlaku, setiap staf baru memakai daftar yang sama dan tenggat surat tetap terpantau." },
       },
       uz: {
         navLabel: "Hospitality",
@@ -1079,7 +1079,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["CV", "KTP / ID", "SKCK", "Tibbiy ma’lumotnoma", "Sertifikatlar", "Referenslar"],
         ctaLabel: "Birinchi ro‘yxatni yaratish",
-        caseStudy: { role: "Odatiy holat", quote: "Balidagi villa boshqaruvi tez-tez almashadigan xodimlar uchun hujjatlarni har safar qaytadan yig‘ishga majbur bo‘lardi. Paket shabloni va muddat eslatmalari bilan bu jarayon ancha tezlashdi." },
+        caseStudy: { role: "Odatiy holat — misol, mijoz sharhi emas", quote: "Balidagi villa boshqaruvi tez-tez almashadigan xodimlar uchun hujjatlarni har safar qaytadan yig‘ishga majbur bo‘lardi. Paket shabloni va muddat eslatmalari bilan har bir yangi xodim bitta ro‘yxat bo‘yicha o‘tadi, muddatlar esa ko‘z oldida qoladi." },
       },
     },
   },
@@ -1104,7 +1104,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["Паспорт", "Фото", "KITAS", "Спонсорские документы", "Страховка"],
         ctaLabel: "Создать первый чек-лист",
-        caseStudy: { role: "Типичный сценарий", quote: "Визовое и релокационное агентство раньше получало паспорт и справки от клиентов частями в разных чатах. С чек-лист-ссылкой команда сразу получает полный пакет и отслеживает сроки KITAS." },
+        caseStudy: { role: "Типичный сценарий — иллюстрация, не отзыв клиента", quote: "Визовое и релокационное агентство раньше получало паспорт и справки от клиентов частями в разных чатах. С чек-лист-ссылкой команда сразу получает полный пакет и отслеживает сроки KITAS." },
       },
       en: {
         navLabel: "Visa agents",
@@ -1123,7 +1123,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["Passport", "Photo", "KITAS", "Sponsor documents", "Insurance"],
         ctaLabel: "Create your first checklist",
-        caseStudy: { role: "Typical scenario", quote: "A visa and relocation agency used to receive passports and certificates from clients scattered across chats. With a checklist link, the team gets the full package right away and tracks KITAS deadlines." },
+        caseStudy: { role: "Typical scenario — an illustration, not a customer review", quote: "A visa and relocation agency used to receive passports and certificates from clients scattered across chats. With a checklist link, the team gets the full package right away and tracks KITAS deadlines." },
       },
       id: {
         navLabel: "Agen visa",
@@ -1142,7 +1142,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["Paspor", "Pas foto", "KITAS", "Dokumen penjamin", "Asuransi"],
         ctaLabel: "Buat checklist pertama",
-        caseStudy: { role: "Skenario umum", quote: "Agen visa dan relokasi biasanya menerima paspor dan surat dari klien secara terpisah di berbagai chat. Dengan tautan ceklis, tim langsung menerima paket lengkap dan memantau tenggat KITAS." },
+        caseStudy: { role: "Skenario umum — ilustrasi, bukan ulasan klien", quote: "Agen visa dan relokasi biasanya menerima paspor dan surat dari klien secara terpisah di berbagai chat. Dengan tautan ceklis, tim langsung menerima paket lengkap dan memantau tenggat KITAS." },
       },
       uz: {
         navLabel: "Viza agentlari",
@@ -1161,7 +1161,7 @@ const DATA: Record<SegmentKey, Segment> = {
         ],
         docs: ["Pasport", "Pas foto", "KITAS", "Homiy hujjatlari", "Sug‘urta"],
         ctaLabel: "Birinchi ro‘yxatni yaratish",
-        caseStudy: { role: "Doimiy holat", quote: "Viza va ko‘chirish agentligi mijozlardan pasport va ma’lumotnomalarni turli chatlarda bo‘lak-bo‘lak olardi. Ro‘yxat-havola bilan jamoa to‘liq paketni darhol oladi va KITAS muddatlarini kuzatib boradi." },
+        caseStudy: { role: "Odatiy holat — misol, mijoz sharhi emas", quote: "Viza va ko‘chirish agentligi mijozlardan pasport va ma’lumotnomalarni turli chatlarda bo‘lak-bo‘lak olardi. Ro‘yxat-havola bilan jamoa to‘liq paketni darhol oladi va KITAS muddatlarini kuzatib boradi." },
       },
     },
   },

@@ -8,10 +8,10 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://www.doki.help";
 
 // Локализованные UI-подписи (как в /for/[segment]).
 const UI: Record<Locale, { start: string; startShort: string; home: string; seeAlso: string; privacy: string; terms: string; ctaSub: string }> = {
-  ru: { start: "Начать бесплатно", startShort: "Начать", home: "← На главную", seeAlso: "Смотрите также", privacy: "Конфиденциальность", terms: "Условия", ctaSub: "Меньше 15 минут — и порядок надолго." },
-  en: { start: "Start for free", startShort: "Start", home: "← Home", seeAlso: "See also", privacy: "Privacy", terms: "Terms", ctaSub: "Less than 15 minutes — and order that lasts." },
-  id: { start: "Mulai gratis", startShort: "Mulai", home: "← Beranda", seeAlso: "Lihat juga", privacy: "Privasi", terms: "Ketentuan", ctaSub: "Kurang dari 15 menit — dan tertata rapi untuk seterusnya." },
-  uz: { start: "Bepul boshlash", startShort: "Boshlash", home: "← Bosh sahifa", seeAlso: "Shuningdek", privacy: "Maxfiylik", terms: "Shartlar", ctaSub: "15 daqiqadan kam — va uzoq saqlanadigan tartib." },
+  ru: { start: "Начать бесплатно", startShort: "Начать", home: "← На главную", seeAlso: "Смотрите также", privacy: "Конфиденциальность", terms: "Условия", ctaSub: "Начните сегодня — и порядок надолго." },
+  en: { start: "Start for free", startShort: "Start", home: "← Home", seeAlso: "See also", privacy: "Privacy", terms: "Terms", ctaSub: "Start today — and order that lasts." },
+  id: { start: "Mulai gratis", startShort: "Mulai", home: "← Beranda", seeAlso: "Lihat juga", privacy: "Privasi", terms: "Ketentuan", ctaSub: "Mulai hari ini — dan tertata rapi untuk seterusnya." },
+  uz: { start: "Bepul boshlash", startShort: "Boshlash", home: "← Bosh sahifa", seeAlso: "Shuningdek", privacy: "Maxfiylik", terms: "Shartlar", ctaSub: "Bugun boshlang — va uzoq saqlanadigan tartib." },
 };
 
 function Dot() {
