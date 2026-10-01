@@ -111,6 +111,13 @@ export type EmployerContext = {
   domains: string[];
   /** Действующая верификация организации (§16). */
   verified: boolean;
+  /**
+   * Название на момент подтверждения (employer_profiles.verified_company_name).
+   * Работодатель его не меняет, поэтому переименование не снимает скрытие.
+   */
+  verified_name?: string | null;
+  /** У кандидата есть действующее трудоустройство в этой организации. */
+  employs_candidate?: boolean;
 };
 
 export type DiscoveryDecision = {
@@ -133,8 +140,10 @@ function organizationBlocked(
 
 function isCurrentEmployer(policy: VisibilityPolicy, employer: EmployerContext): boolean {
   if (!policy.hide_current_employer) return false;
+  if (employer.employs_candidate) return true;
   const names = policy.current_employer_names.map(norm);
   if (names.includes(norm(employer.organization_name))) return true;
+  if (employer.verified_name && names.includes(norm(employer.verified_name))) return true;
   return employer.domains.some((d) => names.includes(norm(d)));
 }
 

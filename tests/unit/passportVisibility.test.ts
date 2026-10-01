@@ -183,6 +183,32 @@ test("текущий работодатель не видит профиль", (
   assert.equal(disabled.level, "pool_fields");
 });
 
+test("переименование после подтверждения не открывает профиль текущему работодателю", () => {
+  const renamed = decide({
+    policy: policy({ current_employer_names: ["PT Contoh Bali"] }),
+    employer: {
+      ...employer,
+      organization_name: "PT Samaran",
+      verified_name: "PT Contoh Bali",
+    },
+  });
+  assert.equal(renamed.reason, "current_employer_hidden");
+});
+
+test("действующее трудоустройство скрывает профиль без ввода названия", () => {
+  const employed = decide({
+    policy: policy({ current_employer_names: [] }),
+    employer: { ...employer, employs_candidate: true },
+  });
+  assert.equal(employed.reason, "current_employer_hidden");
+
+  const disabled = decide({
+    policy: policy({ hide_current_employer: false, current_employer_names: [] }),
+    employer: { ...employer, employs_candidate: true },
+  });
+  assert.equal(disabled.level, "pool_fields");
+});
+
 test("статус unavailable останавливает новые показы, членство остаётся", () => {
   const decision = decide({ search_intent: "unavailable" });
   assert.equal(decision.level, "none");

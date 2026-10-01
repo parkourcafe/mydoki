@@ -46,7 +46,8 @@ say "  применено: $migrations"
 say "▸ Тесты"
 failed=()
 for t in isolation document_versions invitations claim_application write_roles hiring_flow \
-         talent_pool_visibility opportunity_invite_flow employer_verification; do
+         talent_pool_visibility talent_pool_current_employer opportunity_invite_flow \
+         employer_verification; do
   file="$ROOT/tests/rls/$t.sql"
   if out=$("${PSQL[@]}" -tA -f "$file" 2>&1); then
     say "  ✓ $t"
