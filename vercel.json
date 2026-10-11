@@ -5,6 +5,10 @@
     "icn1"
   ],
   "git": {
-    "deploymentEnabled": false
+    "deploymentEnabled": {
+      "*": false,
+      "**": false,
+      "claude/cool-volta-pdpl4t": true
+    }
   }
 }
