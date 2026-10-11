@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { createHash } from "crypto";
 import { getSupabaseServer } from "@/lib/supabase/server";
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
+import { callApplicationRpc } from "@/lib/applicationRpc";
 import { normalizeWhatsapp, parseSource, type Source } from "@/lib/career";
 import { currentIpHash, verifyTurnstile } from "@/lib/antispam";
 import { sendNewApplicationEmail, sendAdminReportAlert } from "@/lib/email";
@@ -78,7 +79,9 @@ export async function reportVacancy(input: ReportInput): Promise<ReportResult> {
 /** Инкремент счётчика просмотров вакансии (anon). Клиент дедуплицирует по сессии. */
 export async function incrementVacancyView(slug: string): Promise<void> {
   const supabase = await getSupabaseServer();
-  await supabase.rpc("increment_vacancy_views", { p_slug: slug });
+  await callApplicationRpc({ admin: getSupabaseAdmin(), user: supabase }, "increment_vacancy_views", {
+    p_slug: slug,
+  });
 }
 
 // ---------------------------- Precheck --------------------------------
@@ -101,7 +104,7 @@ export async function precheckApplication(input: {
 }): Promise<PrecheckResult> {
   const supabase = await getSupabaseServer();
   const ipHash = await currentIpHash();
-  const { data, error } = await supabase.rpc("precheck_application", {
+  const { data, error } = await callApplicationRpc({ admin: getSupabaseAdmin(), user: supabase }, "precheck_application", {
     p_slug: input.slug,
     p_whatsapp: normalizeWhatsapp(input.whatsapp),
     p_ip_hash: ipHash,
@@ -323,7 +326,13 @@ export async function submitApplication(
 
   const ip = await clientIp();
 
-  const { data, error } = await supabase.rpc("submit_application", {
+  // The service-role call has no auth.uid(), so the signed-in candidate (if any)
+  // is passed explicitly, as the function already accepts.
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { data, error } = await callApplicationRpc({ admin: getSupabaseAdmin(), user: supabase }, "submit_application", {
     p_application_id: input.applicationId,
     p_slug: input.slug,
     p_full_name: input.fullName,
@@ -334,6 +343,7 @@ export async function submitApplication(
     p_documents: input.documents ?? [],
     p_source: source,
     p_ip_hash: await ipHashOf(ip),
+    p_user_id: user?.id ?? null,
   });
 
   if (error) {
